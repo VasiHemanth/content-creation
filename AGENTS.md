@@ -67,6 +67,10 @@ A paper gets a dossier before any post text is written. It answers:
 
 Write `Open question` for anything the source does not state. Do not fill gaps from memory. Numbers must appear in the abstract or body of the source.
 
+## Benchmark dossier contract
+
+Papers that introduce or analyse a benchmark use `type: Benchmark` and answer, in order: (1) the capability measured, (2) what one example looks like, (3) how the dataset was built, (4) how it is run and scored, (5) which metric is reported and what it omits, (6) what can inflate, contaminate or destabilize the score, (7) which experiment would reveal more than one leaderboard number, (8) what to read next, (9) the sharpest teaching angle. Separate lab-reported, owner-run and independent results. A score is a system result (model plus harness plus effort); never present it as bare model capability. Every leaderboard figure carries its version and access date.
+
 ## Writing rules
 
 Plain, specific prose. No hype words, no antithesis padding ("not just X, it's Y"), no em-dashes. Separate what the authors report from what we infer. Say "unofficial explainer" in post text.
