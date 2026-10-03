@@ -7,6 +7,3 @@ Structure adapted from the AI Research wiki (raw, wiki, AGENTS.md, OKF frontmatt
 
 ## [2026-10-03] ingest | SkillSeek (arXiv 2609.38822)
 Source record, paper dossier and topic page added. Posted as YouTube Short and Instagram Reel on 2026-10-02.
-
-## [2026-10-03] publish | 2609.38822
-nothing new posted
