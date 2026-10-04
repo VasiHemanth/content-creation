@@ -16,3 +16,6 @@ Source records for the paper (full PDF text), the v1.1 leaderboard snapshot and 
 
 ## [2026-10-03] render | DeepSWE explainer in three styles
 Blueprint, chalkboard and terminal cuts (83.4 s, 9:16) rendered from one storyboard and one voice track. Independent Opus reviews found no factual blockers; fixes applied. Not posted. Post text drafted in the content database (item 2607.07946).
+
+## [2026-10-04] add | 2609.37725 Context Language Models
+Database item created. Dossier still to write: wiki/papers/2609.37725.md

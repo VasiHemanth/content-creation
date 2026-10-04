@@ -6,3 +6,4 @@ Immutable source records. Add new ones, never rewrite claims.
 - [arXiv 2607.07946 DeepSWE paper](sources/arxiv-2607-07946.md)
 - [DeepSWE leaderboard v1.1 snapshot](sources/deepswe-leaderboard-v1-1.md)
 - [DeepSWE GitHub README](sources/deepswe-github-readme.md)
+- [arXiv 2609.37725 Context Language Models](sources/arxiv-2609-37725.md)
