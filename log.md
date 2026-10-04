@@ -19,3 +19,10 @@ Blueprint, chalkboard and terminal cuts (83.4 s, 9:16) rendered from one storybo
 
 ## [2026-10-04] add | 2609.37725 Context Language Models
 Database item created. Dossier still to write: wiki/papers/2609.37725.md
+
+## [2026-10-04] render | 2609.37725 9x16
+84.8s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/contextLanguageModels/out/paper/final.mp4
+
+## [2026-10-04] publish | 2609.37725
+- youtube
+- instagram
