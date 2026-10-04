@@ -91,7 +91,7 @@ Plain, specific prose. No hype words, no antithesis padding ("not just X, it's Y
 
 Post text lives in the database as numbered revisions. Each `posts` row records which revision went live. Editing a caption adds a revision; it never overwrites. Posting rules (approval gate, autonomy level) are set by the human and recorded here:
 
-- Current rule: `OPEN QUESTION`. The earlier research wiki required explicit approval before every post; the reel pipeline is meant to run unattended. Decide which applies and write it here.
+- Current rule: nothing is posted unless (a) `paper-reels/bin/validate.mjs` has passed for the exact video and thumbnail (enforced by `reels publish`) and (b) the human has said to post that item. Whether (b) can be dropped for unattended runs is an open question for the human. Set 2026-10-04 after a corrupt video was posted.
 
 ## Boundaries
 

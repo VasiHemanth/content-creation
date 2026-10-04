@@ -26,3 +26,6 @@ Database item created. Dossier still to write: wiki/papers/2609.37725.md
 ## [2026-10-04] publish | 2609.37725
 - youtube
 - instagram
+
+## [2026-10-04] correction | 2609.37725 first upload was corrupt
+The published YouTube and Instagram videos had a truncated video stream (about 20 s of frames under 85 s of audio) because two renders wrote the same file at once. The owner deleted both posts; they are marked DELETED in the database. Re-rendered and validated with the new `paper-reels/bin/validate.mjs`; `reels publish` now refuses unvalidated files. Not reposted yet.
