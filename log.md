@@ -66,3 +66,6 @@ Rebuilt in the v2 engine (bespoke scenes, transitions, sound design; 48 s) and r
 
 ## [2026-10-05] ingest | Claude Code mods: Blast Radius
 Topic item `claude-code-mods` (kind topic, no arXiv). Source records for the Blast Radius README, the mods docs and the announcement; dossier on the new topic page `wiki/topics/claude-code.md`. Video made, validated by script, not for posting.
+
+## [2026-10-05] render | claude-code-mods 9x16
+63.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/claudeCodeMods/out/paper/final.mp4
