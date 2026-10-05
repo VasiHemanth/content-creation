@@ -57,3 +57,12 @@ Unattended mode (PIPELINE.md, scheduler/README.md). autopublish defaults to off.
 
 ## [2026-10-04] publish | 2609.37725 reposted after rebuild
 Rebuilt in the v2 engine (bespoke scenes, transitions, sound design; 48 s) and re-validated by script (22/22 including the new engagement gate) plus my own frame and post-text check. The independent critic and validator reviews were not completed on this final cut (earlier cuts: critic 6.0 and 6.8, validator PASS). Posted to YouTube and Instagram at the owner's request.
+
+## [2026-10-05] render | claude-code-mods 9x16
+63.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/claudeCodeMods/out/paper/final.mp4
+
+## [2026-10-05] render | claude-code-mods 9x16
+63.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/claudeCodeMods/out/paper/final.mp4
+
+## [2026-10-05] ingest | Claude Code mods: Blast Radius
+Topic item `claude-code-mods` (kind topic, no arXiv). Source records for the Blast Radius README, the mods docs and the announcement; dossier on the new topic page `wiki/topics/claude-code.md`. Video made, validated by script, not for posting.

@@ -14,4 +14,4 @@ Knowledge behind the @hemanth_with_ai short-form videos. Rules are in [AGENTS.md
 - [Log](log.md)
 
 ## Current focus
-Research-paper explainers (see `../paper-reels`). Other topic series will get their own topic pages and sources here.
+Research-paper explainers (see `../paper-reels`). Topic series get their own topic pages and sources here, starting with [Claude Code](wiki/topics/claude-code.md).

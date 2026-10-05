@@ -7,3 +7,6 @@ Immutable source records. Add new ones, never rewrite claims.
 - [DeepSWE leaderboard v1.1 snapshot](sources/deepswe-leaderboard-v1-1.md)
 - [DeepSWE GitHub README](sources/deepswe-github-readme.md)
 - [arXiv 2609.37725 Context Language Models](sources/arxiv-2609-37725.md)
+- [Blast Radius README](sources/blast-radius-readme.md)
+- [Claude Code mods docs](sources/claude-code-mods-docs.md)
+- [Claude Code mods announcement](sources/claude-code-mods-blog.md)
