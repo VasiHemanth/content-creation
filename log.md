@@ -72,3 +72,12 @@ Topic item `claude-code-mods` (kind topic, no arXiv). Source records for the Bla
 
 ## [2026-10-05] render | claude-code-mods 9x16
 65.9s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/claudeCodeMods/out/paper/final.mp4
+
+## [2026-10-06] render | 2607.07946 9x16
+83.4s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/2607.07946/out/blueprint/final.mp4
+
+## [2026-10-06] render | 2607.07946 9x16
+63.4s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/2607.07946/out/blueprint/final.mp4
+
+## [2026-10-06] rebuild | 2607.07946 DeepSWE v2 (blueprint)
+The old blueprint cut failed validation (engagement gap 12.5 s, 19 events/min); it is kept in `out/blueprint-v1/` and was not posted. Rebuilt with nine bespoke blueprint scenes, 63.4 s; validate.mjs 22/22. Live board re-checked: unchanged since 2026-10-03. Not posted; awaiting the owner's go-ahead.
