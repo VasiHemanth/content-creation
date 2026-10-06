@@ -91,3 +91,6 @@ Database item created. Dossier still to write: wiki/papers/2609.14858.md
 
 ## [2026-10-07] ingest | 2609.14858 Dream-RSI
 Full text read from the v1 PDF (36 pages). Source record, dossier and new topic page `agent-self-improvement`. Video built with the HyperFrames renderer and the STE narration profile (`paper-reels/episodes/dreamRSI/`), voice Qwen3-TTS Aiden. Not posted.
+
+## [2026-10-06] render | 2609.14858 9x16
+79.7s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/dreamRSI/out/hf/final.mp4
