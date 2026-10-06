@@ -10,3 +10,4 @@ Immutable source records. Add new ones, never rewrite claims.
 - [Blast Radius README](sources/blast-radius-readme.md)
 - [Claude Code mods docs](sources/claude-code-mods-docs.md)
 - [Claude Code mods announcement](sources/claude-code-mods-blog.md)
+- [arXiv 2609.14858 Dream-RSI](sources/arxiv-2609-14858.md)

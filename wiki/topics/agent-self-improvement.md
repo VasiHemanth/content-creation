@@ -1,0 +1,20 @@
+---
+type: Topic
+title: Agent self-improvement
+description: Agents that improve their own search policies, harnesses or skills between runs, and how that improvement is measured.
+tags: [agents, self-improvement, exploration]
+generated: { by: claude/opus-5.5, at: 2026-10-07T01:05:00+05:30 }
+status: draft
+stale_after: 2027-10-07T00:00:00+05:30
+---
+
+# Agent self-improvement
+
+Papers on agents that change their own exploration policies, code or skills from one run to the next.
+
+## Papers
+- [Dream-RSI](/wiki/papers/2609.14858.md): replays past discovery trees to test new exploration policies without new runs, and reports fewer agent calls for similar or better results in several tasks.
+
+## Open questions
+- How much compute does the self-improvement step use, compared with the compute it saves?
+- Does a policy learned from one model's history work with a different model?
