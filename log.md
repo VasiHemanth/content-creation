@@ -110,3 +110,6 @@ Database item created. Dossier still to write: wiki/papers/2609.34649.md
 
 ## [2026-10-08] ingest | 2609.34649 ContextEvo
 Full text read from the v1 PDF (27 pages). Source record, dossier, link from both the agent context management and agent self-improvement topic pages. Video in production with the HyperFrames renderer and the STE narration profile (`paper-reels/episodes/contextEvo/`), voice Qwen3-TTS Aiden. Not posted.
+
+## [2026-10-08] render | 2609.34649 9x16
+74.3s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/contextEvo/out/hf/final.mp4
