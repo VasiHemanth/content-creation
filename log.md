@@ -104,3 +104,9 @@ Full text read from the v1 PDF (36 pages). Source record, dossier and new topic 
 ## [2026-10-07] publish | 2609.14858
 - youtube
 - instagram
+
+## [2026-10-08] add | 2609.34649 Beyond Skill Evolution: Self-Evolving Context Management Policies for Long-Horizon Agent Harnesses
+Database item created. Dossier still to write: wiki/papers/2609.34649.md
+
+## [2026-10-08] ingest | 2609.34649 ContextEvo
+Full text read from the v1 PDF (27 pages). Source record, dossier, link from both the agent context management and agent self-improvement topic pages. Video in production with the HyperFrames renderer and the STE narration profile (`paper-reels/episodes/contextEvo/`), voice Qwen3-TTS Aiden. Not posted.

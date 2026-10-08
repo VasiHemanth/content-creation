@@ -14,6 +14,7 @@ Papers on agents that change their own exploration policies, code or skills from
 
 ## Papers
 - [Dream-RSI](/wiki/papers/2609.14858.md): replays past discovery trees to test new exploration policies without new runs, and reports fewer agent calls for similar or better results in several tasks.
+- [ContextEvo](/wiki/papers/2609.34649.md): harness evolution aimed at the context policy rather than skills; filed under [agent context management](/wiki/topics/agent-context-management.md).
 
 ## Open questions
 - How much compute does the self-improvement step use, compared with the compute it saves?

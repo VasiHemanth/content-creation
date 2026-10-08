@@ -6,3 +6,4 @@ One dossier per paper that has a video. Each page id matches an `items` row in t
 - [2607.07946 DeepSWE](2607.07946.md)
 - [2609.37725 Context Language Models](2609.37725.md)
 - [2609.14858 Dream-RSI](2609.14858.md)
+- [2609.34649 ContextEvo](2609.34649.md)
