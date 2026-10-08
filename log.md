@@ -113,3 +113,7 @@ Full text read from the v1 PDF (27 pages). Source record, dossier, link from bot
 
 ## [2026-10-08] render | 2609.34649 9x16
 74.3s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/contextEvo/out/hf/final.mp4
+
+## [2026-10-08] publish | 2609.34649
+- youtube
+- instagram
