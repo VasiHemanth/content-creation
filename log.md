@@ -117,3 +117,9 @@ Full text read from the v1 PDF (27 pages). Source record, dossier, link from bot
 ## [2026-10-08] publish | 2609.34649
 - youtube
 - instagram
+
+## [2026-10-09] add | 2610.02163 AutoCompact: Learning When to Compact Context in Long-Horizon Coding Agents
+Database item created. Dossier still to write: wiki/papers/2610.02163.md
+
+## [2026-10-09] ingest | 2610.02163 AutoCompact
+Full text read from the v1 PDF (11 pages). Source record, dossier, link from the agent context management topic page. Video in production with the HyperFrames renderer and the STE narration profile (`paper-reels/episodes/autoCompact/`), voice Qwen3-TTS Aiden, from the director's treatment. Not posted.
