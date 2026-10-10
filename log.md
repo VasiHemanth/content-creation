@@ -154,3 +154,6 @@ Full text read from the v1 PDF (43 pages). Source record, dossier, link from the
 
 ## [2026-10-11] ingest | 2610.08902 Agent Plasticity (regenerated with Claude)
 Full main text re-read from the v1 PDF, appendix B and G read. Source record, dossier and topic link rewritten by Claude Sonnet 5.5 after the earlier open-model records were archived outside the wiki (the earlier version stays in git history at 02b4c92). Video in production with the HyperFrames renderer and the STE narration profile (`paper-reels/episodes/agentPlasticity/`). Not posted.
+
+## [2026-10-11] render | 2610.08902 9x16
+70.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/agentPlasticity/out/hf/final.mp4. Claude regeneration. Deterministic validator 22/22; no independent claim or critic review yet. Not posted.
