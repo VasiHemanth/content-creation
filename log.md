@@ -138,3 +138,13 @@ Full text read from the v1 PDF (11 pages). Source record, dossier, link from the
 
 ## [2026-10-09] render | 2610.02163 9x16
 77.3s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/autoCompact/out/hf/final.mp4
+
+## [2026-10-09] publish | 2610.02163
+- youtube
+- instagram
+
+## [2026-10-10] add | 2610.08902 Agent Plasticity: Measuring Self-Improvement Through Experience
+Database item created. Dossier still to write: wiki/papers/2610.08902.md
+
+## [2026-10-10] ingest | 2610.08902 Agent Plasticity
+Full text read from the v1 PDF (43 pages). Source record, dossier, link from the agent self-improvement topic page. Video in production with the HyperFrames renderer and the STE narration profile (`paper-reels/episodes/agentPlasticity/`), voice Qwen3-TTS Aiden, from the director's treatment. Not posted.

@@ -13,3 +13,4 @@ Immutable source records. Add new ones, never rewrite claims.
 - [arXiv 2609.14858 Dream-RSI](sources/arxiv-2609-14858.md)
 - [arXiv 2609.34649 ContextEvo](sources/arxiv-2609-34649.md)
 - [arXiv 2610.02163 AutoCompact](sources/arxiv-2610-02163.md)
+- [arXiv 2610.08902 Agent Plasticity](sources/arxiv-2610-08902.md)
