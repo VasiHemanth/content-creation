@@ -148,3 +148,9 @@ Database item created. Dossier still to write: wiki/papers/2610.08902.md
 
 ## [2026-10-10] ingest | 2610.08902 Agent Plasticity
 Full text read from the v1 PDF (43 pages). Source record, dossier, link from the agent self-improvement topic page. Video in production with the HyperFrames renderer and the STE narration profile (`paper-reels/episodes/agentPlasticity/`), voice Qwen3-TTS Aiden, from the director's treatment. Not posted.
+
+## [2026-10-10] render | 2610.08902 9x16
+77.6s, /Users/hemanthvasi/Documents/Developer/content-creation/_study/agentPlasticity-opensource-haiku/out/hf/final.mp4 (open-model run finished by Haiku 5.5, archived for study, replaced by the Claude regeneration). Not posted. Validator 22/22.
+
+## [2026-10-11] ingest | 2610.08902 Agent Plasticity (regenerated with Claude)
+Full main text re-read from the v1 PDF, appendix B and G read. Source record, dossier and topic link rewritten by Claude Sonnet 5.5 after the earlier open-model records were archived outside the wiki (the earlier version stays in git history at 02b4c92). Video in production with the HyperFrames renderer and the STE narration profile (`paper-reels/episodes/agentPlasticity/`). Not posted.
