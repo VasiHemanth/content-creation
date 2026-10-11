@@ -157,3 +157,10 @@ Full main text re-read from the v1 PDF, appendix B and G read. Source record, do
 
 ## [2026-10-11] render | 2610.08902 9x16
 70.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/agentPlasticity/out/hf/final.mp4. Claude regeneration. Deterministic validator 22/22; no independent claim or critic review yet. Not posted.
+
+## [2026-10-11] render | 2610.08902 9x16
+72.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/agentPlasticity/out/hf/final.mp4. Version 3, rebuilt after a producer and critic loop (`_critique/agentPlasticity/`) because the first Claude cut did not explain the paper to cold viewers. Deterministic validator 22/22; both cold viewers 18 of 18 on the comprehension quiz; paper-faithful critic found no factual error. The project's claim review and retention review have not run on it.
+
+## [2026-10-11] publish | 2610.08902
+- instagram
+Run outside the regeneration session, which had been told not to publish; who ran it is not confirmed. The Instagram reel is live and the content database has the URL. The YouTube upload in the same run failed on an expired OAuth token, so the reel is not on YouTube.
