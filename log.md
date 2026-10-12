@@ -152,6 +152,21 @@ Full text read from the v1 PDF (43 pages). Source record, dossier, link from the
 ## [2026-10-10] render | 2610.08902 9x16
 77.6s, /Users/hemanthvasi/Documents/Developer/content-creation/_study/agentPlasticity-opensource-haiku/out/hf/final.mp4 (open-model run finished by Haiku 5.5, archived for study, replaced by the Claude regeneration). Not posted. Validator 22/22.
 
+## [2026-10-10] add | 2609.33987 Opera: A Verbal Critic Framework for Long-horizon Coding Agents
+Database item created. Dossier still to write: wiki/papers/2609.33987.md
+
+## [2026-10-10] render | 2609.33987 9x16
+60.3s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/opera/out/hf/final.mp4
+
+## [2026-10-10] render | 2609.33987 9x16
+60.3s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/opera/out/hf/final.mp4
+
+## [2026-10-10] render | 2609.33987 9x16
+60.3s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/opera/out/hf/final.mp4
+
+## [2026-10-10] render | 2609.33987 9x16
+61.2s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/opera/out/hf/final.mp4
+
 ## [2026-10-11] ingest | 2610.08902 Agent Plasticity (regenerated with Claude)
 Full main text re-read from the v1 PDF, appendix B and G read. Source record, dossier and topic link rewritten by Claude Sonnet 5.5 after the earlier open-model records were archived outside the wiki (the earlier version stays in git history at 02b4c92). Video in production with the HyperFrames renderer and the STE narration profile (`paper-reels/episodes/agentPlasticity/`). Not posted.
 
@@ -164,3 +179,12 @@ Full main text re-read from the v1 PDF, appendix B and G read. Source record, do
 ## [2026-10-11] publish | 2610.08902
 - instagram
 Run outside the regeneration session, which had been told not to publish; who ran it is not confirmed. The Instagram reel is live and the content database has the URL. The YouTube upload in the same run failed on an expired OAuth token, so the reel is not on YouTube.
+
+## [2026-10-11] publish | 2610.08902
+- youtube
+
+## [2026-10-12] add | 2609.33401 Evaluating System One Models for Agent Security Decisions: Reliability, Calibration, and Selective Automation
+Database item created. Dossier still to write: wiki/papers/2609.33401.md
+
+## [2026-10-12] ingest | 2609.33401 System One models for agent security decisions
+Full text read from the v1 and v3 PDFs (27 and 26 pages; both under `raw/assets/2609.33401/`). The director's treatment was written from v1; arXiv lists v3 (3 Oct 2026) as current, and v3 rewords the abstract finding and drops the v1 sentence "Confidently allowed attacks never reach the second judge", so the source record and dossier describe v3 with a list of changes from v1, and the video uses v3 receipts. New topic page: agent security. Video in production with the HyperFrames renderer (`paper-reels/episodes/systemOneSecurity/`). Not posted.
