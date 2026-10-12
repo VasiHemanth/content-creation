@@ -188,3 +188,9 @@ Database item created. Dossier still to write: wiki/papers/2609.33401.md
 
 ## [2026-10-12] ingest | 2609.33401 System One models for agent security decisions
 Full text read from the v1 and v3 PDFs (27 and 26 pages; both under `raw/assets/2609.33401/`). The director's treatment was written from v1; arXiv lists v3 (3 Oct 2026) as current, and v3 rewords the abstract finding and drops the v1 sentence "Confidently allowed attacks never reach the second judge", so the source record and dossier describe v3 with a list of changes from v1, and the video uses v3 receipts. New topic page: agent security. Video in production with the HyperFrames renderer (`paper-reels/episodes/systemOneSecurity/`). Not posted.
+
+## [2026-10-12] render | 2609.33401 9x16
+80.4s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/systemOneSecurity/out/hf/final.mp4
+
+## [2026-10-12] render | 2609.33401 9x16
+80.4s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/systemOneSecurity/out/hf/final.mp4
