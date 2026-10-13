@@ -18,7 +18,9 @@ Papers on compaction, offloading, retrieval and model-controlled editing of an a
 
 - [AutoCompact](/wiki/papers/2610.02163.md): a coding agent is trained (judge-corrected SFT, then one pass-or-fail RL reward) to choose when to compact, what to keep and how to continue; 30.4% to 39.6% on SWE-bench Verified with the same base model. Skipping its compact calls costs 19.9 points on a tight budget but only 1.9 at the largest.
 
-Answers to "who decides what the model sees": the model itself (Context Language Models, and AutoCompact for the timing of compaction) or a harness policy learned between runs (ContextEvo).
+- [Meta-Reasoning (Thinking Before Thinking)](/wiki/papers/2609.38147.md): a controller that only decides the next work keeps a compact state, leaves every output in persistent memory and picks which outputs each worker sees; it beat a matched direct-control agent (same workers, full history in one call) in all 12 main-budget comparisons, some by small margins. It changes who directs the run more than what the context holds.
+
+Answers to "who decides what the model sees": the model itself (Context Language Models, and AutoCompact for the timing of compaction), a harness policy learned between runs (ContextEvo), or a separate controller inside the run (Meta-Reasoning).
 
 ## Open questions
 - Does the FLOPs advantage hold up in measured latency and cost?
@@ -26,3 +28,4 @@ Answers to "who decides what the model sees": the model itself (Context Language
 - How much does it cost to learn a context policy, against the tokens it saves per run?
 - When a trained agent compacts, how much of its gain comes from the compaction itself and how much from the training? AutoCompact has no matched RL control without `compact()`.
 - A policy learned on one benchmark lowered scores on another (ContextEvo, Table 13). Can one policy serve many environments?
+- Meta-Reasoning changes the compact state, the control stages and memory access together. Which of them carries the gain, and does it hold at equal tokens rather than equal calls?
