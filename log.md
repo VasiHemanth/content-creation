@@ -210,3 +210,6 @@ Full main text (pp. 1 to 16) and Appendix A read from the v1 PDF (38 pages, `raw
 
 ## [2026-10-13] render | 2609.38147 9x16
 82.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/thinkingBeforeThinking/out/hf/final.mp4
+
+## [2026-10-13] render | 2609.38147 9x16
+81.7s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/thinkingBeforeThinking/out/hf/final.mp4
