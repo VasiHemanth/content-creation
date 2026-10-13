@@ -204,3 +204,6 @@ Database item created. Dossier still to write: wiki/papers/2609.38147.md
 
 ## [2026-10-13] ingest | 2609.38147 Thinking Before Thinking (agentic meta-reasoning)
 Full main text (pp. 1 to 16) and Appendix A read from the v1 PDF (38 pages, `raw/assets/2609.38147/`); appendices G.2, H and I read, the rest searched. Source record, dossier, and a link from the agent context management topic. The video uses the matched direct-control comparison (63.7% against 71.5%), not the Codex number, and makes no cost or efficiency claim (Appendix A). Video in production with the HyperFrames renderer (`paper-reels/episodes/thinkingBeforeThinking/`). Not posted.
+
+## [2026-10-13] render | 2609.38147 9x16
+82.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/thinkingBeforeThinking/out/hf/final.mp4
