@@ -15,3 +15,5 @@ Knowledge behind the @hemanth_with_ai short-form videos. Rules are in [AGENTS.md
 
 ## Current focus
 Research-paper explainers (see `../paper-reels`). Topic series get their own topic pages and sources here, starting with [Claude Code](wiki/topics/claude-code.md).
+
+Engineering case studies: [Agent infrastructure](wiki/topics/agent-infrastructure.md), starting with [Scion](wiki/topics/scion-source-control.md).

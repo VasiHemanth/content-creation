@@ -6,3 +6,6 @@
 - [Claude Code](claude-code.md)
 - [Agent self-improvement](agent-self-improvement.md)
 - [Agent security](agent-security.md)
+
+- [Agent infrastructure](agent-infrastructure.md)
+- [Scion source control](scion-source-control.md)

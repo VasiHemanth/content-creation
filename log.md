@@ -213,3 +213,6 @@ Full main text (pp. 1 to 16) and Appendix A read from the v1 PDF (38 pages, `raw
 
 ## [2026-10-13] render | 2609.38147 9x16
 81.7s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/thinkingBeforeThinking/out/hf/final.mp4
+
+## [2026-10-14] ingest | Scion source control
+Full Anthropic engineering article read. Saved original HTML, extracted text, original browser print and page-marked print text. Source record and two topic pages describe the cache route, online-client assumptions, and company-reported CPU/memory footprint comparison. No publication.
