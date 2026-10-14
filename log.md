@@ -277,3 +277,6 @@ Full main text (pp. 1 to 11) and Appendices B to D read from the v1 PDF (32 page
 
 ## [2026-10-14] build | Stateless Language Agents (2610.07625) video
 Scenes office, assign, cost, result, twist, caveat, close and a thumbnail drawing added to the episode the earlier producer run started; the 14 voiced lines were kept as they were (79.5 s, voice `aiden`). Scope chips stay on screen in each scene they apply to: one baseline run (98%), lower of two setups and Claude Code one run (84%), two analyzed runs and share of tokens, not cost (<0.6%), Codex one run each (FrontierSWE), a trace example, not a rate (duplicate feature), most setups one run (caveat). Post text for YouTube and Instagram is in the database. Validator: 22/22. Not posted.
+
+## [2026-10-14] render | 2610.07625 9x16
+79.5s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/statelessLanguageAgents/out/hf/final.mp4
