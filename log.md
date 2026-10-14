@@ -289,3 +289,9 @@ Scenes office, assign, cost, result, twist, caveat, close and a thumbnail drawin
 
 ## [2026-10-14] revise | Stateless Language Agents (2610.07625) video, critic round 1
 Lines l06, l07, l11, l12, l13 and l14 rewritten and re-voiced (no spoken "S L A", "harness" or "invocations"; caveat cut to two sentences from sec 5). The close now answers the hook only with what Tables 1 and 2 report: on the kernel task and the four FrontierSWE tasks, SLA's final results beat its quarter-budget results; a chip notes the task where no method moved much (SOL-ExecBench #210). Receipts are now strips cropped to the quoted words; the "short horizons" receipt was dropped. 77.7 s. Post text revised with the same scope. Not posted.
+
+## [2026-10-14] render | 2610.07625 9x16
+77.7s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/statelessLanguageAgents/out/hf/final.mp4
+
+## [2026-10-14] revise | Stateless Language Agents (2610.07625) caption and post text fix
+The close caption no longer draws "So," over the next chunk (caption text only, same voice). The close chip and the post text now say only what Table 3 and sec 4.2 support: on one SOL-ExecBench task every method, SLA included, gained less than 0.02 after the first quarter of the budget (SLA's own final result still beat its quarter-budget result on every task). Not posted.
