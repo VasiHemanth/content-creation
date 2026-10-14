@@ -265,3 +265,15 @@ Database item created. Dossier still to write: wiki/papers/2610.07625.md
 
 ## [2026-10-14] ingest | Stateless Language Agents (2610.07625)
 Full main text (pp. 1 to 11) and Appendices B to D read from the v1 PDF (32 pages, `raw/assets/2610.07625/`); Appendices A and E read less closely. Source record, dossier, and a link on the agent context management topic page. Scope notes kept for the video: the 84% is the lower of two setups on one kernel task (Claude Code, one run), the Advisor's 0.24% to 0.51% is a token share (cost share 1.20% to 2.29%), the FrontierSWE reversal is single Codex runs, and statelessness itself is not ablated. No publication.
+
+## [2026-10-14] render | 2610.07625 9x16
+79.5s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/statelessLanguageAgents/out/hf/final.mp4
+
+## [2026-10-14] render | 2610.07625 9x16
+79.5s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/statelessLanguageAgents/out/hf/final.mp4
+
+## [2026-10-14] render | 2610.07625 9x16
+79.5s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/statelessLanguageAgents/out/hf/final.mp4
+
+## [2026-10-14] build | Stateless Language Agents (2610.07625) video
+Scenes office, assign, cost, result, twist, caveat, close and a thumbnail drawing added to the episode the earlier producer run started; the 14 voiced lines were kept as they were (79.5 s, voice `aiden`). Scope chips stay on screen in each scene they apply to: one baseline run (98%), lower of two setups and Claude Code one run (84%), two analyzed runs and share of tokens, not cost (<0.6%), Codex one run each (FrontierSWE), a trace example, not a rate (duplicate feature), most setups one run (caveat). Post text for YouTube and Instagram is in the database. Validator: 22/22. Not posted.
