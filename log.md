@@ -216,3 +216,13 @@ Full main text (pp. 1 to 16) and Appendix A read from the v1 PDF (38 pages, `raw
 
 ## [2026-10-14] ingest | Scion source control
 Full Anthropic engineering article read. Saved original HTML, extracted text, original browser print and page-marked print text. Source record and two topic pages describe the cache route, online-client assumptions, and company-reported CPU/memory footprint comparison. No publication.
+
+## [2026-10-14] add | anthropic-scion-v2 Redesigning source control at Anthropic
+Database item created (kind topic). Source records and the wiki page are still to write.
+
+## [2026-10-14] render | anthropic-scion-v2 9x16
+70.7s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV2/out/hf/final.mp4
+70.7s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV2/out/hf/final.mp4
+
+## [2026-10-14] ingest | Scion v2 rebuild
+Reused the saved article and source record. Topic page now lists item anthropic-scion-v2 and the extra Anthropic-reported figures used by the rebuilt video (25 million CI checkouts a day, 30,401 peak, over 99% hits per tier, worktree 7.1 min to 5.1 s median, 20x less memory for the Claude rewrite of the ingestion prototype), with the per-row note against "two orders of magnitude". No publication.
