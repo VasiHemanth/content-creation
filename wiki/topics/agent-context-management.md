@@ -20,7 +20,9 @@ Papers on compaction, offloading, retrieval and model-controlled editing of an a
 
 - [Meta-Reasoning (Thinking Before Thinking)](/wiki/papers/2609.38147.md): a controller that only decides the next work keeps a compact state, leaves every output in persistent memory and picks which outputs each worker sees; it beat a matched direct-control agent (same workers, full history in one call) in all 12 main-budget comparisons, some by small margins. It changes who directs the run more than what the context holds.
 
-Answers to "who decides what the model sees": the model itself (Context Language Models, and AutoCompact for the timing of compaction), a harness policy learned between runs (ContextEvo), or a separate controller inside the run (Meta-Reasoning).
+- [Stateless Language Agents (SLA)](/wiki/papers/2610.07625.md): for research runs of up to a billion tokens, no agent keeps its conversation across invocations; the harness keeps candidates and scores and builds a fresh context per role, and a stateless Advisor assigns experiments to parallel Workers. Best final result on every task in the authors' runs; over 84% fewer tokens to match the strongest baseline on one kernel task (lower of two setups). Statelessness itself is not ablated.
+
+Answers to "who decides what the model sees": the model itself (Context Language Models, and AutoCompact for the timing of compaction), a harness policy learned between runs (ContextEvo), or a separate controller inside the run (Meta-Reasoning), or the harness itself, with no agent keeping state (SLA).
 
 ## Open questions
 - Does the FLOPs advantage hold up in measured latency and cost?
@@ -29,3 +31,4 @@ Answers to "who decides what the model sees": the model itself (Context Language
 - When a trained agent compacts, how much of its gain comes from the compaction itself and how much from the training? AutoCompact has no matched RL control without `compact()`.
 - A policy learned on one benchmark lowered scores on another (ContextEvo, Table 13). Can one policy serve many environments?
 - Meta-Reasoning changes the compact state, the control stages and memory access together. Which of them carries the gain, and does it hold at equal tokens rather than equal calls?
+- SLA's ablations keep every agent stateless. Does a Worker that keeps its conversation, with the same harness-built context on top, do worse over a full run?

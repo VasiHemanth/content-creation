@@ -214,15 +214,54 @@ Full main text (pp. 1 to 16) and Appendix A read from the v1 PDF (38 pages, `raw
 ## [2026-10-13] render | 2609.38147 9x16
 81.7s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/thinkingBeforeThinking/out/hf/final.mp4
 
+## [2026-10-13] publish | 2609.38147
+- youtube
+- instagram
+
+## [2026-10-13] add | anthropic-scion Redesigning source control at Anthropic
+Database item created (kind topic). Source records and the wiki page are still to write.
+
 ## [2026-10-14] ingest | Scion source control
 Full Anthropic engineering article read. Saved original HTML, extracted text, original browser print and page-marked print text. Source record and two topic pages describe the cache route, online-client assumptions, and company-reported CPU/memory footprint comparison. No publication.
+
+## [2026-10-13] render | anthropic-scion 9x16
+81.5s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionSourceControl/out/hf/final.mp4
 
 ## [2026-10-14] add | anthropic-scion-v2 Redesigning source control at Anthropic
 Database item created (kind topic). Source records and the wiki page are still to write.
 
 ## [2026-10-14] render | anthropic-scion-v2 9x16
 70.7s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV2/out/hf/final.mp4
+
+## [2026-10-14] render | anthropic-scion-v2 9x16
 70.7s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV2/out/hf/final.mp4
 
 ## [2026-10-14] ingest | Scion v2 rebuild
 Reused the saved article and source record. Topic page now lists item anthropic-scion-v2 and the extra Anthropic-reported figures used by the rebuilt video (25 million CI checkouts a day, 30,401 peak, over 99% hits per tier, worktree 7.1 min to 5.1 s median, 20x less memory for the Claude rewrite of the ingestion prototype), with the per-row note against "two orders of magnitude". No publication.
+
+## [2026-10-14] render | anthropic-scion-v2 9x16
+70.7s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV2/out/hf/final.mp4
+
+## [2026-10-14] render | anthropic-scion-v2 9x16
+70.6s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV2/out/hf/final.mp4
+
+## [2026-10-14] render | anthropic-scion-v2 9x16
+72.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV2/out/hf/final.mp4
+
+## [2026-10-14] render | anthropic-scion-v2 9x16
+72.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV2/out/hf/final.mp4
+
+## [2026-10-14] render | anthropic-scion-v2 9x16
+69.2s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV2/out/hf/final.mp4
+
+## [2026-10-14] render | anthropic-scion-v2 9x16
+69.2s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV2/out/hf/final.mp4
+
+## [2026-10-14] render | anthropic-scion-v2 9x16
+73.5s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV2/out/hf/final.mp4
+
+## [2026-10-14] add | 2610.07625 Stateless Language Agents: Scaling Long-Horizon Automated Research
+Database item created. Dossier still to write: wiki/papers/2610.07625.md
+
+## [2026-10-14] ingest | Stateless Language Agents (2610.07625)
+Full main text (pp. 1 to 11) and Appendices B to D read from the v1 PDF (32 pages, `raw/assets/2610.07625/`); Appendices A and E read less closely. Source record, dossier, and a link on the agent context management topic page. Scope notes kept for the video: the 84% is the lower of two setups on one kernel task (Claude Code, one run), the Advisor's 0.24% to 0.51% is a token share (cost share 1.20% to 2.29%), the FrontierSWE reversal is single Codex runs, and statelessness itself is not ablated. No publication.
