@@ -313,3 +313,9 @@ HyperFrames, 15 lines, 7 scenes (hook, setup, inertia, strict, forms, limit, clo
 
 ## [2026-10-15] revise | Thinking Inertia (2610.11765) re-render
 The forms scene now hides the yes-or-no and multiple-choice cards during the push to the open-ended page (they were cut at the left edge). Re-rendered and re-registered, 77.9 s, validator 22/22. Post text revised: the first line scopes the accuracy drop to the open-ended math tasks and five models; the YouTube limits line no longer mentions compute. Not posted.
+
+## [2026-10-15] add | anthropic-scion-v3 Redesigning source control at Anthropic
+Database item created (kind topic). Source records and the wiki page are still to write.
+
+## [2026-10-15] ingest | anthropic-scion-v3 Redesigning source control at Anthropic
+Source record `raw/sources/anthropic-scion-blog-v3.md` (second full read of the saved article, exact sentences with print pages), v3 section appended to `wiki/topics/scion-source-control.md`. Episode `paper-reels/episodes/scionV3/` (format system-design): storyboard, facts and evidence written to the script checkpoint, STE 0 hard findings. No voice yet.

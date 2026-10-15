@@ -20,3 +20,4 @@ Immutable source records. Add new ones, never rewrite claims.
 - [arXiv 2610.11765 Thinking Inertia](sources/arxiv-2610-11765.md)
 
 - [Anthropic Scion engineering article](sources/anthropic-scion-blog.md)
+- [Anthropic Scion article, v3 read](sources/anthropic-scion-blog-v3.md)
