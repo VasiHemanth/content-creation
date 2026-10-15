@@ -301,3 +301,9 @@ Database item created. Dossier still to write: wiki/papers/2610.11765.md
 
 ## [2026-10-15] ingest | Thinking Inertia (2610.11765)
 Source record `raw/sources/arxiv-2610-11765.md` (v1, main text and Appendices B to I read in full), dossier `wiki/papers/2610.11765.md`, new topic page `wiki/topics/llm-reasoning-control.md`. The dossier keeps the two conditions apart: thinking mode off with no extra prompt (99.69% explicit inference on open-ended math, pooled, 99.5 to 99.9% per model, Gemini-3-Flash at minimal) and the strict prompt (62.00% pooled, 56.73 to 98.90% for the Qwen models, GPT-5.4 almost fully answer-only); the 15-point accuracy drop is a mean over the five fully-off models. Visible output only (sec 5.1).
+
+## [2026-10-15] render | 2610.11765 9x16
+77.9s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/thinkingInertia/out/hf/final.mp4
+
+## [2026-10-15] build | Thinking Inertia (2610.11765) video
+HyperFrames, 15 lines, 7 scenes (hook, setup, inertia, strict, forms, limit, close), 77.9 s, voice `aiden` at 1.25. Built from the director's treatment with three script changes: l02 says five models disabled and one set to minimal; l04 says "Across all replies" (the pooled rates, not six-model means); the close is conditional ("If you ask for the answer only, read what comes before it."). The two conditions stay apart on screen (99.7% tagged "thinking mode off, no extra prompt"; 62% tagged "thinking mode off + strict prompt", pooled, varies by model, Gemini at minimal); the 15 points is tagged as a mean of five models. Four one-line receipts (sec 3.2, 3.3, 3.5, 5.1), no digits in any crop. Post text for YouTube and Instagram is in the database. Validator: 22/22. Not posted.
