@@ -331,3 +331,9 @@ The v3 note now sits in `wiki/topics/agent-infrastructure.md` (the item's databa
 
 ## [2026-10-15] build | anthropic-scion-v3 Scion video (system-design)
 HyperFrames, 26 lines, 3 scenes (hook, board, close), 162.8 s, voice `aiden` at 1.12 (l10 seed 5, l16 seed 11 after whisper heard "roughund"). The board is one 143.6 s scene with persistent actors: the Git server recolours to the Scion server where it stands, the payments/refund.py file is the pink hero from l05 to the end, one test machine multiplies to a grid and back. Four one-line receipts from the article print (p3, p3, p8, p12). Post text for YouTube and Instagram in the database (revision 2). Validator: 23/23. Not posted.
+
+## [2026-10-15] render | anthropic-scion-v3 9x16
+162.3s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV3/out/hf/final.mp4
+
+## [2026-10-15] revise | anthropic-scion-v3 validator round 1
+l10 now says "about twenty five million" (the article: "on the order of"); l11 says "If each took those twenty five gigabytes" so the multiplied size matches the 25 GB of files (on-screen tag to match). Both lines re-voiced (l10 seed 7). The board camera now has a floor: every focus keeps the lowest actor above the caption band, zooming out when needed. 162.3 s. Not posted.
