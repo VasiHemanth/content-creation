@@ -307,3 +307,9 @@ Source record `raw/sources/arxiv-2610-11765.md` (v1, main text and Appendices B 
 
 ## [2026-10-15] build | Thinking Inertia (2610.11765) video
 HyperFrames, 15 lines, 7 scenes (hook, setup, inertia, strict, forms, limit, close), 77.9 s, voice `aiden` at 1.25. Built from the director's treatment with three script changes: l02 says five models disabled and one set to minimal; l04 says "Across all replies" (the pooled rates, not six-model means); the close is conditional ("If you ask for the answer only, read what comes before it."). The two conditions stay apart on screen (99.7% tagged "thinking mode off, no extra prompt"; 62% tagged "thinking mode off + strict prompt", pooled, varies by model, Gemini at minimal); the 15 points is tagged as a mean of five models. Four one-line receipts (sec 3.2, 3.3, 3.5, 5.1), no digits in any crop. Post text for YouTube and Instagram is in the database. Validator: 22/22. Not posted.
+
+## [2026-10-15] render | 2610.11765 9x16
+77.9s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/thinkingInertia/out/hf/final.mp4
+
+## [2026-10-15] revise | Thinking Inertia (2610.11765) re-render
+The forms scene now hides the yes-or-no and multiple-choice cards during the push to the open-ended page (they were cut at the left edge). Re-rendered and re-registered, 77.9 s, validator 22/22. Post text revised: the first line scopes the accuracy drop to the open-ended math tasks and five models; the YouTube limits line no longer mentions compute. Not posted.
