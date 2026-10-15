@@ -337,3 +337,9 @@ HyperFrames, 26 lines, 3 scenes (hook, board, close), 162.8 s, voice `aiden` at 
 
 ## [2026-10-15] revise | anthropic-scion-v3 validator round 1
 l10 now says "about twenty five million" (the article: "on the order of"); l11 says "If each took those twenty five gigabytes" so the multiplied size matches the 25 GB of files (on-screen tag to match). Both lines re-voiced (l10 seed 7). The board camera now has a floor: every focus keeps the lowest actor above the caption band, zooming out when needed. 162.3 s. Not posted.
+
+## [2026-10-15] render | anthropic-scion-v3 9x16
+162.3s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV3/out/hf/final.mp4
+
+## [2026-10-15] revise | anthropic-scion-v3 validator round 2
+Camera pushes added in fourteen quiet stretches of the board and one in the close, so no stretch without a visual event is longer than 2.5 s (gate 3.5 s). No word or voice change. 162.3 s, 54.8 MB, validator 23/23. Not posted.
