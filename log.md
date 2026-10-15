@@ -319,3 +319,6 @@ Database item created (kind topic). Source records and the wiki page are still t
 
 ## [2026-10-15] ingest | anthropic-scion-v3 Redesigning source control at Anthropic
 Source record `raw/sources/anthropic-scion-blog-v3.md` (second full read of the saved article, exact sentences with print pages), v3 section appended to `wiki/topics/scion-source-control.md`. Episode `paper-reels/episodes/scionV3/` (format system-design): storyboard, facts and evidence written to the script checkpoint, STE 0 hard findings. No voice yet.
+
+## [2026-10-15] revise | anthropic-scion-v3 wiki note moved
+The v3 note now sits in `wiki/topics/agent-infrastructure.md` (the item's database topic). `wiki/topics/scion-source-control.md` is back to its v1/v2 text.
