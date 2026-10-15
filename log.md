@@ -322,3 +322,12 @@ Source record `raw/sources/anthropic-scion-blog-v3.md` (second full read of the 
 
 ## [2026-10-15] revise | anthropic-scion-v3 wiki note moved
 The v3 note now sits in `wiki/topics/agent-infrastructure.md` (the item's database topic). `wiki/topics/scion-source-control.md` is back to its v1/v2 text.
+
+## [2026-10-15] render | anthropic-scion-v3 9x16
+162.8s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV3/out/hf/final.mp4
+
+## [2026-10-15] render | anthropic-scion-v3 9x16
+162.8s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/scionV3/out/hf/final.mp4
+
+## [2026-10-15] build | anthropic-scion-v3 Scion video (system-design)
+HyperFrames, 26 lines, 3 scenes (hook, board, close), 162.8 s, voice `aiden` at 1.12 (l10 seed 5, l16 seed 11 after whisper heard "roughund"). The board is one 143.6 s scene with persistent actors: the Git server recolours to the Scion server where it stands, the payments/refund.py file is the pink hero from l05 to the end, one test machine multiplies to a grid and back. Four one-line receipts from the article print (p3, p3, p8, p12). Post text for YouTube and Instagram in the database (revision 2). Validator: 23/23. Not posted.
