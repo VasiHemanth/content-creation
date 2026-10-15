@@ -6,6 +6,7 @@
 - [Claude Code](claude-code.md)
 - [Agent self-improvement](agent-self-improvement.md)
 - [Agent security](agent-security.md)
+- [LLM reasoning control](llm-reasoning-control.md)
 
 - [Agent infrastructure](agent-infrastructure.md)
 - [Scion source control](scion-source-control.md)

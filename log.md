@@ -295,3 +295,9 @@ Lines l06, l07, l11, l12, l13 and l14 rewritten and re-voiced (no spoken "S L A"
 
 ## [2026-10-14] revise | Stateless Language Agents (2610.07625) caption and post text fix
 The close caption no longer draws "So," over the next chunk (caption text only, same voice). The close chip and the post text now say only what Table 3 and sec 4.2 support: on one SOL-ExecBench task every method, SLA included, gained less than 0.02 after the first quarter of the budget (SLA's own final result still beat its quarter-budget result on every task). Not posted.
+
+## [2026-10-15] add | 2610.11765 Thinking Inertia: LLMs Keep Thinking When Told Not To
+Database item created. Dossier still to write: wiki/papers/2610.11765.md
+
+## [2026-10-15] ingest | Thinking Inertia (2610.11765)
+Source record `raw/sources/arxiv-2610-11765.md` (v1, main text and Appendices B to I read in full), dossier `wiki/papers/2610.11765.md`, new topic page `wiki/topics/llm-reasoning-control.md`. The dossier keeps the two conditions apart: thinking mode off with no extra prompt (99.69% explicit inference on open-ended math, pooled, 99.5 to 99.9% per model, Gemini-3-Flash at minimal) and the strict prompt (62.00% pooled, 56.73 to 98.90% for the Qwen models, GPT-5.4 almost fully answer-only); the 15-point accuracy drop is a mean over the five fully-off models. Visible output only (sec 5.1).
