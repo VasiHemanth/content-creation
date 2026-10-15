@@ -1,0 +1,38 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2610.08902/paper-v1.pdf",
+ "note": "Receipts: real crops of arXiv 2610.08902v1, each two lines or fewer. gap = p.1 abstract (two highlights, one per half of the contrast); rank = last two lines of p.7 (Sec. 3.4), highlights on 'depend on provider pricing' and 'not a universal model ranking'. Every number readable in a crop must be in facts.json (numbers or evidence_incidental); qa checks it. Neither crop shows 233 or 14 or any other digit.",
+ "items": [
+  {
+   "id": "gap",
+   "page": 1,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "learns"
+   ],
+   "find": [
+    "at a fixed point in time",
+    "rather than how effectively it learns"
+   ]
+  },
+  {
+   "id": "rank",
+   "page": 7,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "ranking"
+   ],
+   "find": [
+    "depend on provider pricing",
+    "not a universal model ranking"
+   ]
+  }
+ ]
+}

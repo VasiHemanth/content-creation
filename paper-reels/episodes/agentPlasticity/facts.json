@@ -1,0 +1,39 @@
+{
+ "note": "Agent Plasticity (arXiv 2610.08902v1, 2026-10-06), v2 build. Data numbers on screen: 298 (GPT-5.6 Sol estimated Psat), 57 (Claude Fable 5 estimated Psat) and 98% (GPT-5.6 Luna, share of relevant chess decisions without artifact use). Psat is an estimated saturation-fit efficiency in score points per $1,000 of mean per-game learning cost on the combined chess, Go and Hex curve; it depends on the protocol and on provider pricing. The 98% is a judged share: a second model (Gemini 3.1 Pro) read the game logs, with execution evidence. All results are the authors' own runs. Every other digit on screen is a model name, the arXiv id or a source tag (section, page, figure).",
+ "paper": "llm-wiki/raw/sources/arxiv-2610-08902.md, PDF at llm-wiki/raw/assets/2610.08902/paper-v1.pdf",
+ "numbers": {
+  "298": "GPT-5.6 Sol: estimated plasticity to saturation (Psat), 298 percentage points of held-out ID score per $1,000 of mean per-game learning cost, combined chess, Go and Hex curve (sec 3.4, p. 7; Fig. 1 right, p. 1). An estimate from a saturation fit. A rate, not a total. Depends on provider pricing.",
+  "57": "Claude Fable 5: estimated Psat, same unit and curve (sec 3.4, p. 7; Fig. 1 right, p. 1). Fable 5 also reaches the highest fitted performance level (sec 3.4, Finding 2, p. 8).",
+  "98": "GPT-5.6 Luna: about 98% of relevant decisions without artifact use, pooled Hard and Easy chess (sec 3.5, p. 8). A judged share: labels come from Gemini 3.1 Pro reading the game logs with execution evidence (sec 2.3, p. 5; appendix G). Observational.",
+  "1,000": "unit of the plasticity figures: score points per $1,000 of learning cost (sec 2.2, p. 4)",
+  "5": "digit inside the model name Claude Fable 5 (Fig. 1, p. 1)",
+  "2610.08902": "arXiv id (title page, p. 1), used in the opening tag and the end card",
+  "1": "page 1 (abstract) and Figure 1 (p. 1): source tags",
+  "4": "page 4 (sec 2.1 and 2.2): source tags",
+  "7": "page 7 (sec 3.4): source tag and receipt label",
+  "8": "page 8 (sec 3.5): source tag",
+  "14": "Figure 14 (p. 25): Sol's two games and its two files, source tag",
+  "25": "page 25 (appendix E, Figure 14): source tag",
+  "2.1": "section 2.1, Fixed-Weight Agent Lineages (p. 3 to 4): source tag",
+  "2.2": "section 2.2, Measuring Agent Plasticity (p. 4): source tag",
+  "3.4": "section 3.4, Acquisition Efficiency Differs from Endpoint Capability (p. 7): source tag",
+  "3.5": "section 3.5, Where Does the Improvement Loop Break? (p. 8): source tag"
+ },
+ "evidence_incidental": {},
+ "claims": {
+  "l01": "Abstract (p. 1) and sec 3.2 (p. 6): with comparable opportunities to learn, frontier models follow sharply different trajectories; some gain a lot, others stay near their start. The pair on screen, GPT-5.6 Sol and GPT-5.6 Luna, is the producer's choice from Fig. 1 (p. 1): Sol rises, Luna shows no reliable rise (sec 3.4, p. 7). Luna's bar starts below Sol's (about 6% against about 18% on the combined curve) and never rises.",
+  "l02": "Abstract (p. 1), receipt crop: existing evaluations largely measure what an agent can do at a fixed point in time rather than how effectively it learns. Sec 1 (p. 2): most agent evaluations ask what an agent can accomplish at a fixed point in time.",
+  "l03": "Sec 3.1 (p. 6): chess, Go and Hex, 20 rounds (checkpoints 0 to 20) each. Each game is a separate lineage, and separately trained lineages do not show that saved items carry across tasks (pp. 10 to 11). Board sizes (5 by 5 Go, 6 by 6 Hex, sec 3.3 p. 7) are drawn, not printed.",
+  "l04": "Sec 2.1 (p. 3) and sec 3.1 (p. 6): after each round the model reviews its training games and proposes an update to its saved tools, skills, strategies and memory; rejected edits leave them unchanged. Fig. 14 (p. 25): Sol's chess engine (tools/chess_engine.py) was written at checkpoint 1, and START_HERE.md is headed IMMEDIATE ACTION and DO NOT INSPECT. The code lines on the program card are generic drawings, not the paper's code.",
+  "l05": "Sec 1 (p. 2) and sec 2.1 (p. 3): model weights stay frozen; each acting episode starts in a fresh context with the saved items. Fig. 14 (p. 25), second game: at checkpoint 18 the engine Sol wrote at checkpoint 1 picks every move and the game ends in checkmate on move 42, a win for Sol. First game: at checkpoint 0, with an empty library, Sol picks every move by hand and is mated on move 37. One game each, not an average: Sol's mean Hard-chess test score ends near 37% (sec 3.2, p. 6).",
+  "l06": "Sec 2.1 (p. 4): neither held-out trajectories nor their scores are exposed to reflection; the model still plays the test games with its current saved items. Sec 3.2 (p. 6): the results provide evidence that the saved items are useful beyond the interaction data the review saw. Sec 1 (p. 2): improvements may fail to generalize beyond the interactions that produced them. 'Like an exam' is the producer's plain comparison.",
+  "l07": "Sec 2.2 (p. 4), Eq. 3: plasticity is held-out performance gain per unit learning cost. Cost covers the model calls that play the training games and revise the saved items, rejected edits included, expressed in dollars (sec 2.1, p. 4). Score is 100(W + 0.5D)/N, the share of points won (sec 3.1, p. 6).",
+  "l08": "Sec 3.2 (p. 6), sec 3.4 (p. 7) and Fig. 1 (p. 1): Sol and Fable 5 gain a lot; Luna shows no reliable rise (Psat assigned 0). Fig. 1 left edge: Fable 5 about 43%, Sol about 18%, Luna about 6%; Sol is flat until about $30 and then climbs; Luna's line is short. The chart is the combined curve of chess, Go and Hex (mean), drawn as a sketch with no figures printed; the tag names Figure 1 in words (first figure).",
+  "l09": "Sec 3.4 and Finding 2 (pp. 7 to 8): Claude Fable 5 reaches the highest fitted performance level; GPT-5.6 Sol has the highest estimated Psat, 298 against 57 for Fable 5, in percentage points per $1,000 of mean per-game learning cost. Estimates depend on provider pricing and saturation-fit assumptions.",
+  "l10": "Sec 3.5 (p. 8): pooled over Hard and Easy chess, GPT-5.6 Luna takes about 98% of relevant decisions without artifact use; use and gain go together across 19 model-game cells, which the paper calls an association and a candidate bottleneck (pp. 5, 8). A relevant decision is a move where at least one saved item is relevant (sec 2.3, p. 5). The 98% is a judged share (Gemini 3.1 Pro with execution evidence). One of the four heaviest users, Opus 4.8, gained little (sec 3.2, p. 6; sec 3.5, p. 8).",
+  "l11": "Sec 3.5 (p. 8): the models that use artifacts at almost every relevant chess decision fail less often overall (about 0.16 against 0.38 identified failures per relevant decision for the other models), but most of their remaining failures (83 to 99%) happen while a relevant artifact is in use. The two grids are a sketch: no counts are printed, and failures per decision are not shares of squares.",
+  "l12": "Sec 3.5 (p. 8): using an artifact does not guarantee success; the artifact may not generalize to the position, or the agent may apply it poorly. Quoted: 'We leave separating these causes to future work.' Sec 4 (p. 10): the interpretations are observational rather than causal.",
+  "l13": "Sec 3.4 (p. 7), receipt crop: 'We therefore interpret plasticity as a protocol-dependent measure, not a universal model ranking.' Efficiency estimates depend on provider pricing and saturation-fit assumptions. Sec 3.3 (p. 7): Sol's NetHack score falls from about 570 to about 420 while Sol has the highest plasticity on the board-game curve. NetHack has no test games (appendix C, p. 21), so the label says score, not test score.",
+  "l14": "Abstract (p. 1) and sec 5 (p. 11): evaluating long-lived agents requires measuring not only what they can do at a fixed point in time but how efficiently they become better through experience. The line repeats l02 on purpose, as the ending."
+ }
+}

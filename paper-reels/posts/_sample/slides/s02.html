@@ -1,0 +1,28 @@
+<template id="s02-template">
+  <div id="root" data-composition-id="s02" data-width="1080" data-height="1350">
+    <div class="pk-page">
+      <h2 class="pk-h2" data-bind="s02.title"></h2>
+      <div class="pk-compare">
+        <div class="pk-x">
+          <div class="pk-x-label" data-bind="s02.tag_before"></div>
+          <p class="pk-x-text is-s" data-bind="s02.x_before"></p>
+        </div>
+        <div class="pk-arrow"></div>
+        <div class="pk-cmp is-good">
+          <div class="pk-cmp-label" data-bind="s02.tag_after"></div>
+          <p class="pk-cmp-text is-s" data-bind="s02.after"></p>
+        </div>
+      </div>
+      <div class="pk-bars">
+        <div class="pk-bar is-coral" data-var="--pct:s02.rows.0._pct">
+          <div class="pk-bar-head"><span class="pk-bar-label" data-bind="s02.rows.0.label"></span><span class="pk-bar-val" data-bind="s02.rows.0.value"></span></div>
+          <div class="pk-bar-track"><i class="pk-bar-fill"></i></div>
+        </div>
+        <div class="pk-bar is-mint" data-var="--pct:s02.rows.1._pct">
+          <div class="pk-bar-head"><span class="pk-bar-label" data-bind="s02.rows.1.label"></span><span class="pk-bar-val" data-bind="s02.rows.1.value"></span></div>
+          <div class="pk-bar-track"><i class="pk-bar-fill"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

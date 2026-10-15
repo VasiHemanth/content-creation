@@ -1,0 +1,39 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2609.14858/paper-v1.pdf",
+ "note": "Receipts: real crops of arXiv 2609.14858v1. Every number readable in a crop must be in facts.json (numbers or evidence_incidental); qa checks it.",
+ "items": [
+  {
+   "id": "replay",
+   "page": 2,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "rerunning"
+   ],
+   "find": [
+    "Because all execution outcomes are already saved in the tree",
+    "evaluating a new strategy requires only reading past",
+    "records without rerunning the underlying discovery agent or evaluator."
+   ]
+  },
+  {
+   "id": "lasso",
+   "page": 7,
+   "context": [
+    1,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "317"
+   ],
+   "find": [
+    "317 discovery-agent calls, compared with 550 calls",
+    "3587.1 ms to 2931.0 ms"
+   ]
+  }
+ ]
+}

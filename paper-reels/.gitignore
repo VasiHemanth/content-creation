@@ -1,0 +1,8 @@
+node_modules/
+.venv/
+.env
+.tokens/
+episodes/*/out/*
+!episodes/*/out/.gitkeep
+data/*.sqlite*
+data/*.upload.json

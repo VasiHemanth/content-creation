@@ -1,0 +1,143 @@
+<template id="audit-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #audit-p1, #audit-p2 { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #audit-p2 { background: radial-gradient(1100px 1300px at 50% 40%, #0f3a63 0%, #0b2a4a 60%, #061a30 100%); }
+    #audit-q1 { left: 0; top: 230px; width: 1080px; text-align: center; font-size: 130px; }
+    #audit-q2 { left: 0; top: 380px; width: 1080px; text-align: center; font-size: 200px; color: var(--amber); text-shadow: 10px 10px 0 var(--shadow); }
+    #audit-q2 .char, #audit-q1 .char { display: inline-block; }
+    .audit-run { position: absolute; top: 860px; width: 120px; height: 150px; background: var(--white); box-shadow: 8px 8px 0 var(--shadow); }
+    .audit-run i { position: absolute; left: 14px; height: 9px; background: var(--faint); }
+    .audit-run b { position: absolute; left: 6px; bottom: 10px; font: 700 26px "Mono", monospace; padding: 2px 8px; border: 3px solid; transform: rotate(-8deg); }
+    #audit-judge-l { left: 90px; top: 1150px; font-size: 32px; color: var(--white); }
+    #audit-runs-l { left: 430px; top: 1050px; font-size: 32px; }
+    #audit-title { left: 70px; top: 250px; width: 940px; font-size: 44px; color: var(--white); }
+    .audit-row { position: absolute; left: 70px; width: 940px; height: 150px; }
+    .audit-row .lb { position: absolute; left: 0; top: 0; font: 700 40px "Mono", monospace; color: var(--white); white-space: nowrap; }
+    .audit-row .bar { position: absolute; left: 0; top: 64px; height: 64px; background: var(--white); transform-origin: 0 50%; box-shadow: 8px 8px 0 var(--shadow); }
+    .audit-row .trk { position: absolute; left: 0; top: 64px; width: 760px; height: 64px; border: 3px solid var(--faint); transform-origin: 0 50%; }
+    .audit-row .val { position: absolute; top: 40px; font: 400 104px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; text-shadow: 6px 6px 0 var(--shadow); }
+    #audit-tags { position: absolute; left: 70px; top: 760px; width: 940px; display: flex; flex-wrap: wrap; gap: 18px; }
+    #audit-tags .tag { position: relative; font-size: 30px; }
+    #audit-band { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #audit-c1, #audit-c2 { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #audit-c1 { transform-origin: 540px 900px; } #audit-c2 { transform-origin: 540px 700px; }
+  </style>
+  <div id="root" data-composition-id="audit" data-width="1080" data-height="1920">
+    <div id="audit-p1"><div id="audit-c1">
+      <div id="audit-q1" class="hd" data-bind="l08a.q1"></div>
+      <div id="audit-q2" class="hd" data-bind="l08a.q2" data-layout-allow-overlap></div>
+      <svg class="ink sketch" id="audit-judge" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <g id="audit-bot">
+          <path class="ln" d="M210 880 L210 850" /><circle class="fl amber" cx="210" cy="842" r="10" />
+          <rect x="130" y="880" width="160" height="124" rx="22" fill="#0a2340" stroke="#f2f8ff" stroke-width="6" />
+          <circle id="audit-eyeL" class="fl amber" cx="180" cy="934" r="14" /><circle id="audit-eyeR" class="fl amber" cx="240" cy="934" r="14" />
+          <path class="ln cyan" d="M178 972 L242 972" />
+          <rect x="150" y="1012" width="120" height="110" rx="14" fill="#0a2340" stroke="#f2f8ff" stroke-width="5" />
+        </g>
+        <g id="audit-lens">
+          <path class="ln heavy" d="M380 1000 L330 1070" stroke-width="16" />
+          <circle cx="420" cy="940" r="72" fill="rgba(168,220,242,0.18)" stroke="#f2f8ff" stroke-width="10" />
+        </g>
+      </svg>
+      <div id="audit-runs"></div>
+      <div id="audit-judge-l" class="lbl" data-bind="l08a.judge"></div>
+      <div id="audit-runs-l" class="lbl" data-bind="l08a.runs"></div>
+    </div></div>
+    <div id="audit-p2"><div id="audit-c2">
+      <div id="audit-title" class="lbl" data-bind="l08b.title"></div>
+      <div class="audit-row" id="audit-r0" style="top:350px"><div class="lb" data-bind="l08b.rows.0.label"></div><div class="trk" id="audit-t0"></div><div class="bar" id="audit-b0"></div><div class="val" id="audit-v0" data-bind="l08b.rows.0.value" data-to=""></div></div>
+      <div class="audit-row" id="audit-r1" style="top:560px"><div class="lb" data-bind="l08b.rows.1.label"></div><div class="trk" id="audit-t1"></div><div class="bar" id="audit-b1"></div><div class="val" id="audit-v1" data-bind="l08b.rows.1.value" data-to=""></div></div>
+      <svg class="ink" id="audit-loupe" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <circle cx="108" cy="656" r="62" fill="none" stroke="#ffb454" stroke-width="8" />
+        <path d="M152 700 L200 752" stroke="#ffb454" stroke-width="14" stroke-linecap="round" />
+      </svg>
+      <div id="audit-tags"></div>
+      <div id="audit-band"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'audit', a = (w, n) => KIT.cue('l08a', w, n), b = (w, n) => KIT.cue('l08b', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#audit-p1'); KIT.bind('#audit-p2');
+      const A = KIT.data('l08a'), B = KIT.data('l08b');
+      const tl = gsap.timeline({ paused: true });
+
+      // part 1: does it hold up? an LLM judge re-checks graded runs
+      const q1 = SplitText.create('#audit-q1', { type: 'chars' }), q2 = SplitText.create('#audit-q2', { type: 'chars' });
+      [...q1.chars, ...q2.chars].forEach((ch) => ch.setAttribute('data-layout-allow-overlap', ''));
+      tl.fromTo(q1.chars, { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, stagger: 0.04, ease: 'back.out(2)' }, a('Does') - 0.1);
+      tl.fromTo(q2.chars, { scale: 3, opacity: 0, rotation: (i) => [-16, 11, -8, 14, -12, 9, -14, 6][i % 8] }, { scale: 1, opacity: 1, rotation: 0, duration: 0.22, stagger: 0.035, ease: 'power4.in' }, a('hold') - 0.2);
+      KIT.shake(tl, '#audit-p1', a('hold') + 0.1, { amp: 14, dur: 0.3 });
+      const runs = document.querySelector('#audit-runs'), marks = [A.pass, A.fail, A.pass, A.pass, A.fail];
+      marks.forEach((m, k) => {
+        const el = document.createElement('div'); el.className = 'audit-run'; el.id = `audit-run${k}`; el.style.left = `${430 + k * 120}px`;
+        el.innerHTML = `<i style="top:20px;width:80px"></i><i style="top:40px;width:64px"></i><i style="top:60px;width:90px"></i><i style="top:80px;width:50px"></i><b style="color:${m === A.pass ? '#2f9e6b' : '#d94848'};border-color:${m === A.pass ? '#2f9e6b' : '#d94848'}"></b>`;
+        el.querySelector('b').textContent = m; runs.appendChild(el);
+        tl.fromTo(el, { y: 300, opacity: 0, rotation: 10 }, { y: 0, opacity: 1, rotation: (k % 2 ? 3 : -3), duration: 0.35, ease: 'back.out(2)' }, a('An') - 0.2 + k * 0.07);
+      });
+      KIT.fade(tl, '#audit-runs-l', a('graded'));
+      tl.fromTo('#audit-bot', { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'back.out(1.8)' }, a('An') - 0.1);
+      KIT.rise(tl, '#audit-judge-l', a('judge'), { y: 24 });
+      tl.fromTo('#audit-lens', { x: -220, y: 60, opacity: 0, rotation: -20, svgOrigin: '420 940' }, { x: 0, y: 0, opacity: 1, rotation: 0, duration: 0.35, ease: 'back.out(2)', svgOrigin: '420 940' }, a('judge') - 0.05);
+      // the lens checks each run
+      for (let k = 0; k < 5; k++) tl.to('#audit-lens', { x: 70 + k * 120 - 20, y: 0, duration: 0.2, ease: 'power2.inOut' }, a('re-checked') + k * 0.24);
+      tl.fromTo('#audit-eyeL, #audit-eyeR', { scaleY: 1, transformOrigin: '50% 50%' }, { scaleY: 0.1, duration: 0.06, yoyo: true, repeat: 1 }, a('graded') + 0.2);
+
+      // camera beats on the judge: push in when it appears, again as it reaches the graded runs
+      tl.fromTo('#audit-c1', { scale: 1, x: 0, y: 0 }, { scale: 1.06, x: -8, y: -30, duration: 0.35, ease: 'power3.out' }, a('judge') - 0.1);
+      const CS = 1.1, CX = -20, CY = -60;
+      tl.to('#audit-c1', { scale: CS, x: CX, y: CY, duration: 0.3, ease: 'power3.out' }, a('graded') - 0.05);
+
+      // into the lens: part 2 opens from the lens centre (lens position after the camera beat above)
+      const tIn = KIT.line('l08b').t0 - 0.12, lx0 = 420 + 70 + 4 * 120 - 20, ly0 = 940;
+      const lx = Math.round(540 + CS * (lx0 - 540) + CX), ly = Math.round(900 + CS * (ly0 - 900) + CY);
+      tl.fromTo('#audit-p2', { clipPath: `circle(72px at ${lx}px ${ly}px)`, opacity: 0 }, { clipPath: `circle(72px at ${lx}px ${ly}px)`, opacity: 1, duration: 0.05 }, tIn - 0.05);
+      tl.to('#audit-p2', { clipPath: `circle(2300px at ${lx}px ${ly}px)`, duration: 0.5, ease: 'power3.in' }, tIn);
+      tl.to('#audit-p1', { scale: 2.2, transformOrigin: `${lx}px ${ly}px`, duration: 0.5, ease: 'power3.in' }, tIn);
+      tl.set('#audit-p1', { opacity: 0 }, tIn + 0.52);
+
+      // part 2: two bars, then the paper's own caveats, then the receipt
+      KIT.typeOn(tl, '#audit-title', b('disagreed') - 0.15, 40);
+      const MAX = 40, W = 760, v0 = parseFloat(B.rows[0].value), v1 = parseFloat(B.rows[1].value);
+      document.querySelector('#audit-b0').style.width = `${W * v0 / MAX}px`; document.querySelector('#audit-b1').style.width = `${Math.max(10, W * v1 / MAX)}px`;
+      document.querySelector('#audit-v0').style.left = `${W * v0 / MAX + 30}px`; document.querySelector('#audit-v1').style.left = `${Math.max(10, W * v1 / MAX) + 150}px`;
+      // the chart frame first: both tracks and labels, then each bar fills on its number
+      KIT.grow(tl, '#audit-t0', b('disagreed'), 0.45); KIT.grow(tl, '#audit-t1', b('disagreed') + 0.12, 0.45);
+      KIT.rise(tl, '#audit-r0 .lb', b('with') - 0.1, { x: -40, y: 0 });
+      KIT.rise(tl, '#audit-r1 .lb', b('with') + 0.05, { x: -40, y: 0 });
+      KIT.grow(tl, '#audit-b0', b('thirty') - 0.05, b('percent') + 0.3 - b('thirty'), { ease: 'power2.out' });
+      KIT.fade(tl, '#audit-v0', b('thirty') - 0.05, { dur: 0.1 });
+      KIT.count(tl, '#audit-v0', b('thirty') - 0.05, b('percent') + 0.3 - b('thirty'), { ease: 'power2.out' });
+      KIT.shake(tl, '#audit-p2', b('thirty'), { amp: 10, dur: 0.25 });
+      tl.fromTo('#audit-r1 .lb', { color: '#f2f8ff' }, { color: '#ffb454', duration: 0.15 }, b('Deep') - 0.1);
+      KIT.grow(tl, '#audit-b1', b('one') - 0.05, 0.3, { ease: 'back.out(3)' });
+      KIT.fade(tl, '#audit-v1', b('one') - 0.05, { dur: 0.1 });
+      KIT.count(tl, '#audit-v1', b('one') - 0.05, b('four', 1) - b('one') + 0.3, { ease: 'power2.out' });
+      tl.fromTo('#audit-loupe', { scale: 3, opacity: 0, svgOrigin: '108 656' }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(2)', svgOrigin: '108 656' }, b('one') + 0.1);
+      const tags = document.querySelector('#audit-tags');
+      B.tags.forEach((t, k) => {
+        const el = document.createElement('div'); el.className = `tag ${k === 1 ? 'cyan' : ''}`; el.id = `audit-tag${k}`; el.textContent = t; tags.appendChild(el);
+        tl.fromTo(el, { scale: 0, opacity: 0, rotation: -8 }, { scale: 1, opacity: 1, rotation: k % 2 ? 1.5 : -1.5, duration: 0.3, ease: 'back.out(2.5)' }, b('of') + k * 0.22);
+      });
+      // the receipt: a wide strip of the abstract with the two numbers centred, highlighted and circled
+      const p = KIT.paper('#audit-band', 'audit', { width: 2350, x: 0, y: 1110 }), r = p.ev.rects[0];
+      p.el.style.left = `${540 - (r.x + r.w / 2) * p.width}px`;
+      const tag = document.createElement('div'); tag.className = 'receipt-tag'; tag.id = 'audit-rtag'; tag.textContent = B.receipt; tag.style.left = '60px'; tag.style.top = '1040px';
+      document.querySelector('#audit-band').appendChild(tag);
+      tl.fromTo(p.el, { y: 300, opacity: 0, rotationX: 50 }, { y: 0, opacity: 1, rotationX: 0, duration: 0.45, ease: 'power3.out' }, b('and') - 0.1);
+      tl.fromTo(tag, { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, b('and') + 0.05);
+      tl.fromTo(p.hls[0], { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: 'none' }, b('Deep') + 0.1);
+      KIT.circle(tl, p, '32.4%)', b('one') + 0.3);
+      // camera beats on the chart, on the words that carry it
+      tl.fromTo('#audit-c2', { scale: 1, x: 0, y: 0 }, { scale: 1.06, x: 0, y: 0, duration: 0.35, ease: 'power3.out' }, b('disagreed') - 0.05);
+      tl.to('#audit-c2', { scale: 1.09, x: -26, y: 24, duration: 0.3, ease: 'power3.out' }, b('Bench') - 0.05);
+      tl.to('#audit-c2', { scale: 1.04, x: 10, y: -10, duration: 0.3, ease: 'power3.out' }, b('grader') - 0.05);
+      tl.to('#audit-c2', { scale: 1.0, x: 0, y: 0, duration: 0.35, ease: 'power3.inOut' }, b('runs'));
+      tl.to('#audit-c2', { scale: 1.06, x: 0, y: 44, duration: 0.3, ease: 'power3.out' }, b('one') - 0.05);
+      tl.to('#audit-c2', { scale: 1.02, x: 0, y: 0, duration: 0.45, ease: 'power3.inOut' }, b('four', 1) + 0.25);
+
+      window.__timelines["audit"] = tl;
+    })();
+  </script>
+</template>

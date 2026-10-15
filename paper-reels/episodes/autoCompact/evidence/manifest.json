@@ -1,0 +1,117 @@
+{
+ "stale": {
+  "img": "evidence/stale.png",
+  "w": 2966,
+  "h": 229,
+  "page": 1,
+  "rects": [
+   {
+    "x": 0.11811638982864994,
+    "y": 0.3636383888789877,
+    "w": 0.30468550710269277,
+    "h": 0.2724206172399454
+   }
+  ],
+  "text": "jectories of code inspection, search, editing, and testing. As a task progresses,\r\nearlier exploration becomes stale, so managing context is more than avoiding over\u0002flow: an agent must decide when to compact, what working state to preserve, and",
+  "circles": {
+   "stale,": {
+    "x": 0.3813874681775418,
+    "y": 0.3636383888789877,
+    "w": 0.04646786283614232,
+    "h": 0.24939107705103072
+   }
+  }
+ },
+ "rarely": {
+  "img": "evidence/rarely.png",
+  "w": 2965,
+  "h": 259,
+  "page": 3,
+  "rects": [
+   {
+    "x": 0.0969390675287384,
+    "y": 0.4770455054357472,
+    "w": 0.13372674383820785,
+    "h": 0.2409299788757179
+   }
+  ],
+  "text": "Prompting alone does not induce proactive compaction. In our preliminary experiments, the base\r\nmodel rarely invoked compact() before the context limit, even when compaction rules were spec\u0002",
+  "circles": {
+   "rarely": {
+    "x": 0.0969390675287384,
+    "y": 0.4770455054357472,
+    "w": 0.05412078281277504,
+    "h": 0.2409299788757179
+   }
+  }
+ },
+ "progress": {
+  "img": "evidence/progress.png",
+  "w": 2967,
+  "h": 250,
+  "page": 8,
+  "rects": [
+   {
+    "x": 0.4186828194388316,
+    "y": 0.3336946540435834,
+    "w": 0.4998646475557497,
+    "h": 0.2502772728279443
+   }
+  ],
+  "text": "with a length-triggered fallback, allowing the agent to reorganize its context before compaction be\u0002comes mandatory. It also indicates that compaction based on task progress is more effective than\r\ncompaction based solely on the length of the context.",
+  "circles": {
+   "progress": {
+    "x": 0.6725394013457576,
+    "y": 0.3957075099622296,
+    "w": 0.07853267045216822,
+    "h": 0.18826441690929813
+   }
+  }
+ },
+ "adv1": {
+  "img": "evidence/adv1.png",
+  "w": 2967,
+  "h": 320,
+  "page": 8,
+  "rects": [
+   {
+    "x": 0.3447557131769145,
+    "y": 0.2507046735317115,
+    "w": 0.3176791238843141,
+    "h": 0.20472435190961047
+   }
+  ],
+  "text": "be attributed solely to better agent behavior learned during training: part of the benefit depends on\r\nactually executing compaction. The advantage is 19.9% at $0.10 and remains 1.9% at $4.00, so\r\nexecuting compaction improves cost efficiency without reducing final performance.",
+  "circles": {
+   "19.9%": {
+    "x": 0.5185992865649414,
+    "y": 0.26176487586917485,
+    "w": 0.05665536777129725,
+    "h": 0.1511578701221744
+   }
+  }
+ },
+ "adv2": {
+  "img": "evidence/adv2.png",
+  "w": 2967,
+  "h": 320,
+  "page": 8,
+  "rects": [
+   {
+    "x": 0.7135445966373892,
+    "y": 0.2507046735317115,
+    "w": 0.21724579271462838,
+    "h": 0.1763142003591294
+   }
+  ],
+  "text": "be attributed solely to better agent behavior learned during training: part of the benefit depends on\r\nactually executing compaction. The advantage is 19.9% at $0.10 and remains 1.9% at $4.00, so\r\nexecuting compaction improves cost efficiency without reducing final performance.",
+  "circles": {
+   "1.9%": {
+    "x": 0.7986805012706646,
+    "y": 0.26176487586917485,
+    "w": 0.04490609538403627,
+    "h": 0.1511578701221744
+   }
+  }
+ }
+}

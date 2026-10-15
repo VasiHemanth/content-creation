@@ -1,0 +1,128 @@
+<template id="results-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #results-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #results-push, #results-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 900px; }
+    #results-stage, #results-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #results-scrim { position: absolute; left: -1500px; top: -1500px; width: 4000px; height: 5000px; background: #061a30; opacity: 0; }
+    #results-title { left: 0; top: 172px; width: 1080px; text-align: center; font-size: 58px; }
+    #results-title .char { display: inline-block; }
+    #results-sub { left: 90px; top: 258px; width: 900px; text-align: center; white-space: normal; text-wrap: balance; font-size: 28px; line-height: 1.3; transform-origin: 50% 50%; }
+    #results-start { left: 946px; top: 546px; font-size: 28px; }
+    .results-bar { position: absolute; width: 170px; transform-origin: 50% 100%; box-shadow: 8px 8px 0 var(--shadow); }
+    .results-val { position: absolute; width: 240px; padding: 6px 0 2px; text-align: center; font: 400 66px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 6px 6px 0 var(--shadow);
+      white-space: nowrap; background: rgba(7,29,53,.88); border-radius: 12px; }
+    .results-lab { position: absolute; top: 976px; width: 300px; text-align: center; font: 700 28px/1 "Mono", monospace; color: var(--white); white-space: nowrap; }
+    .results-stack { position: absolute; width: 120px; transform-origin: 50% 100%; border: 4px solid var(--cyan); border-bottom: 0;
+      background: repeating-linear-gradient(0deg, #1d5a8c 0 22px, #0d3358 22px 30px); }
+    #results-tok { left: 90px; top: 1058px; font-size: 28px; }
+    #results-fewer { left: 480px; top: 1052px; font-size: 30px; }
+  </style>
+  <div id="root" data-composition-id="results" data-width="1080" data-height="1920">
+    <div id="results-cam">
+      <div id="results-push"><div id="results-beat"><div id="results-world" style="position:absolute;left:0;top:0;width:1080px;height:1920px">
+        <div id="results-title" class="hd" data-bind="l10.title"></div>
+        <div id="results-sub" class="lbl" data-bind="l10.sub"></div>
+        <svg class="ink sketch" id="results-axes" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <path id="results-axis" class="ln thick" d="M90 470 L90 962 L970 962" />
+          <path id="results-line" class="ln cyan thick dash" d="" />
+          <path id="results-base2" class="ln thick" d="M120 1422 L960 1422" />
+        </svg>
+        <div id="results-start" class="lbl" data-bind="l10.start"></div>
+        <div id="results-bars"></div>
+        <div id="results-tok" class="lbl" data-bind="l10.tok"></div>
+        <div id="results-fewer" class="tag cyan" data-bind="l11.fewer"></div>
+      </div></div></div>
+      <div id="results-scrim"></div>
+      <div id="results-stage"></div>
+    </div>
+    <div id="results-hud"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'results', a = (w, n) => KIT.cue('l10', w, n), b = (w, n) => KIT.cue('l11', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#results-world');
+      const d10 = KIT.data('l10'), d11 = KIT.data('l11'), tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+      const mkEl = (tag, cls, id, css, parent, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; e.id = id; if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; (typeof parent === 'string' ? q(parent) : parent).appendChild(e); return e; };
+
+      // ---- scales: both start at 0 with no break. Scores: 0..0.5 (top not printed); tokens: 0..10M per run (not printed) ----
+      const BASE = 962, H = 480, TOP = 0.5, TBASE = 1422, TH = 300, TMAX = 10;
+      const v = [parseFloat(d10.v1), parseFloat(d10.v2), parseFloat(d11.v3)], tok = [d10._tok1, d10._tok2, d11._tok3].map(Number);
+      const hOf = (x) => H * x / TOP, CX = [230, 540, 850];
+      q('#results-line').setAttribute('d', `M90 ${(BASE - hOf(v[0])).toFixed(1)} L938 ${(BASE - hOf(v[0])).toFixed(1)}`);
+      q('#results-start').style.top = `${(BASE - hOf(v[0]) - 16).toFixed(0)}px`;
+      const COL = ['#f2f8ff', '#f2f8ff', '#a8dcf2'], LAB = [d10.b1, d10.b2, d11.b3], VAL = [d10.v1, d10.v2, d11.v3];
+      const bars = [0, 1, 2].map((i) => {
+        const hh = i === 1 ? hOf(v[0]) : hOf(v[i]);            // the skills bar first rises to the start line, then falls
+        const bar = mkEl('div', 'results-bar', `results-bar${i}`, `left:${CX[i] - 85}px;top:${BASE - hh}px;height:${hh}px;background:${COL[i]}`, '#results-bars');
+        const val = mkEl('div', 'results-val', `results-v${i}`, `left:${CX[i] - 120}px;top:${BASE - hOf(v[i]) - 80}px`, '#results-bars', VAL[i]);
+        val.dataset.to = VAL[i];
+        const lab = mkEl('div', 'results-lab', `results-l${i}`, `left:${CX[i] - 150}px`, '#results-bars', LAB[i]);
+        const st = mkEl('div', 'results-stack', `results-k${i}`, `left:${CX[i] - 60}px;top:${TBASE - TH * tok[i] / TMAX}px;height:${TH * tok[i] / TMAX}px`, '#results-bars');
+        return { bar, val, lab, st, hh };
+      });
+
+      // "On long terminal tasks": title, subtitle, axes and the dashed start line
+      const sp = SplitText.create('#results-title', { type: 'words,chars' });
+      tl.fromTo(sp.chars, { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.28, stagger: 0.022, ease: 'back.out(2)' }, 0.04);
+      tl.fromTo('#results-sub', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35 }, a('terminal') - 0.1);
+      KIT.draw(tl, '#results-axis', a('long'), 0.5);
+      KIT.draw(tl, '#results-line', a('tasks') - 0.1, 0.45);
+      KIT.draw(tl, '#results-base2', a('tasks'), 0.4);
+      tl.fromTo('#results-start', { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.25 }, a('tasks') + 0.25);
+
+      // "the average score": the starting agent's bar counts up to its value
+      const grow = (i, t, dur) => {
+        tl.fromTo(bars[i].lab, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.25 }, t - 0.1);
+        tl.fromTo(bars[i].bar, { scaleY: 0 }, { scaleY: 1, duration: dur, ease: 'power2.out' }, t);
+      };
+      grow(0, a('average') - 0.05, 0.6);
+      KIT.fade(tl, bars[0].val, a('average') - 0.05, { dur: 0.1 });
+      KIT.count(tl, bars[0].val, a('average') - 0.05, 0.6, { ease: 'power2.out' });
+      // "with skills falls": the second bar reaches the start line, then falls below it
+      grow(1, a('with') - 0.05, 0.45);
+      tl.to(bars[1].bar, { scaleY: v[1] / v[0], duration: 0.22, ease: 'power3.in' }, a('falls') - 0.12);
+      KIT.shake(tl, bars[1].bar, a('falls') + 0.1, { amp: 7, dur: 0.22 });
+
+      // the paper says it: "0.417 to 0.370" (camera holds the start of the phrase in frame)
+      const tR = a('from') - 0.12;
+      KIT.beats(tl, '#results-beat', [a('long'), a('tasks'), a('average'), a('with')], { amp: 0.02, shift: 14, reset: tR - 0.05 });
+      tl.to('#results-scrim', { opacity: 0.88, duration: 0.3 }, tR);
+      tl.to('#results-world', { opacity: 0, duration: 0.2 }, tR + 0.3);
+      const P = KIT.read(tl, { cam: '#results-cam', parent: '#results-stage', hud: '#results-hud', tagY: 560, id: 'skills', t: tR, label: d10.receipt,
+        x: 40, y: 820, width: 1000, zoom: 3.4, fx: 110, fy: 860, follow: 0,
+        marks: [[a('point'), a('seven', 1) + 0.22, [[a('four'), 0.12], [a('one'), 0.24], [a('seven'), 0.31], [a('to'), 0.43], [a('point', 1), 0.628], [a('three'), 0.8], [a('seven', 1), 0.93]]]],
+        circles: [{ word: '0.370', t: a('three') - 0.05 }] });
+      // a hard cut back to the chart
+      const tB = a('seven', 1) + 0.26;
+      tl.set('#results-cam', { x: 0, y: 0, scale: 1 }, tB);
+      tl.set(P.el, { opacity: 0 }, tB);
+      tl.set('#results-hud', { opacity: 0 }, tB);
+      tl.set('#results-scrim', { opacity: 0 }, tB);
+      tl.set('#results-world', { opacity: 1 }, tB);
+      // back on the chart: the skills value lands; token stacks rise under the first two bars
+      KIT.pop(tl, bars[1].val, tB + 0.12, { from: 0.4 });
+      tl.fromTo('#results-tok', { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.25 }, tB + 0.15);
+      [0, 1].forEach((i) => tl.fromTo(bars[i].st, { scaleY: 0 }, { scaleY: 1, duration: 0.35, ease: 'back.out(1.4)' }, tB + 0.2 + i * 0.12));
+
+      // "ContextEvo reaches 0.448": the third bar grows and lands above the start line
+      grow(2, b('reaches') - 0.15, b('eight') - b('reaches') + 0.15);
+      KIT.fade(tl, bars[2].val, b('reaches') - 0.15, { dur: 0.1 });
+      KIT.count(tl, bars[2].val, b('reaches') - 0.15, b('eight') - b('reaches') + 0.15, { ease: 'power2.out' });
+      KIT.shake(tl, '#results-push', b('eight'), { amp: 12, dur: 0.28 });
+      KIT.sparks(tl, '#results-world', CX[2], BASE - hOf(v[2]), b('eight') + 0.02, { n: 12, r: 190, color: '#a8dcf2' });
+      // "uses fewer tokens on average": its stack is the shortest
+      tl.fromTo(bars[2].st, { scaleY: 0 }, { scaleY: 1, duration: 0.35, ease: 'back.out(1.4)' }, b('uses') - 0.1);
+      KIT.pop(tl, '#results-fewer', b('fewer') - 0.08, { from: 0.4 });
+      // "average": pull back to the whole picture; the subtitle (all tasks, including the ones it learned from) pulses
+      tl.fromTo('#results-push', { scale: 1 }, { scale: 1.03, duration: b('average') - 0.2, ease: 'sine.inOut' }, 0);
+      tl.to('#results-push', { scale: 0.97, duration: 0.6, ease: 'power2.inOut' }, b('average') - 0.15);
+      tl.to('#results-sub', { scale: 1.07, color: '#ffb454', duration: 0.22, yoyo: true, repeat: 1, ease: 'sine.inOut' }, b('average') + 0.05);
+
+      KIT.beats(tl, '#results-beat', [b('Context'), b('point'), b('uses'), b('fewer')], { amp: 0.018, shift: 12 });
+
+      window.__timelines["results"] = tl;
+    })();
+  </script>
+</template>

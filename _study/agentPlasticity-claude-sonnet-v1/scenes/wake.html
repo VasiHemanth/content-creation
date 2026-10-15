@@ -1,0 +1,98 @@
+<template id="wake-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #wake-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 860px; }
+    .wk-card { width: 440px; height: 620px; }
+    #wake-ca { left: 60px; top: 390px; }
+    #wake-cb { left: 580px; top: 390px; }
+    #wake-g1 { left: 92px; top: 408px; font-size: 32px; }
+    #wake-g2 { left: 612px; top: 408px; font-size: 32px; }
+    #wake-brain { left: 92px; top: 330px; }
+    #wake-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #wake-nb { position: absolute; left: 100px; top: 1120px; width: 340px; height: 230px; border-radius: 14px; border: 5px solid var(--ink); background: var(--amber); box-shadow: 8px 8px 0 var(--shadow); }
+    #wake-nb .sp { position: absolute; left: 14px; top: 12px; bottom: 12px; width: 34px; background: radial-gradient(circle at 17px 16px, var(--ink) 7px, transparent 8px) repeat-y; background-size: 34px 40px; }
+    #wake-nb .cv { position: absolute; left: 66px; top: 84px; font: 400 52px/1 "Marker", sans-serif; color: var(--deep); white-space: nowrap; }
+  </style>
+  <div id="root" data-composition-id="wake" data-width="1080" data-height="1920">
+    <div id="wake-cam">
+      <div id="wake-ca" class="plate deep wk-card"></div>
+      <div id="wake-cb" class="plate deep wk-card"></div>
+      <div id="wake-g1" class="lbl white" data-bind="l02.g1"></div>
+      <div id="wake-g2" class="lbl white" data-bind="l02.g2"></div>
+      <div id="wake-brain" class="tag cyan" data-bind="l02.brain"></div>
+      <svg id="wake-svg" class="ink sketch" viewBox="0 0 1080 1920">
+        <g id="wake-bubble">
+          <ellipse class="ln cyan" cx="280" cy="506" rx="150" ry="42" />
+          <circle class="ln cyan" cx="262" cy="562" r="10" />
+          <circle class="ln cyan" cx="272" cy="584" r="6" />
+          <path class="ln dim thin" d="M190 494 H330 M190 510 H366 M190 526 H290" />
+        </g>
+        <path id="wake-bubble2" class="ln faint thin" d="M650 506 a150 42 0 1 0 300 0 a150 42 0 1 0 -300 0" opacity="0.5" />
+        <g id="wake-botA"></g>
+        <g id="wake-botB"></g>
+        <path id="wake-frost" class="ln cyan thick" d="M168 660 L196 645 M176 700 L208 684 M392 660 L364 645 M384 704 L352 688 M236 640 L226 616 M324 640 L334 616" />
+        <g id="wake-lock">
+          <path class="ln" d="M406 702 V682 a15 15 0 0 1 30 0 V702" />
+          <rect class="fl amber" x="396" y="700" width="52" height="38" rx="6" />
+        </g>
+        <path id="wake-arrow" class="ln amber heavy" d="M300 1040 C 400 1110 600 1110 760 1040 M760 1040 L728 1042 M760 1040 L748 1070" />
+      </svg>
+      <div id="wake-nb">
+        <div class="sp"></div>
+        <div class="cv" data-bind="l02.cover"></div>
+      </div>
+    </div>
+    <div id="wake-flash" style="position:absolute;left:0;top:0;width:1080px;height:1920px;background:#ffe2b0;opacity:0"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l02', w, n), D = KIT.sceneDur('wake');
+      KIT.bind('#wake-cam');
+      const tl = gsap.timeline({ paused: true });
+      const A = KIT.robot('#wake-botA', { id: 'wkA', x: 280, y: 640, s: 1.25, asleep: true });
+      const B = KIT.robot('#wake-botB', { id: 'wkB', x: 800, y: 640, s: 1.25, asleep: true });
+      // open eyes: amber discs that replace the closed arcs
+      const open = (cx, id) => [-47.5, 47.5].map((dx, k) => KIT.svgEl('circle', { cx: cx + dx, cy: 717.5, r: 20, fill: '#ffb454', id: `${id}${k}`, opacity: 0 }, '#wake-svg'));
+      const eA = open(280, 'wake-eyeA'), eB = open(800, 'wake-eyeB');
+
+      // cards and robots come in
+      KIT.pop(tl, '#wake-ca', 0.02, { from: 0.8 });
+      KIT.pop(tl, '#wake-cb', 0.1, { from: 0.8 });
+      tl.fromTo('#wake-botA', { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'back.out(1.6)' }, 0.1);
+      tl.fromTo('#wake-botB', { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'back.out(1.6)' }, 0.2);
+      tl.fromTo(['#wake-g1', '#wake-g2'], { opacity: 0 }, { opacity: 1, duration: 0.25, stagger: 0.08 }, 0.25);
+      tl.fromTo(['#wake-bubble', '#wake-bubble2'], { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.35);
+
+      // "freezes": frost draws over the head, the padlock snaps shut, the tag drops in
+      KIT.draw(tl, '#wake-frost', c('freezes'), 0.55, { ease: 'power2.out' });
+      KIT.pop(tl, '#wake-lock', c('freezes') + 0.1, { from: 0.2 });
+      KIT.rise(tl, '#wake-brain', c('freezes') - 0.1, { y: -30 });
+      KIT.shake(tl, '#wake-cam', c('freezes') + 0.2, { amp: 8, dur: 0.25 });
+
+      // "starts fresh": the old context bubble pops and the eyes open on a clean slate
+      tl.to('#wake-bubble', { scale: 0, opacity: 0, svgOrigin: '280 506', duration: 0.28, ease: 'back.in(2)' }, c('fresh'));
+      KIT.sparks(tl, '#wake-cam', 280, 506, c('fresh'), { n: 10, r: 140 });
+      tl.to([A.eyes[0], A.eyes[1]], { opacity: 0, duration: 0.1 }, c('fresh') + 0.05);
+      tl.fromTo(eA, { opacity: 0, scale: 0.2, svgOrigin: '280 717' }, { opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(3)' }, c('fresh') + 0.05);
+
+      // "artifacts": the notebook lands beside the first robot, then travels to the next game
+      KIT.pop(tl, '#wake-nb', c('artifacts') - 0.1, { from: 0.3 });
+      KIT.draw(tl, '#wake-arrow', c('pass') - 0.05, 0.5, { ease: 'power2.inOut' });
+      tl.to('#wake-nb', { y: -90, duration: 0.25, ease: 'power2.out' }, c('pass') - 0.05);
+      tl.to('#wake-nb', { x: 540, duration: 0.55, ease: 'power2.inOut' }, c('pass') - 0.05);
+      tl.to('#wake-nb', { y: 0, duration: 0.25, ease: 'bounce.out' }, c('pass') + 0.35);
+      tl.to('#wake-cam', { x: -70, duration: 0.8, ease: 'power2.inOut' }, c('pass'));
+
+      // "next game": the second robot wakes with the notebook at hand
+      tl.to([B.eyes[0], B.eyes[1]], { opacity: 0, duration: 0.1 }, c('next') + 0.05);
+      tl.fromTo(eB, { opacity: 0, scale: 0.2, svgOrigin: '800 717' }, { opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(3)' }, c('next') + 0.05);
+      tl.to('#wake-cb', { scale: 1.04, duration: 0.2, yoyo: true, repeat: 1, transformOrigin: '50% 50%' }, c('game', 1) - 0.05);
+      KIT.sparks(tl, '#wake-cam', 800, 700, c('game', 1), { n: 10, r: 150 });
+
+      // soft light pulses on emphasis words (line drawings alone change too few pixels to count as motion)
+      [c('Each'), c('fresh')].forEach((t) => tl.fromTo('#wake-flash', { opacity: 0.2 }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t));
+
+      window.__timelines["wake"] = tl;
+    })();
+  </script>
+</template>

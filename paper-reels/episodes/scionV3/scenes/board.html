@@ -1,0 +1,545 @@
+<template id="board-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #board-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 900px; }
+    #board-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #board-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    .board-a { box-sizing: border-box; }
+    .board-lab { position: absolute; font: 400 34px/1 "Marker", sans-serif; color: var(--role); white-space: nowrap; }
+    .board-mono { position: absolute; font: 700 26px "Mono", monospace; white-space: nowrap; }
+    .board-fold { position: absolute; padding: 6px 12px; font: 700 28px "Mono", monospace; color: var(--amber); border: 2px solid var(--amber); background: var(--deep); white-space: nowrap; }
+    .board-hero { position: absolute; padding: 6px 14px; font: 700 28px "Mono", monospace; color: var(--deep); background: var(--role-hero); white-space: nowrap; box-shadow: 0 0 22px rgba(255,143,196,.55); }
+    .board-tag { position: absolute; padding: 8px 16px; font: 700 28px "Mono", monospace; background: var(--deep); border: 3px solid currentColor; white-space: nowrap; }
+    .board-big { position: absolute; left: 0; width: 1080px; text-align: center; font: 400 112px/1 "Marker", sans-serif; white-space: nowrap; text-shadow: 8px 8px 0 var(--shadow); }
+    .board-row { position: absolute; left: 22px; font: 700 26px "Mono", monospace; color: var(--white); white-space: nowrap; }
+    .packet.hero-pk { background: var(--role-hero); box-shadow: 0 0 18px var(--role-hero); width: 34px; height: 34px; margin: -17px 0 0 -17px; }
+    .packet.ask { background: var(--role-compute); box-shadow: 0 0 16px var(--role-compute); border-radius: 50%; }
+    .packet.big { width: 44px; height: 30px; margin: -15px 0 0 -22px; background: var(--role-old); box-shadow: 0 0 18px var(--role-old); }
+    .cell { border-radius: 6px; }
+    #board-dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: var(--deep); opacity: 0; }
+    #board-rcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #board-rstage, #board-rhud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #board-pay { position: absolute; left: 60px; top: 230px; width: 880px; height: 520px; background: var(--deep); border: 3px solid var(--white); box-shadow: 12px 12px 0 var(--shadow); opacity: 0; }
+    .board-bar { position: absolute; left: 40px; height: 64px; transform-origin: 0 50%; }
+  </style>
+  <div id="root" data-composition-id="board" data-width="1080" data-height="1920">
+    <div id="board-beat">
+      <div id="board-world">
+        <svg class="ink" id="board-svg" viewBox="0 0 1080 1920">
+          <g id="board-bots"></g>
+          <path id="board-arrow" class="ln coral thick dash" d="M500 655 L500 1000" />
+          <path id="board-wire" class="ln cyan heavy" d="M600 1005 L600 655" />
+          <path id="board-check" class="ln mint heavy" d="M650 1180 L690 1225 L760 1130" />
+          <path id="board-w1" class="ln cyan thick" d="M215 1060 L400 875" />
+          <path id="board-w2" class="ln cyan thick" d="M865 1060 L680 875" />
+          <path id="board-w3" class="ln amber thick" d="M540 765 L540 655" />
+          <path id="board-col" class="ln amber thick dash" d="M300 1180 L300 360" />
+          <g id="board-lap">
+            <rect x="48" y="1060" width="210" height="130" rx="10" fill="#0a2340" stroke="#f2f8ff" stroke-width="5" />
+            <path d="M28 1205 L278 1205 L262 1222 L44 1222 Z" fill="#0a2340" stroke="#f2f8ff" stroke-width="5" stroke-linejoin="round" />
+            <rect x="80" y="1095" width="110" height="60" fill="#ff6b6b" opacity="0.85" />
+            <path d="M200 1030 Q 222 1010 244 1030 M208 1042 Q 222 1030 236 1042" fill="none" stroke="#a8dcf2" stroke-width="5" stroke-linecap="round" />
+            <path id="board-nosig" d="M196 1012 L248 1052" class="ln coral thick" />
+          </g>
+                    <g id="board-film">
+            <rect x="790" y="830" width="130" height="96" rx="6" fill="#0a2340" stroke="#f2f8ff" stroke-width="5" />
+            <path d="M790 852 L920 852 M790 904 L920 904" stroke="#f2f8ff" stroke-width="4" />
+            <path d="M843 865 L843 892 L868 878 Z" fill="#ffb454" />
+          </g>
+          <g id="board-proj"></g>
+          <g id="board-lock">
+            <rect x="0" y="16" width="34" height="28" rx="4" fill="#7be3b0" />
+            <path d="M6 18 L6 8 Q 17 -6 28 8 L28 18" fill="none" stroke="#7be3b0" stroke-width="5" />
+          </g>
+        </svg>
+
+        <div id="board-agents-tag" class="board-tag" style="left:150px; top:200px; color:var(--role-compute)" data-bind="l03.agents"></div>
+
+        <div id="board-server" class="actor old board-a" style="left:150px; top:315px; width:780px; height:340px; background:transparent; padding:0;">
+          <div id="board-srv-git" class="board-lab" style="left:18px; top:14px;" data-bind="l06.server"></div>
+          <div id="board-srv-scion" class="board-lab" style="left:18px; top:14px; opacity:0;" data-bind="l14.server"></div>
+          <div id="board-stays" class="board-tag" style="left:300px; top:262px; color:var(--role-new); opacity:0;" data-bind="l14.stays"></div>
+        </div>
+        <div id="board-store" class="actor store board-a" style="left:200px; top:385px; width:680px; height:235px; padding:0; overflow:hidden;">
+          <div id="board-st-git" class="board-lab" style="left:0; top:38px; width:100%; text-align:center; font-size:134px;" data-bind="l01.git"></div>
+          <div id="board-st-scion" class="board-lab" style="left:0; top:44px; width:100%; text-align:center; font-size:110px; opacity:0;" data-bind="l02.scion"></div>
+          <div id="board-st-one" class="board-lab" style="left:20px; top:16px; opacity:0;" data-bind="l02.store"></div>
+          <div id="board-st-mono" class="board-lab" style="left:20px; top:16px; opacity:0;" data-bind="l02.monorepo"></div>
+        </div>
+        <div id="board-f0" class="board-fold" style="left:222px; top:458px;" data-bind="l02.folders.0"></div>
+        <div id="board-f1" class="board-fold" style="left:332px; top:458px;" data-bind="l02.folders.1"></div>
+        <div id="board-f2" class="board-fold" style="left:442px; top:458px;" data-bind="l02.folders.2"></div>
+        <div id="board-f3" class="board-fold" style="left:630px; top:458px;" data-bind="l02.folders.3"></div>
+
+        <div id="board-mach" class="actor compute board-a" style="left:300px; top:1010px; width:480px; height:330px; padding:0;">
+          <div class="board-lab" style="left:16px; top:12px; font-size:30px;" data-bind="l04.machine"></div>
+          <div id="board-ci" class="chip" style="left:340px; top:14px; --role: var(--role-compute);" data-bind="l04.ci"></div>
+          <div id="board-slot" style="position:absolute; left:16px; top:62px; width:290px; height:250px; border:3px dashed var(--dim); box-sizing:border-box;">
+            <div id="board-nocode" class="board-mono" style="left:0; top:100px; width:284px; text-align:center; color:var(--dim);" data-bind="l05.nocode"></div>
+          </div>
+          <div id="board-mcache" class="actor store board-a" style="left:318px; top:62px; width:146px; height:250px; padding:0; box-shadow:none; opacity:0;">
+            <div class="board-lab" style="left:10px; top:10px; font-size:28px;" data-bind="l19.cache"></div>
+          </div>
+        </div>
+        <div id="board-copy" class="actor old board-a" style="left:332px; top:1090px; width:270px; height:200px; padding:0;">
+          <div id="board-copy-past" style="position:absolute; left:10px; top:110px; width:246px; height:78px; border:2px dashed var(--role-old); opacity:0;"></div>
+          <div class="board-mono" style="left:14px; top:12px; color:var(--role-old); font-size:24px;" data-bind="l07.copy"></div>
+          <div id="board-copy-files" class="board-mono" style="left:14px; top:56px; color:var(--white); font-size:22px; opacity:0;" data-bind="l08.files"></div>
+          <div id="board-copy-pastl" class="board-mono" style="left:20px; top:122px; color:var(--role-old); font-size:20px; opacity:0;" data-bind="l08.past"></div>
+          <div id="board-copy-pasts" class="board-mono" style="left:20px; top:148px; width:232px; white-space:normal; line-height:1.1; color:var(--dim); font-size:17px; opacity:0;" data-bind="l08.pastSub"></div>
+        </div>
+        <div id="board-size" class="board-tag" style="left:612px; top:1180px; color:var(--role-old); font-size:44px; opacity:0;" data-bind="l09.size"></div>
+        <div id="board-checkout" class="board-tag" style="left:200px; top:800px; color:var(--role-old);" data-bind="l07.checkout"></div>
+        <div id="board-offline" class="board-tag" style="left:40px; top:1250px; color:var(--white);" data-bind="l08.offline"></div>
+        <div id="board-noconn" class="board-mono" style="left:44px; top:1320px; color:var(--dim);" data-bind="l08.noconn"></div>
+        <div id="board-most" class="board-tag" style="left:40px; top:880px; color:var(--mint); font-size:24px;" data-bind="l09.most"></div>
+        <div id="board-films" class="board-tag" style="left:650px; top:945px; color:var(--amber); font-size:24px;" data-bind="l09.films"></div>
+
+        <div id="board-grid"></div>
+        <div id="board-rate" class="board-big" style="top:676px; color:var(--amber); font-size:76px;" data-bind="l10.rate"></div>
+        <div id="board-ratetag" class="board-tag" style="left:150px; top:1215px; color:var(--cyan); font-size:24px;" data-bind="l10.tag"></div>
+        <div id="board-mult" class="board-tag" style="left:250px; top:680px; color:var(--role-old); font-size:36px;" data-bind="l11.mult"></div>
+        <div id="board-iftag" class="board-tag" style="left:210px; top:1212px; color:var(--dim); font-size:22px;" data-bind="l11.tag"></div>
+        <div id="board-total" class="board-big" style="top:1275px; font-size:96px; color:var(--role-old);" data-bind="l11.total"></div>
+        <div id="board-totalgb" class="board-tag" style="left:60px; top:1385px; color:var(--white); font-size:26px;" data-bind="l11.totalGb"></div>
+
+        <div id="board-online" class="board-tag" style="left:630px; top:790px; color:var(--cyan);" data-bind="l12.online"></div>
+        <div id="board-where" class="board-tag" style="left:300px; top:1360px; color:var(--cyan); font-size:24px;" data-bind="l12.where"></div>
+        <div id="board-nofull" class="stamp" style="left:350px; top:1110px; font-size:44px; padding:4px 18px; border-width:6px; outline-offset:-14px;" data-bind="l13.ask"></div>
+        <div id="board-only" class="board-tag" style="left:316px; top:1355px; color:var(--role-new); font-size:24px;" data-bind="l14.only"></div>
+
+        <div id="board-tree1" class="actor new board-a" style="left:110px; top:690px; width:390px; height:280px; padding:0;">
+          <div id="board-t1-main" class="board-lab" style="left:20px; top:14px; font-size:30px;" data-bind="l15.main"></div>
+          <div id="board-t1-tree" class="board-lab" style="left:20px; top:14px; font-size:30px; opacity:0;" data-bind="l15.tree"></div>
+          <div id="board-r0" class="board-row" style="top:70px;" data-bind="l15.rows.0"></div>
+          <div id="board-r1" class="board-row" style="top:118px;" data-bind="l15.rows.1"></div>
+          <div id="board-r2" class="board-row" style="top:166px;" data-bind="l15.rows.2"></div>
+          <div id="board-r3" class="board-row" style="top:214px;" data-bind="l15.rows.3"></div>
+        </div>
+        <div id="board-tree2" class="actor new board-a" style="left:560px; top:690px; width:370px; height:280px; padding:0;">
+          <div class="board-lab" style="left:20px; top:14px; font-size:30px;" data-bind="l16.sub"></div>
+          <div id="board-q0" class="board-row" style="top:80px;" data-bind="l16.rows.0"></div>
+          <div id="board-q1" class="board-row" style="top:136px;" data-bind="l16.rows.1"></div>
+          <div id="board-q2" class="board-row" style="top:192px;" data-bind="l16.rows.2"></div>
+        </div>
+        <svg class="ink" id="board-svg2" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <path id="board-tlink" class="ln amber thick" d="M300 873 C 450 873 470 790 560 790" />
+          <path id="board-qlink" class="ln thick" style="stroke:var(--role-hero)" d="M720 785 C 900 860 820 1000 470 1150" />
+        </svg>
+
+        <div id="board-fix" class="board-hero" style="left:442px; top:540px;" data-bind="l05.file"></div>
+        <div id="board-id1" class="board-tag" style="left:340px; top:1200px; color:var(--role-hero); font-size:26px; opacity:0;" data-bind="l17.idOld"></div>
+        <div id="board-id2" class="board-tag" style="left:470px; top:1200px; color:var(--role-hero); font-size:26px; opacity:0;" data-bind="l18.idNew"></div>
+        <div id="board-ca" class="board-tag" style="left:330px; top:940px; color:var(--role-hero);" data-bind="l17.label"></div>
+        <div id="board-same" class="board-tag" style="left:200px; top:1370px; color:var(--mint); font-size:24px;" data-bind="l18.lock"></div>
+        <div id="board-saved" class="board-tag" style="left:640px; top:930px; color:var(--amber); font-size:22px;" data-bind="l19.saved"></div>
+        <div id="board-ok" class="board-tag" style="left:640px; top:1360px; color:var(--mint); font-size:22px;" data-bind="l19.ok"></div>
+        <div id="board-cid" class="board-tag" style="left:628px; top:1150px; color:var(--role-hero); font-size:22px; opacity:0;" data-bind="l17.idOld"></div>
+
+        <div id="board-sideL" class="actor compute board-a" style="left:140px; top:1060px; width:150px; height:220px; padding:0;">
+          <div class="actor store board-a" style="left:14px; top:110px; width:120px; height:90px; padding:0; box-shadow:none;"><div class="board-lab" style="left:12px; top:30px; font-size:24px;" data-bind="l20.cache"></div></div>
+        </div>
+        <div id="board-sideR" class="actor compute board-a" style="left:790px; top:1060px; width:150px; height:220px; padding:0;">
+          <div class="actor store board-a" style="left:14px; top:110px; width:120px; height:90px; padding:0; box-shadow:none;"><div class="board-lab" style="left:12px; top:30px; font-size:24px;" data-bind="l20.cache"></div></div>
+        </div>
+        <div id="board-shared" class="actor store board-a" style="left:340px; top:765px; width:400px; height:120px; padding:0;">
+          <div class="board-lab" style="left:20px; top:16px;" data-bind="l20.shared"></div>
+          <div class="board-mono" style="left:22px; top:70px; color:var(--dim); font-size:24px;" data-bind="l20.region"></div>
+        </div>
+        <div id="board-t1" class="board-tag" style="left:600px; top:945px; color:var(--amber); font-size:24px;" data-bind="l21.t1"></div>
+        <div id="board-t2" class="board-tag" style="left:130px; top:800px; color:var(--amber); font-size:24px;" data-bind="l21.t2"></div>
+        <div id="board-t3" class="board-tag" style="left:760px; top:262px; color:var(--role-new); font-size:24px;" data-bind="l21.t3"></div>
+        <div id="board-tiers" class="board-tag" style="left:330px; top:960px; color:var(--amber); font-size:40px;" data-bind="l21.tiers"></div>
+        <div id="board-pk" class="board-hero" style="left:470px; top:830px; opacity:0;" data-bind="l05.file"></div>
+        <div id="board-hit" class="stamp mint" style="left:612px; top:1268px; font-size:44px; padding:2px 16px; border-width:6px; outline-offset:-14px;" data-bind="l22.hit"></div>
+        <div id="board-r99a" class="board-tag" style="left:624px; top:1255px; color:var(--mint); font-size:30px;" data-bind="l22.rate"></div>
+        <div id="board-r99b" class="board-tag" style="left:760px; top:790px; color:var(--mint); font-size:34px;" data-bind="l22.rate"></div>
+        <div id="board-power" class="board-tag" style="left:190px; top:440px; color:var(--role-new); font-size:26px;" data-bind="l23.power"></div>
+        <div id="board-mem" class="board-tag" style="left:560px; top:440px; color:var(--role-new); font-size:26px;" data-bind="l23.memory"></div>
+        <div id="board-memsub" class="board-mono" style="left:562px; top:500px; color:var(--dim); font-size:22px;" data-bind="l23.memSub"></div>
+      </div>
+    </div>
+    <div id="board-dim"></div>
+    <div id="board-pay">
+      <div class="board-mono" style="left:40px; top:40px; color:var(--role-old); font-size:30px;" data-bind="l24.old"></div>
+      <div id="board-bar-old" class="board-bar" style="top:90px; width:800px; background:var(--role-old);"></div>
+      <div class="board-mono" style="left:40px; top:190px; color:var(--role-new); font-size:30px;" data-bind="l24.new"></div>
+      <div id="board-bar-new" class="board-bar" style="top:240px; width:10px; background:var(--role-new);"></div>
+      <div id="board-ratio" class="hd" style="left:40px; top:330px; font-size:110px; color:var(--amber);" data-bind="l24.ratio"></div>
+      <div class="board-mono" style="left:44px; top:455px; color:var(--white); font-size:30px;" data-bind="l24.what"></div>
+    </div>
+    <div id="board-rcam"><div id="board-rstage"></div></div>
+    <div id="board-rhud"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'board', D = KIT.sceneDur(S), E = KIT.svgEl, W = '#board-world';
+      const c = (l, w, n) => KIT.cue(l, w, n), ce = (l, w, n) => KIT.cueEnd(l, w, n), st = (l) => KIT.cue(l, 0), en = (l) => KIT.cue(l, 'end');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const out = (sel, t, d = 0.3) => tl.to(sel, { opacity: 0, duration: d, ease: 'power1.in' }, t);
+      // Camera with a floor: the lowest actor on the board at time t must stay above the caption band (y 1490).
+      // Screen y of world point Y is 960 + s * (Y - py), so the floor needs py >= floor - 470 / s (470 leaves room for
+      // the beat wrapper). If the wanted shot sits too high for that, zoom out until the target and the floor both fit.
+      const tMachine = KIT.cue('l04', 0) - 0.7;   // the camera settles on the l04 shot before the machine rises
+      const floorAt = (t) => (t < tMachine ? 700 : t < KIT.cue('l20', 0) ? 1430 : 1345);
+      const focus = (t, px, py, s, dur = 0.9) => {
+        const fl = floorAt(t); let s2 = s;
+        if (py < fl - 470 / s) s2 = Math.min(s, 980 / (fl - py));
+        const py2 = Math.max(py, fl - 470 / s2);
+        KIT.focus(tl, W, t, { px, py: py2, s: s2, dur });
+      };
+      const beatTimes = [];
+      const beat = (t) => beatTimes.push(t);
+
+      // ---- elements hidden at load (each animated in once with fromTo below) ----
+      const later = ['#board-agents-tag', '#board-server', '#board-mach', '#board-ci', '#board-copy', '#board-checkout', '#board-offline', '#board-noconn', '#board-most', '#board-films',
+        '#board-rate', '#board-ratetag', '#board-mult', '#board-iftag', '#board-total', '#board-totalgb', '#board-online', '#board-where', '#board-nofull', '#board-only',
+        '#board-tree1', '#board-tree2', '#board-ca', '#board-same', '#board-saved', '#board-ok', '#board-sideL', '#board-sideR', '#board-shared', '#board-t1', '#board-t2', '#board-t3', '#board-tiers',
+        '#board-hit', '#board-r99a', '#board-r99b', '#board-power', '#board-mem', '#board-memsub', '#board-lap', '#board-film', '#board-lock', '#board-f0', '#board-f1', '#board-f2', '#board-f3', '#board-fix'];
+      gsap.set(later, { opacity: 0 });   // hidden before the timeline runs (a tl.set at 0 does not render at frame 0)
+      ['#board-arrow', '#board-wire', '#board-check', '#board-w1', '#board-w2', '#board-w3', '#board-col', '#board-tlink', '#board-qlink', '#board-nosig'].forEach((p) => gsap.set(p, { drawSVG: '0%' }));
+
+      // ---- l02: Scion named, the store draws on, folders rise, it becomes the monorepo ----
+      // frame 0 of the board shows the hook's GIT box where it stood (the hook camera ends at scale 1.07)
+      gsap.set('#board-store', { '--role': getComputedStyle(document.documentElement).getPropertyValue('--role-old').trim() });
+      // the store sits at its final place; a transform maps it onto the GIT box (368, 467, 344 x 220) until "one store"
+      const SX = 344 / 680, SY = 220 / 235;
+      gsap.set(['#board-st-git', '#board-st-scion'], { scaleX: 1 / SX, scaleY: 1 / SY, transformOrigin: '50% 50%' });
+      tl.fromTo('#board-store', { x: 168, y: 82, scaleX: SX, scaleY: SY, transformOrigin: '0 0' }, { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 1.0, ease: 'power3.inOut' }, c('l02', 'All') - 0.05);
+      tl.to('#board-st-git', { y: -8, duration: 0.15, yoyo: true, repeat: 1 }, c('l02', 'built'));
+      KIT.recolor(tl, '#board-store', c('l02', 'Scion') - 0.15, 'new', { dur: 0.35 });
+      KIT.swap(tl, '#board-st-git', '#board-st-scion', c('l02', 'Scion') - 0.15);
+      KIT.sparks(tl, W, 540, 577, c('l02', 'Scion'), { color: '#c3a6ff', n: 12, r: 240 });
+      tl.to('#board-st-scion', { opacity: 0, duration: 0.25 }, c('l02', 'All') + 0.05);
+      KIT.recolor(tl, '#board-store', c('l02', 'All'), 'store', { dur: 0.6 });
+      KIT.fade(tl, '#board-st-one', c('l02', 'code'));
+      tl.fromTo(['#board-f0', '#board-f1', '#board-f2', '#board-f3'], { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, stagger: 0.12, ease: 'back.out(2)' }, c('l02', 'code') + 0.1);
+      KIT.swap(tl, '#board-st-one', '#board-st-mono', c('l02', 'monorepo') - 0.1);
+      focus(0, 540, 760, 1.12, 0.01);
+      focus(c('l02', 'All') - 0.05, 540, 590, 1.25, 1.0);
+      beat(c('l02', 'monorepo'));
+
+      // ---- l03: agents write code into the store ----
+      const bots = [330, 450, 570, 690].map((x, i) => KIT.robot('#board-bots', { id: `board-bot${i}`, x, y: 175, s: 0.34 }).g);
+      tl.fromTo(bots, { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.1, ease: 'back.out(2)' }, c('l03', 'AI') - 0.1);
+      tl.to(['#board-f0', '#board-f1', '#board-f2', '#board-f3'], { y: -6, duration: 0.15, yoyo: true, repeat: 1, stagger: 0.08 }, c('l03', 'code'));
+      for (let k = 0; k < 6; k++) KIT.travel(tl, W, c('l03', 'write') + k * 0.45, [330 + (k % 4) * 120, 280], [300 + ((k * 3) % 5) * 120, 470], { dur: 0.45 });
+      KIT.pop(tl, '#board-agents-tag', c('l03', 'agents') - 0.1);
+
+      // ---- l04: the test machine rises; a check; the chip says CI JOB ----
+      focus(tMachine, 540, 900, 0.95, 0.6);
+      tl.fromTo('#board-mach', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'back.out(1.5)' }, Math.max(c('l04', 'machine') - 0.1, tMachine + 0.6));
+      KIT.travel(tl, W, c('l04', 'checks'), [500, 620], [450, 1150], { dur: 0.5 });
+      KIT.draw(tl, '#board-check', c('l04', 'changes'), 0.35);
+      KIT.pop(tl, '#board-ci', c('l04', 'job') - 0.15);
+      tl.to('#board-check', { opacity: 0, duration: 0.3 }, en('l04') - 0.2);
+
+      // ---- l05: one fix to payments/refund.py; its CI job needs the code ----
+      focus(c('l05', 'one') - 0.3, 540, 520, 1.45, 0.8);
+      tl.to('#board-f2', { color: '#ff8fc4', borderColor: '#ff8fc4', scale: 1.12, duration: 0.3 }, c('l05', 'payments') - 0.1);
+      tl.fromTo('#board-fix', { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(2.6)' }, c('l05', 'refund') - 0.1);
+      KIT.sparks(tl, W, 530, 560, c('l05', 'refund') + 0.1, { color: '#ff8fc4', r: 120, n: 8 });
+      focus(c('l05', 'needs') - 0.5, 540, 1120, 1.25, 0.8);
+      tl.to('#board-nocode', { scale: 1.15, color: '#f2f8ff', duration: 0.25, yoyo: true, repeat: 1 }, c('l05', 'code'));
+
+      // ---- l06: it asks a central computer: the server frame draws around the store ----
+      focus(c('l06', 'asks') - 0.4, 540, 820, 0.92, 0.9);
+      KIT.travel(tl, W, c('l06', 'asks'), [540, 1010], [540, 650], { cls: 'packet ask', dur: 0.55 });
+      tl.fromTo('#board-server', { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'power3.out' }, c('l06', 'central') - 0.1);
+      beat(c('l06', 'server'));
+
+      // ---- l07: the server sends a copy down the arrow: a checkout ----
+      KIT.draw(tl, '#board-arrow', c('l07', 'sends') - 0.1, 0.5);
+      tl.fromTo('#board-copy', { y: -640, opacity: 0, scale: 0.6 }, { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: 'power2.inOut' }, c('l07', 'sends'));
+      tl.to('#board-nocode', { opacity: 0, duration: 0.2 }, c('l07', 'sends') + 0.6);
+      KIT.pop(tl, '#board-checkout', c('l07', 'checkout') - 0.15);
+      focus(c('l07', 'checkout') - 0.3, 540, 1000, 1.05, 0.7);
+
+      // ---- l08: every file and every past version; people work offline ----
+      focus(c('l08', 'Git') - 0.3, 470, 1150, 1.5, 0.7);
+      tl.fromTo('#board-copy-files', { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3 }, c('l08', 'file') - 0.1);
+      tl.fromTo(['#board-copy-past', '#board-copy-pastl'], { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.1 }, c('l08', 'past') - 0.1);
+      KIT.fade(tl, '#board-copy-pasts', c('l08', 'looked') - 0.1);
+      tl.to('#board-copy', { scale: 1.08, duration: 0.25, yoyo: true, repeat: 1 }, c('l08', 'change'));
+      focus(c('l08', 'people') - 0.35, 330, 1150, 1.15, 0.7);
+      tl.fromTo('#board-lap', { x: -200, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, c('l08', 'people') - 0.1);
+      KIT.draw(tl, '#board-nosig', c('l08', 'offline') - 0.1, 0.25);
+      KIT.pop(tl, '#board-offline', c('l08', 'offline'));
+      KIT.fade(tl, '#board-noconn', c('l08', 'connection') - 0.1);
+
+      // ---- l09: right for most projects; but here over 25 GB; one film is a few GB ----
+      const pg = document.getElementById('board-proj'), projs = [];
+      [70, 160, 250].forEach((x, i) => { const g = E('g', { id: `board-p${i}` }, pg); E('rect', { x, y: 740, width: 70, height: 90, rx: 6, fill: '#0a2340', stroke: '#a8dcf2', 'stroke-width': 4 }, g); E('rect', { x: x + 15, y: 790, width: 40, height: 22, fill: '#ff6b6b' }, g); E('path', { d: `M${x + 18} ${732} L${x + 32} ${746} L${x + 58} ${716}`, fill: 'none', stroke: '#7be3b0', 'stroke-width': 6, 'stroke-linecap': 'round' }, g); projs.push(g); });
+      focus(c('l09', 'suits') - 0.35, 360, 980, 1.0, 0.7);
+      tl.fromTo(projs, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, stagger: 0.12, ease: 'back.out(2)' }, c('l09', 'suits'));
+      KIT.pop(tl, '#board-most', c('l09', 'projects'));
+      focus(c('l09', 'But') - 0.2, 520, 1130, 1.4, 0.6);
+      tl.to(['#board-copy-past', '#board-copy-pastl', '#board-copy-pasts'], { opacity: 0.15, duration: 0.3 }, c('l09', 'files'));
+      out(['#board-proj', '#board-most', '#board-lap', '#board-offline', '#board-noconn'], c('l09', 'But') - 0.2, 0.25);
+      tl.to('#board-checkout', { opacity: 0, duration: 0.2 }, c('l09', 'But') - 0.2);
+      KIT.travel(tl, W, c('l09', 'files') - 0.2, [500, 640], [470, 1120], { cls: 'packet big', dur: 0.6 });
+      KIT.slam(tl, '#board-size', c('l09', 'twenty') - 0.2, { shakeTarget: '#board-beat', amp: 12 });
+      focus(c('l09', 'One') - 0.3, 700, 1000, 1.2, 0.6);
+      tl.fromTo('#board-film', { scale: 0.3, opacity: 0, transformOrigin: '855px 878px' }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(2.4)' }, c('l09', 'film') - 0.1);
+      KIT.pop(tl, '#board-films', c('l09', 'few'));
+
+      // ---- l10: receipt, then one machine becomes many ----
+      const rdT = c('l10', 'runs') - 0.45;
+      tl.to('#board-beat', { autoAlpha: 0, duration: 0.3 }, rdT - 0.05);
+      const ev1 = KIT.EP.evidence.checkouts, Wp = 1000, X0 = 40, Y0 = 700, ph1 = Wp * ev1.h / ev1.w;
+      const R1 = KIT.read(tl, { cam: '#board-rcam', parent: '#board-rstage', hud: '#board-rhud', tagY: 420, id: 'checkouts', t: rdT, label: KIT.data('l10').src,
+        x: X0, y: Y0, width: Wp, zoom: 2.0, fx: 110, fy: 820, follow: 0,
+        marks: [[c('l10', 'twenty'), ce('l10', 'checkouts'), [[c('l10', 'million'), 0.2], [c('l10', 'checkouts'), 0.5]]]],
+        circles: [{ word: '25', t: c('l10', 'twenty') + 0.1 }] });
+      const back1 = ce('l10', 'checkouts') + 0.05;
+      tl.to(R1.el, { y: 900, opacity: 0, duration: 0.3, ease: 'power3.in' }, back1);
+      tl.to(`#${R1.el.id}-tag`, { opacity: 0, duration: 0.2 }, back1);
+      tl.to('#board-beat', { autoAlpha: 1, duration: 0.3 }, back1);
+      tl.to('#board-rcam', { x: 0, y: 0, scale: 1, duration: 0.01 }, back1 + 0.35);
+      const gridT = back1 + 0.1;
+      focus(gridT - 0.1, 540, 900, 1.0, 0.6);
+      out(['#board-copy', '#board-size', '#board-lap', '#board-offline', '#board-noconn', '#board-most', '#board-films', '#board-film', '#board-proj', '#board-checkout', '#board-arrow'], gridT - 0.1, 0.25);
+      tl.to('#board-mach', { opacity: 0, duration: 0.3 }, gridT);
+      KIT.multiply(tl, '#board-grid', gridT + 0.1, { n: 60, cols: 10, cell: 58, gap: 14, x: 540, y: 990, dur: 1.0, seed: 7 });
+      KIT.slam(tl, '#board-rate', gridT + 0.2, { shake: false });
+      KIT.pop(tl, '#board-ratetag', gridT + 0.5);
+
+      // ---- l11: if each took the full copy: 25 million x 25 GB, over 600 million GB, over a hundred million films ----
+      tl.to('#board-rate', { opacity: 0, y: -30, duration: 0.3 }, c('l11', 'If') - 0.1);
+      tl.to('#board-ratetag', { opacity: 0, duration: 0.2 }, c('l11', 'If') + 0.2);
+      KIT.pop(tl, '#board-iftag', c('l11', 'If') + 0.1);
+      // "those twenty five gigabytes": one full copy leaves the server for one cell of the grid
+      KIT.travel(tl, W, c('l11', 'took') - 0.1, [540, 640], [187 + 29 + 4 * 72, 781 + 29 + 2 * 72], { cls: 'packet big', dur: 0.7 });
+      tl.to('#board-server', { boxShadow: '0 0 60px rgba(255,107,107,.75)', duration: 0.4 }, c('l11', 'servers') - 0.1);
+      for (let k = 0; k < 16; k++) {
+        const col = (k * 7) % 10, row = (k * 3) % 6;
+        KIT.travel(tl, W, c('l11', 'send') + k * 0.22, [540, 640], [187 + 29 + col * 72, 781 + 29 + row * 72], { cls: 'packet big', dur: 0.5 });
+      }
+      KIT.pop(tl, '#board-mult', c('l11', 'times') - 0.3);
+      // "times twenty five gigabytes a day": every cell fills with the coral copy, in a wave, as the product is spoken
+      const cells = Array.from(document.querySelectorAll('#board-grid .cell'));
+      tl.to(cells, { backgroundColor: 'rgba(255,107,107,.85)', borderColor: '#ff6b6b', duration: 0.12, stagger: { each: 0.025, from: 'start' } }, c('l11', 'times'));
+      beat(c('l11', 'twenty', 2));
+      tl.to('#board-mult', { scale: 1.08, duration: 0.2, yoyo: true, repeat: 1 }, c('l11', 'gigabytes', 1));
+      KIT.slam(tl, '#board-total', c('l11', 'six') - 0.2, { shakeTarget: '#board-beat', amp: 14 });
+      KIT.pop(tl, '#board-totalgb', c('l11', 'gigabytes', 2) - 0.2);
+      tl.fromTo('#board-grid', { opacity: 1 }, { opacity: 0.55, duration: 0.3 }, c('l11', 'or'));
+      tl.to('#board-total', { scale: 1.08, duration: 0.2, yoyo: true, repeat: 1 }, c('l11', 'films') - 0.1);
+      focus(c('l11', 'six') - 0.3, 540, 1080, 1.08, 1.0);
+      beat(c('l11', 'films'));
+
+      // ---- l12: CI jobs never work offline: one machine, the receipt, a wire that stays ----
+      const t12 = st('l12');
+      out(['#board-grid', '#board-mult', '#board-iftag', '#board-total', '#board-totalgb', '#board-ratetag'], t12, 0.3);
+      tl.to('#board-server', { boxShadow: '8px 8px 0 rgba(2,12,24,.62)', duration: 0.4 }, t12);
+      tl.to('#board-mach', { opacity: 1, duration: 0.3 }, t12 + 0.1);
+      tl.to(['#board-copy', '#board-lap'], { opacity: 1, duration: 0.3 }, t12 + 0.15);
+      focus(t12, 520, 1000, 1.05, 0.6);
+      const rdT2 = c('l12', 'jobs') - 0.5;
+      tl.to('#board-beat', { autoAlpha: 0, duration: 0.3 }, rdT2 - 0.05);
+      const R2 = KIT.read(tl, { cam: '#board-rcam', parent: '#board-rstage', hud: '#board-rhud', tagY: 420, id: 'online', t: rdT2, label: KIT.data('l12').src,
+        x: X0, y: Y0, width: Wp, zoom: 1.85, fx: 90, fy: 820, follow: 0,
+        marks: [[c('l12', 'jobs'), ce('l12', 'offline'), [[c('l12', 'never'), 0.35], [c('l12', 'work'), 0.6]]]],
+        circles: [{ word: 'online', t: c('l12', 'offline') }] });
+      const back2 = ce('l12', 'offline') + 0.25;
+      tl.to(R2.el, { y: 900, opacity: 0, duration: 0.3, ease: 'power3.in' }, back2);
+      tl.to(`#${R2.el.id}-tag`, { opacity: 0, duration: 0.2 }, back2);
+      tl.to('#board-beat', { autoAlpha: 1, duration: 0.3 }, back2);
+      tl.to('#board-rcam', { x: 0, y: 0, scale: 1, duration: 0.01 }, back2 + 0.35);
+      focus(back2, 540, 900, 0.95, 0.7);
+      KIT.pop(tl, '#board-where', c('l12', 'own') - 0.1);
+      KIT.draw(tl, '#board-wire', c('l12', 'connected') - 0.2, 0.5);
+      KIT.pop(tl, '#board-online', c('l12', 'connected'));
+      tl.to('#board-lap', { opacity: 0.2, duration: 0.4 }, c('l12', 'server'));
+
+      // ---- l13: so they need no full copy ----
+      KIT.shake(tl, '#board-copy', c('l13', 'no') - 0.1, { amp: 12, dur: 0.3 });
+      tl.to('#board-copy', { opacity: 0, scale: 0.7, rotation: -6, duration: 0.4, ease: 'power2.in' }, c('l13', 'full'));
+      KIT.slam(tl, '#board-nofull', c('l13', 'no') - 0.1, { shake: false, from: 2 });
+      focus(c('l13', 'So') - 0.2, 540, 1120, 1.25, 0.5);
+
+      // ---- l14: the Git server turns into the Scion server where it stands ----
+      focus(c('l14', 'Git') - 0.2, 540, 800, 0.92, 0.7);
+      tl.to(['#board-nofull', '#board-where', '#board-online', '#board-lap'], { opacity: 0, duration: 0.3 }, c('l14', 'Git'));
+      KIT.recolor(tl, '#board-server', c('l14', 'Scion') - 0.15, 'new', { dur: 0.5 });
+      KIT.swap(tl, '#board-srv-git', '#board-srv-scion', c('l14', 'Scion') - 0.15);
+      KIT.sparks(tl, W, 540, 330, c('l14', 'Scion'), { color: '#c3a6ff', n: 12, r: 260 });
+      // the one store breaks into pieces: no full copy anywhere, even on the server
+      const pieces = []; const rp = KIT.rng(14);
+      for (let k = 0; k < 14; k++) { const d = document.createElement('div'); d.style.cssText = `position:absolute;left:${220 + (k % 7) * 92 + rp() * 30}px;top:${430 + Math.floor(k / 7) * 90 + rp() * 30}px;width:${36 + rp() * 24}px;height:${28 + rp() * 18}px;background:#c3a6ff;opacity:0`; const wd = document.getElementById('board-world'); wd.insertBefore(d, document.getElementById('board-server')); pieces.push(d); }
+      tl.to(['#board-store', '#board-f0', '#board-f1', '#board-f2', '#board-f3'], { opacity: 0, scale: 0.9, duration: 0.35 }, c('l14', 'keeps') - 0.1);
+      tl.fromTo(pieces, { opacity: 0, scale: 0.2 }, { opacity: 0.75, scale: 1, duration: 0.3, stagger: 0.03, ease: 'back.out(2)' }, c('l14', 'keeps'));
+      KIT.pop(tl, '#board-stays', c('l14', 'server') - 0.1);
+      focus(c('l14', 'machine') - 0.3, 540, 1080, 1.1, 0.7);
+      KIT.pop(tl, '#board-only', c('l14', 'only'));
+      beat(c('l14', 'needs'));
+
+      // ---- l15: to find refund.py, the machine gets a list of the main folder: a tree ----
+      tl.to('#board-only', { opacity: 0, duration: 0.3 }, c('l15', 'To') - 0.3);
+      focus(c('l15', 'To') - 0.2, 540, 820, 1.0, 0.7);
+      tl.to('#board-fix', { scale: 1.2, duration: 0.25, yoyo: true, repeat: 1 }, c('l15', 'refund'));
+      KIT.travel(tl, W, c('l15', 'gets') - 0.3, [540, 1010], [540, 650], { cls: 'packet ask', dur: 0.45 });
+      tl.fromTo('#board-tree1', { y: -260, opacity: 0, scale: 0.5 }, { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out' }, c('l15', 'list') - 0.1);
+      tl.fromTo(['#board-r0', '#board-r1', '#board-r2', '#board-r3'], { x: -20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.2, stagger: 0.12 }, c('l15', 'main') - 0.1);
+      focus(c('l15', 'call') - 0.3, 330, 830, 1.35, 0.6);
+      KIT.swap(tl, '#board-t1-main', '#board-t1-tree', c('l15', 'tree') - 0.15);
+      tl.to('#board-tree1', { scale: 1.05, duration: 0.2, yoyo: true, repeat: 1 }, c('l15', 'tree'));
+
+      // ---- l16: that tree points to the payments folder's tree, which points to refund.py ----
+      focus(c('l16', 'points') - 0.3, 520, 860, 1.05, 0.6);
+      tl.to('#board-r2', { color: '#ffb454', duration: 0.2 }, c('l16', 'payments') - 0.2);
+      KIT.draw(tl, '#board-tlink', c('l16', 'payments') - 0.1, 0.4);
+      tl.fromTo('#board-tree2', { y: -260, opacity: 0, scale: 0.5 }, { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: 'power3.out' }, c('l16', 'tree', 1) - 0.2);
+      tl.to('#board-q0', { color: '#ff8fc4', duration: 0.2 }, c('l16', 'which'));
+      tl.to(['#board-q1', '#board-q2'], { opacity: 0.3, duration: 0.3 }, c('l16', 'refund') - 0.2);
+      KIT.draw(tl, '#board-qlink', c('l16', 'points', 1), 0.5);
+      // the pink file itself rides down into the machine's slot
+      tl.to('#board-fix', { x: -90, y: 610, duration: 0.9, ease: 'power2.inOut' }, c('l16', 'refund') - 0.1);
+      focus(c('l16', 'refund') + 0.2, 480, 1080, 1.1, 0.7);
+      tl.to(pieces.slice(0, 2), { backgroundColor: '#ff8fc4', duration: 0.2 }, c('l16', 'refund'));
+
+      // ---- l17: each file version gets an ID made from its contents: a content address ----
+      out(['#board-tree1', '#board-tree2', '#board-tlink', '#board-qlink', '#board-only'], c('l17', 'Each') - 0.2, 0.3);
+      focus(c('l17', 'Each') - 0.2, 440, 1180, 1.7, 0.8);
+      tl.fromTo('#board-id1', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3 }, c('l17', 'contents') - 0.2);
+      KIT.typeOn(tl, '#board-id1', c('l17', 'contents') - 0.2, 14);
+      focus(c('l17', 'call') - 0.3, 470, 1060, 1.3, 0.6);
+      KIT.pop(tl, '#board-ca', c('l17', 'content') - 0.1);
+
+      // ---- l18: the fix edits the file: a new address; the old one keeps its contents ----
+      tl.to('#board-fix', { backgroundColor: '#ffb454', duration: 0.15, yoyo: true, repeat: 3 }, c('l18', 'edits') - 0.1);
+      tl.to('#board-ca', { opacity: 0, duration: 0.3 }, c('l18', 'When'));
+      focus(c('l18', 'new') - 0.4, 470, 1200, 1.6, 0.6);
+      tl.fromTo('#board-id2', { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(2.4)' }, c('l18', 'new') - 0.05);
+      tl.set('#board-lock', { x: 372, y: 1262 }, 0);
+      tl.fromTo('#board-lock', { scale: 2.2, opacity: 0, transformOrigin: '17px 25px' }, { scale: 1, opacity: 1, duration: 0.25, ease: 'power4.in' }, c('l18', 'always') - 0.15);
+      focus(c('l18', 'old') - 0.3, 480, 1180, 1.25, 0.6);
+      KIT.pop(tl, '#board-same', c('l18', 'same') - 0.1);
+
+      // ---- l19: any machine can keep copies and reuse them: a cache ----
+      focus(c('l19', 'So') - 0.2, 540, 1150, 1.2, 0.6);
+      tl.fromTo('#board-mcache', { opacity: 0, scaleY: 0.3, transformOrigin: '50% 100%' }, { opacity: 1, scaleY: 1, duration: 0.4, ease: 'back.out(1.6)' }, c('l19', 'keep') - 0.2);
+      tl.fromTo('#board-cid', { x: -270, y: 50, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.6, ease: 'power2.inOut' }, c('l19', 'copies') - 0.1);
+      KIT.pop(tl, '#board-saved', c('l19', 'copies') + 0.1);
+      KIT.pop(tl, '#board-ok', c('l19', 'reuse'));
+      focus(c('l19', 'call') - 0.3, 690, 1180, 1.5, 0.6);
+      tl.to('#board-mcache', { boxShadow: '0 0 40px rgba(255,180,84,.8)', duration: 0.3 }, c('l19', 'cache') - 0.1);
+
+      // ---- l20: machine cache, side machines, one shared cache in the same region ----
+      out(['#board-saved', '#board-ok', '#board-same'], st('l20'), 0.3);
+      focus(c('l20', 'Each') - 0.2, 540, 940, 1.0, 0.9);
+      tl.fromTo('#board-sideL', { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, c('l20', 'own') - 0.2);
+      tl.fromTo('#board-sideR', { x: 300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, c('l20', 'own') - 0.1);
+      tl.fromTo('#board-shared', { y: -60, opacity: 0, scale: 0.6 }, { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.8)' }, c('l20', 'share') - 0.2);
+      KIT.draw(tl, ['#board-w1', '#board-w2', '#board-w3'], c('l20', 'share'), 0.4);
+      tl.to('#board-wire', { opacity: 0.25, duration: 0.3 }, c('l20', 'share'));
+      KIT.travel(tl, W, c('l20', 'few') - 0.3, [215, 1060], [420, 860], { cls: 'packet ask', dur: 0.5 });
+      KIT.travel(tl, W, c('l20', 'few') - 0.1, [865, 1060], [660, 860], { cls: 'packet ask', dur: 0.5 });
+      KIT.travel(tl, W, c('l20', 'ask'), [540, 765], [540, 655], { cls: 'packet ask', dur: 0.4 });
+      beat(c('l20', 'region'));
+
+      // ---- l21: machine cache, shared cache, server: three tiers ----
+      // the camera walks up the column: machine cache, shared cache, server, then pulls back for the bracket
+      focus(c('l21', 'Machine') - 0.3, 722, 1150, 1.25, 0.5);
+      focus(c('l21', 'shared') - 0.3, 540, 900, 1.1, 0.5);
+      focus(c('l21', 'server') - 0.3, 540, 480, 1.1, 0.5);
+      focus(c('l21', 'call') - 0.2, 540, 940, 1.0, 0.7);
+      KIT.pop(tl, '#board-t1', c('l21', 'Machine') - 0.1);
+      tl.to('#board-mcache', { scale: 1.12, duration: 0.2, yoyo: true, repeat: 1 }, c('l21', 'Machine'));
+      KIT.pop(tl, '#board-t2', c('l21', 'shared') - 0.1);
+      tl.to('#board-shared', { scale: 1.08, duration: 0.2, yoyo: true, repeat: 1 }, c('l21', 'shared'));
+      KIT.pop(tl, '#board-t3', c('l21', 'server') - 0.1);
+      tl.to('#board-server', { scale: 1.04, duration: 0.2, yoyo: true, repeat: 1 }, c('l21', 'server'));
+      KIT.draw(tl, '#board-col', c('l21', 'call') - 0.1, 0.6);
+      KIT.slam(tl, '#board-tiers', c('l21', 'tiers') - 0.2, { shakeTarget: '#board-beat', amp: 10 });
+
+      // ---- l22: a cache hit; both cache tiers over 99% ----
+      tl.to('#board-tiers', { opacity: 0, duration: 0.3 }, c('l22', 'When'));
+      focus(c('l22', 'When') - 0.2, 722, 1060, 1.25, 0.6);
+      tl.to(['#board-t2', '#board-srv-scion'], { opacity: 0, duration: 0.2 }, c('l22', 'When') - 0.2);
+      tl.fromTo('#board-pk', { x: 0, y: 0, opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.2 }, c('l22', 'cache') - 0.2);
+      tl.to('#board-pk', { x: 160, y: 385, duration: 0.8, ease: 'power2.inOut' }, c('l22', 'holds') - 0.1);
+      tl.to('#board-mcache', { boxShadow: '0 0 50px rgba(123,227,176,.9)', duration: 0.2, yoyo: true, repeat: 1 }, c('l22', 'holds') + 0.6);
+      KIT.slam(tl, '#board-hit', c('l22', 'hit') - 0.2, { shake: false, from: 2.2 });
+      focus(c('l22', 'Machine') - 0.3, 540, 940, 1.0, 0.7);
+      tl.to(['#board-hit', '#board-pk'], { opacity: 0, duration: 0.3 }, c('l22', 'Machine'));
+      tl.to(['#board-t2', '#board-srv-scion'], { opacity: 1, duration: 0.3 }, c('l22', 'Machine') + 0.3);
+      KIT.slam(tl, '#board-r99a', c('l22', 'ninety') - 0.15, { shake: false });
+      KIT.slam(tl, '#board-r99b', c('l22', 'percent') - 0.1, { shake: false });
+
+      // ---- l23: few requests reach the server; less to send: less power and memory ----
+      focus(c('l23', 'Few') - 0.2, 540, 900, 1.0, 0.8);
+      for (let k = 0; k < 10; k++) {
+        const from = [[215, 1060], [540, 1010], [865, 1060]][k % 3];
+        KIT.travel(tl, W, c('l23', 'Few') + k * 0.32, from, [540, 880], { cls: 'packet ask', dur: 0.35 });
+      }
+      KIT.travel(tl, W, c('l23', 'server') - 0.1, [540, 765], [540, 655], { cls: 'packet ask', dur: 0.4 });
+      tl.to('#board-server', { opacity: 0.75, duration: 0.4 }, c('l23', 'Less'));
+      KIT.pop(tl, '#board-power', c('l23', 'power') - 0.15);
+      KIT.pop(tl, '#board-mem', c('l23', 'memory') - 0.1);
+      KIT.fade(tl, '#board-memsub', c('l23', 'shortterm') - 0.15);
+      tl.to('#board-t1', { opacity: 0, duration: 0.3 }, c('l23', 'Less'));
+      focus(c('l23', 'memory') - 0.3, 540, 700, 0.85, 0.7);
+
+      // ---- l24: the receipt, then the bars: 200 times less computer power and memory ----
+      const rdT3 = st('l24') - 0.05;
+      tl.to('#board-beat', { autoAlpha: 0, duration: 0.3 }, rdT3 - 0.05);
+      const R3 = KIT.read(tl, { cam: '#board-rcam', parent: '#board-rstage', hud: '#board-rhud', tagY: 420, id: 'footprint', t: rdT3, label: KIT.data('l24').src,
+        x: X0, y: Y0, width: Wp, zoom: 1.35, fx: 90, fy: 820, follow: 0,
+        marks: [[c('l24', 'Anthropic') + 0.1, ce('l24', 'reports')], [c('l24', 'two'), ce('l24', 'times')]],
+        circles: [{ word: '200x', t: c('l24', 'two') + 0.05 }] });
+      const back3 = ce('l24', 'times') + 0.05;
+      tl.to(R3.el, { y: 900, opacity: 0, duration: 0.3, ease: 'power3.in' }, back3);
+      tl.to(`#${R3.el.id}-tag`, { opacity: 0, duration: 0.2 }, back3);
+      tl.to('#board-beat', { autoAlpha: 1, duration: 0.3 }, back3);
+      tl.to(['#board-stays', '#board-power', '#board-mem', '#board-memsub', '#board-srv-scion', '#board-t3'], { opacity: 0, duration: 0.2 }, back3);
+      tl.to('#board-rcam', { x: 0, y: 0, scale: 1, duration: 0.01 }, back3 + 0.35);
+      focus(back3, 540, 960, 0.8, 0.8);
+      tl.fromTo('#board-pay', { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }, back3 + 0.05);
+      KIT.grow(tl, '#board-bar-old', back3 + 0.2, 0.5, { to: parseFloat(KIT.data('l24')._oldW) });
+      KIT.grow(tl, '#board-bar-new', back3 + 0.45, 0.3);
+      KIT.slam(tl, '#board-ratio', c('l24', 'both') - 0.15, { shakeTarget: '#board-beat', amp: 12 });
+      beat(c('l24', 'Git'));
+
+      // ---- camera beats on many spoken words, so the frame never sits still for long ----
+      const extra = [['l02', 'code'], ['l03', 'code'], ['l04', 'call'], ['l05', 'Take'], ['l06', 'call'], ['l08', 'every', 1], ['l08', 'work'], ['l09', 'alone'], ['l10', 'For'],
+        ['l11', 'took'], ['l11', 'day'], ['l12', 'run'], ['l13', 'copy'], ['l14', 'every'], ['l15', 'what'], ['l16', 'That'], ['l17', 'version'], ['l17', 'address'],
+        ['l18', 'file'], ['l18', 'holds'], ['l19', 'machine'], ['l19', 'store'], ['l20', 'cache'], ['l20', 'server'], ['l21', 'layers'], ['l22', 'call'], ['l22', 'time'],
+        ['l23', 'whole'], ['l23', 'send'], ['l23', 'storage']];
+      extra.forEach(([l, w, n]) => beat(c(l, w, n)));
+      KIT.beats(tl, '#board-beat', beatTimes, { amp: 0.025, shift: 8, dur: 0.3 });
+      // ---- the camera follows what the voice names (each move also keeps the engagement gate's events under 3 s) ----
+      focus(c('l02', 'store') - 0.1, 540, 570, 1.32, 0.6);                 // in on the store
+      focus(c('l02', 'monorepo') - 0.2, 540, 600, 1.42, 0.5);             // closer as it gets its name
+      focus(c('l03', 'AI') - 0.3, 540, 560, 1.15, 0.6);                   // back out to take in the agents
+      focus(c('l03', 'agents') - 0.2, 540, 330, 1.2, 0.5);                // onto the agents as they get their name
+      focus(c('l05', 'refund') - 0.15, 500, 1068, 1.3, 0.5);             // in on the pink file
+      focus(c('l04', 'checks') - 0.1, 540, 1021, 1.15, 0.6);              // down to the machine that checks
+      focus(c('l04', 'job') - 0.2, 600, 1100, 1.35, 0.5);                 // onto the CI JOB chip
+      focus(c('l05', 'payments') - 0.1, 480, 1021, 1.15, 0.6);            // over to the payments folder
+      focus(c('l07', 'server') - 0.2, 540, 960, 1.0, 0.5);                // the server sends ...
+      focus(c('l07', 'copy') - 0.1, 540, 1040, 1.1, 0.6);                 // ... and the copy lands
+      focus(c('l08', 'past') - 0.1, 470, 1200, 1.7, 0.5);                 // into the past-version layer
+      focus(c('l11', 'those') - 0.1, 540, 1030, 1.15, 0.6);               // the one cell that takes the copy
+      focus(c('l11', 'send') - 0.1, 540, 960, 1.0, 0.6);                  // out to the whole grid
+      focus(c('l12', 'computers') - 0.2, 540, 1100, 1.15, 0.5);           // the machine itself
+      focus(c('l12', 'connected') - 0.2, 540, 935, 0.95, 0.6);            // and the wire to the server
+      focus(c('l14', 'Scion') - 0.2, 540, 700, 1.1, 0.5);                 // onto the server as it turns violet
+      tl.to('#board-stays', { opacity: 0, duration: 0.25 }, c('l15', 'To') - 0.3);
+      tl.to('#board-stays', { opacity: 1, duration: 0.3 }, KIT.cue('l20', 0));
+      focus(c('l15', 'refund') - 0.1, 480, 1010, 1.12, 0.5);              // the file the machine wants
+      focus(c('l15', 'machine') - 0.1, 540, 960, 1.0, 0.5);
+      focus(c('l16', 'payments') - 0.1, 420, 1021, 1.1, 0.5);            // the payments row in the top tree
+      focus(c('l16', 'which') - 0.1, 600, 1021, 1.05, 0.5);               // across to the payments tree
+      focus(c('l17', 'made') - 0.1, 540, 1195, 1.8, 0.5);                 // close on the file chip
+      tl.to('#board-same', { opacity: 0, duration: 0.25 }, c('l19', 'keep') - 0.35);
+      focus(c('l19', 'keep') - 0.1, 640, 1180, 1.4, 0.5);                 // the cache opens in the machine
+      focus(c('l22', 'shared') - 0.1, 590, 918, 1.1, 0.5);                // toward the shared cache
+      focus(c('l22', 'ninety') - 0.2, 540, 940, 1.0, 0.5);                // both badges in frame
+      tl.to('#board-beat', { scale: 1, x: 0, y: 0, duration: 0.3 }, D - 0.4);
+      tl.set({}, {}, D);
+      window.__timelines["board"] = tl;
+    })();
+  </script>
+</template>

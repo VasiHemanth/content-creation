@@ -1,0 +1,133 @@
+<template id="tie-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #tie-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 300px 520px; }
+    #tie-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #tie-stage, #tie-tagl { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #tie-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #tie-bucketg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #tie-bsvg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #tie-fill { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .tie-mini { position: absolute; width: 22px; height: 15px; border: 2px solid var(--white); border-radius: 3px; background: #cfe9f7; opacity: 0; }
+    .tie-mini.amb { background: radial-gradient(circle, rgba(255,180,84,1) 30%, #cfe9f7 75%); border-color: var(--amber); }
+    .tie-card { position: absolute; width: 70px; height: 50px; border: 4px solid var(--amber); border-radius: 6px; background: radial-gradient(circle, rgba(255,180,84,.95) 18%, var(--panel) 60%); opacity: 0; }
+    #tie-bucket { left: 60px; top: 236px; font-size: 26px; }
+    #tie-missed { left: 640px; top: 300px; font-size: 28px; }
+    #tie-benign { left: 420px; top: 320px; font-size: 26px; color: var(--white); border-color: var(--white); }
+    .tie-exit { top: 760px; font-size: 28px; }
+    #tie-allow { left: 150px; color: var(--cyan); border-color: var(--cyan); }
+    #tie-esc { left: 430px; }
+    #tie-block { left: 730px; color: var(--white); border-color: var(--white); }
+    #tie-pin { left: 380px; top: 360px; font-size: 26px; }
+    #tie-all { left: 60px; top: 690px; font-size: 40px; color: var(--white); border-color: var(--amber); }
+    #tie-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="tie" data-width="1080" data-height="1920">
+    <div id="tie-world">
+      <svg id="tie-svg" class="ink sketch" viewBox="0 0 1080 1920">
+        <path id="tie-line" class="ln thick" d="M90 560 L960 560" />
+        <g id="tie-gate"><rect class="fl panel" x="110" y="590" width="200" height="18" /><rect class="ln cyan thick" x="110" y="590" width="200" height="18" /></g>
+        <path id="tie-tray" class="ln amber thick" d="M420 600 L445 720 L585 720 L610 600" />
+        <rect id="tie-wall" class="ln thick" x="770" y="590" width="110" height="150" />
+        <g id="tie-pinH"><path class="ln amber heavy" d="M690 490 L690 580" /><circle class="fl amber" cx="690" cy="484" r="15" /></g>
+        <g id="tie-pinL"><path class="ln amber heavy" d="M340 490 L340 580" /><circle class="fl amber" cx="340" cy="484" r="15" /><circle id="tie-pinglow" class="fl amber" cx="340" cy="484" r="32" opacity="0" /></g>
+      </svg>
+      <div id="tie-cards"></div>
+      <div id="tie-bucketg">
+        <svg id="tie-bsvg" class="ink" viewBox="0 0 1080 1920">
+          <path id="tie-bk" class="fl panel" d="M110 400 L310 400 L285 556 L135 556 Z" />
+          <path class="ln thick" d="M110 400 L135 556 L285 556 L310 400" />
+          <path class="ln dim" d="M100 400 L320 400" />
+        </svg>
+        <div id="tie-fill"></div>
+      </div>
+      <div id="tie-bucket" class="tag" data-bind="l08.bucket"></div>
+      <div id="tie-missed" class="tag" data-bind="l08.missed"></div>
+      <div id="tie-benign" class="tag" data-bind="l08.benign"></div>
+      <div id="tie-allow" class="tag tie-exit" data-bind="l08.allow"></div>
+      <div id="tie-esc" class="tag tie-exit" data-bind="l08.esc"></div>
+      <div id="tie-block" class="tag tie-exit" data-bind="l08.block"></div>
+      <div id="tie-pin" class="tag" data-bind="l09.pin"></div>
+      <div id="tie-all" class="tag" data-bind="l09.all"></div>
+    </div>
+    <div id="tie-cam"><div id="tie-stage"></div></div>
+    <div id="tie-tagl"></div>
+    <div id="tie-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c8 = (w, n) => KIT.cue('l08', w, n), c9 = (w, n) => KIT.cue('l09', w, n), D = KIT.sceneDur('tie');
+      KIT.bind('#tie-world');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.18) => tl.fromTo('#tie-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // the bucket holds N tied inputs; the amber share is drawn from the storyboard counts (never printed)
+      const d8 = KIT.data('l08'), N = 42, nMiss = Math.max(1, Math.round(N * d8._tieMiss / d8._tieAll));
+      const fill = document.getElementById('tie-fill'), minis = [], amb = [];
+      const missAt = new Set([2, 9, 15].slice(0, nMiss));
+      for (let k = 0; k < N; k++) {
+        const r = Math.floor(k / 6), col = k % 6, e = document.createElement('div');
+        e.className = 'tie-mini' + (missAt.has(k) ? ' amb' : ''); e.id = `tie-n${k}`;
+        e.style.left = `${144 + col * 23 + (r % 2) * 6}px`; e.style.top = `${534 - r * 17}px`;
+        fill.appendChild(e); (missAt.has(k) ? amb : minis).push(e);
+      }
+      // three missed attacks arrive on the rail first
+      const cards = document.getElementById('tie-cards'), CA = [];
+      [[700, 430], [790, 380], [880, 470]].forEach(([x, y], k) => {
+        const e = document.createElement('div'); e.className = 'tie-card'; e.id = `tie-c${k}`;
+        e.style.left = `${x}px`; e.style.top = `${y}px`; cards.appendChild(e); CA.push(e);
+      });
+
+      // the rail comes back (same picture as the policy scene), lower and larger while nothing else is on screen
+      tl.fromTo('#tie-world', { y: 300, scale: 1.12 }, { y: 300, scale: 1.12, duration: 0.01 }, 0);
+      KIT.draw(tl, '#tie-line', 0.05, 0.35);
+      KIT.rise(tl, ['#tie-gate', '#tie-tray', '#tie-wall', '#tie-pinL', '#tie-pinH'], 0.1, { y: 30, stagger: 0.04 });
+      KIT.fade(tl, ['#tie-allow', '#tie-esc', '#tie-block'], 0.2, { stagger: 0.05 });
+      pulse(0.08, 0.14);
+      // "missed attacks": three amber-core cards slide onto the rail; "shared": they snap to one height
+      CA.forEach((e, k) => tl.fromTo(e, { x: 300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }, c8('missed') - 0.1 + k * 0.08));
+      KIT.pop(tl, '#tie-missed', c8('attacks'), { from: 0.5 });
+      CA.forEach((e, k) => tl.to(e, { x: 380 - parseFloat(e.style.left) + k * 78, y: 480 - parseFloat(e.style.top), duration: 0.3, ease: 'power3.inOut' }, c8('shared')));
+      pulse(c8('shared'));
+      // "lowest possible": the bucket drops in at the left end and the three cards fall in as amber cores
+      tl.fromTo('#tie-bucketg', { y: -500, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'bounce.out' }, c8('lowest') - 0.15);
+      KIT.pop(tl, '#tie-bucket', c8('lowest') + 0.1, { from: 0.5 });
+      tl.to(CA, { x: (i, el) => 160 + i * 40 - parseFloat(el.style.left), y: (i, el) => 520 - parseFloat(el.style.top), scale: 0.35, opacity: 0, duration: 0.4, ease: 'power2.in', stagger: 0.06 }, c8('possible'));
+      tl.fromTo(amb, { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.2, stagger: 0.06 }, c8('possible') + 0.3);
+      pulse(c8('lowest'), 0.22);
+      tl.to('#tie-missed', { opacity: 0, duration: 0.2 }, c8('probability'));
+      // "benign": pale inputs stream in until the amber cores are buried among them
+      tl.fromTo(minis, { y: -260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'power2.in', stagger: 0.025 }, c8('with'));
+      KIT.pop(tl, '#tie-benign', c8('benign'), { from: 0.5 });
+      pulse(c8('benign'));
+      tl.to('#tie-world', { scale: 1.3, x: -20, y: 360, duration: 0.8, ease: 'power2.inOut' }, c8('many'));
+
+      // ---- l09: the paper's sentence below; above it the allow pin nudges and the whole bucket tips: all or none
+      tl.to('#tie-world', { scale: 1, x: 0, y: 0, duration: 0.4, ease: 'power3.inOut' }, c9('Thresholds') - 0.35);
+      tl.to(['#tie-allow', '#tie-esc', '#tie-block', '#tie-benign'], { opacity: 0, duration: 0.25 }, c9('Thresholds') - 0.35);
+      KIT.pop(tl, '#tie-pin', c9('Thresholds'), { from: 0.5 });
+      const R = KIT.read(tl, { cam: '#tie-cam', parent: '#tie-stage', hud: '#tie-tagl', tagY: 830, id: 'tie', t: Math.max(0.1, c9('Thresholds') - 0.4), label: KIT.data('l09').receipt,
+        x: 40, y: 940, width: 1000, zoom: 2.0, fx: 60, fy: 960, follow: 0,
+        marks: [[c9('Thresholds'), c9('correct') + 0.25], [c9('and'), c9('score') + 0.3]],
+        circles: [{ word: 'same', t: c9('same') }] });
+      tl.set(R.el, { rotationZ: 0, rotationX: 0 }, c9('Thresholds') + 0.2);
+      pulse(c9('cannot'), 0.16);
+      // the pin moves right by a hair: the gate opens and the whole bucket drops through, amber cores and all
+      const tip = c9('same') + 0.05;
+      tl.to('#tie-pinL', { x: 34, duration: 0.15, ease: 'power2.out' }, tip);
+      tl.fromTo('#tie-pinglow', { opacity: 0 }, { opacity: 0.5, duration: 0.15, immediateRender: false }, tip);
+      tl.to('#tie-gate', { rotation: 80, svgOrigin: '110 599', duration: 0.18, ease: 'power2.out' }, tip + 0.08);
+      tl.to('#tie-bucketg', { y: 150, rotation: 8, transformOrigin: '210px 480px', duration: 0.3, ease: 'power2.in' }, tip + 0.12);
+      KIT.slam(tl, '#tie-all', tip + 0.15, { from: 1.8, shakeTarget: '#tie-world', amp: 8 });
+      pulse(tip, 0.24);
+      // and back: the pin returns, the bucket rights itself, all of it kept out
+      const back = c9('score') + 0.3;
+      tl.to('#tie-pinL', { x: 0, duration: 0.15 }, back);
+      tl.to('#tie-pinglow', { opacity: 0, duration: 0.15 }, back);
+      tl.to('#tie-bucketg', { y: 0, rotation: 0, duration: 0.3, ease: 'power2.out' }, back + 0.05);
+      tl.to('#tie-gate', { rotation: 0, svgOrigin: '110 599', duration: 0.2 }, back + 0.1);
+      tl.to(R.el, { opacity: 0, duration: 0.2 }, back);
+      window.__timelines["tie"] = tl;
+    })();
+  </script>
+</template>

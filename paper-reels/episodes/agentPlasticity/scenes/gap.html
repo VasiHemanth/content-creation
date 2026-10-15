@@ -1,0 +1,60 @@
+<template id="gap-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #gap-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #gap-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #gap-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #gap-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #gap-dotlab { left: 120px; top: 800px; font-size: 34px; }
+    #gap-arrlab { left: 370px; top: 232px; font-size: 34px; }
+    #gap-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="gap" data-width="1080" data-height="1920">
+    <div id="gap-cam"><div id="gap-stage"></div></div>
+    <div id="gap-hud">
+      <svg id="gap-svg" class="ink sketch" viewBox="0 0 1080 1920">
+        <path id="gap-axy" class="ln dim thick" d="M150 870 L150 270 M150 270 L134 298 M150 270 L166 298" />
+        <path id="gap-axx" class="ln dim thick" d="M150 870 L900 870 M900 870 L872 854 M900 870 L872 886" />
+        <path id="gap-arrow" class="ln amber thick dash" d="M280 740 C 430 710 560 560 790 340" />
+        <path id="gap-head" class="fl amber" d="M0 -20 L40 0 L0 20 Z" />
+        <circle id="gap-ring" class="ln cyan" cx="250" cy="760" r="22" opacity="0" />
+        <circle id="gap-dot" class="fl" cx="250" cy="760" r="22" />
+      </svg>
+      <div id="gap-dotlab" class="tag cyan" data-bind="l02.dot"></div>
+      <div id="gap-arrlab" class="tag" data-bind="l02.arrow"></div>
+    </div>
+    <div id="gap-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l02', w, n), D = KIT.sceneDur('gap');
+      KIT.bind('#gap-hud');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t) => tl.fromTo('#gap-flash', { opacity: 0.2 }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // upper half: the score dot, then the dashed arrow of learning (reprised in the last line)
+      KIT.draw(tl, '#gap-axy', 0.1, 0.5);
+      KIT.draw(tl, '#gap-axx', 0.2, 0.5);
+      tl.fromTo('#gap-dot', { scale: 0, svgOrigin: '250 760' }, { scale: 1, svgOrigin: '250 760', duration: 0.3, ease: 'back.out(3)' }, c('Most'));
+      KIT.rise(tl, '#gap-dotlab', c('now'), { y: 18 });
+      tl.fromTo('#gap-ring', { scale: 1, opacity: 0, svgOrigin: '250 760' }, { scale: 2.6, opacity: 1, duration: 0.5, ease: 'power2.out', immediateRender: false }, c('now'));
+      tl.to('#gap-ring', { opacity: 0, duration: 0.2 }, c('now') + 0.5);
+      KIT.draw(tl, '#gap-arrow', c('not'), 1.0, { ease: 'power1.inOut' });
+      tl.fromTo('#gap-head', { opacity: 0, x: 280, y: 740, rotation: -26 }, { opacity: 1, x: 280, y: 740, rotation: -26, duration: 0.05 }, c('not'));
+      tl.to('#gap-head', { x: 790, y: 340, rotation: -43, duration: 1.0, ease: 'power1.inOut' }, c('not'));
+      KIT.pop(tl, '#gap-arrlab', c('well'), { from: 0.5 });
+      KIT.sparks(tl, '#gap-hud', 790, 340, c('learns') + 0.1, { n: 8, r: 110 });
+
+      // lower half: the paper's own sentence read on camera, held for the whole second half of the line
+      const tR = Math.max(0.1, c('show') - 0.25);
+      const R = KIT.read(tl, { cam: '#gap-cam', parent: '#gap-stage', hud: '#gap-hud', tagY: 1010, id: 'gap', t: tR, label: KIT.data('l02').receipt,
+        x: 40, y: 1100, width: 1000, zoom: 2.6, fx: 70, fy: 1200, follow: 0,
+        marks: [[c('how'), c('now') + 0.05], [c('not'), c('learns') + 0.45]],
+        circles: [{ word: 'learns', t: c('learns') + 0.1 }] });
+      tl.set(R.el, { rotationZ: 0, rotationX: 0 }, tR + 0.6);
+
+      [c('good'), c('now'), c('not'), c('learns')].forEach(pulse);
+      window.__timelines["gap"] = tl;
+    })();
+  </script>
+</template>

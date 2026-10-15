@@ -1,0 +1,266 @@
+{
+ "item": "claude-code-mods",
+ "name": "Mods",
+ "authors": [],
+ "lines": [
+  {
+   "id": "h1",
+   "block": "scene",
+   "say": "Your agent is about to run r m dash r f build. Something stops it first.",
+   "text": "Your agent is about to run rm -rf build. Something stops it first.",
+   "data": {
+    "scene": "hammer",
+    "cmd": "rm -rf build",
+    "prompt": "$",
+    "folder": "build",
+    "stamp": "HELD"
+   },
+   "transition": "punch",
+   "sfx": [
+    {
+     "at": 0.06,
+     "kind": "tick"
+    },
+    {
+     "at": 0.62,
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "m2",
+   "block": "scene",
+   "say": "A mod is a set of JavaScript or TypeScript functions. Claude Code calls them on events, and they can watch, rewrite or answer.",
+   "text": "A mod is a set of JavaScript or TypeScript functions. Claude Code calls them on events, and they can watch, rewrite or answer.",
+   "data": {
+    "scene": "plug",
+    "label": "mod",
+    "code": [
+     "on('tool.call',",
+     "  async ($, e, next) => {",
+     "    ...",
+     "    return next(e)",
+     "})"
+    ],
+    "box": "Claude Code",
+    "events": [
+     "tool call",
+     "prompt",
+     "UI draw"
+    ],
+    "verbs": [
+     "watch",
+     "rewrite",
+     "answer"
+    ]
+   },
+   "transition": "whip",
+   "sfx": [
+    {
+     "at": 0.42,
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "b3",
+   "block": "scene",
+   "say": "Blast Radius is a sample mod. When Claude calls Bash with a risky command, it holds the call.",
+   "text": "Blast Radius is a sample mod. When Claude calls Bash with a risky command, it holds the call.",
+   "data": {
+    "scene": "conveyor",
+    "name": "Blast Radius",
+    "tag": "sample mod · shared as is",
+    "tool": "Bash",
+    "calls": [
+     "ls",
+     "cat README.md",
+     "rm -rf build",
+     "git status"
+    ],
+    "risky": "rm -rf build",
+    "grab": "HOLD"
+   },
+   "transition": "punch",
+   "sfx": [
+    {
+     "at": 0.66,
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "p4",
+   "block": "scene",
+   "say": "It works out what the command would touch. For r m, it lists the files it would delete, with the count and total size.",
+   "text": "It works out what the command would touch. For rm, it lists the files it would delete, with the count and total size.",
+   "data": {
+    "scene": "pane",
+    "cmd": "rm -rf build",
+    "folder": "build",
+    "rows": [
+     "build/app.js",
+     "build/logo.png",
+     "build/index.html",
+     "build/styles.css",
+     "build/vendor.js"
+    ],
+    "example": "example files",
+    "label": "files it would delete",
+    "meta": "count · total size",
+    "ring": "blast radius"
+   },
+   "transition": "cut",
+   "sfx": [
+    {
+     "at": 0.05,
+     "kind": "whoosh"
+    },
+    {
+     "at": 0.269,
+     "kind": "pop"
+    },
+    {
+     "at": 0.331,
+     "kind": "pop"
+    },
+    {
+     "at": 0.393,
+     "kind": "pop"
+    },
+    {
+     "at": 0.455,
+     "kind": "pop"
+    },
+    {
+     "at": 0.517,
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "k5",
+   "block": "scene",
+   "say": "Two buttons: one proceeds, two cancels. Cancel has the focus, so Enter refuses.",
+   "text": "Two buttons: 1 proceeds, 2 cancels. Cancel has the focus, so Enter refuses.",
+   "data": {
+    "scene": "buttons",
+    "proceed": "Proceed",
+    "cancel": "Cancel",
+    "k1": "1",
+    "k2": "2",
+    "enter": "Enter",
+    "focus": "focus",
+    "runs": "runs it",
+    "refuses": "refuses it"
+   },
+   "transition": "whip",
+   "sfx": [
+    {
+     "at": 0.86,
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "r6",
+   "block": "scene",
+   "say": "Claude sees the refusal and the reason, and nothing gets deleted. Every other command runs as normal.",
+   "text": "Claude sees the refusal and the reason, and nothing gets deleted. Every other command runs as normal.",
+   "data": {
+    "scene": "refusal",
+    "note": "refused",
+    "reason": "+ the reason",
+    "folder": "build",
+    "kept": "nothing deleted",
+    "others": [
+     "ls",
+     "git status",
+     "npm test"
+    ],
+    "normal": "runs as normal",
+    "tool": "Bash"
+   },
+   "transition": "whip"
+  },
+  {
+   "id": "l7",
+   "block": "scene",
+   "say": "The catch: it reads only the Bash command text. Bash dash c, aliases or eval can slip past. It is a safety net, not a lock.",
+   "text": "The catch: it reads only the Bash command text. bash -c, aliases or eval can slip past. It is a safety net, not a lock.",
+   "data": {
+    "scene": "limits",
+    "title": "the catch",
+    "sneaky": [
+     "bash -c \"rm ...\"",
+     "alias",
+     "eval"
+    ],
+    "stamp": "SAFETY NET, NOT A LOCK",
+    "hard": "hard block: use permission rules",
+    "net": "reads only the Bash command text",
+    "caught": "rm -rf build",
+    "tool": "Bash"
+   },
+   "transition": "punch",
+   "sfx": [
+    {
+     "at": 0.78,
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "t8",
+   "block": "scene",
+   "say": "Mods are not sandboxed. They run with your permissions, so install only from sources you trust.",
+   "text": "Mods are not sandboxed. They run with your permissions, so install only from sources you trust.",
+   "data": {
+    "scene": "trust",
+    "sandbox": "sandbox",
+    "stamp": "NOT SANDBOXED",
+    "perms": "runs with your permissions",
+    "rule": "install only from sources you trust",
+    "mod": "mod",
+    "shell": ">_"
+   },
+   "transition": "whip",
+   "sfx": [
+    {
+     "at": 0.2,
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "c9",
+   "block": "scene",
+   "say": "Describe a mod to Claude, and it writes one. To try this one, clone claude code playground, then run claude dash dash plugin dir from its mods folder.",
+   "text": "Describe a mod to Claude, and it writes one. To try this one, clone claude-code-playground, then run claude --plugin-dir from its mods folder.",
+   "data": {
+    "scene": "close",
+    "line1": "Describe a mod to Claude.",
+    "line2": "It writes one.",
+    "prompt": "$",
+    "handle": "hemanth_with_ai",
+    "credit": "code.claude.com/docs/en/plugins/mods",
+    "folder": "build",
+    "clone": "clone claude-code-playground",
+    "term": [
+     "$ cd claude-code-playground/",
+     "    claude-code/mods",
+     "$ claude --plugin-dir",
+     "    ./blast-radius"
+    ],
+    "loop": {
+     "cmd": "rm -rf build",
+     "prompt": "$",
+     "folder": "build",
+     "stamp": "HELD"
+    }
+   },
+   "transition": "cut",
+   "camera": false
+  }
+ ]
+}

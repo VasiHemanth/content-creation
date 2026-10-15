@@ -1,0 +1,165 @@
+<template id="split-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #sp-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 900px; }
+    #sp-a { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #sp-asvg, #sp-tsvg, #sp-bsvg, #sp-csvg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #sp-step { left: 470px; top: 560px; font-size: 34px; }
+    #sp-hist { left: 120px; top: 950px; font-size: 34px; }
+    #sp-top, #sp-bot { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #sp-name { left: 60px; top: 176px; font-size: 40px; }
+    #sp-ctl { left: 60px; top: 520px; font-size: 38px; }
+    #sp-wrk { left: 60px; top: 900px; font-size: 38px; }
+    #sp-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="split" data-width="1080" data-height="1920">
+    <div id="sp-cam">
+      <div id="sp-a">
+        <svg id="sp-asvg" class="ink" viewBox="0 0 1080 1920"></svg>
+      </div>
+      <div id="sp-step" class="tag" data-bind="l04.step"></div>
+      <div id="sp-hist" class="tag" data-bind="l04.hist"></div>
+      <div id="sp-top"><svg id="sp-tsvg" class="ink" viewBox="0 0 1080 1920"></svg><div id="sp-ctl" class="tag cyan" data-bind="l05.ctl"></div></div>
+      <div id="sp-bot"><svg id="sp-bsvg" class="ink" viewBox="0 0 1080 1920"></svg><div id="sp-wrk" class="tag cyan" data-bind="l05.wrk"></div></div>
+      <svg id="sp-csvg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="sp-name" class="tag cyan" data-bind="l05.name"></div>
+    </div>
+    <div id="sp-flash"></div>
+  </div>
+  <script>
+    (function () {
+      // railway drawings shared by every scene of this episode (inlined per scene; the first scene to load defines it)
+      window.RAIL = window.RAIL || (function () {
+        const S = KIT.svgEl, INK = '#f2f8ff', DEEP = '#0a2340', CY = '#a8dcf2';
+        const wrap = (parent, id, x, y, s) => { const g = S('g', { id }, parent); const ig = S('g', { transform: `translate(${x} ${y}) scale(${s})` }, g); return { g, ig }; };
+        // side view, facing right; (x, y) = rail level under the cab; about 310 x 165 at s = 1
+        function loco(parent, { id, x, y, s = 1, col = INK, body = DEEP, acc = CY }) {
+          const { g, ig } = wrap(parent, id, x, y, s), w = [];
+          S('rect', { x: -6, y: -44, width: 300, height: 16, fill: col }, ig);
+          S('rect', { x: 0, y: -150, width: 92, height: 108, rx: 8, fill: body, stroke: col, 'stroke-width': 6 }, ig);
+          const win = S('rect', { x: 16, y: -134, width: 46, height: 40, rx: 4, fill: acc, opacity: 0.85, id: `${id}-win` }, ig);
+          S('path', { d: 'M-10 -152 H102', stroke: col, 'stroke-width': 9, 'stroke-linecap': 'round' }, ig);
+          S('rect', { x: 92, y: -112, width: 190, height: 70, rx: 30, fill: body, stroke: col, 'stroke-width': 6 }, ig);
+          S('rect', { x: 150, y: -134, width: 36, height: 26, rx: 10, fill: body, stroke: col, 'stroke-width': 5 }, ig);
+          S('rect', { x: 226, y: -152, width: 30, height: 44, fill: body, stroke: col, 'stroke-width': 6 }, ig);
+          S('path', { d: 'M282 -42 L314 -6 L282 -6 Z', fill: col }, ig);
+          [[44, 27], [148, 31], [228, 31]].forEach(([cx, r], k) => {
+            const wg = S('g', { id: `${id}-w${k}` }, ig);
+            S('circle', { cx, cy: -r, r, fill: body, stroke: col, 'stroke-width': 6 }, wg);
+            S('path', { d: `M${cx - r + 5} ${-r} H${cx + r - 5} M${cx} ${-2 * r + 5} V${-5}`, stroke: acc, 'stroke-width': 5 }, wg);
+            w.push(wg);
+          });
+          S('path', { d: 'M44 -27 H228', stroke: col, 'stroke-width': 6, 'stroke-linecap': 'round' }, ig);
+          return { g, ig, w, win };
+        }
+        // a wagon with a blank plate; (x, y) = rail level under its left end; 150 wide plus a coupler
+        function wagon(parent, { id, x, y, s = 1, col = INK, fill = CY }) {
+          const { g, ig } = wrap(parent, id, x, y, s);
+          S('rect', { x: -12, y: -48, width: 174, height: 10, fill: col }, ig);
+          S('rect', { x: 0, y: -108, width: 150, height: 64, rx: 6, fill, stroke: col, 'stroke-width': 5 }, ig);
+          S('rect', { x: 46, y: -92, width: 58, height: 30, rx: 3, fill: DEEP, opacity: 0.55 }, ig);
+          [36, 114].forEach((cx) => S('circle', { cx, cy: -20, r: 19, fill: DEEP, stroke: col, 'stroke-width': 5 }, ig));
+          return { g, ig };
+        }
+        // a straight rail with sleepers, side view
+        function track(parent, { id, x0, x1, y, col = '#6aa9d0' }) {
+          const g = S('g', { id }, parent);
+          for (let x = x0 + 8; x < x1 - 10; x += 36) S('rect', { x, y: y + 4, width: 14, height: 16, fill: '#3d78a6' }, g);
+          S('path', { d: `M${x0} ${y} H${x1}`, stroke: col, 'stroke-width': 7, 'stroke-linecap': 'round' }, g);
+          return g;
+        }
+        // signal box, side view; (x, y) = ground under its left wall; 280 x 300 at s = 1
+        function box(parent, { id, x, y, s = 1, col = INK }) {
+          const { g, ig } = wrap(parent, id, x, y, s);
+          S('rect', { x: 0, y: -120, width: 220, height: 120, fill: DEEP, stroke: col, 'stroke-width': 6 }, ig);
+          S('path', { d: 'M0 -80 H220 M0 -40 H220 M70 -120 V-80 M150 -80 V-40 M70 -40 V0', stroke: '#3d78a6', 'stroke-width': 4 }, ig);
+          S('rect', { x: -12, y: -232, width: 244, height: 112, fill: DEEP, stroke: col, 'stroke-width': 6 }, ig);
+          const win = S('rect', { x: 6, y: -216, width: 208, height: 72, fill: CY, opacity: 0.3, id: `${id}-win` }, ig);
+          S('path', { d: 'M75 -216 V-144 M145 -216 V-144', stroke: col, 'stroke-width': 4 }, ig);
+          S('path', { d: 'M-34 -232 L110 -304 L254 -232 Z', fill: DEEP, stroke: col, 'stroke-width': 6, 'stroke-linejoin': 'round' }, ig);
+          const lev = S('g', { id: `${id}-lev` }, ig);
+          S('path', { d: 'M110 -150 L110 -198', stroke: '#ffb454', 'stroke-width': 9, 'stroke-linecap': 'round' }, lev);
+          S('circle', { cx: 110, cy: -200, r: 9, fill: '#ffb454' }, lev);
+          return { g, ig, win, lev };
+        }
+        // steam puffs from a locomotive chimney, one burst per time
+        function puffs(tl, L, times, { n = 3 } = {}) {
+          times.forEach((t) => { for (let i = 0; i < n; i++) {
+            const c = S('circle', { cx: 241, cy: -170, r: 15 + i * 5, fill: INK, opacity: 0 }, L.ig);
+            tl.fromTo(c, { opacity: 0, scale: 0.4, x: 0, y: 0, transformOrigin: '50% 50%' }, { opacity: 0.9, scale: 0.8, duration: 0.01, immediateRender: false }, t + i * 0.13);
+            tl.to(c, { opacity: 0, scale: 2.3, y: -95 - i * 22, x: -40 - i * 30, duration: 0.9, ease: 'power2.out' }, t + i * 0.13 + 0.01);
+          } });
+        }
+        // wheels turn for a while (whole turns, so the last frame is clean)
+        function roll(tl, L, t, dur, turns = 2) { tl.fromTo(L.w, { rotation: 0, transformOrigin: '50% 50%' }, { rotation: 360 * turns, duration: dur, ease: 'none', immediateRender: false }, t); }
+        return { loco, wagon, track, box, puffs, roll };
+      })();
+      const c = (w, n) => KIT.cue('l04', w, n), d = (w, n) => KIT.cue('l05', w, n), D = KIT.sceneDur('split'), S = KIT.svgEl;
+      KIT.bind('#sp-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.2) => tl.fromTo('#sp-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const A = document.getElementById('sp-asvg'), TS = document.getElementById('sp-tsvg'), BS = document.getElementById('sp-bsvg'), CS = document.getElementById('sp-csvg');
+
+      // l04: one locomotive whose driver also holds the switch lever; the switch is just ahead
+      RAIL.track(A, { id: 'sp-tr', x0: -1400, x1: 1060, y: 1000 });
+      const blade = S('path', { d: 'M830 1000 L1010 948', stroke: '#ffb454', 'stroke-width': 9, 'stroke-linecap': 'round', id: 'sp-blade' }, A);
+      const L = RAIL.loco(A, { id: 'sp-loco', x: 380, y: 1000, s: 1.3 });
+      S('circle', { cx: 52, cy: -112, r: 12, fill: '#f2f8ff' }, L.ig);
+      const lev = S('g', { id: 'sp-lev' }, L.ig);
+      S('path', { d: 'M64 -60 L96 -128', stroke: '#ffb454', 'stroke-width': 9, 'stroke-linecap': 'round' }, lev);
+      S('circle', { cx: 96, cy: -130, r: 10, fill: '#ffb454' }, lev);
+      const wag = [0, 1, 2, 3, 4].map((k) => RAIL.wagon(A, { id: `sp-wg${k}`, x: 380 - (k + 1) * 226, y: 1000, s: 1.3 }));
+
+      tl.fromTo('#sp-a', { x: 0, y: 0, scale: 1 }, { x: -20, y: 10, scale: 1.04, duration: c('step'), ease: 'sine.inOut' }, 0);
+      RAIL.puffs(tl, L, [0.15, 1.2]);
+      tl.fromTo(L.w, { rotation: 0, transformOrigin: '50% 50%' }, { rotation: 360, duration: 2.0, ease: 'none' }, 0.1);
+      tl.fromTo(lev, { rotation: 0, transformOrigin: '0% 100%' }, { rotation: 38, duration: 0.14, ease: 'power4.in' }, c('step') - 0.1);
+      tl.fromTo(blade, { rotation: 0, transformOrigin: '0% 100%' }, { rotation: 9, duration: 0.12, ease: 'power4.in', immediateRender: false }, c('step'));
+      KIT.pop(tl, '#sp-step', c('step'));
+      KIT.shake(tl, '#sp-cam', c('step') + 0.05, { amp: 8, dur: 0.22 });
+      pulse(c('step'), 0.18);
+      wag.forEach((w, k) => tl.fromTo(w.g, { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.16, ease: 'power3.out' }, c('over') + k * 0.15));
+      tl.to('#sp-a', { x: 467, y: 330, scale: 0.57, duration: 0.9, ease: 'power2.inOut' }, c('over') + 0.15);
+      tl.to('#sp-step', { opacity: 0, duration: 0.25 }, c('over') + 0.1);
+      KIT.pop(tl, '#sp-hist', c('whole'));
+      pulse(c('history'), 0.15);
+
+      // l05: "Meta-reasoning" names it; "splits" cracks the frame; controller above, workers below
+      KIT.pop(tl, '#sp-name', d('Meta-reasoning'));
+      const crack = S('path', { d: 'M0 862 L140 850 L210 876 L330 846 L470 872 L560 852 L690 878 L820 848 L940 870 L1080 856', class: 'ln heavy', id: 'sp-crack' }, CS);
+      KIT.draw(tl, crack, d('splits') - 0.05, 0.22, { ease: 'power2.out' });
+      tl.to(['#sp-a', '#sp-hist'], { y: '+=900', opacity: 0, duration: 0.45, ease: 'power3.in' }, d('splits') + 0.1);
+      tl.to(crack, { opacity: 0.35, duration: 0.4 }, d('splits') + 0.4);
+      KIT.shake(tl, '#sp-cam', d('splits') + 0.12, { amp: 16, dur: 0.32 });
+      pulse(d('splits'), 0.3);
+      // top half: the signal box (controller)
+      const BX = RAIL.box(TS, { id: 'sp-box', x: 400, y: 820, s: 1.25 });
+      RAIL.track(TS, { id: 'sp-ttr', x0: 40, x1: 1040, y: 822 });
+      tl.fromTo('#sp-top', { y: -700, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, d('splits') + 0.2);
+      KIT.pop(tl, '#sp-ctl', d('controller') - 0.1);
+      // bottom half: three workers on three tracks, and a switch on the middle one
+      const ys = [1040, 1210, 1380], Ls = ys.map((y, k) => { RAIL.track(BS, { id: `sp-bt${k}`, x0: 40, x1: 920, y }); return RAIL.loco(BS, { id: `sp-w${k}`, x: 60, y, s: 0.5 }); });
+      const stub = S('path', { d: 'M560 1210 L760 1132', stroke: '#ffb454', 'stroke-width': 8, 'stroke-linecap': 'round', id: 'sp-stub' }, BS);
+      const wire = S('path', { d: 'M560 822 L560 1200', class: 'ln amber dash', id: 'sp-wire' }, BS);
+      tl.fromTo('#sp-bot', { y: 700, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, d('splits') + 0.25);
+      KIT.pop(tl, '#sp-wrk', d('Workers') - 0.1);
+      Ls.forEach((W, k) => {
+        if (k !== 1) tl.fromTo(W.g, { x: 0 }, { x: 260 + k * 60, duration: 1.1, ease: 'power2.inOut' }, d('Workers') + k * 0.08);
+        RAIL.puffs(tl, W, [d('Workers') + k * 0.08], { n: 2 });
+        tl.fromTo(W.w, { rotation: 0, transformOrigin: '50% 50%' }, { rotation: 540, duration: 1.2, ease: 'power2.inOut' }, d('Workers') + k * 0.08);
+      });
+      tl.fromTo(Ls[1].g, { x: 0 }, { x: 240, duration: 0.9, ease: 'power2.inOut' }, d('Workers') + 0.08);
+      pulse(d('Workers'), 0.15);
+      // "controller decides": the window lights, the lever throws, the switch moves, one worker diverts
+      KIT.draw(tl, wire, d('controller'), 0.35);
+      tl.fromTo(BX.win, { opacity: 0.3 }, { opacity: 1, duration: 0.2, immediateRender: false }, d('controller'));
+      tl.fromTo(BX.lev, { rotation: 0, transformOrigin: '50% 100%' }, { rotation: 40, duration: 0.14, ease: 'power4.in' }, d('decides') - 0.12);
+      tl.fromTo(stub, { rotation: 18, transformOrigin: '0% 100%' }, { rotation: 0, duration: 0.14, ease: 'power4.in' }, d('decides'));
+      tl.to(Ls[1].g, { x: 470, y: -70, rotation: -18, duration: 0.7, ease: 'power2.inOut', transformOrigin: '50% 100%' }, d('decides') + 0.12);
+      RAIL.puffs(tl, Ls[1], [d('decides') + 0.15], { n: 2 });
+      pulse(d('decides'), 0.2);
+      tl.to('#sp-cam', { scale: 1.05, duration: 0.5, ease: 'power2.out' }, d('next'));
+      window.__timelines["split"] = tl;
+    })();
+  </script>
+</template>

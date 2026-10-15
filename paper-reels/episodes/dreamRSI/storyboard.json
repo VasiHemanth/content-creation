@@ -1,0 +1,378 @@
+{
+ "item": "2609.14858",
+ "name": "Dream-RSI",
+ "renderer": "hyperframes",
+ "authors": [
+  "Tong Zheng",
+  "Xidong Wu",
+  "Zheng Zhang",
+  "Zhankui He",
+  "Chaoyi Zhang",
+  "Benjamin Coleman",
+  "Ruoqiao Wei",
+  "Di Bai",
+  "Haolin Liu",
+  "Rui Liu",
+  "Xue Wang",
+  "Yue Zhuan",
+  "Wang-Cheng Kang",
+  "Renkai Xiang",
+  "Heng Huang",
+  "Xinwu Cheng",
+  "Yunsong Guo"
+ ],
+ "voice": {
+  "preset": "aiden",
+  "speed": 1.12
+ },
+ "ste": {
+  "names": [
+   "Dream-RSI",
+   "dreaming",
+   "coding",
+   "AlphaEvolve",
+   "Lasso",
+   "GPU"
+  ],
+  "terms": [
+   {
+    "term": "exploration policy",
+    "avoid": [
+     "search strategy",
+     "exploration strategy"
+    ]
+   },
+   {
+    "term": "replay simulator",
+    "avoid": [
+     "dream world",
+     "sandbox",
+     "replay world",
+     "world model"
+    ]
+   },
+   {
+    "term": "discovery tree",
+    "avoid": [
+     "search tree",
+     "history tree"
+    ]
+   },
+   {
+    "term": "attempts",
+    "avoid": [
+     "generations",
+     "tries",
+     "agent calls"
+    ]
+   }
+  ]
+ },
+ "scenes": {
+  "hook": {
+   "transition": "zoom"
+  },
+  "search": {
+   "transition": "whip"
+  },
+  "tree": {
+   "transition": "blur"
+  },
+  "dream": {
+   "transition": "punch"
+  },
+  "results": {
+   "transition": "whip"
+  },
+  "limits": {
+   "transition": "blur"
+  },
+  "close": {}
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "This AI system practices in its dreams. Then it finds faster code with fewer attempts.",
+   "text": "This AI system practices in its dreams. Then it finds faster code with fewer attempts.",
+   "data": {
+    "title": "Dream-RSI",
+    "kicker": "recursive self-improvement",
+    "zzz": "Z",
+    "c1": "faster code",
+    "c2": "fewer attempts"
+   },
+   "sfx": [
+    {
+     "t": 0.02,
+     "kind": "whoosh"
+    },
+    {
+     "cue": "dreams",
+     "kind": "chime"
+    },
+    {
+     "cue": "faster",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "scene": "search",
+   "say": "Agents like Alpha Evolve search for better code, often over thousands of attempts.",
+   "text": "Agents like AlphaEvolve search for better code, often over thousands of attempts.",
+   "data": {
+    "agent": "AlphaEvolve",
+    "label": "search for better code",
+    "count": "thousands of attempts"
+   },
+   "sfx": [
+    {
+     "cue": "thousands",
+     "kind": "riser",
+     "offset": -0.6
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "search",
+   "say": "A set of rules picks the next idea to try. The paper calls it the exploration policy.",
+   "text": "A set of rules picks the next idea to try. The paper calls it the exploration policy.",
+   "data": {
+    "policy": "exploration policy",
+    "rules": [
+     "which branch next",
+     "how many at once",
+     "when to stop"
+    ]
+   },
+   "sfx": [
+    {
+     "cue": "rules",
+     "kind": "pop"
+    },
+    {
+     "cue": "exploration",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "search",
+   "say": "Most systems keep this policy fixed. To test a new one, they must run a full new search.",
+   "text": "Most systems keep this policy fixed. To test a new one, they must run a full new search.",
+   "data": {
+    "fixed": "fixed",
+    "newp": "new policy",
+    "full": "full new search"
+   },
+   "sfx": [
+    {
+     "cue": "fixed",
+     "kind": "thud"
+    },
+    {
+     "cue": "full",
+     "kind": "tick"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "tree",
+   "say": "Dream R S I keeps every past attempt and its score in a discovery tree. The tree becomes a replay simulator.",
+   "text": "Dream-RSI keeps every past attempt and its score in a discovery tree. The tree becomes a replay simulator.",
+   "data": {
+    "tree": "discovery tree",
+    "sim": "replay simulator",
+    "attempt": "attempt",
+    "score": "score"
+   },
+   "sfx": [
+    {
+     "cue": "keeps",
+     "kind": "pop"
+    },
+    {
+     "cue": "replay",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "tree",
+   "say": "A new policy can replay the old tree. The tree already holds every result, so the test needs no new runs.",
+   "text": "A new policy can replay the old tree. The tree already holds every result, so the test needs no new runs.",
+   "data": {
+    "newp": "new policy",
+    "norun": "no new runs",
+    "receipt": "FROM THE PAPER · Introduction"
+   },
+   "sfx": [
+    {
+     "cue": "replay",
+     "kind": "whoosh"
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "dream",
+   "say": "The paper calls this dreaming. A second agent rewrites the policy many times inside the dream.",
+   "text": "The paper calls this dreaming. A second agent rewrites the policy many times inside the dream.",
+   "data": {
+    "dream": "dreaming",
+    "agent2": "second agent",
+    "version": "version",
+    "best": "best"
+   },
+   "sfx": [
+    {
+     "cue": "dreaming",
+     "kind": "chime"
+    },
+    {
+     "cue": "rewrites",
+     "kind": "type"
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "scene": "dream",
+   "say": "The best version returns to the real search. Its new attempts grow the tree for the next dream.",
+   "text": "The best version returns to the real search. Its new attempts grow the tree for the next dream.",
+   "data": {
+    "back": "real search",
+    "grow": "new attempts",
+    "next": "next dream"
+   },
+   "sfx": [
+    {
+     "cue": "best",
+     "kind": "impact"
+    },
+    {
+     "cue": "grow",
+     "kind": "pop"
+    }
+   ],
+   "voice": {
+    "preset": "aiden",
+    "speed": 1.12,
+    "seed": 11
+   }
+  },
+  {
+   "id": "l09",
+   "scene": "results",
+   "say": "On a Lasso solver, it used three hundred seventeen attempts where a fixed policy used five hundred fifty. Its code also ran faster.",
+   "text": "On a Lasso solver, it used 317 attempts where a fixed policy used 550. Its code also ran faster.",
+   "data": {
+    "title": "Lasso solver",
+    "unit": "attempts",
+    "rows": [
+     {
+      "label": "fixed policy",
+      "value": "550"
+     },
+     {
+      "label": "Dream-RSI",
+      "value": "317"
+     }
+    ],
+    "faster": "its code also ran faster",
+    "receipt": "FROM THE PAPER · Algorithm engineering"
+   },
+   "sfx": [
+    {
+     "cue": "three",
+     "kind": "thud"
+    },
+    {
+     "cue": "five",
+     "kind": "thud"
+    },
+    {
+     "cue": "faster",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "results",
+   "say": "On G P U kernels, it reached about the same speed with up to two point four three times fewer attempts.",
+   "text": "On GPU kernels, it reached about the same speed with up to 2.43 times fewer attempts.",
+   "data": {
+    "title": "GPU kernels",
+    "value": "2.43×",
+    "label": "fewer attempts",
+    "same": "about the same speed as a fixed policy",
+    "upto": "up to"
+   },
+   "sfx": [
+    {
+     "cue": "two",
+     "kind": "riser",
+     "offset": -1.0
+    },
+    {
+     "cue": "two",
+     "kind": "impact",
+     "offset": 0.05
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "limits",
+   "say": "Two limits. A dream only replays paths that the agent already tried. The cost numbers do not count the second agent.",
+   "text": "Two limits. A dream only replays paths that the agent already tried. The cost numbers do not count the second agent.",
+   "data": {
+    "title": "Two limits",
+    "lim1": "replays only paths already tried",
+    "lim2": "cost counts the coding agent only",
+    "untried": "not tried",
+    "counted": "counted",
+    "notcounted": "not counted"
+   },
+   "sfx": [
+    {
+     "cue": "limits",
+     "kind": "thud"
+    },
+    {
+     "cue": "only",
+     "kind": "tick"
+    },
+    {
+     "cue": "cost",
+     "kind": "tick"
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "close",
+   "say": "Old work is not waste. It becomes a place to practice.",
+   "text": "Old work is not waste. It becomes a place to practice.",
+   "data": {
+    "line1": "Old work is not waste.",
+    "line2": "It becomes a place to practice.",
+    "handle": "hemanth_with_ai",
+    "credit": "Dream-RSI · arXiv 2609.14858 · unofficial explainer"
+   },
+   "sfx": [
+    {
+     "cue": "waste",
+     "kind": "impact"
+    }
+   ]
+  }
+ ]
+}

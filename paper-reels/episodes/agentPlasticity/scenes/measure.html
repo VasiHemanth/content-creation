@@ -1,0 +1,139 @@
+<template id="measure-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #ms-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 860px; }
+    #ms-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    .ms-card { position: absolute; width: 190px; height: 190px; border: 5px solid var(--cyan); border-radius: 10px; background: conic-gradient(rgba(168,220,242,0.55) 25%, rgba(7,29,53,0.9) 0 50%, rgba(168,220,242,0.55) 0 75%, rgba(7,29,53,0.9) 0) 0 0 / 47.5px 47.5px; }
+    #ms-tl { left: 80px; top: 862px; font-size: 32px; }
+    #ms-tr { left: 640px; top: 862px; font-size: 32px; }
+    #ms-never { left: 70px; top: 950px; width: 940px; font-size: 34px; color: var(--white); }
+    #ms-gain { left: 70px; top: 1030px; width: 900px; font-size: 34px; line-height: 1.25; white-space: normal; color: var(--amber); }
+    #ms-src6 { left: 70px; top: 1430px; font-size: 22px; color: var(--dim); }
+    #ms-mag { position: absolute; left: 0; top: 0; width: 116px; height: 116px; box-sizing: border-box; border: 9px solid var(--amber); border-radius: 50%; background: rgba(168, 220, 242, 0.16); z-index: 30; }
+    #ms-magh { position: absolute; left: 92px; top: 100px; width: 62px; height: 14px; border-radius: 7px; background: var(--amber); transform: rotate(45deg); transform-origin: 0 50%; }
+    #ms-no { position: absolute; left: 0; top: 0; width: 170px; height: 170px; box-sizing: border-box; border: 14px solid var(--coral); border-radius: 50%; z-index: 40; }
+    #ms-no::after { content: ""; position: absolute; left: -14px; top: 62px; width: 170px; height: 14px; border-radius: 7px; background: var(--coral); transform: rotate(-45deg); }
+    #ms-exam { position: absolute; left: 0; top: 0; width: 150px; height: 190px; box-sizing: border-box; background: var(--paper); border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--shadow); z-index: 20; }
+    .ms-rule { position: absolute; left: 18px; height: 6px; border-radius: 3px; background: #9db8d3; }
+    #ms-pencil { position: absolute; left: 96px; top: 96px; width: 90px; height: 16px; border-radius: 4px; background: var(--amber); transform: rotate(-40deg); transform-origin: 0 50%; box-shadow: 0 0 0 3px var(--ink); }
+    #ms-word { left: 0; top: 214px; width: 1080px; text-align: center; font: 400 136px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); white-space: nowrap; }
+    #ms-up { left: 560px; top: 836px; font-size: 34px; }
+    #ms-per { left: 450px; top: 1238px; font-size: 34px; }
+    #ms-score { left: 190px; top: 470px; font-size: 26px; color: var(--white); }
+    #ms-pay { left: 90px; top: 1380px; font-size: 30px; color: var(--cyan); }
+    #ms-src7 { left: 70px; top: 1432px; font-size: 22px; color: var(--dim); }
+    #ms-counter { position: absolute; left: 240px; top: 1310px; width: 600px; height: 52px; box-sizing: border-box; border: 5px solid var(--cyan); border-radius: 8px; background: rgba(7, 29, 53, 0.8); }
+    .ms-coin { position: absolute; width: 46px; height: 46px; box-sizing: border-box; border: 6px solid var(--amber); border-radius: 50%; background: #ffd78a; }
+    #ms-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="measure" data-width="1080" data-height="1920">
+    <div id="ms-cam">
+      <svg id="ms-svg" class="ink sketch" viewBox="0 0 1080 1920">
+        <g id="ms-g6">
+          <path id="ms-cx" class="ln dim thick" d="M620 510 L620 270 M620 270 L606 296 M620 270 L634 296" />
+          <path id="ms-cy" class="ln dim thick" d="M620 510 L980 510 M980 510 L954 496 M980 510 L954 524" />
+          <path id="ms-line" class="ln thick" d="M650 480 L720 456 L790 410 L860 360 L920 312" />
+          <path id="ms-ahead" class="fl" d="M0 -22 L44 0 L0 22 Z" />
+        </g>
+        <g id="ms-g7">
+          <path id="ms-ay" class="ln thick" d="M170 1180 L170 520 M170 520 L154 548 M170 520 L186 548" />
+          <path id="ms-ax" class="ln thick" d="M170 1180 L920 1180 M920 1180 L892 1164 M920 1180 L892 1196" />
+          <path id="ms-curve" class="ln cyan heavy" d="M210 1100 C 360 1080 450 780 610 650 S 820 590 905 580" />
+          <circle id="ms-start" class="fl" cx="210" cy="1100" r="16" />
+          <path id="ms-bgain" class="ln amber thick" d="M946 1100 H966 V580 H946" />
+          <path id="ms-bper" class="ln cyan thick" d="M210 1204 V1224 H905 V1204" />
+        </g>
+      </svg>
+      <div id="ms-pile6"></div>
+      <div id="ms-tl" class="tag cyan" data-bind="l06.mine"></div>
+      <div id="ms-tr" class="tag" data-bind="l06.tst"></div>
+      <div id="ms-mag"><div id="ms-magh"></div></div>
+      <div id="ms-no"></div>
+      <div id="ms-exam"><div id="ms-pencil"></div></div>
+      <div id="ms-never" class="lbl" data-bind="l06.never"></div>
+      <div id="ms-gain" class="lbl" data-bind="l06.gain"></div>
+      <div id="ms-src6" class="lbl" data-bind="l06.src"></div>
+
+      <div id="ms-word" class="abs" data-bind="l07.word"></div>
+      <div id="ms-up" class="tag" data-bind="l07.up"></div>
+      <div id="ms-per" class="tag cyan" data-bind="l07.per"></div>
+      <div id="ms-score" class="lbl" data-bind="l07.score"></div>
+      <div id="ms-counter"></div>
+      <div id="ms-coins"></div>
+      <div id="ms-pay" class="lbl" data-bind="l07.pay"></div>
+      <div id="ms-src7" class="lbl" data-bind="l07.src"></div>
+    </div>
+    <div id="ms-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l06', w, n), b = (w, n) => KIT.cue('l07', w, n), D = KIT.sceneDur('measure');
+      KIT.bind('#ms-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t) => tl.fromTo('#ms-flash', { opacity: 0.2 }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // ---------- l06: its games are reviewed, test games are not ----------
+      const host = document.getElementById('ms-pile6'), left = [], right = [];
+      for (let k = 0; k < 4; k++) {
+        [[80, left], [620, right]].forEach(([x0, arr]) => {
+          const d = document.createElement('div'); d.className = 'ms-card'; d.style.cssText = `left:${x0 + k * 22}px;top:${620 - k * 24}px;z-index:${k}`; host.appendChild(d); arr.push(d);
+        });
+      }
+      const exam = document.getElementById('ms-exam');
+      [[18, 30, 110], [18, 54, 90], [18, 78, 104], [18, 102, 70], [18, 126, 98]].forEach(([x, y, w]) => { const r = document.createElement('div'); r.className = 'ms-rule'; r.style.cssText = `left:${x}px;top:${y}px;width:${w}px`; exam.appendChild(r); });
+      gsap.set('#ms-exam', { x: 820, y: 560, rotation: 7 });
+      gsap.set('#ms-mag', { x: 80, y: 560, opacity: 0 });
+      gsap.set('#ms-no', { x: 443, y: 593, opacity: 0 });
+      left.forEach((d, k) => tl.fromTo(d, { y: -420, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'bounce.out' }, a('It') + k * 0.1));
+      KIT.rise(tl, '#ms-tl', a('also'), { y: 14 });
+      right.forEach((d, k) => tl.fromTo(d, { y: -420, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'bounce.out' }, a('test') - 0.1 + k * 0.1));
+      KIT.pop(tl, '#ms-tr', a('games'), { from: 0.5 });
+      pulse(a('plays')); pulse(a('test'));
+      // "like an exam": a paper sheet lands on the test pile
+      KIT.pop(tl, '#ms-exam', a('exam') - 0.15, { from: 0.4 });
+      tl.fromTo('#ms-pencil', { x: 30, y: 30 }, { x: 0, y: 0, duration: 0.6, ease: 'power2.out' }, a('exam'));
+      pulse(a('exam'));
+      // "never reviews them": the magnifier sweeps its games, then stops at the test pile and is crossed out
+      tl.fromTo('#ms-mag', { opacity: 0 }, { opacity: 1, duration: 0.15 }, a('never'));
+      tl.to('#ms-mag', { x: 230, y: 650, duration: 0.5, ease: 'sine.inOut' }, a('never'));
+      tl.to('#ms-mag', { x: 100, y: 700, duration: 0.45, ease: 'sine.inOut' }, a('reviews'));
+      tl.to(left, { borderColor: '#ffb454', duration: 0.2, stagger: 0.1 }, a('reviews'));
+      tl.to('#ms-mag', { x: 470, y: 620, duration: 0.45, ease: 'power2.inOut' }, a('them') - 0.4);
+      tl.fromTo('#ms-no', { scale: 0.3, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(2.4)' }, a('them'));
+      KIT.shake(tl, '#ms-cam', a('them') + 0.2, { amp: 9, dur: 0.25 });
+      KIT.rise(tl, '#ms-never', a('them'), { y: 14 });
+      pulse(a('never')); pulse(a('them'));
+      // "gains there are evidence of progress": a score line rises above the test pile and ends in an arrow
+      KIT.draw(tl, '#ms-cx', a('so'), 0.35); KIT.draw(tl, '#ms-cy', a('so') + 0.05, 0.35);
+      KIT.draw(tl, '#ms-line', a('gains'), 0.7, { ease: 'power1.out' });
+      tl.fromTo('#ms-ahead', { opacity: 0, x: 880, y: 340, rotation: -39 }, { opacity: 1, x: 898, y: 327, rotation: -39, duration: 0.3, ease: 'back.out(2.4)' }, a('evidence'));
+      KIT.rise(tl, '#ms-gain', a('there'), { y: 14 });
+      pulse(a('gains')); pulse(a('evidence'));
+      KIT.fade(tl, '#ms-src6', a('evidence'), { to: 0.8 });
+
+      // ---------- l07: plasticity = test score gain for each dollar ----------
+      const t7 = b('Plasticity') - 0.12;
+      tl.to(['#ms-g6', '#ms-ahead', '#ms-pile6', '#ms-tl', '#ms-tr', '#ms-mag', '#ms-no', '#ms-exam', '#ms-never', '#ms-gain', '#ms-src6'], { opacity: 0, duration: 0.3 }, t7);
+      KIT.slam(tl, '#ms-word', b('Plasticity'), { from: 2.2, shake: false });
+      KIT.shake(tl, '#ms-cam', b('Plasticity') + 0.2, { amp: 12, dur: 0.3 });
+      KIT.draw(tl, '#ms-ay', b('test'), 0.45); KIT.draw(tl, '#ms-ax', b('test') + 0.1, 0.45);
+      tl.fromTo('#ms-start', { scale: 0, svgOrigin: '210 1100' }, { scale: 1, svgOrigin: '210 1100', duration: 0.3, ease: 'back.out(3)' }, b('test') + 0.2);
+      KIT.rise(tl, '#ms-score', b('score'), { y: 12 });
+      KIT.draw(tl, '#ms-curve', b('gain') - 0.1, 1.0, { ease: 'power2.inOut' });
+      KIT.draw(tl, '#ms-bgain', b('for'), 0.4, { ease: 'power2.out' });
+      KIT.pop(tl, '#ms-up', b('for') + 0.1, { from: 0.5 });
+      KIT.draw(tl, '#ms-bper', b('each'), 0.4, { ease: 'power2.out' });
+      KIT.pop(tl, '#ms-per', b('dollar'), { from: 0.5 });
+      // coins fall into the counter on "dollar"; the counter fills as it "spends"
+      KIT.fade(tl, '#ms-counter', b('each'), { dur: 0.25 });
+      const coins = document.getElementById('ms-coins'), cs = [];
+      for (let k = 0; k < 7; k++) { const d = document.createElement('div'); d.className = 'ms-coin'; d.style.cssText = `left:${275 + k * 78}px;top:${1316}px`; coins.appendChild(d); cs.push(d); }
+      tl.fromTo(cs, { y: -110, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'bounce.out', stagger: 0.1 }, b('dollar'));
+      KIT.rise(tl, '#ms-pay', b('model'), { y: 12 });
+      KIT.fade(tl, '#ms-src7', b('model'), { to: 0.8 });
+      [b('Plasticity'), b('test'), b('gain'), b('dollar'), b('spends')].forEach(pulse);
+      tl.fromTo('#ms-cam', { scale: 1 }, { scale: 1.03, duration: D, ease: 'sine.inOut', immediateRender: false }, 0);
+      window.__timelines["measure"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,71 @@
+{
+ "buried": {
+  "img": "evidence/buried.png",
+  "w": 2714,
+  "h": 229,
+  "page": 1,
+  "rects": [
+   {
+    "x": 0.42910559795954556,
+    "y": 0.3636490217728809,
+    "w": 0.3106600456067647,
+    "h": 0.21091257105275737
+   }
+  ],
+  "text": "but existing experience- and skill-based methods are less effective on long-horizon\r\ntasks. As interactions grow, useful evidence can be buried by redundant or out\u0002dated context, making context management itself a key bottleneck. We intro\u0002",
+  "circles": {
+   "buried": {
+    "x": 0.6749462968668944,
+    "y": 0.3636490217728809,
+    "w": 0.06481934669941586,
+    "h": 0.20970025912471266
+   }
+  }
+ },
+ "skills": {
+  "img": "evidence/skills.png",
+  "w": 2966,
+  "h": 250,
+  "page": 7,
+  "rects": [
+   {
+    "x": 0.03328959455273617,
+    "y": 0.33586448697673466,
+    "w": 0.13908118607937464,
+    "h": 0.19165710911458156
+   }
+  ],
+  "text": "the same held-in LHTB tasks used by CONTEXTEVO. Across 46 tasks, skill-only reward falls from\r\n0.417 to 0.370, while mean tokens rise from 8.57M to 9.61M (Table 3). CONTEXTEVO reaches\r\n0.448 with 7.52M tokens; adding skills to it yields 0.419 with 9.69M.",
+  "circles": {
+   "0.370": {
+    "x": 0.12061196755822833,
+    "y": 0.33586448697673466,
+    "w": 0.05175881307388249,
+    "h": 0.19165710911458156
+   }
+  }
+ },
+ "vary": {
+  "img": "evidence/vary.png",
+  "w": 2966,
+  "h": 250,
+  "page": 9,
+  "rects": [
+   {
+    "x": 0.6392980221153968,
+    "y": 0.4166712046811889,
+    "w": 0.3262621223273623,
+    "h": 0.2499955328919547
+   }
+  ],
+  "text": "Across the reported benchmark and model settings, the selected policies improve several full\u0002benchmark point estimates over the Pi-agent baseline, while held-out changes vary by setting.\r\nCase-level analysis indicates that the reviewed updates emphasize different information demands",
+  "circles": {
+   "vary": {
+    "x": 0.8139814656668013,
+    "y": 0.47861467747054476,
+    "w": 0.04014523618303391,
+    "h": 0.18805206010259884
+   }
+  }
+ }
+}

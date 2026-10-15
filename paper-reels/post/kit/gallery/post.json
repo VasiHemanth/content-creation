@@ -1,0 +1,58 @@
+{
+  "item": "kit-gallery",
+  "kind": "post",
+  "name": "Slide kit gallery",
+  "format": "4x5",
+  "ste": {
+    "names": ["STE"],
+    "terms": [],
+    "allow": [],
+    "examples": [
+      { "slide": "g03", "key": "x_before", "why": "an unclear sentence, shown on purpose next to its rewrite" }
+    ]
+  },
+  "slides": [
+    { "id": "g01", "kind": "image", "alt": "Cover slide of the slide kit gallery: a tangled line is cut into three short lines.",
+      "data": { "label": "Unofficial guide", "hook": "Eight parts for one clear slide", "_hl": "one clear slide", "sub": "Copy a part. Change the words.", "swipe": "Swipe" } },
+    { "id": "g02", "kind": "image", "alt": "Three panels, each with a letter tag.",
+      "data": { "title": "A panel with a letter tag",
+        "items": [
+          { "tag": "A", "title": "Say who reads it", "text": "Name the reader first." },
+          { "tag": "B", "title": "Use one word per idea", "text": "Pick a word and keep it." },
+          { "tag": "C", "title": "Keep each step short", "text": "One action in each sentence." } ] } },
+    { "id": "g03", "kind": "image", "alt": "A rejected sentence, labelled Not STE, above its rewrite.",
+      "data": { "title": "Before and after", "tag_before": "Not STE",
+        "x_before": "The configuration file was edited by the operator, and then the new settings were applied by the system after the restart was completed.",
+        "tag_after": "STE", "after": "The operator edits the file. Then the system applies the new settings after it restarts.",
+        "note": "Show the bad text on purpose. Label it." } },
+    { "id": "g04", "kind": "image", "alt": "Two bars and a meter. The first bar is full, the second bar is shorter.",
+      "data": { "title": "Bars and meters", "unit": "words in the longest sentence",
+        "rows": [ { "label": "Before", "value": "23", "_pct": 1 }, { "label": "After", "value": "10", "_pct": 0.4348 } ],
+        "meter_label": "Rewrite done", "_meter": 0.7 } },
+    { "id": "g05", "kind": "image", "alt": "Four numbered steps.",
+      "data": { "title": "Numbered steps",
+        "steps": [
+          { "title": "Write the goal", "text": "Say what the reader must do." },
+          { "title": "Cut each sentence", "text": "Keep one idea in each one." },
+          { "title": "Check the words", "text": "Replace a long word with a short one." },
+          { "title": "Test the text", "text": "Ask a model to follow it." } ] } },
+    { "id": "g06", "kind": "image", "alt": "Three callouts: a note, a warning and a tip.",
+      "data": { "title": "Callouts",
+        "amber": { "title": "Note", "text": "Keep a callout to two lines." },
+        "coral": { "title": "Caution", "text": "Do not hide a limit." },
+        "mint": { "title": "Tip", "text": "Put the key fact first." } } },
+    { "id": "g07", "kind": "image", "alt": "A vertical timeline with four entries.",
+      "data": { "title": "A timeline",
+        "items": [
+          { "when": "Draft", "what": "Write the copy in plain words." },
+          { "when": "Check", "what": "Run the checker. Fix each problem." },
+          { "when": "Render", "what": "Build the slides and look at them." },
+          { "when": "Post", "what": "Post only after a person says yes." } ] } },
+    { "id": "g08", "kind": "image", "alt": "Two code boxes: a prompt and its output.",
+      "data": { "title": "Code and prompt boxes", "prompt_label": "Prompt",
+        "prompt": "Write four steps.\nUse one verb in each step.\nStop after step four.",
+        "output_label": "Output", "output": "Step one: open the file.\nStep two: read the first line." } },
+    { "id": "g09", "kind": "image", "alt": "Closing slide with the channel handle.",
+      "data": { "line1": "Plain words help every reader.", "line2": "Copy a part and start.", "handle": "hemanth_with_ai", "label": "Unofficial guide" } }
+  ]
+}

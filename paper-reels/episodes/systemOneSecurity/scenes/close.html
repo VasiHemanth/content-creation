@@ -1,0 +1,117 @@
+<template id="close-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #close-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #close-a { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-frame { left: 180px; top: 262px; font-size: 32px; }
+    #close-differ { left: 330px; top: 820px; font-size: 32px; color: var(--white); border-color: var(--white); }
+    .close-ghost { position: absolute; top: 930px; width: 190px; height: 140px; border: 5px dashed var(--cyan); border-radius: 12px; opacity: 0; }
+    #close-g1 { left: 200px; }
+    #close-g2 { left: 640px; }
+    .close-gl { position: absolute; left: 30px; height: 12px; border-radius: 6px; background: var(--dim); }
+    #close-adapt { left: 150px; top: 1110px; font-size: 28px; }
+    #close-lang { left: 590px; top: 1110px; font-size: 28px; }
+    #close-b { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .close-tile { position: absolute; top: 380px; width: 290px; height: 150px; display: flex; align-items: center; justify-content: center; font-size: 38px; opacity: 0; }
+    #close-t1 { left: 60px; } #close-t2 { left: 365px; } #close-t3 { left: 670px; }
+    #close-q { position: absolute; left: 0; top: 200px; width: 1080px; text-align: center; font: 400 66px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; text-shadow: 6px 6px 0 var(--shadow); opacity: 0; }
+    #close-card { position: absolute; left: 400px; top: 700px; width: 280px; height: 190px; background: var(--panel); border: 5px solid var(--white); border-radius: 12px; box-shadow: 10px 10px 0 var(--shadow); opacity: 0; }
+    .close-bar { position: absolute; left: 26px; height: 16px; border-radius: 8px; background: var(--dim); }
+    #close-stamp { left: 418px; top: 742px; font-size: 76px; padding: 0 22px; border-width: 7px; outline-width: 3px; outline-offset: -16px; color: var(--cyan); border-color: var(--cyan); outline-color: var(--cyan); opacity: 0; }
+    #close-end { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-handle { left: 0; top: 640px; width: 1080px; text-align: center; font: 400 92px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; opacity: 0; }
+    #close-title { left: 60px; top: 800px; width: 960px; text-align: center; font: 700 42px/1.3 "Mono", monospace; color: var(--white); white-space: normal; opacity: 0; }
+    #close-credit { left: 0; top: 990px; width: 1080px; text-align: center; font: 600 36px "Mono", monospace; color: var(--cyan); white-space: nowrap; opacity: 0; }
+    #close-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+    <div id="close-cam">
+      <div id="close-a">
+        <svg id="close-svg" class="ink sketch" viewBox="0 0 1080 1920">
+          <rect id="close-box" class="ln cyan thick" x="160" y="300" width="760" height="470" rx="18" />
+          <path id="close-rail" class="ln thick" d="M260 560 L820 560" />
+          <path class="ln amber heavy" d="M430 510 L430 590 M650 510 L650 590" />
+          <path id="close-tray" class="ln amber thick" d="M480 600 L500 690 L580 690 L600 600" />
+          <rect id="close-wall" class="ln" x="700" y="590" width="70" height="110" />
+          <path id="close-bk" class="ln" d="M270 460 L380 460 L366 548 L284 548 Z" />
+        </svg>
+        <div id="close-frame" class="tag cyan" data-bind="l13.frame"></div>
+        <div id="close-differ" class="tag" data-bind="l13.differ"></div>
+        <div id="close-g1" class="close-ghost"><div class="close-gl" style="top:34px;width:120px"></div><div class="close-gl" style="top:64px;width:90px"></div><div class="close-gl" style="top:94px;width:110px"></div></div>
+        <div id="close-g2" class="close-ghost"><div class="close-gl" style="top:34px;width:60px"></div><div class="close-gl" style="top:34px;left:100px;width:50px"></div><div class="close-gl" style="top:74px;width:120px"></div></div>
+        <div id="close-adapt" class="tag" data-bind="l13.adapt"></div>
+        <div id="close-lang" class="tag" data-bind="l13.lang"></div>
+      </div>
+      <div id="close-b">
+        <svg class="ink sketch" viewBox="0 0 1080 1920" style="left:0;top:0;width:1080px;height:1920px">
+          <path id="close-clamp" class="ln amber heavy" d="M40 360 L40 344 L1000 344 L1000 360 M40 550 L40 566 L1000 566 L1000 550" />
+        </svg>
+        <div id="close-q" data-bind="l14.q"></div>
+        <div id="close-t1" class="plate close-tile" data-bind="l14.t1"></div>
+        <div id="close-t2" class="plate close-tile" data-bind="l14.t2"></div>
+        <div id="close-t3" class="plate close-tile" data-bind="l14.t3"></div>
+        <div id="close-card"><div class="close-bar" style="top:34px;width:200px"></div><div class="close-bar" style="top:70px;width:150px"></div><div class="close-bar" style="top:106px;width:180px"></div><div class="close-bar" style="top:142px;width:120px"></div></div>
+        <div id="close-stamp" class="stamp" data-bind="l14.stamp"></div>
+      </div>
+      <div id="close-end">
+        <div id="close-handle" class="abs" data-bind="l14.handle"></div>
+        <div id="close-title" class="abs" data-bind="l14.title"></div>
+        <div id="close-credit" class="abs" data-bind="l14.credit"></div>
+      </div>
+    </div>
+    <div id="close-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l13', w, n), e = (w, n) => KIT.cue('l14', w, n), D = KIT.sceneDur('close');
+      KIT.bind('#close-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.18) => tl.fromTo('#close-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // l13. the rail shrinks into a frame: what was tested
+      tl.fromTo(['#close-rail', '#close-tray', '#close-wall', '#close-bk'], { scale: 1.6, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.45, ease: 'power3.out' }, 0.05);
+      pulse(0.06, 0.14);
+      KIT.draw(tl, '#close-box', c('tests'), 0.6);
+      KIT.pop(tl, '#close-frame', c('public'), { from: 0.5 });
+      pulse(c('public'));
+      KIT.slam(tl, '#close-differ', c('Results'), { from: 1.8, shakeTarget: '#close-a', amp: 6 });
+      pulse(c('Results'));
+      // "adaptive attacks": outside the frame, a card that keeps changing shape
+      tl.fromTo('#close-g1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power3.out' }, c('adaptive') - 0.1);
+      tl.to('#close-g1', { borderRadius: '70px 10px 70px 10px', skewX: -12, scaleY: 1.15, duration: 0.3, ease: 'power2.inOut' }, c('adaptive') + 0.25);
+      tl.to('#close-g1', { borderRadius: '10px 60px 10px 60px', skewX: 10, scaleY: 0.9, duration: 0.3, ease: 'power2.inOut' }, c('attacks') + 0.25);
+      KIT.pop(tl, '#close-adapt', c('adaptive'), { from: 0.5 });
+      pulse(c('adaptive'), 0.22);
+      // "other languages": a second card in another script-like pattern
+      tl.fromTo('#close-g2', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power3.out' }, c('other') - 0.1);
+      KIT.pop(tl, '#close-lang', c('languages'), { from: 0.5 });
+      pulse(c('languages'));
+      tl.to('#close-cam', { scale: 1.05, y: -40, duration: 1.2, ease: 'sine.inOut' }, c('Results'));
+
+      // l14. three tiles, clamped together; then the hook card returns and SAFE lands again
+      const t14 = KIT.cue('l14', 0);
+      tl.to('#close-a', { opacity: 0.1, duration: 0.3 }, t14 + 0.05);
+      tl.to('#close-cam', { scale: 1, y: 0, duration: 0.3 }, t14 + 0.05);
+      KIT.slam(tl, '#close-t1', e('accuracy') - 0.1, { from: 1.8, shakeTarget: '#close-b', amp: 6 });
+      KIT.slam(tl, '#close-t2', e('calibration') - 0.1, { from: 1.8, shakeTarget: '#close-b', amp: 6 });
+      KIT.slam(tl, '#close-t3', e('policy') - 0.1, { from: 1.8, shakeTarget: '#close-b', amp: 6 });
+      pulse(e('accuracy')); pulse(e('calibration')); pulse(e('policy'));
+      KIT.draw(tl, '#close-clamp', e('together') - 0.05, 0.3);
+      tl.to(['#close-t1', '#close-t3'], { x: (i) => (i ? -12 : 12), duration: 0.12, yoyo: true, repeat: 1 }, e('together') + 0.2);
+      pulse(e('together'), 0.22);
+      tl.fromTo('#close-card', { x: -600, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, e('trust') - 0.15);
+      KIT.slam(tl, '#close-stamp', e('safe') - 0.12, { from: 2.2, shakeTarget: '#close-b', amp: 10 });
+      tl.fromTo('#close-q', { opacity: 0 }, { opacity: 0.55, duration: 0.3 }, e('says'));
+      pulse(e('safe'), 0.24);
+      // the end card: handle, the paper's title, its id and the words "unofficial explainer"
+      const tE = e('safe') + 0.45;
+      tl.to('#close-b', { opacity: 0.08, duration: 0.3 }, tE - 0.05);
+      KIT.slam(tl, '#close-handle', tE, { from: 1.4, shake: false });
+      KIT.rise(tl, '#close-title', tE + 0.15, { y: 24 });
+      KIT.rise(tl, '#close-credit', tE + 0.3, { y: 14 });
+      pulse(tE);
+      window.__timelines["close"] = tl;
+    })();
+  </script>
+</template>

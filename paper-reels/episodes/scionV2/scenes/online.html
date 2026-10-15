@@ -1,0 +1,113 @@
+<template id="online-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #online-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #online-grid { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 495px 1300px; }
+    #online-gsvg, #online-csvg, #online-psvg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    .online-lab { position: absolute; top: 436px; width: 400px; text-align: center; font: 700 56px "Mono", monospace; color: var(--cyan); }
+    #online-agents { left: 70px; } #online-jobs { left: 520px; }
+    #online-always { position: absolute; left: 0; top: 250px; width: 1080px; text-align: center; font: 400 110px/1 "Marker", sans-serif; color: var(--mint); text-shadow: 8px 8px 0 var(--shadow); white-space: nowrap; }
+    #online-server { position: absolute; left: 140px; top: 180px; width: 780px; height: 240px; background: rgba(255,180,84,.16); border: 6px solid var(--amber); box-shadow: 12px 12px 0 var(--shadow); }
+    #online-sname { position: absolute; left: 0; top: 0; width: 780px; height: 228px; display: flex; align-items: center; justify-content: center; font: 700 72px "Mono", monospace; color: var(--white); }
+    #online-sflash { position: absolute; inset: 0; background: var(--cyan); opacity: 0; }
+    .online-w { position: absolute; padding: 6px 16px; font: 700 44px "Mono", monospace; color: var(--deep); background: var(--amber); white-space: nowrap; }
+    #online-panel { position: absolute; left: 60px; top: 290px; width: 860px; height: 860px; background: rgba(7,29,53,.92); border: 6px solid var(--amber); transform-origin: 50% 0; }
+    .online-card { position: absolute; background: var(--panel); border: 5px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); }
+    #online-main { left: 380px; top: 340px; width: 500px; height: 590px; }
+    .online-ch { position: absolute; left: 0; top: 18px; width: 100%; text-align: center; font: 700 64px "Mono", monospace; color: var(--amber); }
+    .online-row { position: absolute; left: 24px; width: 452px; height: 104px; border-top: 3px solid var(--faint); }
+    .online-row span { position: absolute; left: 0; top: 26px; font: 600 44px "Mono", monospace; color: var(--white); }
+    .online-row svg { position: absolute; right: 0; top: 14px; width: 76px; height: 76px; overflow: visible; }
+    #online-foot { position: absolute; left: 370px; top: 950px; width: 520px; text-align: center; font: 700 40px "Mono", monospace; color: var(--mint); }
+    .online-par { width: 250px; height: 230px; left: 90px; }
+    .online-par .online-ch { font-size: 42px; top: 20px; }
+    #online-p1 { top: 360px; } #online-p2 { top: 680px; }
+    .online-par svg { position: absolute; left: 22px; top: 100px; width: 206px; height: 100px; overflow: visible; }
+    #online-shelf { position: absolute; left: 60px; top: 1180px; width: 860px; height: 260px; background: rgba(123,227,176,.12); border: 5px solid var(--mint); }
+    #online-dname { position: absolute; left: 30px; top: 20px; font: 700 60px "Mono", monospace; color: var(--mint); }
+    .online-tile { position: absolute; top: 130px; padding: 14px 26px; font: 700 48px "Mono", monospace; color: var(--deep); background: var(--mint); white-space: nowrap; }
+    #online-blame { left: 30px; } #online-hist { left: 300px; }
+  </style>
+  <div id="root" data-composition-id="online" data-width="1080" data-height="1920">
+    <div id="online-beat" style="position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px"><div id="online-cam">
+      <svg class="ink" id="online-csvg" viewBox="0 0 1080 1920"></svg>
+      <div id="online-grid">
+        <svg class="ink" id="online-gsvg" viewBox="0 0 1080 1920"></svg>
+        <div id="online-agents" class="online-lab" data-bind="l04.agents"></div>
+        <div id="online-jobs" class="online-lab" data-bind="l04.jobs"></div>
+      </div>
+      <div id="online-server"><div id="online-sflash"></div><div id="online-sname" data-bind="l04.server"></div></div>
+      <div id="online-always" data-bind="l04.online"></div>
+      <div id="online-panel"></div>
+      <svg class="ink" id="online-psvg" viewBox="0 0 1080 1920">
+        <path id="online-a1" class="ln white thick" d="M340 475 L375 520" />
+        <path id="online-a2" class="ln white thick" d="M340 795 L375 760" />
+      </svg>
+      <div id="online-p1" class="online-card online-par"><div class="online-ch" data-bind="l04.changeset"></div><svg viewBox="0 0 206 100"><g class="online-seals"></g></svg></div>
+      <div id="online-p2" class="online-card online-par"><div class="online-ch" data-bind="l04.changeset"></div><svg viewBox="0 0 206 100"><g class="online-seals"></g></svg></div>
+      <div id="online-main" class="online-card">
+        <div class="online-ch" data-bind="l04.changeset"></div>
+        <div class="online-row" style="top:120px"><span data-bind="l04.row"></span><svg viewBox="0 0 76 76"><g class="online-seal1"></g></svg></div>
+        <div class="online-row" style="top:270px"><span data-bind="l04.row"></span><svg viewBox="0 0 76 76"><g class="online-seal1"></g></svg></div>
+        <div class="online-row" style="top:420px"><span data-bind="l04.row"></span><svg viewBox="0 0 76 76"><g class="online-seal1"></g></svg></div>
+      </div>
+      <div id="online-foot" data-bind="l04.foot"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'online', c = (w, n) => KIT.cue('l04', w, n), c5 = (w, n) => KIT.cue('l05', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true }), E = KIT.svgEl;
+      // wax seal: the mark of an object that never changes
+      const seal = (g, cx, cy, r) => { E('circle', { cx, cy, r, fill: '#ff6b6b', stroke: '#ffd6d6', 'stroke-width': r * 0.12 }, g); E('path', { d: `M${cx - r * 0.45} ${cy} L${cx - r * 0.1} ${cy + r * 0.38} L${cx + r * 0.5} ${cy - r * 0.35}`, fill: 'none', stroke: '#fff7e6', 'stroke-width': r * 0.2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g); };
+      document.querySelectorAll('#online-root .online-seal1, .online-seal1').forEach((g) => seal(g, 38, 38, 32));
+      document.querySelectorAll('.online-seals').forEach((g) => [30, 103, 176].forEach((x) => seal(g, x, 50, 30)));
+
+      // ---- l04: a grid of agents and jobs, all online
+      const g = document.getElementById('online-gsvg'), cs = document.getElementById('online-csvg');
+      const XS = [140, 270, 400, 590, 720, 850], YS = [600, 780, 960, 1140], icons = [], dots = [], cables = [];
+      XS.forEach((x, k) => YS.forEach((y, j) => {
+        const grp = E('g', { id: `online-i${k}-${j}` }, g);
+        if (k < 3) { E('rect', { x: x - 48, y: y - 52, width: 96, height: 92, rx: 22, fill: '#0a2340', stroke: '#f2f8ff', 'stroke-width': 6 }, grp); E('circle', { cx: x - 18, cy: y - 8, r: 10, fill: '#ffb454' }, grp); E('circle', { cx: x + 18, cy: y - 8, r: 10, fill: '#ffb454' }, grp); E('path', { d: `M${x} ${y - 52} L${x} ${y - 72}`, stroke: '#f2f8ff', 'stroke-width': 6 }, grp); }
+        else { E('rect', { x: x - 48, y: y - 52, width: 96, height: 96, rx: 8, fill: '#0a2340', stroke: '#a8dcf2', 'stroke-width': 6 }, grp); [-22, 0, 22].forEach((d) => E('path', { d: `M${x - 28} ${y - 4 + d} L${x + 28} ${y - 4 + d}`, stroke: '#a8dcf2', 'stroke-width': 7, 'stroke-linecap': 'round' }, grp)); }
+        icons.push(grp);
+        dots.push(E('circle', { cx: x + 44, cy: y - 50, r: 15, fill: '#7be3b0', id: `online-dot${k}-${j}` }, g));
+        if (j === 0) cables.push(E('path', { d: `M${x} ${y - 80} C ${x} ${y - 160}, ${200 + k * 136} ${520}, ${200 + k * 136} ${426}`, class: 'ln cyan', 'stroke-width': 9, id: `online-cb${k}` }, cs));
+      }));
+      const tCl = Math.max(0.05, c('clients') - 0.35);
+      icons.forEach((e, i) => tl.fromTo(e, { opacity: 0, scale: 0.3, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2.2)' }, tCl + (i % 4) * 0.05 + Math.floor(i / 4) * 0.04));
+      KIT.rise(tl, '#online-agents', c('agents') - 0.1, { y: 30 });
+      KIT.rise(tl, '#online-jobs', c('jobs') - 0.1, { y: 30 });
+      const tOn = c('always') - 0.05;
+      dots.forEach((d, i) => tl.fromTo(d, { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.2, ease: 'back.out(3)' }, tOn + i * 0.008));
+      tl.to(dots, { scale: 1.6, duration: 0.2, yoyo: true, repeat: 3, ease: 'sine.inOut' }, tOn + 0.3);
+      KIT.slam(tl, '#online-always', tOn, { amp: 12 });
+
+      // "So the server writes each changeset": cables up into one scion-server block, which opens on a changeset
+      const tSo = c('So') - 0.15;
+      tl.to(['#online-agents', '#online-jobs'], { opacity: 0, duration: 0.2 }, tSo);
+      tl.to('#online-always', { x: 1100, opacity: 0, duration: 0.3, ease: 'power3.in' }, tSo);
+      tl.fromTo('#online-server', { scaleY: 0, opacity: 0, transformOrigin: '50% 0' }, { scaleY: 1, opacity: 1, duration: 0.3, ease: 'power3.out' }, tSo + 0.1);
+      KIT.draw(tl, cables, tSo + 0.15, 0.35, { stagger: 0.03 });
+      tl.fromTo('#online-cam', { y: 0 }, { y: 60, duration: 0.4, ease: 'power2.inOut' }, tSo);
+      const tsv = c('server') - 0.05;
+      tl.fromTo('#online-sflash', { opacity: 0 }, { opacity: 0.4, duration: 0.08, yoyo: true, repeat: 1 }, tsv);
+      tl.to('#online-cam', { y: 0, duration: 0.3, ease: 'power2.out' }, tsv);
+      const tW = c('writes') - 0.1;
+      tl.to('#online-grid', { opacity: 0, duration: 0.25 }, tW); tl.to('#online-csvg', { opacity: 0, duration: 0.25 }, tW);
+      tl.to('#online-server', { opacity: 0, duration: 0.2 }, tW + 0.05);
+      tl.fromTo('#online-panel', { scaleY: 0.27, opacity: 0 }, { scaleY: 1, opacity: 1, duration: 0.4, ease: 'power3.out' }, tW);
+      tl.fromTo('#online-main', { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(1.8)' }, tW + 0.2);
+      const tc = c('changeset') - 0.1;
+      KIT.fade(tl, '#online-foot', tc + 0.2, { dur: 0.3 });
+      tl.fromTo('#online-p1', { x: -400, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }, tc);
+      tl.fromTo('#online-p2', { x: -400, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }, tc + 0.12);
+      KIT.draw(tl, ['#online-a1', '#online-a2'], tc + 0.4, 0.25);
+      tl.to('#online-panel', { borderColor: '#7be3b0', duration: 0.2 }, tc + 0.2);
+      tl.fromTo('#online-cam', { scale: 1 }, { scale: 1.2, duration: 0.6, ease: 'power2.in' }, KIT.cueEnd('l04', 'changeset') + 0.1);
+      KIT.beats(tl, '#online-beat', [c('agents'), c('jobs'), c('online')], { amp: 0.03, shift: 26, reset: c('So') });
+      window.__timelines["online"] = tl;
+    })();
+  </script>
+</template>

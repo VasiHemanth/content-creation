@@ -1,0 +1,679 @@
+{
+ "item": "anthropic-scion-v3",
+ "name": "Scion",
+ "format": "system-design",
+ "renderer": "hyperframes",
+ "authors": [
+  "Anthropic source control team"
+ ],
+ "voice": {
+  "preset": "aiden",
+  "speed": 1.12
+ },
+ "ste": {
+  "names": [
+   "Scion",
+   "Anthropic",
+   "refund.py",
+   "payments/refund.py"
+  ],
+  "jargon": [
+   {
+    "term": "Git",
+    "line": "l01"
+   },
+   {
+    "term": "monorepo",
+    "line": "l02"
+   },
+   {
+    "term": "agent",
+    "line": "l03"
+   },
+   {
+    "term": "CI job",
+    "line": "l04"
+   },
+   {
+    "term": "server",
+    "line": "l06"
+   },
+   {
+    "term": "checkout",
+    "line": "l07"
+   },
+   {
+    "term": "offline",
+    "line": "l08"
+   },
+   {
+    "term": "tree",
+    "line": "l15"
+   },
+   {
+    "term": "content address",
+    "line": "l17"
+   },
+   {
+    "term": "cache",
+    "line": "l19"
+   },
+   {
+    "term": "tier",
+    "line": "l21"
+   },
+   {
+    "term": "cache hit",
+    "line": "l22"
+   },
+   {
+    "term": "memory",
+    "line": "l23"
+   }
+  ],
+  "terms": [
+   {
+    "term": "checkout",
+    "avoid": [
+     "clone",
+     "fetch"
+    ]
+   },
+   {
+    "term": "monorepo",
+    "avoid": [
+     "repository",
+     "repo",
+     "codebase"
+    ]
+   },
+   {
+    "term": "content address",
+    "avoid": [
+     "hash",
+     "fingerprint",
+     "checksum"
+    ]
+   },
+   {
+    "term": "cache",
+    "avoid": [
+     "buffer"
+    ]
+   },
+   {
+    "term": "server",
+    "avoid": [
+     "mirror",
+     "mirrors",
+     "replica",
+     "backend"
+    ]
+   },
+   {
+    "term": "CI job",
+    "avoid": [
+     "test run",
+     "pipeline",
+     "build job"
+    ]
+   },
+   {
+    "term": "tree",
+    "avoid": [
+     "manifest",
+     "directory"
+    ]
+   },
+   {
+    "term": "every past version",
+    "avoid": [
+     "history",
+     "commits"
+    ]
+   }
+  ],
+  "allow": []
+ },
+ "scenes": {
+  "hook": {
+   "transition": "zoom"
+  },
+  "board": {
+   "transition": "whip"
+  },
+  "close": {}
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "Anthropic replaced Git, the tool that tracks every code change. Why?",
+   "text": "Anthropic replaced Git, the tool that tracks every code change. Why?",
+   "data": {
+    "title": "ANTHROPIC REPLACED GIT",
+    "git": "GIT",
+    "sub": "TRACKS EVERY CODE CHANGE",
+    "why": "WHY?"
+   },
+   "sfx": [
+    {
+     "cue": "replaced",
+     "kind": "impact"
+    },
+    {
+     "cue": "Why",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "scene": "board",
+   "say": "It built its own tool, Scion. All its code sits in one store. We call it a monorepo.",
+   "text": "It built its own tool, Scion. All its code sits in one store. We call it a monorepo.",
+   "data": {
+    "scion": "SCION",
+    "store": "ONE STORE",
+    "folders": [
+     "api/",
+     "web/",
+     "payments/",
+     "docs/"
+    ],
+    "monorepo": "MONOREPO"
+   },
+   "sfx": [
+    {
+     "cue": "Scion",
+     "kind": "pop"
+    },
+    {
+     "cue": "monorepo",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "board",
+   "say": "AI programs write code all day. We call them agents.",
+   "text": "AI programs write code all day. We call them agents.",
+   "data": {
+    "agents": "AGENTS"
+   },
+   "sfx": [
+    {
+     "cue": "agents",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "board",
+   "say": "A machine checks each of their changes. We call this a C I job.",
+   "text": "A machine checks each of their changes. We call this a CI job.",
+   "data": {
+    "machine": "TEST MACHINE",
+    "ci": "CI JOB"
+   },
+   "sfx": [
+    {
+     "cue": "job",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "board",
+   "say": "Take one fix to payments slash refund dot P Y. Its C I job needs the code.",
+   "text": "Take one fix to payments/refund.py. Its CI job needs the code.",
+   "data": {
+    "folder": "payments/",
+    "file": "refund.py",
+    "nocode": "NO CODE"
+   },
+   "sfx": [
+    {
+     "cue": "refund",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "board",
+   "say": "It asks a central computer. We call it the server.",
+   "text": "It asks a central computer. We call it the server.",
+   "data": {
+    "server": "GIT SERVER"
+   },
+   "sfx": [
+    {
+     "cue": "server",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "board",
+   "say": "The server sends a copy. We call this step a checkout.",
+   "text": "The server sends a copy. We call this step a checkout.",
+   "data": {
+    "copy": "COPY",
+    "checkout": "CHECKOUT"
+   },
+   "sfx": [
+    {
+     "cue": "sends",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "checkout",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "scene": "board",
+   "say": "Git sends every file, and every past version: how it looked before each change. So people can work offline, with no connection.",
+   "text": "Git sends every file, and every past version: how it looked before each change. So people can work offline, with no connection.",
+   "data": {
+    "files": "EVERY FILE",
+    "past": "EVERY PAST VERSION",
+    "pastSub": "HOW IT LOOKED BEFORE EACH CHANGE",
+    "offline": "OFFLINE",
+    "noconn": "NO CONNECTION"
+   },
+   "sfx": [
+    {
+     "cue": "past",
+     "kind": "pop"
+    },
+    {
+     "cue": "offline",
+     "kind": "click"
+    }
+   ]
+  },
+  {
+   "id": "l09",
+   "scene": "board",
+   "say": "That suits most projects. But here, the files alone fill over twenty five gigabytes. One film is a few gigabytes.",
+   "text": "That suits most projects. But here, the files alone fill over 25 gigabytes. One film is a few gigabytes.",
+   "data": {
+    "most": "RIGHT FOR MOST PROJECTS",
+    "size": "25+ GB",
+    "films": "ONE FILM = A FEW GB",
+    "fix": "refund.py"
+   },
+   "sfx": [
+    {
+     "cue": "twenty",
+     "kind": "impact"
+    },
+    {
+     "cue": "film",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "board",
+   "say": "For these changes, Anthropic runs about twenty five million C I checkouts a day.",
+   "text": "For these changes, Anthropic runs about 25 million CI checkouts a day.",
+   "data": {
+    "rate": "ABOUT 25 MILLION / DAY",
+    "tag": "CI CHECKOUTS · ANTHROPIC'S ESTIMATE",
+    "src": "Anthropic Engineering · Growing our monorepo"
+   },
+   "sfx": [
+    {
+     "cue": "twenty",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "twenty",
+     "kind": "impact"
+    }
+   ],
+   "voice": {
+    "preset": "aiden",
+    "seed": 7
+   }
+  },
+  {
+   "id": "l11",
+   "scene": "board",
+   "say": "If each took those twenty five gigabytes, the servers would send twenty five million times twenty five gigabytes a day. That is over six hundred million gigabytes, or over a hundred million films.",
+   "text": "If each took those 25 gigabytes, the servers would send 25 million times 25 gigabytes a day. That is over 600 million gigabytes, or over a hundred million films.",
+   "data": {
+    "mult": "25 MILLION × 25 GB",
+    "total": "600+ PB / DAY",
+    "totalGb": "OVER 600 MILLION GB",
+    "tag": "IF EVERY CHECKOUT TOOK THOSE 25 GB",
+    "films": "OVER A HUNDRED MILLION FILMS"
+   },
+   "sfx": [
+    {
+     "cue": "times",
+     "kind": "tick"
+    },
+    {
+     "cue": "six",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "board",
+   "say": "But C I jobs never work offline. They run on Anthropic's own computers, always connected to the server.",
+   "text": "But CI jobs never work offline. They run on Anthropic's own computers, always connected to the server.",
+   "data": {
+    "where": "ANTHROPIC'S OWN COMPUTERS",
+    "online": "ALWAYS CONNECTED",
+    "src": "Anthropic Engineering · Growing our monorepo"
+   },
+   "sfx": [
+    {
+     "cue": "connected",
+     "kind": "click"
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "board",
+   "say": "So they need no full copy.",
+   "text": "So they need no full copy.",
+   "data": {
+    "ask": "NO FULL COPY"
+   },
+   "sfx": [
+    {
+     "cue": "no",
+     "kind": "glitch"
+    }
+   ]
+  },
+  {
+   "id": "l14",
+   "scene": "board",
+   "say": "Git sends every past version. Scion keeps them on the server instead. The machine gets only the files it needs.",
+   "text": "Git sends every past version. Scion keeps them on the server instead. The machine gets only the files it needs.",
+   "data": {
+    "server": "SCION SERVER",
+    "stays": "PAST VERSIONS STAY HERE",
+    "only": "ONLY THE FILES IT NEEDS"
+   },
+   "sfx": [
+    {
+     "cue": "Scion",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l15",
+   "scene": "board",
+   "say": "To find refund dot P Y, the machine gets a list of what is in the main folder. We call such a list a tree.",
+   "text": "To find refund.py, the machine gets a list of what is in the main folder. We call such a list a tree.",
+   "data": {
+    "tree": "TREE",
+    "main": "MAIN FOLDER",
+    "rows": [
+     "api/",
+     "web/",
+     "payments/",
+     "docs/"
+    ]
+   },
+   "sfx": [
+    {
+     "cue": "tree",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l16",
+   "scene": "board",
+   "say": "That tree points to the payments folder's tree, which points to refund dot P Y.",
+   "text": "That tree points to the payments folder's tree, which points to refund.py.",
+   "data": {
+    "sub": "payments/",
+    "rows": [
+     "refund.py",
+     "invoice.py",
+     "tax.py"
+    ]
+   },
+   "sfx": [
+    {
+     "cue": "payments",
+     "kind": "tick"
+    },
+    {
+     "cue": "refund",
+     "kind": "pop"
+    }
+   ],
+   "voice": {
+    "preset": "aiden",
+    "seed": 11
+   }
+  },
+  {
+   "id": "l17",
+   "scene": "board",
+   "say": "Each file version gets an I D made from its contents. We call it a content address.",
+   "text": "Each file version gets an ID made from its contents. We call it a content address.",
+   "data": {
+    "label": "CONTENT ADDRESS",
+    "idOld": "#bdfa"
+   },
+   "sfx": [
+    {
+     "cue": "address",
+     "kind": "stamp"
+    }
+   ],
+   "voice": {
+    "speed": 1.06
+   }
+  },
+  {
+   "id": "l18",
+   "scene": "board",
+   "say": "When the fix edits the file, it gets a new address. An old address always holds the same contents.",
+   "text": "When the fix edits the file, it gets a new address. An old address always holds the same contents.",
+   "data": {
+    "idOld": "#bdfa",
+    "idNew": "#ecad",
+    "lock": "SAME ADDRESS, SAME CONTENTS"
+   },
+   "sfx": [
+    {
+     "cue": "new",
+     "kind": "pop"
+    },
+    {
+     "cue": "always",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l19",
+   "scene": "board",
+   "say": "So any machine can keep copies and reuse them. We call such a store of copies a cache.",
+   "text": "So any machine can keep copies and reuse them. We call such a store of copies a cache.",
+   "data": {
+    "saved": "SAVED COPY",
+    "ok": "ALWAYS RIGHT",
+    "cache": "CACHE"
+   },
+   "sfx": [
+    {
+     "cue": "reuse",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "cache",
+     "kind": "stamp"
+    }
+   ],
+   "voice": {
+    "speed": 1.06
+   }
+  },
+  {
+   "id": "l20",
+   "scene": "board",
+   "say": "Each machine has its own cache. Machines in the same region also share one, so few ask the server.",
+   "text": "Each machine has its own cache. Machines in the same region also share one, so few ask the server.",
+   "data": {
+    "cache": "CACHE",
+    "shared": "SHARED CACHE",
+    "region": "SAME REGION"
+   },
+   "sfx": [
+    {
+     "cue": "share",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l21",
+   "scene": "board",
+   "say": "Machine cache, shared cache, server: we call these three layers tiers.",
+   "text": "Machine cache, shared cache, server: we call these three layers tiers.",
+   "data": {
+    "t1": "MACHINE CACHE",
+    "t2": "SHARED CACHE",
+    "t3": "SERVER",
+    "tiers": "TIERS"
+   },
+   "sfx": [
+    {
+     "cue": "tiers",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l22",
+   "scene": "board",
+   "say": "When a cache holds the file, we call it a cache hit. Machine cache and shared cache each hit over ninety nine percent of the time.",
+   "text": "When a cache holds the file, we call it a cache hit. Machine cache and shared cache each hit over 99% of the time.",
+   "data": {
+    "hit": "HIT",
+    "rate": "99%+"
+   },
+   "sfx": [
+    {
+     "cue": "hit",
+     "kind": "stamp"
+    },
+    {
+     "cue": "ninety",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l23",
+   "scene": "board",
+   "say": "Few requests reach the server, and none for a whole copy. Less to send means less computer power and memory, a computer's short-term storage.",
+   "text": "Few requests reach the server, and none for a whole copy. Less to send means less computer power and memory, a computer's short-term storage.",
+   "data": {
+    "power": "COMPUTER POWER",
+    "memory": "MEMORY",
+    "memSub": "SHORT-TERM STORAGE"
+   },
+   "sfx": [
+    {
+     "cue": "Less",
+     "kind": "tick"
+    }
+   ]
+  },
+  {
+   "id": "l24",
+   "scene": "board",
+   "say": "Anthropic reports two hundred times less of both than the old Git servers.",
+   "text": "Anthropic reports 200 times less of both than the old Git servers.",
+   "data": {
+    "old": "OLD GIT SERVERS",
+    "new": "SCION",
+    "ratio": "200x LESS",
+    "what": "COMPUTER POWER AND MEMORY",
+    "_oldW": 1,
+    "_newW": 0.005,
+    "src": "Anthropic Engineering · Scaling Scion"
+   },
+   "sfx": [
+    {
+     "cue": "two",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "two",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l25",
+   "scene": "close",
+   "say": "Anthropic says Scion fits only the largest monorepos. Normal projects have small copies, so Git stays right.",
+   "text": "Anthropic says Scion fits only the largest monorepos. Normal projects have small copies, so Git stays right.",
+   "data": {
+    "own": "ANTHROPIC'S OWN NUMBERS",
+    "scion": "SCION",
+    "largest": "LARGEST MONOREPOS",
+    "git": "GIT",
+    "normal": "NORMAL PROJECTS",
+    "small": "SMALL COPIES",
+    "src": "Anthropic Engineering · Contributing to the wider ecosystem"
+   },
+   "sfx": [
+    {
+     "cue": "only",
+     "kind": "tick"
+    },
+    {
+     "cue": "right",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l26",
+   "scene": "close",
+   "say": "So why did Anthropic replace Git? Its C I machines are always online.",
+   "text": "So why did Anthropic replace Git? Its CI machines are always online.",
+   "data": {
+    "title": "ANTHROPIC REPLACED GIT",
+    "answer": "CI MACHINES ARE ALWAYS ONLINE",
+    "handle": "hemanth_with_ai",
+    "credit": "Anthropic Engineering · unofficial explainer"
+   },
+   "sfx": [
+    {
+     "cue": "always",
+     "kind": "impact"
+    }
+   ]
+  }
+ ]
+}

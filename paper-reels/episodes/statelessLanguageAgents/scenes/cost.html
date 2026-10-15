@@ -1,0 +1,105 @@
+<template id="cost-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #co-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 820px; }
+    #co-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #co-mtag { left: 470px; top: 640px; font-size: 28px; }
+    #co-bar { position: absolute; left: 90px; top: 770px; width: 840px; height: 96px; box-sizing: border-box; border: 5px solid var(--white); background: #071d35; }
+    #co-wfill { position: absolute; left: 0; top: 0; height: 100%; background: #3d78a6; }
+    #co-afill { position: absolute; top: 0; height: 100%; right: 0; background: var(--amber); }
+    #co-wk { left: 122px; top: 800px; font-size: 32px; color: var(--white); }
+    #co-adv { left: 740px; top: 896px; font-size: 30px; }
+    #co-big { left: 0; top: 1010px; width: 1080px; text-align: center; font: 400 190px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); }
+    #co-chips { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #co-chip { left: 60px; top: 170px; font-size: 30px; }
+    #co-tag1 { left: 60px; top: 1236px; font-size: 32px; }
+    #co-tag2 { left: 60px; top: 1312px; font-size: 28px; }
+    #co-src { left: 60px; top: 1392px; font-size: 26px; color: var(--dim); }
+    #co-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="cost" data-width="1080" data-height="1920">
+    <div id="co-cam"><div id="co-shk" class="fill">
+      <svg id="co-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="co-mtag" class="tag cyan" data-bind="l10.meter"></div>
+      <div id="co-bar"><div id="co-wfill"></div><div id="co-afill"></div></div>
+      <div id="co-wk" class="lbl white" data-bind="l10.wk"></div>
+      <div id="co-adv" class="tag" data-bind="l10.adv"></div>
+      <svg id="co-svg2" class="ink" viewBox="0 0 1080 1920" style="left:0;top:0;width:1080px;height:1920px"></svg>
+      <div id="co-big" class="abs" data-bind="l10.big"></div>
+    </div></div>
+    <div id="co-chips">
+      <div id="co-chip" class="tag cyan" data-bind="l10.chip"></div>
+      <div id="co-tag1" class="tag" data-bind="l10.tag1"></div>
+      <div id="co-tag2" class="tag cyan" data-bind="l10.tag2"></div>
+      <div id="co-src" class="lbl" data-bind="l10.src"></div>
+    </div>
+    <div id="co-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l10', w, n), D = KIT.sceneDur('cost');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const d = KIT.data('l10');
+      const svg = document.getElementById('co-svg'), svg2 = document.getElementById('co-svg2'), E = (tag, at, p) => KIT.svgEl(tag, at, p || svg);
+      const pulse = (t, o = 0.18) => tl.fromTo('#co-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // ---- the token meter, large, needle running; coins drop into its hopper ----
+      const MX = 540, MY = 470, R = 130;
+      E('path', { d: `M${MX - 60} 250 L${MX + 60} 250 L${MX + 26} 312 L${MX - 26} 312 Z`, fill: '#0a2340', stroke: '#a8dcf2', 'stroke-width': 4 });
+      E('circle', { cx: MX, cy: MY, r: R, fill: '#071d35', stroke: '#f2f8ff', 'stroke-width': 8 });
+      for (let k = 0; k <= 10; k++) { const q = (-120 + k * 24) * Math.PI / 180; E('path', { d: `M${MX + Math.sin(q) * (R - 14)} ${MY - Math.cos(q) * (R - 14)} L${MX + Math.sin(q) * (R - 36)} ${MY - Math.cos(q) * (R - 36)}`, class: 'ln cyan' }); }
+      const needle = E('g', { id: 'co-needle' });
+      E('path', { d: `M${MX} ${MY} L${MX} ${MY - R + 26}`, stroke: '#ffb454', 'stroke-width': 10, 'stroke-linecap': 'round' }, needle);
+      E('circle', { cx: MX, cy: MY, r: 16, fill: '#ffb454' });
+      tl.fromTo(needle, { rotation: -110, svgOrigin: `${MX} ${MY}` }, { rotation: 250, svgOrigin: `${MX} ${MY}`, duration: D, ease: 'none' }, 0);
+      for (let i = 0; i < 10; i++) {
+        const el = E('circle', { cx: MX + ((i % 3) - 1) * 16, cy: 170, r: 15, fill: '#ffb454', stroke: '#ffe2b0', 'stroke-width': 4, opacity: 0 });
+        const t = 0.1 + i * 0.45;
+        tl.fromTo(el, { y: 0, opacity: 0 }, { y: 110, opacity: 1, duration: 0.3, ease: 'power2.in' }, t);
+        tl.to(el, { opacity: 0, duration: 0.05 }, t + 0.3);
+      }
+      tl.fromTo('#co-cam', { scale: 1.08 }, { scale: 1, duration: 0.8, ease: 'power3.out' }, 0);
+      KIT.pop(tl, '#co-mtag', 0.15, { from: 0.5 });
+      pulse(0.05, 0.12);
+
+      // "In two runs": the scope chip; the stacked bar of all tokens fills, Workers almost all of it
+      KIT.rise(tl, '#co-chip', c('two') - 0.1, { x: -40, y: 0 });
+      const share = Math.max(0.005, d._advisor / 100);   // the Advisor sliver, with a visible minimum width
+      gsap.set('#co-wfill', { width: `${((1 - share) * 100).toFixed(2)}%` });
+      gsap.set('#co-afill', { width: `${(share * 100).toFixed(2)}%` });
+      KIT.grow(tl, '#co-wfill', c('runs') - 0.2, 0.9, { ease: 'power2.out' });
+      KIT.fade(tl, '#co-wk', c('runs') + 0.2);
+      tl.fromTo('#co-afill', { opacity: 0 }, { opacity: 1, duration: 0.15 }, c('runs') + 0.75);
+      pulse(c('runs'), 0.12);
+      // "the Advisor": a magnifier swings over the sliver
+      const mag = E('g', { id: 'co-mag' }, svg2);
+      const SX = 90 + 840 * (1 - share / 2), SY = 818;
+      // inside the lens: the end of the bar, drawn larger (a magnified view of the same sliver)
+      const NS = 'http://www.w3.org/2000/svg', cp = document.createElementNS(NS, 'clipPath'); cp.setAttribute('id', 'co-lens'); svg2.appendChild(cp);
+      E('circle', { cx: SX, cy: SY, r: 66 }, cp);
+      const lens = E('g', { 'clip-path': 'url(#co-lens)' }, mag);
+      E('rect', { x: SX - 70, y: SY - 70, width: 140, height: 140, fill: '#071d35' }, lens);
+      E('rect', { x: SX - 70, y: SY - 36, width: 62, height: 72, fill: '#3d78a6' }, lens);
+      E('rect', { x: SX - 8, y: SY - 36, width: 18, height: 72, fill: '#ffb454' }, lens);
+      E('circle', { cx: SX, cy: SY, r: 70, fill: 'none', stroke: '#f2f8ff', 'stroke-width': 9 }, mag);
+      E('path', { d: `M${SX - 50} ${SY + 50} L${SX - 120} ${SY + 120}`, stroke: '#f2f8ff', 'stroke-width': 18, 'stroke-linecap': 'round' }, mag);
+      tl.fromTo(mag, { opacity: 0, x: -300, y: 200, rotation: -30, svgOrigin: `${SX} ${SY}` }, { opacity: 1, x: 0, y: 0, rotation: 0, svgOrigin: `${SX} ${SY}`, duration: 0.4, ease: 'back.out(1.6)' }, c('Advisor') - 0.15);
+      KIT.pop(tl, '#co-adv', c('Advisor') + 0.1, { from: 0.4 });
+      tl.to('#co-cam', { scale: 1.06, x: -20, y: -20, duration: 0.45, ease: 'power3.out' }, c('Advisor'));
+      tl.to('#co-afill', { scaleY: 1.25, duration: 0.15, yoyo: true, repeat: 3, ease: 'sine.inOut' }, c('used'));
+      pulse(c('Advisor'), 0.12);
+      // "under zero point six percent": the number slams
+      tl.to('#co-cam', { scale: 1, x: 0, y: 0, duration: 0.35, ease: 'power3.inOut' }, c('zero') - 0.35);
+      KIT.slam(tl, '#co-big', c('zero') - 0.1, { from: 2.4, shakeTarget: '#co-shk', amp: 14 });
+      pulse(c('zero'));
+      // "of all tokens": share of tokens, and not of cost
+      KIT.rise(tl, '#co-tag1', c('of') - 0.05, { x: -40, y: 0 });
+      KIT.rise(tl, '#co-tag2', c('tokens'), { x: -40, y: 0 });
+      KIT.fade(tl, '#co-src', c('tokens') + 0.2, { to: 0.9 });
+      pulse(c('tokens'), 0.12);
+      tl.to('#co-cam', { scale: 1.05, duration: D - c('tokens'), ease: 'sine.out' }, c('tokens'));
+      window.__timelines["cost"] = tl;
+    })();
+  </script>
+</template>

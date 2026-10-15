@@ -1,0 +1,128 @@
+<template id="claude-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #claude-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 60px 740px; }
+    #claude-model { position: absolute; left: 80px; top: 190px; width: 820px; text-align: center; white-space: normal; font: 700 44px/1.25 "Mono", monospace; color: var(--amber); }
+    .claude-box { position: absolute; top: 400px; height: 900px; background: rgba(7,29,53,.85); border: 5px solid; }
+    #claude-bl { left: 60px; width: 440px; border-color: var(--coral); }
+    #claude-br { left: 560px; width: 360px; border-color: var(--mint); }
+    .claude-h { position: absolute; left: 20px; top: 18px; white-space: normal; font: 700 44px/1.2 "Mono", monospace; color: var(--white); }
+    #claude-hl { width: 400px; } #claude-hr { width: 320px; }
+    #claude-sub { position: absolute; left: 20px; top: 186px; font: 600 40px "Mono", monospace; color: var(--coral); }
+    #claude-mlab { position: absolute; left: 20px; top: 240px; font: 600 40px "Mono", monospace; color: var(--cyan); }
+    #claude-tag { position: absolute; left: 0; top: 1320px; width: 1080px; text-align: center; }
+    #claude-tag span { display: inline-block; padding: 8px 24px; font: 700 64px "Mono", monospace; color: var(--mint); background: var(--deep); border: 4px solid var(--mint); }
+    #claude-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #claude-log { position: absolute; left: 60px; top: 300px; width: 470px; height: 1110px; background: rgba(7,29,53,.9); border: 5px solid var(--cyan); }
+    #claude-logh { position: absolute; left: 24px; top: 16px; font: 700 52px "Mono", monospace; color: var(--cyan); }
+    #claude-tool { position: absolute; left: 600px; top: 1040px; width: 320px; height: 260px; background: rgba(123,227,176,.12); border: 5px solid var(--mint); }
+    #claude-toolh { position: absolute; left: 20px; top: 20px; width: 280px; white-space: normal; font: 700 52px/1.15 "Mono", monospace; color: var(--mint); }
+    #claude-no { left: 110px; top: 640px; font-size: 200px; }
+    #claude-eng { position: absolute; left: 750px; top: 860px; font: 700 44px "Mono", monospace; color: var(--white); }
+    #claude-rcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #claude-rstage, #claude-rhud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #claude-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ff6b6b; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="claude" data-width="1080" data-height="1920">
+    <div id="claude-beat" style="position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 860px"><div id="claude-cam">
+      <div id="claude-a">
+        <div id="claude-model" data-bind="l11.model"></div>
+        <div id="claude-bl" class="claude-box"><div id="claude-hl" class="claude-h" data-bind="l11.left"></div><div id="claude-sub" data-bind="l11.leftSub"></div><div id="claude-mlab" data-bind="l11.memory"></div></div>
+        <div id="claude-br" class="claude-box"><div id="claude-hr" class="claude-h" data-bind="l11.right"></div></div>
+        <svg class="ink" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <rect id="claude-bar1" x="170" y="740" width="220" height="520" fill="#ff6b6b" />
+          <rect id="claude-bar2" x="630" y="1230" width="220" height="30" fill="#7be3b0" />
+          <path class="ln white thick" d="M100 1262 L460 1262 M600 1262 L880 1262" />
+        </svg>
+        <div id="claude-tag"><span data-bind="l11.tag"></span></div>
+      </div>
+      <div id="claude-b">
+        <div id="claude-log"><div id="claude-logh" data-bind="l12.log"></div></div>
+        <div id="claude-tool"><div id="claude-toolh" data-bind="l12.tool"></div></div>
+        <svg class="ink" id="claude-svg" viewBox="0 0 1080 1920">
+          <g id="claude-rows"></g>
+          <rect id="claude-scan" x="76" y="0" width="438" height="46" rx="6" fill="none" stroke="#ffb454" stroke-width="7" />
+          <path id="claude-arrow" class="ln mint heavy" d="M520 1238 C 570 1238, 560 1170, 596 1170" />
+          <path id="claude-head" class="fl mint" d="M596 1150 L630 1170 L596 1190 Z" />
+          <g id="claude-engineer">
+            <circle cx="680" cy="860" r="40" fill="#0a2340" stroke="#f2f8ff" stroke-width="7" />
+            <path d="M610 990 C 610 920, 750 920, 750 990 Z" fill="#0a2340" stroke="#f2f8ff" stroke-width="7" />
+          </g>
+        </svg>
+        <div id="claude-no" class="stamp" data-bind="l12.no"></div>
+        <div id="claude-eng" data-bind="l12.engineer"></div>
+      </div>
+    </div></div>
+    <div id="claude-rcam"><div id="claude-rstage"></div></div>
+    <div id="claude-rhud"></div>
+    <div id="claude-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'claude', c1 = (w, n) => KIT.cue('l11', w, n), c2 = (w, n) => KIT.cue('l12', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#claude-cam');
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(['#claude-b', '#claude-engineer', '#claude-eng', '#claude-no'], { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+
+      // ---- l11: the handwritten prototype against Claude's rewrite; the bar heights come from the reported ratio
+      const ratio = parseFloat(KIT.data('l11').value), H = 520, h2 = H / ratio;
+      const b2 = document.getElementById('claude-bar2'); b2.setAttribute('height', h2.toFixed(1)); b2.setAttribute('y', (1260 - h2).toFixed(1));
+      const t0 = Math.max(0.05, c1('Claude') - 0.3);
+      tl.fromTo('#claude-model', { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }, t0);
+      tl.fromTo('#claude-bl', { x: -500, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, t0 + 0.05);
+      tl.fromTo('#claude-br', { x: 500, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, t0 + 0.2);
+      const tp = c1('prototype') - 0.15;
+      tl.fromTo('#claude-bar1', { scaleY: 0, svgOrigin: '280 1260' }, { scaleY: 1, svgOrigin: '280 1260', duration: 0.6, ease: 'power3.out' }, tp);
+      tl.fromTo('#claude-mlab', { opacity: 0 }, { opacity: 1, duration: 0.3 }, tp + 0.2);
+      const tw = c1('used');
+      tl.fromTo('#claude-bar2', { scaleY: 0, svgOrigin: '740 1260' }, { scaleY: 1, svgOrigin: '740 1260', duration: 0.3, ease: 'back.out(3)' }, tw);
+      KIT.pop(tl, '#claude-tag', c1('twenty') - 0.05);
+      tl.fromTo('#claude-cam', { scale: 1 }, { scale: 1.06, duration: 0.7, ease: 'power2.inOut' }, c1('memory') - 0.1);   // centred on the left edge: the left box and top label stay inside x >= 40
+
+      // ---- l12: code by Claude reads the commit log row by row to find one merge; the engineers say no and point it at the code review tool
+      const rows = document.getElementById('claude-rows'), RY = (i) => 400 + i * 56, NR = 18, HIT = 15, rr = KIT.rng(12), rowEls = [];
+      for (let i = 0; i < NR; i++) {
+        const g = KIT.svgEl('g', { id: `claude-r${i}` }, rows);
+        rowEls.push(KIT.svgEl('rect', { x: 80, y: RY(i), width: 430, height: 42, rx: 6, fill: '#0a2340', stroke: '#3d78a6', 'stroke-width': 3 }, g));
+        KIT.svgEl('rect', { x: 96, y: RY(i) + 13, width: 90, height: 16, rx: 4, fill: '#6aa9d0' }, g);
+        KIT.svgEl('rect', { x: 204, y: RY(i) + 13, width: 120 + Math.round(rr() * 160), height: 16, rx: 4, fill: '#a8dcf2', opacity: 0.6 }, g);
+      }
+      const tc = c2('In') - 0.25;
+      tl.to('#claude-a', { opacity: 0, y: -200, duration: 0.35, ease: 'power2.in' }, tc);
+      tl.to('#claude-cam', { scale: 1, duration: 0.4, ease: 'power2.out' }, tc);
+      tl.to('#claude-b', { opacity: 1, duration: 0.01 }, tc + 0.2);
+      tl.fromTo('#claude-log', { x: -520 }, { x: 0, duration: 0.4, ease: 'power3.out' }, tc + 0.2);
+      tl.fromTo('#claude-rows', { x: -520 }, { x: 0, duration: 0.4, ease: 'power3.out' }, tc + 0.2);
+      tl.fromTo('#claude-tool', { opacity: 0 }, { opacity: 0.6, duration: 0.3 }, tc + 0.4);
+      // the scan: one row at a time, from "every" to "merge"
+      const s0 = c2('read') - 0.1, s1 = Math.max(s0 + 0.8, c2('merged')), step = (s1 - s0) / HIT;
+      KIT.shake(tl, '#claude-log', c2('broke'), { amp: 12, dur: 0.3 });
+      tl.fromTo('#claude-log', { borderColor: '#a8dcf2' }, { borderColor: '#ff6b6b', duration: 0.15, yoyo: true, repeat: 3 }, c2('broke'));
+      tl.fromTo('#claude-scan', { opacity: 0, y: RY(0) - 2 }, { opacity: 1, y: RY(0) - 2, duration: 0.05 }, s0);
+      for (let i = 1; i <= HIT; i++) tl.to('#claude-scan', { y: RY(i) - 2, duration: step * 0.6, ease: 'power2.out' }, s0 + i * step);
+      rowEls.slice(0, HIT).forEach((e, i) => tl.to(e, { fill: 'rgba(255,180,84,.28)', duration: 0.1 }, s0 + i * step + step * 0.5));
+      tl.to(rowEls[HIT], { fill: '#7be3b0', duration: 0.12 }, s1 + 0.05);
+      KIT.shake(tl, '#claude-log', s1 + 0.05, { amp: 10, dur: 0.25 });
+      // the article's words, read on camera, and the stamp over the brute-force scan
+      const tt = c2('tell') - 0.35, ev = KIT.EP.evidence.no, Wp = 420, X = 610, Y = 300, ph = Wp * ev.h / ev.w, r0 = ev.rects[0];
+      const RD = KIT.read(tl, { cam: '#claude-rcam', parent: '#claude-rstage', hud: '#claude-rhud', id: 'no', t: tt,
+        x: X, y: Y, width: Wp, zoom: 1, fx: X + r0.x * Wp, fy: Y + (r0.y + r0.h / 2) * ph, follow: 0,
+        marks: [[c2('tell'), KIT.cueEnd('l12', 'tell')], [c2('Claude', 1), KIT.cueEnd('l12', 'no'), [[c2('no'), 0.62]]]] });
+      tl.to('#claude-no', { opacity: 1, duration: 0.01 }, c2('tell'));
+      KIT.slam(tl, '#claude-no', c2('tell'), { amp: 14, from: 2.4 });
+      tl.to('#claude-scan', { stroke: '#ff6b6b', duration: 0.15 }, c2('tell'));
+      // the engineers' way: ask the code review tool
+      const tn = KIT.cueEnd('l12', 'no') + 0.05;
+      tl.to(RD.el, { y: -500, opacity: 0, duration: 0.35, ease: 'power3.in' }, tn);
+      const tr = c2('Claude', 1);
+      tl.to(['#claude-engineer', '#claude-eng'], { opacity: 1, duration: 0.25 }, tr);
+      tl.to('#claude-tool', { opacity: 1, duration: 0.2 }, tr + 0.1);
+      KIT.draw(tl, '#claude-arrow', tr + 0.15, 0.35);
+      tl.fromTo('#claude-head', { opacity: 0 }, { opacity: 1, duration: 0.1 }, tr + 0.45);
+      tl.to('#claude-cam', { scale: 0.94, duration: 0.6, ease: 'power2.inOut' }, tn + 0.3);
+      KIT.beats(tl, '#claude-beat', [c1('rewrite'), c1('one'), c1('used'), c1('less')], { amp: 0.02, shift: 6, reset: c2('In') - 0.2 });
+      KIT.beats(tl, '#claude-beat', [c2('migration'), c2('rules'), c2('example'), c2('commit'), c2('find'), c2('change'), c2('Engineers')], { amp: 0.02, shift: 8, reset: c2('tell') - 0.1 });
+      window.__timelines["claude"] = tl;
+    })();
+  </script>
+</template>

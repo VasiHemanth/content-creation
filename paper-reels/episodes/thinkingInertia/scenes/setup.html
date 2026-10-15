@@ -1,0 +1,160 @@
+<template id="setup-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #setup-all, #setup-shk { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #setup-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 3840px; transform-origin: 0 0; }
+    #setup-svg { left: 0; top: 0; width: 1080px; height: 3840px; }
+    .setup-col { position: absolute; width: 340px; text-align: center; }
+    .setup-col .tag { position: relative; display: inline-block; font-size: 26px; padding: 6px 14px; }
+    .setup-pill { position: absolute; width: 176px; height: 50px; border-radius: 25px; border: 4px solid var(--cyan); background: #10406b; box-sizing: border-box; }
+    .setup-knob { position: absolute; left: 128px; top: 5px; width: 32px; height: 32px; border-radius: 16px; background: var(--amber); }
+    .setup-st { position: absolute; left: 50px; top: 6px; font: 700 26px "Mono", monospace; color: var(--coral); opacity: 0; white-space: nowrap; }
+    .setup-g { left: 60px; font-size: 28px; }
+    .setup-card { position: absolute; width: 230px; height: 74px; line-height: 68px; text-align: center; font-size: 30px; box-sizing: border-box; }
+    #setup-reply { position: absolute; left: 120px; top: 2170px; width: 780px; height: 930px; background: var(--panel); border: 4px solid var(--cyan); border-radius: 22px; box-shadow: 10px 10px 0 var(--shadow); }
+    #setup-q { left: 120px; top: 2080px; }
+    #setup-pre { left: 150px; top: 2196px; font-size: 28px; }
+    #setup-gen { left: 160px; top: 2525px; font: 600 34px "Mono", monospace; color: var(--white); }
+    #setup-nc { left: 560px; top: 2518px; font-size: 28px; }
+    #setup-ei { left: 560px; top: 2324px; font-size: 28px; }
+    #setup-fin { position: absolute; left: 160px; top: 2700px; width: 380px; height: 120px; border: 5px solid var(--white); border-radius: 12px; box-sizing: border-box; text-align: center; line-height: 108px; font: 700 34px/108px "Mono", monospace; color: var(--white); }
+    #setup-mag { position: absolute; left: 0; top: 0; width: 240px; height: 300px; }
+    #setup-msvg { left: 0; top: 0; width: 240px; height: 240px; }
+    #setup-judge { left: 0; top: 214px; font-size: 26px; padding: 6px 12px; }
+    #setup-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="setup" data-width="1080" data-height="1920">
+    <div id="setup-all">
+      <div id="setup-shk"><div id="setup-cam">
+        <svg id="setup-svg" class="ink" viewBox="0 0 1080 3840"></svg>
+        <div id="setup-c1" class="setup-col"><div class="tag cyan" data-bind="l02.m1"></div></div>
+        <div id="setup-c2" class="setup-col"><div class="tag cyan" data-bind="l02.m2"></div></div>
+        <div id="setup-c3" class="setup-col"><div class="tag cyan" data-bind="l02.m3"></div></div>
+        <div id="setup-c4" class="setup-col"><div class="tag cyan" data-bind="l02.m4"></div></div>
+        <div id="setup-c5" class="setup-col"><div class="tag cyan" data-bind="l02.m5"></div></div>
+        <div id="setup-c6" class="setup-col"><div class="tag cyan" data-bind="l02.m6"></div></div>
+        <div id="setup-p1" class="setup-pill"><div class="setup-st" data-bind="l02.off"></div><div class="setup-knob"></div></div>
+        <div id="setup-p2" class="setup-pill"><div class="setup-st" data-bind="l02.off"></div><div class="setup-knob"></div></div>
+        <div id="setup-p3" class="setup-pill"><div class="setup-st" data-bind="l02.off"></div><div class="setup-knob"></div></div>
+        <div id="setup-p4" class="setup-pill"><div class="setup-st" data-bind="l02.off"></div><div class="setup-knob"></div></div>
+        <div id="setup-p5" class="setup-pill"><div class="setup-st" data-bind="l02.off"></div><div class="setup-knob"></div></div>
+        <div id="setup-p6" class="setup-pill"><div class="setup-st" data-bind="l02.minimal"></div><div class="setup-knob"></div></div>
+        <div id="setup-g1" class="tag cyan setup-g" data-bind="l02.g1"></div>
+        <div id="setup-g2" class="tag cyan setup-g" data-bind="l02.g2"></div>
+        <div id="setup-g3" class="tag setup-g" data-bind="l02.g3"></div>
+        <div id="setup-k1" class="plate setup-card" data-bind="l02.k1"></div>
+        <div id="setup-k2" class="plate setup-card" data-bind="l02.k2"></div>
+        <div id="setup-k3" class="plate setup-card" data-bind="l02.k3"></div>
+        <div id="setup-k4" class="plate setup-card" data-bind="l02.k4"></div>
+        <div id="setup-k5" class="plate setup-card" data-bind="l02.k5"></div>
+        <div id="setup-k6" class="plate setup-card" data-bind="l02.k6"></div>
+        <div id="setup-q" class="tag cyan" data-bind="l03.qtag"></div>
+        <div id="setup-reply"></div>
+        <svg id="setup-svg2" class="ink" style="left:0;top:0;width:1080px;height:3840px" viewBox="0 0 1080 3840"></svg>
+        <div id="setup-pre" class="tag cyan" data-bind="l03.pre"></div>
+        <div id="setup-gen" class="abs" data-bind="l03.generic"></div>
+        <div id="setup-nc" class="tag coral" data-bind="l03.nc"></div>
+        <div id="setup-ei" class="tag" data-bind="l03.ei"></div>
+        <div id="setup-fin" data-bind="l03.fin"></div>
+        <svg id="setup-svg3" class="ink" style="left:0;top:0;width:1080px;height:3840px" viewBox="0 0 1080 3840"></svg>
+        <div id="setup-mag">
+          <svg id="setup-msvg" class="ink" viewBox="0 0 240 240"></svg>
+          <div id="setup-judge" class="tag" data-bind="l03.judge"></div>
+        </div>
+      </div></div>
+      <div id="setup-flash"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l02', w, n), d = (w, n) => KIT.cue('l03', w, n), D = KIT.sceneDur('setup'), S = KIT.svgEl;
+      KIT.bind('#setup-all');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.2) => tl.fromTo('#setup-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const G = document.getElementById('setup-svg'), G2 = document.getElementById('setup-svg2'), G3 = document.getElementById('setup-svg3');
+      const $ = (id) => document.getElementById(id);
+      const OY = 1920;
+
+      // ---- l02: six robots in two rows of three, each with a switch and a name tag ----
+      const CX = [190, 540, 890], RY = [230, 640], bots = [];
+      for (let k = 0; k < 6; k++) {
+        const cx = CX[k % 3], y = RY[Math.floor(k / 3)];
+        bots.push(KIT.robot(G, { id: `setup-r${k}`, x: cx, y, s: 0.62 }));
+        const pill = $(`setup-p${k + 1}`); pill.style.left = `${cx - 88}px`; pill.style.top = `${y + 178}px`;
+        const col = $(`setup-c${k + 1}`); col.style.left = `${cx - 170}px`; col.style.top = `${y + 240}px`;
+      }
+      bots.forEach((b, k) => tl.fromTo(b.g, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power3.out' }, 0.05 + k * 0.05));
+      // "disabled": the first five switches flip to OFF in a ripple
+      for (let k = 0; k < 5; k++) {
+        const p = `#setup-p${k + 1}`, t = c('disabled') + k * 0.16;
+        tl.to(`${p} .setup-knob`, { x: -120, duration: 0.12, ease: 'power4.in' }, t);
+        tl.to(p, { backgroundColor: '#071d35', borderColor: '#ff6b6b', duration: 0.1 }, t + 0.1);
+        tl.fromTo(`${p} .setup-st`, { opacity: 0 }, { opacity: 1, duration: 0.1 }, t + 0.1);
+        tl.fromTo(bots[k].eyes, { opacity: 1 }, { opacity: 0.25, duration: 0.15, immediateRender: false }, t + 0.1);
+      }
+      pulse(c('disabled'), 0.14);
+      // "five models": the camera leans in on the five that are off
+      tl.to('#setup-cam', { x: -20, y: -16, scale: 1.04, duration: 0.4, ease: 'power3.out' }, c('five'));
+      pulse(c('five'), 0.1);
+      // "minimal": the sixth switch goes to minimal (amber)
+      const p6 = '#setup-p6';
+      tl.to(`${p6} .setup-knob`, { x: -120, duration: 0.12, ease: 'power4.in' }, c('minimal') - 0.1);
+      tl.to(p6, { backgroundColor: '#071d35', borderColor: '#ffb454', duration: 0.1 }, c('minimal'));
+      tl.fromTo(`${p6} .setup-st`, { opacity: 0, color: '#ffb454' }, { opacity: 1, color: '#ffb454', duration: 0.1 }, c('minimal'));
+      tl.fromTo(p6, { scale: 1 }, { scale: 1.25, duration: 0.16, yoyo: true, repeat: 1, ease: 'sine.inOut', immediateRender: false }, c('minimal'));
+      pulse(c('minimal'), 0.2);
+      // "six benchmarks": three answer-space rows, two cards each; the camera tilts down to them
+      const GY = [1040, 1170, 1300];
+      GY.forEach((y, r) => {
+        $(`setup-g${r + 1}`).style.top = `${y + 10}px`;
+        [0, 1].forEach((j) => { const e = $(`setup-k${r * 2 + j + 1}`); e.style.left = `${430 + j * 250}px`; e.style.top = `${y}px`; });
+      });
+      tl.to('#setup-cam', { x: 0, y: -60, scale: 1, duration: 0.5, ease: 'power3.inOut' }, c('six') - 0.1);
+      ['#setup-g1', '#setup-g2', '#setup-g3'].forEach((s, k) => KIT.rise(tl, s, c('six') + k * 0.08, { x: -60, y: 0, dur: 0.35 }));
+      for (let k = 0; k < 6; k++) tl.fromTo(`#setup-k${k + 1}`, { y: -90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.28, ease: 'power3.in' }, c('benchmarks') + k * 0.08);
+      pulse(c('benchmarks') + 0.3, 0.18);
+
+      // ---- l03: pan down to one reply, split into pre-answer text and the final answer ----
+      const L3 = KIT.cue('l03', 0.02);
+      tl.to('#setup-cam', { x: 0, y: -OY, scale: 1, duration: 0.5, ease: 'power3.inOut' }, L3);
+      pulse(L3 + 0.25, 0.16);
+      const T = [[2290, 640], [2350, 380], [2410, 700], [2470, 480]], tb = [];
+      T.forEach(([y, w], k) => tb.push(S('rect', { x: 160, y, width: w, height: 22, rx: 11, fill: '#a8dcf2', id: `setup-t${k}` }, G2)));
+      const hiBar = S('rect', { x: 160, y: 2350, width: 380, height: 22, rx: 11, fill: '#ffb454', opacity: 0, id: 'setup-hi' }, G2);
+      tb.forEach((b, k) => tl.fromTo(b, { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, duration: 0.18, ease: 'none' }, L3 + 0.35 + k * 0.08));
+      tl.fromTo('#setup-gen', { opacity: 0 }, { opacity: 1, duration: 0.2 }, L3 + 0.7);
+      const div = S('path', { d: `M150 ${OY + 740} H870`, class: 'ln dash thick', id: 'setup-div' }, G2);
+      tl.fromTo('#setup-fin', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' }, L3 + 0.75);
+      // "judge": the magnifier glides over the top part
+      const M = $('setup-msvg');
+      S('circle', { cx: 100, cy: 100, r: 70, fill: 'rgba(168,220,242,0.14)', stroke: '#ffb454', 'stroke-width': 10 }, M);
+      S('path', { d: 'M150 150 L210 210', stroke: '#ffb454', 'stroke-width': 18, 'stroke-linecap': 'round' }, M);
+      tl.fromTo('#setup-mag', { x: 640, y: OY + 120, opacity: 0 }, { x: 600, y: OY + 230, opacity: 1, duration: 0.35, ease: 'power3.out' }, d('judge') + 0.3);
+      tl.to('#setup-mag', { x: 180, y: OY + 290, duration: 1.0, ease: 'sine.inOut' }, d('checked'));
+      // "pre-answer text": the dashed line splits the reply
+      KIT.pop(tl, '#setup-pre', d('pre'), { from: 0.5 });
+      KIT.draw(tl, div, d('pre'), 0.45);
+      pulse(d('pre'), 0.12);
+      // "text": a generic lead-in does not count
+      tl.to('#setup-gen', { opacity: 0.4, duration: 0.25 }, d('text'));
+      KIT.pop(tl, '#setup-nc', d('text') + 0.05, { from: 0.5 });
+      // "explicit inference": one line lights amber
+      tl.fromTo(hiBar, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, d('explicit'));
+      KIT.pop(tl, '#setup-ei', d('explicit'));
+      tl.to('#setup-mag', { x: 300, y: OY + 330, duration: 0.4, ease: 'power3.out' }, d('explicit'));
+      pulse(d('explicit'), 0.2);
+      // "step": an arrow draws from the question, through that line, to the final answer; the camera follows it
+      const arr = S('path', { d: `M330 ${OY + 220} C 560 ${OY + 240}, 560 ${OY + 360}, 440 ${OY + 441} C 400 ${OY + 520}, 500 ${OY + 560}, 480 ${OY + 772}`, class: 'ln amber heavy', id: 'setup-arr' }, G3);
+      const head = S('path', { d: `M458 ${OY + 752} L480 ${OY + 790} L502 ${OY + 748}`, class: 'ln amber heavy', id: 'setup-head' }, G3);
+      KIT.draw(tl, arr, d('step') - 0.05, 0.75);
+      tl.fromTo(head, { opacity: 0 }, { opacity: 1, duration: 0.1 }, d('step') + 0.7);
+      tl.to('#setup-mag', { opacity: 0, duration: 0.25 }, d('step'));
+      const s2 = 1.08;
+      tl.to('#setup-cam', { x: 510 * (1 - s2), y: -OY * s2 + 700 * (1 - s2), scale: s2, duration: 1.0, ease: 'power2.inOut' }, d('step'));
+      // "answer": the final-answer slot lights up
+      tl.to('#setup-fin', { borderColor: '#ffb454', color: '#ffb454', duration: 0.15 }, d('answer', 1));
+      pulse(d('answer', 1), 0.18);
+      window.__timelines["setup"] = tl;
+    })();
+  </script>
+</template>

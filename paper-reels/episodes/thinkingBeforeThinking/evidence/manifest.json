@@ -1,0 +1,71 @@
+{
+ "conclusion": {
+  "img": "evidence/conclusion.png",
+  "w": 3488,
+  "h": 148,
+  "page": 16,
+  "rects": [
+   {
+    "x": 0.41212328232856715,
+    "y": 0.07542259888298847,
+    "w": 0.3848842219931252,
+    "h": 0.41985499450650066
+   }
+  ],
+  "text": "well it does the work. As runs grow longer, that decision becomes work in its own right.",
+  "circles": {
+   "becomes work": {
+    "x": 0.5310705098635733,
+    "y": 0.07542259888298847,
+    "w": 0.12076603030407301,
+    "h": 0.32878593664164074
+   }
+  }
+ },
+ "enough": {
+  "img": "evidence/enough.png",
+  "w": 3482,
+  "h": 102,
+  "page": 11,
+  "rects": [
+   {
+    "x": 0.2783548040852035,
+    "y": 0.09843866417549303,
+    "w": 0.2975390895104107,
+    "h": 0.6156929431599978
+   }
+  ],
+  "text": "at the intermediate budget. Continuing to work is not enough; what the agent does next also matters.",
+  "circles": {
+   "enough;": {
+    "x": 0.5101746417583332,
+    "y": 0.10588109723556409,
+    "w": 0.06571925183728106,
+    "h": 0.6082505100999267
+   }
+  }
+ },
+ "overhead": {
+  "img": "evidence/overhead.png",
+  "w": 3365,
+  "h": 82,
+  "page": 1,
+  "rects": [
+   {
+    "x": 0.5799753925505616,
+    "y": 0.12660932872878006,
+    "w": 0.35817375774491605,
+    "h": 0.7560750348110926
+   }
+  ],
+  "text": "tested budget ranges where direct control plateaus, though its overhead can hurt at small budgets.",
+  "circles": {
+   "small": {
+    "x": 0.8080943206135512,
+    "y": 0.12660932872878006,
+    "w": 0.047035297620068396,
+    "h": 0.592075823132599
+   }
+  }
+ }
+}

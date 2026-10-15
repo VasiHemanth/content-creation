@@ -1,0 +1,77 @@
+{
+  "item": "_sample",
+  "kind": "post",
+  "name": "Sample post",
+  "format": "4x5",
+  "ste": {
+    "names": [],
+    "terms": [
+      {
+        "term": "step",
+        "avoid": [
+          "stage"
+        ]
+      }
+    ],
+    "allow": [],
+    "examples": [
+      {
+        "slide": "s02",
+        "key": "x_before",
+        "why": "typical long prose with passive verbs, shown on purpose next to its rewrite"
+      }
+    ]
+  },
+  "slides": [
+    {
+      "id": "s01",
+      "kind": "image",
+      "alt": "Cover slide. The title says: Plain words give clear steps. A tangled line is cut, and three short lines come out.",
+      "data": {
+        "label": "Unofficial guide",
+        "hook": "Plain words give clear steps",
+        "_hl": "clear steps",
+        "sub": "One idea in each sentence.",
+        "swipe": "Swipe"
+      }
+    },
+    {
+      "id": "s02",
+      "kind": "image",
+      "alt": "A long sentence labelled Not STE, an arrow, and its rewrite in two short sentences. Two bars compare the longest sentence: 22 words before, 10 words after.",
+      "data": {
+        "title": "Cut it short",
+        "tag_before": "Not STE",
+        "x_before": "The file was edited by the operator, and then the new settings were applied by the system after the restart was completed.",
+        "tag_after": "STE",
+        "after": "The operator edits the file. Then the system applies the new settings after it restarts.",
+        "rows": [
+          {
+            "label": "Before",
+            "value": "22 words",
+            "_pct": 1
+          },
+          {
+            "label": "After",
+            "value": "10 words",
+            "_pct": 0.4545
+          }
+        ]
+      }
+    },
+    {
+      "id": "s03",
+      "kind": "video",
+      "alt": "An excerpt of a reel: a tree of past attempts, then a passage of the paper, with captions in short sentences.",
+      "source": {
+        "item": "2609.14858",
+        "from": 31.23,
+        "to": 38.6
+      },
+      "data": {
+        "title": "The same plain style, in a reel",
+        "handle": "hemanth_with_ai"
+      }
+    }
+  ]
+}

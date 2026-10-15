@@ -1,0 +1,156 @@
+<template id="limit-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #limit-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 700px; }
+    #limit-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #limit-fill { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .limit-mini { position: absolute; width: 22px; height: 15px; border: 2px solid var(--white); border-radius: 3px; background: #cfe9f7; }
+    .limit-mini.amb { background: radial-gradient(circle, rgba(255,180,84,1) 30%, #cfe9f7 75%); border-color: var(--amber); }
+    #limit-bucketg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #limit-dialv { position: absolute; left: 720px; top: 250px; width: 200px; text-align: center; font: 400 96px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; opacity: 0; }
+    #limit-dial { left: 724px; top: 430px; font-size: 30px; }
+    #limit-set { left: 60px; top: 330px; font-size: 26px; color: var(--white); border-color: var(--white); }
+    .limit-exit { top: 866px; font-size: 26px; }
+    #limit-allow { left: 140px; color: var(--cyan); border-color: var(--cyan); }
+    #limit-esc { left: 440px; }
+    #limit-block { left: 760px; color: var(--white); border-color: var(--white); }
+    #limit-every { left: 380px; top: 940px; font-size: 32px; color: var(--white); border-color: var(--amber); }
+    #limit-review { left: 650px; top: 690px; font-size: 26px; }
+    #limit-pile { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .limit-card { position: absolute; width: 70px; height: 46px; border: 4px solid var(--white); border-radius: 6px; background: var(--panel); opacity: 0; }
+    #limit-sep { left: 60px; top: 190px; font-size: 26px; }
+    #limit-big { position: absolute; left: 60px; top: 1010px; font: 400 150px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; text-shadow: 8px 8px 0 var(--shadow); opacity: 0; }
+    #limit-lab { left: 320px; top: 1070px; font-size: 32px; }
+    #limit-bar { position: absolute; left: 90px; top: 1250px; width: 800px; height: 56px; border: 4px solid var(--cyan); opacity: 0; }
+    #limit-bfill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: var(--amber); transform-origin: 0 50%; }
+    #limit-anone { position: absolute; left: -4px; top: -16px; width: 0; height: 80px; border-left: 6px dashed var(--cyan); opacity: 0; }
+    #limit-blk { left: 160px; top: 1180px; font-size: 26px; }
+    #limit-alw { left: 90px; top: 1330px; font-size: 26px; color: var(--cyan); border-color: var(--cyan); }
+    #limit-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="limit" data-width="1080" data-height="1920">
+    <div id="limit-world">
+      <svg id="limit-svg" class="ink sketch" viewBox="0 0 1080 1920">
+        <rect id="limit-zE" class="fl amber" x="340" y="590" width="360" height="30" opacity="0.3" />
+        <rect id="limit-zB" class="fl" x="562" y="590" width="418" height="30" opacity="0" />
+        <path id="limit-line" class="ln thick" d="M90 620 L990 620" />
+        <g id="limit-gate"><rect class="fl panel" x="110" y="650" width="200" height="18" /><rect class="ln cyan thick" x="110" y="650" width="200" height="18" /></g>
+        <g id="limit-gatelock" opacity="0"><rect class="fl cyan" x="190" y="676" width="40" height="32" rx="4" /><path class="ln cyan thick" d="M197 676 L197 664 Q210 646 223 664 L223 676" /></g>
+        <path id="limit-tray" class="ln amber thick" d="M430 660 L455 840 L615 840 L640 660" />
+        <rect id="limit-wall" class="ln thick" x="790" y="650" width="110" height="190" />
+        <g id="limit-dialg">
+          <circle class="fl deep" cx="820" cy="300" r="118" />
+          <circle class="ln amber thick" cx="820" cy="300" r="118" />
+          <path class="ln dim" d="M820 182 L820 204 M938 300 L916 300 M702 300 L724 300" />
+        </g>
+        <g id="limit-pinL"><path class="ln amber heavy" d="M340 550 L340 640" /><circle class="fl amber" cx="340" cy="544" r="15" /></g>
+        <g id="limit-pinH"><path class="ln amber heavy" d="M700 550 L700 640" /><circle class="fl amber" cx="700" cy="544" r="15" /></g>
+        <g id="limit-lock"><rect class="fl amber" x="500" y="512" width="40" height="34" rx="5" /><path id="limit-shackle" class="ln amber thick" d="M507 512 L507 500 Q520 482 533 500 L533 512" /><path class="ln amber dash" d="M356 530 L500 530 M540 530 L684 530" /></g>
+      </svg>
+      <div id="limit-pile"></div>
+      <div id="limit-bucketg">
+        <svg class="ink" viewBox="0 0 1080 1920" style="left:0;top:0;width:1080px;height:1920px">
+          <path class="fl panel" d="M110 460 L310 460 L285 616 L135 616 Z" /><path class="ln thick" d="M110 460 L135 616 L285 616 L310 460" />
+        </svg>
+        <div id="limit-fill"></div>
+      </div>
+      <div id="limit-dialv" data-bind="l11.value"></div>
+      <div id="limit-dial" class="tag" data-bind="l11.dial"></div>
+      <div id="limit-set" class="tag" data-bind="l11.set"></div>
+      <div id="limit-allow" class="tag limit-exit" data-bind="l11.allow"></div>
+      <div id="limit-esc" class="tag limit-exit" data-bind="l11.esc"></div>
+      <div id="limit-block" class="tag limit-exit" data-bind="l11.block"></div>
+      <div id="limit-review" class="tag cyan" data-bind="l11.review"></div>
+      <div id="limit-every" class="tag" data-bind="l11.every"></div>
+      <div id="limit-sep" class="tag cyan" data-bind="l12.sep"></div>
+      <div id="limit-big" data-bind="l12.value" data-to=""></div>
+      <div id="limit-lab" class="tag" data-bind="l12.lab"></div>
+      <div id="limit-bar"><div id="limit-bfill"></div><div id="limit-anone"></div></div>
+      <div id="limit-blk" class="tag" data-bind="l12.blk"></div>
+      <div id="limit-alw" class="tag" data-bind="l12.alw"></div>
+    </div>
+    <div id="limit-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l11', w, n), b = (w, n) => KIT.cue('l12', w, n), D = KIT.sceneDur('limit');
+      KIT.bind('#limit-world');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.18) => tl.fromTo('#limit-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const X = (p) => 90 + p * 900;   // rail position of an unsafe probability (schematic)
+
+      // the bucket of tied inputs from the tie scene, same drawing
+      const d8 = KIT.data('l08'), N = 42, nMiss = Math.max(1, Math.round(N * d8._tieMiss / d8._tieAll)), miss = new Set([2, 9, 15].slice(0, nMiss));
+      const fill = document.getElementById('limit-fill');
+      for (let k = 0; k < N; k++) {
+        const r = Math.floor(k / 6), e = document.createElement('div'); e.className = 'limit-mini' + (miss.has(k) ? ' amb' : ''); e.id = `limit-n${k}`;
+        e.style.left = `${144 + (k % 6) * 23 + (r % 2) * 6}px`; e.style.top = `${594 - r * 17}px`; fill.appendChild(e);
+      }
+      KIT.draw(tl, '#limit-line', 0.05, 0.35);
+      KIT.rise(tl, ['#limit-bucketg', '#limit-gate', '#limit-tray', '#limit-wall', '#limit-pinL', '#limit-pinH', '#limit-lock'], 0.08, { y: 30, stagger: 0.03 });
+      KIT.fade(tl, ['#limit-allow', '#limit-esc', '#limit-block'], 0.2, { stagger: 0.04 });
+      pulse(0.06, 0.14);
+      // "limit": the dial; "one percent": the value, labelled as a setting the author chose
+      KIT.slam(tl, '#limit-dialg', a('limit') - 0.1, { from: 1.6, shakeTarget: '#limit-world', amp: 8 });
+      KIT.pop(tl, '#limit-dial', a('limit') + 0.15, { from: 0.5 });
+      KIT.slam(tl, '#limit-dialv', a('one') - 0.1, { from: 2.4, shakeTarget: '#limit-world', amp: 12 });
+      KIT.pop(tl, '#limit-set', a('percent') + 0.15, { from: 0.4 });
+      pulse(a('limit')); pulse(a('one'), 0.24);
+      tl.to('#limit-pinL', { x: X(0.025) - 340, duration: 0.35, ease: 'power3.inOut' }, a('attacks'));
+      // "policy": both pins jump to the rail ends, the whole rail becomes escalate
+      tl.to('#limit-pinL', { x: X(0) - 340, duration: 0.25, ease: 'back.out(2)' }, a('policy'));
+      tl.to('#limit-pinH', { x: X(1) - 700, duration: 0.25, ease: 'back.out(2)' }, a('policy'));
+      tl.to('#limit-lock', { x: 0, opacity: 0.35, duration: 0.25 }, a('policy'));
+      tl.to('#limit-zE', { attr: { x: 90, width: 900 }, opacity: 0.38, duration: 0.3 }, a('policy'));
+      pulse(a('policy'));
+      // "escalated every": cards flood into the review tray, which overflows; the camera climbs with the pile
+      const pile = document.getElementById('limit-pile'), P = [], rp = KIT.rng(5);
+      for (let k = 0; k < 14; k++) {
+        const e = document.createElement('div'); e.className = 'limit-card'; e.id = `limit-p${k}`;
+        e.style.left = `${470 + (k % 3) * 38 + Math.round(rp() * 10)}px`; e.style.top = `${786 - Math.floor(k / 3) * 34}px`; e.style.transform = `rotate(${Math.round((rp() - 0.5) * 24)}deg)`;
+        pile.appendChild(e); P.push(e);
+      }
+      tl.fromTo(P, { y: -420, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'power2.in', stagger: 0.06 }, a('escalated') - 0.1);
+      KIT.pop(tl, '#limit-review', a('escalated'), { from: 0.5 });
+      KIT.slam(tl, '#limit-every', a('every'), { from: 1.8, shakeTarget: '#limit-pile', amp: 8 });
+      pulse(a('every'), 0.22);
+      tl.to('#limit-world', { scale: 1.12, y: 40, duration: 0.8, ease: 'power2.inOut' }, a('escalated'));
+
+      // ---- l12: separate thresholds (an exploratory analysis): the lock opens, the block pin moves alone
+      tl.to('#limit-world', { scale: 1, y: 0, duration: 0.35, ease: 'power3.inOut' }, b('With'));
+      tl.to(['#limit-every', '#limit-set', '#limit-dial', '#limit-dialv', '#limit-dialg'], { opacity: 0.3, duration: 0.3 }, b('With'));
+      tl.to('#limit-lock', { opacity: 1, duration: 0.15 }, b('separate') - 0.2);
+      tl.to('#limit-shackle', { rotation: -40, svgOrigin: '507 512', y: -8, duration: 0.25, ease: 'back.out(2)' }, b('separate'));
+      KIT.pop(tl, '#limit-sep', b('separate'), { from: 0.5 });
+      tl.to('#limit-pinH', { x: X(0.525) - 700, duration: 0.45, ease: 'power3.inOut' }, b('thresholds'));
+      tl.to('#limit-zE', { attr: { x: 90, width: X(0.525) - 90 }, duration: 0.45, ease: 'power3.inOut' }, b('thresholds'));
+      tl.fromTo('#limit-zB', { opacity: 0 }, { opacity: 0.3, duration: 0.3, immediateRender: false }, b('thresholds') + 0.3);
+      pulse(b('separate'));
+      // the coverage bar (a data mark): all test inputs; the block share fills to the storyboard value
+      tl.fromTo('#limit-bar', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, b('it'));
+      KIT.rise(tl, '#limit-lab', b('decided'), { y: 20 });
+      const big = document.getElementById('limit-big'); big.dataset.to = KIT.data('l12').value;
+      tl.fromTo(big, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.25, ease: 'power3.out' }, b('seven') - 0.15);
+      KIT.count(tl, big, b('seven') - 0.1, 0.6);
+      KIT.grow(tl, '#limit-bfill', b('seven'), 0.6, { to: KIT.data('l12')._cov / 100 });
+      pulse(b('seven'), 0.24);
+      // "automatically": a stream of cards hits the wall
+      const S = [0, 1, 2, 3, 4].map((k) => { const e = document.createElement('div'); e.className = 'limit-card'; e.id = `limit-s${k}`; e.style.left = '600px'; e.style.top = `${690 + (k % 3) * 40}px`; pile.appendChild(e); return e; });
+      S.forEach((e, k) => {
+        tl.fromTo(e, { x: -200, opacity: 0 }, { x: 160, opacity: 1, duration: 0.18, ease: 'power2.in' }, b('automatically') - 0.1 + k * 0.1);
+        tl.to(e, { x: 60, y: -60, rotation: -30, opacity: 0, duration: 0.3, ease: 'power2.out' }, b('automatically') + 0.08 + k * 0.1);
+      });
+      KIT.shake(tl, '#limit-world', b('automatically') + 0.25, { amp: 10, dur: 0.35 });
+      pulse(b('automatically'));
+      // "Every one was a block": the block tag lands on the filled share; the allow share is empty;
+      // the zero-score bucket slides past the locked allow gate into review
+      KIT.pop(tl, '#limit-blk', b('Every'), { from: 0.5 });
+      tl.fromTo('#limit-anone', { opacity: 0 }, { opacity: 1, duration: 0.15, yoyo: true, repeat: 3, immediateRender: false }, b('Every'));
+      KIT.pop(tl, '#limit-alw', b('Every') + 0.15, { from: 0.5 });
+      tl.fromTo('#limit-gatelock', { opacity: 0, scale: 1.6, svgOrigin: '210 690' }, { opacity: 1, scale: 1, svgOrigin: '210 690', duration: 0.25, ease: 'back.out(2)' }, b('Every') - 0.1);
+      tl.to('#limit-bucketg', { x: 340, y: 120, scale: 0.6, transformOrigin: '210px 540px', duration: 0.6, ease: 'power2.inOut' }, b('one') - 0.05);
+      pulse(b('block'), 0.22);
+      window.__timelines["limit"] = tl;
+    })();
+  </script>
+</template>

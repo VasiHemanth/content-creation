@@ -1,0 +1,72 @@
+{
+ "replay": {
+  "img": "evidence/replay.png",
+  "w": 3492,
+  "h": 285,
+  "page": 2,
+  "rects": [
+   {
+    "x": 0.8644437413645063,
+    "y": 0.03985312173558628,
+    "w": 0.10570823690258638,
+    "h": 0.19994280955968147
+   },
+   {
+    "x": 0.02830584081288518,
+    "y": 0.37320262805745735,
+    "w": 0.44775929509370543,
+    "h": 0.2557660849051867
+   },
+   {
+    "x": 0.4891569797832713,
+    "y": 0.37320262805745735,
+    "w": 0.48159232590235335,
+    "h": 0.2557660849051867
+   },
+   {
+    "x": 0.028166341067870165,
+    "y": 0.706528109514344,
+    "w": 0.6697451949922175,
+    "h": 0.2557657095166713
+   }
+  ],
+  "text": "branches, in different orders, with different parallel groupings and stopping decisions. Because all\r\nexecution outcomes are already saved in the tree, evaluating a new strategy requires only reading past\r\nrecords without rerunning the underlying discovery agent or evaluator. This transforms meta-policy",
+  "circles": {
+   "rerunning": {
+    "x": 0.18373972745239228,
+    "y": 0.7140426368152714,
+    "w": 0.09342241194065216,
+    "h": 0.24825118221574385
+   }
+  }
+ },
+ "lasso": {
+  "img": "evidence/lasso.png",
+  "w": 3493,
+  "h": 190,
+  "page": 7,
+  "rects": [
+   {
+    "x": 0.4147655216011138,
+    "y": 0.5597890566447833,
+    "w": 0.47130571721507464,
+    "h": 0.3836514676560467
+   },
+   {
+    "x": 0.02805134792903572,
+    "y": 0.5803203059585219,
+    "w": 0.2202511994134649,
+    "h": 0.2962931471845408
+   }
+  ],
+  "text": "Exploration. With Gemini-3.1 Pro, it reduces the average runtime across the six held-out datasets from\r\n3587.1 ms to 2931.0 ms while using only 317 discovery-agent calls, compared with 550 calls for fixed",
+  "circles": {
+   "317": {
+    "x": 0.4147655216011138,
+    "y": 0.5811255192358695,
+    "w": 0.03431653949257534,
+    "h": 0.28944939741329456
+   }
+  }
+ }
+}

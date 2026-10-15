@@ -1,0 +1,83 @@
+{
+ "stall": {
+  "img": "evidence/stall.png",
+  "w": 3473,
+  "h": 90,
+  "page": 2,
+  "rects": [
+   {
+    "x": 0.2573926835245728,
+    "y": 0.11297842031527766,
+    "w": 0.1598346662614779,
+    "h": 0.5726539598073958
+   },
+   {
+    "x": 0.42303474101068667,
+    "y": 0.11297842031527766,
+    "w": 0.31918367173758305,
+    "h": 0.7732732131714956
+   }
+  ],
+  "text": "of the final 1,500 sessions make no tool calls while token consumption continues (Figure 2(b)). This shows",
+  "circles": {
+   "continues": {
+    "x": 0.6568680493528023,
+    "y": 0.14295687594918827,
+    "w": 0.08535036339546744,
+    "h": 0.5426755041734851
+   }
+  }
+ },
+ "office": {
+  "img": "evidence/office.png",
+  "w": 3479,
+  "h": 90,
+  "page": 1,
+  "rects": [
+   {
+    "x": 0.5240968666176549,
+    "y": 0.142951994984946,
+    "w": 0.2796522980443131,
+    "h": 0.7448037977850178
+   },
+   {
+    "x": 0.8096071960822792,
+    "y": 0.142951994984946,
+    "w": 0.15730203140828034,
+    "h": 0.5426535639551824
+   }
+  ],
+  "text": "on the principle of stateful search with stateless agents: no agent carries its conversation across invocations;",
+  "circles": {
+   "conversation": {
+    "x": 0.6928003759550567,
+    "y": 0.142951994984946,
+    "w": 0.11094878870691115,
+    "h": 0.5426535639551824
+   }
+  }
+ },
+ "twist": {
+  "img": "evidence/twist.png",
+  "w": 3479,
+  "h": 90,
+  "page": 3,
+  "rects": [
+   {
+    "x": 0.02871745397162877,
+    "y": 0.1130654746476019,
+    "w": 0.2780358210186586,
+    "h": 0.7754077732587458
+   }
+  ],
+  "text": "horizons can misjudge methods, components, and configurations. On FrontierSWE, SLA trails the strongest",
+  "circles": {
+   "misjudge": {
+    "x": 0.14566949071857682,
+    "y": 0.1130654746476019,
+    "w": 0.07986874564129051,
+    "h": 0.7754077732587458
+   }
+  }
+ }
+}

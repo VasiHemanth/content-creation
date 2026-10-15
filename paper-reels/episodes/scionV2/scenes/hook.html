@@ -1,0 +1,116 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #hook-world { position: absolute; left: 0; top: 0; width: 2160px; height: 1920px; }
+    #hook-pa, #hook-pb { position: absolute; top: 0; width: 1080px; height: 1920px; }
+    #hook-pa { left: 0; } #hook-pb { left: 1080px; }
+    #hook-pbz { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 330px; }
+    #hook-flood { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .hook-tile { position: absolute; left: 0; top: 0; width: 34px; height: 34px; border-radius: 7px; background: var(--amber); box-shadow: inset 0 0 0 4px rgba(7,29,53,.35); }
+    .hook-hd { position: absolute; left: 0; width: 1080px; text-align: center; color: var(--white); white-space: nowrap; text-shadow: 8px 8px 0 var(--shadow); }
+    #hook-about { top: 176px; font: 400 64px/1 "Marker", sans-serif; color: var(--cyan); }
+    #hook-value { top: 256px; font: 400 136px/1 "Marker", sans-serif; transform-origin: 540px 330px; }
+    #hook-unit { top: 414px; font: 400 76px/1 "Marker", sans-serif; }
+    #hook-how { top: 515px; font: 400 200px/1 "Marker", sans-serif; color: var(--amber); }
+    #hook-tag { left: 94px; top: 752px; padding: 8px 20px; font: 700 44px "Mono", monospace; color: var(--cyan); border: 3px solid var(--cyan); background: var(--deep); white-space: nowrap; }
+    #hook-neck { left: 80px; top: 880px; font: 700 48px "Mono", monospace; color: var(--coral); }
+    #hook-card { position: absolute; left: 290px; top: 200px; width: 500px; height: 680px; background: var(--paper); box-shadow: 14px 14px 0 var(--shadow); }
+    #hook-bcam { position: absolute; left: 15px; top: 15px; width: 470px; height: 650px; overflow: hidden; }
+    #hook-binner { position: absolute; left: 0; top: 0; width: 470px; height: 650px; transform-origin: 235px 160px; }
+    #hook-binner img { position: absolute; left: 0; top: 0; width: 470px; height: 650px; }
+    #hook-ring { position: absolute; border: 7px solid var(--mint); border-radius: 18px; }
+    #hook-src { position: absolute; left: 190px; top: 905px; width: 700px; text-align: center; white-space: normal; font: 700 40px/1.2 "Mono", monospace; color: var(--deep); background: var(--amber); padding: 10px 18px; }
+    #hook-big1 { top: 1090px; font: 400 100px/1 "Marker", sans-serif; color: var(--amber); }
+    #hook-big2 { top: 1220px; font: 400 84px/1 "Marker", sans-serif; }
+    #hook-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #fff7e6; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-flood"></div>
+    <div id="hook-cam"><div id="hook-world">
+      <div id="hook-pa">
+        <svg class="ink" id="hook-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <path id="hook-wall" class="ln coral heavy" d="M90 1450 L470 960 L470 860 M900 1450 L610 960 L610 860" />
+        </svg>
+        <div id="hook-neck" class="abs" data-bind="l01.neck"></div>
+        <div id="hook-about" class="hook-hd" data-layout-allow-overlap data-bind="l01.about"></div>
+        <div id="hook-value" class="hook-hd" data-layout-allow-overlap data-bind="l01.value"></div>
+        <div id="hook-unit" class="hook-hd" data-layout-allow-overlap data-bind="l01.unit"></div>
+        <div id="hook-how" class="hook-hd" data-layout-allow-overlap data-bind="l01.how"></div>
+        <div id="hook-tag" class="abs" data-bind="l01.tag"></div>
+      </div>
+      <div id="hook-pb"><div id="hook-pbz">
+        <div id="hook-card"><div id="hook-bcam"><div id="hook-binner"></div></div></div>
+        <div id="hook-src" data-bind="l02.src"></div>
+        <div id="hook-big1" class="hook-hd" data-layout-allow-overlap data-bind="l02.big1"></div>
+        <div id="hook-big2" class="hook-hd" data-layout-allow-overlap data-bind="l02.big2"></div>
+      </div></div>
+    </div></div>
+    <div id="hook-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'hook', c1 = (w, n) => KIT.cue('l01', w, n), c2 = (w, n) => KIT.cue('l02', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#hook-world');
+      const tl = gsap.timeline({ paused: true });
+      const flash = (t, o = 0.22) => { tl.fromTo('#hook-flash', { opacity: o }, { opacity: 0, duration: 0.35, ease: 'none', immediateRender: false }, t); };
+
+      // ---- the checkout flood: tiles stream up into the Git mirror neck from frame 0; a pile builds under the neck
+      const host = document.getElementById('hook-flood'), r = KIT.rng(31), NS = 120, NP = 70;
+      const stream = [], pile = [];
+      for (let i = 0; i < NS; i++) { const e = document.createElement('div'); e.className = 'hook-tile'; e.id = `hook-s${i}`; host.appendChild(e); stream.push({ e, ph: r(), x0: 110 + r() * 760, jx: (r() - 0.5) * 90, k: 0.8 + r() * 0.5 }); }
+      // pile slots: rows widening downward from the neck mouth
+      let row = 0, cnt = 0;
+      while (cnt < NP) { const w = 3 + row * 2; for (let j = 0; j < w && cnt < NP; j++, cnt++) { const e = document.createElement('div'); e.className = 'hook-tile'; e.id = `hook-p${cnt}`; host.appendChild(e); pile.push({ e, x: 540 - (w * 40) / 2 + j * 40 + 3, y: 905 + row * 40 }); } row++; }
+      const dist = (t) => 0.42 * t + 0.5 * Math.max(0, t - 0.3) ** 1.2;   // cumulative travel; the flood speeds up after 0.3 s
+      const pileN = (t) => Math.min(NP, Math.round(12 + 20 * t));           // the pile grows under the neck
+      function place(t) {
+        const n = pileN(t), bottom = n ? pile[n - 1].y + 40 : 905;
+        stream.forEach((s, i) => {
+          const u = (dist(t) * s.k + s.ph) % 1, yb = 1460, yt = bottom;
+          const y = yb - u * (yb - yt), x = s.x0 + (540 + s.jx - s.x0) * Math.min(1, u * 1.15);
+          const o = u < 0.06 ? u / 0.06 : u > 0.94 ? (1 - u) / 0.06 : 1;
+          s.e.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; s.e.style.opacity = (o * 0.95).toFixed(3);
+        });
+        pile.forEach((p, i) => { p.e.style.transform = `translate(${p.x}px, ${p.y}px)`; p.e.style.opacity = i < n ? '1' : '0'; });
+      }
+      const px = { t: 0 }; place(0);
+      tl.fromTo(px, { t: 0 }, { t: D, duration: D, ease: 'none', onUpdate: () => place(px.t) }, 0);
+
+      // ---- l01: the claim is on screen at 0.0; beats on the spoken words
+      tl.fromTo('#hook-how', { scale: 1, transformOrigin: '50% 50%' }, { scale: 1.06, duration: 0.25, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 0.3);
+      const tw = c1('twenty');
+      tl.fromTo('#hook-value', { scale: 1 }, { scale: 1.12, duration: 0.14, ease: 'power3.out' }, tw);
+      tl.to('#hook-value', { scale: 1, duration: 0.3, ease: 'back.out(2)' }, tw + 0.14);
+      KIT.shake(tl, '#hook-pa', tw + 0.05, { amp: 12, dur: 0.3 });
+      flash(tw, 0.18);
+      tl.fromTo('#hook-wall', { opacity: 1 }, { opacity: 0.55, duration: 0.15, yoyo: true, repeat: 3 }, c1('C'));
+      tl.fromTo('#hook-cam', { scale: 1 }, { scale: 1.06, duration: 0.9, ease: 'power3.inOut' }, c1('checkouts'));
+      tl.fromTo('#hook-tag', { x: -900, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, c1('day') - 0.1);
+
+      // ---- l02: whip to the article's own chart, camera rides up to the spike, the number slams below
+      const img = document.createElement('img'); img.src = KIT.EP.evidence.merges.img; img.alt = ''; document.getElementById('hook-binner').appendChild(img);
+      const rr = KIT.EP.evidence.merges.rects[0], ring = document.createElement('div'); ring.id = 'hook-ring';
+      ring.style.cssText = `left:${rr.x * 470 - 10}px;top:${rr.y * 650 - 10}px;width:${rr.w * 470 + 20}px;height:${rr.h * 650 + 20}px`;
+      document.getElementById('hook-binner').appendChild(ring);
+      const tS = c2('September') - 0.15;
+      tl.to('#hook-cam', { scale: 1, duration: 0.35, ease: 'power2.inOut' }, tS);
+      tl.fromTo('#hook-world', { x: 0 }, { x: -1080, duration: 0.42, ease: 'power3.inOut' }, tS);
+      tl.fromTo('#hook-world', { filter: 'blur(0px)' }, { filter: 'blur(10px)', duration: 0.18, yoyo: true, repeat: 1, ease: 'none', immediateRender: false }, tS + 0.03);
+      tl.to('#hook-flood', { opacity: 0.18, duration: 0.4 }, tS);
+      tl.fromTo('#hook-card', { rotation: 6, y: 80 }, { rotation: -2, y: 0, duration: 0.55, ease: 'back.out(1.6)' }, tS + 0.1);
+      tl.fromTo('#hook-src', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35 }, tS + 0.4);
+      // camera rides up the bars to the spike: the chart starts low in its card and rises, then the page pushes in on the callout
+      tl.fromTo('#hook-pbz', { scale: 1 }, { scale: 1.12, duration: 1.2, ease: 'sine.inOut' }, tS + 0.5);
+      tl.fromTo('#hook-ring', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2)' }, c2('thirty') - 0.1);
+      const tT = KIT.slam(tl, '#hook-big1', c2('Source') - 0.15, { amp: 14, shakeTarget: '#hook-pb' });
+      flash(tT, 0.2);
+      tl.to('#hook-pbz', { scale: 1, duration: 0.3, ease: 'power3.out' }, Math.max(tS + 1.75, tT - 0.3));
+      tl.fromTo('#hook-big2', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'back.out(2)' }, tT + 0.25);
+      tl.fromTo('#hook-pb', { rotation: 0, transformOrigin: '540px 800px' }, { rotation: -4, duration: 0.5, ease: 'power2.in' }, c2('bottleneck'));
+
+      KIT.beats(tl, '#hook-cam', [c2('day'), c2('Anthropic'), c2('merged'), c2('changes')], { amp: 0.03, shift: 22, reset: c2('Source') - 0.25 });
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

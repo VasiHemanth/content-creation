@@ -1,0 +1,614 @@
+{
+ "item": "2610.08902",
+ "name": "Agent Plasticity",
+ "renderer": "hyperframes",
+ "authors": [
+  "Harman Singh",
+  "Anton Bakhtin",
+  "Rulin Shao",
+  "Gabriel Synnaeve",
+  "Ilia Kulikov",
+  "Rob Fergus",
+  "Sanjeev Arora",
+  "Kurt Keutzer",
+  "Jason Weston",
+  "Anuj Mahajan",
+  "Anirudh Goyal"
+ ],
+ "voice": {
+  "preset": "aiden",
+  "speed": 1.12
+ },
+ "ste": {
+  "names": [
+   "Fable",
+   "Sol",
+   "Luna",
+   "Hex",
+   "Go"
+  ],
+  "terms": [
+   {
+    "term": "model",
+    "avoid": [
+     "agent",
+     "agents",
+     "bot",
+     "bots",
+     "system",
+     "systems",
+     "LLM",
+     "player",
+     "players"
+    ]
+   },
+   {
+    "term": "programs and notes",
+    "avoid": [
+     "artifact",
+     "artifacts",
+     "tool",
+     "tools",
+     "rule",
+     "rules",
+     "instruction",
+     "instructions",
+     "memory",
+     "file",
+     "files",
+     "saved program",
+     "saved items",
+     "code",
+     "script",
+     "scripts"
+    ]
+   },
+   {
+    "term": "test games",
+    "avoid": [
+     "held-out",
+     "held out",
+     "unseen",
+     "hidden",
+     "validation",
+     "evaluation games",
+     "new games"
+    ]
+   },
+   {
+    "term": "its games",
+    "avoid": [
+     "training games",
+     "practice games",
+     "training"
+    ]
+   },
+   {
+    "term": "round",
+    "avoid": [
+     "checkpoint",
+     "checkpoints",
+     "epoch",
+     "epochs",
+     "iteration",
+     "iterations",
+     "cycle",
+     "cycles"
+    ]
+   },
+   {
+    "term": "reviews",
+    "avoid": [
+     "reflect",
+     "reflects",
+     "reflection",
+     "revise",
+     "revises",
+     "revision"
+    ]
+   },
+   {
+    "term": "plasticity",
+    "avoid": [
+     "learning efficiency",
+     "learning speed",
+     "learning rate",
+     "adaptability",
+     "learnability",
+     "efficiency"
+    ]
+   },
+   {
+    "term": "dollar",
+    "avoid": [
+     "learning cost",
+     "compute",
+     "budget",
+     "tokens"
+    ]
+   },
+   {
+    "term": "bad moves",
+    "avoid": [
+     "mistake",
+     "mistakes",
+     "failure",
+     "failures",
+     "error",
+     "errors",
+     "blunder",
+     "blunders"
+    ]
+   },
+   {
+    "term": "test score",
+    "avoid": [
+     "held-out score",
+     "final score",
+     "top score",
+     "top scorer",
+     "performance"
+    ]
+   },
+   {
+    "term": "gain",
+    "avoid": [
+     "uplift",
+     "performance gain"
+    ]
+   },
+   {
+    "term": "practice",
+    "avoid": [
+     "experience",
+     "opportunities"
+    ]
+   },
+   {
+    "term": "use",
+    "avoid": [
+     "reuse",
+     "reused",
+     "retrieve",
+     "invoke",
+     "ignore",
+     "ignored",
+     "skip",
+     "skipped"
+    ]
+   }
+  ],
+  "allow": []
+ },
+ "scenes": {
+  "hook": {
+   "transition": "whip"
+  },
+  "gap": {
+   "transition": "zoom"
+  },
+  "loop": {
+   "transition": "blur"
+  },
+  "measure": {
+   "transition": "whip"
+  },
+  "result": {
+   "transition": "whip"
+  },
+  "why": {
+   "transition": "punch"
+  },
+  "close": {
+   "transition": "zoom"
+  },
+  "end": {}
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "Two A I models get the same practice. Only one improves.",
+   "text": "Two AI models get the same practice. Only one improves.",
+   "data": {
+    "b1": "TWO AI MODELS GET",
+    "b2": "THE SAME PRACTICE.",
+    "b3": "ONLY ONE IMPROVES.",
+    "tag": "Agent Plasticity · arXiv 2610.08902",
+    "n1": "GPT-5.6 Sol",
+    "n2": "GPT-5.6 Luna"
+   },
+   "sfx": [
+    {
+     "t": 0.02,
+     "kind": "whoosh"
+    },
+    {
+     "cue": "same",
+     "kind": "pop"
+    },
+    {
+     "cue": "improves",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "scene": "gap",
+   "say": "Most tests show how good a model is now, not how well it learns.",
+   "text": "Most tests show how good a model is now, not how well it learns.",
+   "data": {
+    "dot": "score today",
+    "arrow": "how well it learns?",
+    "receipt": "FROM THE PAPER · Abstract, p. 1"
+   },
+   "sfx": [
+    {
+     "cue": "now",
+     "kind": "tick"
+    },
+    {
+     "cue": "not",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "loop",
+   "say": "A model plays chess, Go or Hex, round after round.",
+   "text": "A model plays chess, Go or Hex, round after round.",
+   "data": {
+    "g1": "chess",
+    "g2": "Go",
+    "g3": "Hex",
+    "rnd": "round",
+    "note": "Each game has its own rounds."
+   },
+   "sfx": [
+    {
+     "cue": "chess",
+     "kind": "pop"
+    },
+    {
+     "cue": "Go",
+     "kind": "pop"
+    },
+    {
+     "cue": "Hex",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "loop",
+   "say": "In chess, it reviews its games each round and writes a program and notes.",
+   "text": "In chess, it reviews its games each round and writes a program and notes.",
+   "data": {
+    "stack": "its games",
+    "fileA": "chess_engine.py",
+    "kindA": "a program",
+    "fileB": "START_HERE.md",
+    "kindB": "a note",
+    "h1": "IMMEDIATE ACTION",
+    "h2": "DO NOT INSPECT",
+    "wrote": "Sol wrote: a program and a note.",
+    "src": "Paper, Fig. 14, p. 25"
+   },
+   "sfx": [
+    {
+     "cue": "reviews",
+     "kind": "tick"
+    },
+    {
+     "cue": "program",
+     "kind": "click"
+    },
+    {
+     "cue": "notes",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "loop",
+   "say": "The model never changes, but each round starts with its programs and notes.",
+   "text": "The model never changes, but each round starts with its programs and notes.",
+   "data": {
+    "lock": "model: never changes",
+    "r1": "this round",
+    "r2": "next round",
+    "jump": "a later round",
+    "after": "One game, a later round: its program plays every move, and Sol wins.",
+    "before": "Before: no program, Sol loses.",
+    "src": "Paper, Fig. 14, p. 25"
+   },
+   "sfx": [
+    {
+     "cue": "never",
+     "kind": "thud"
+    },
+    {
+     "cue": "but",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "each",
+     "kind": "click"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "measure",
+   "say": "It also plays test games, like an exam. It never reviews them, so gains there are evidence of progress.",
+   "text": "It also plays test games, like an exam. It never reviews them, so gains there are evidence of progress.",
+   "data": {
+    "mine": "its games",
+    "tst": "test games",
+    "never": "The model never reviews test games.",
+    "gain": "A gain on its games is not always a gain on test games.",
+    "src": "Paper, Sec. 2.1, p. 4"
+   },
+   "sfx": [
+    {
+     "cue": "test",
+     "kind": "pop"
+    },
+    {
+     "cue": "exam",
+     "kind": "click"
+    },
+    {
+     "cue": "them",
+     "kind": "thud"
+    },
+    {
+     "cue": "evidence",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "measure",
+   "say": "Plasticity is the test score gain for each dollar the model spends to learn.",
+   "text": "Plasticity is the test score gain for each dollar the model spends to learn.",
+   "data": {
+    "word": "PLASTICITY",
+    "up": "test score gain",
+    "per": "per dollar",
+    "pay": "Dollars pay for its games and its reviews.",
+    "score": "Score: the share of points won.",
+    "src": "Paper, Sec. 2.2, p. 4"
+   },
+   "sfx": [
+    {
+     "cue": "Plasticity",
+     "kind": "impact"
+    },
+    {
+     "cue": "gain",
+     "kind": "tick"
+    },
+    {
+     "cue": "dollar",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "scene": "result",
+   "say": "Sol gained a lot, but Luna did not. Fable five gained a lot too.",
+   "text": "Sol gained a lot, but Luna did not. Fable 5 gained a lot too.",
+   "data": {
+    "n1": "Claude Fable 5",
+    "n2": "GPT-5.6 Sol",
+    "n3": "GPT-5.6 Luna",
+    "y": "test score",
+    "x": "dollars spent",
+    "avg": "Average of the games. A sketch of the paper's first figure."
+   },
+   "sfx": [
+    {
+     "cue": "Sol",
+     "kind": "pop"
+    },
+    {
+     "cue": "Luna",
+     "kind": "pop"
+    },
+    {
+     "cue": "Fable",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l09",
+   "scene": "result",
+   "say": "Fable five reached the best test score, but Sol had the best plasticity.",
+   "text": "Fable 5 reached the best test score, but Sol had the best plasticity.",
+   "data": {
+    "best": "best test score: Fable 5",
+    "bestp": "best plasticity: Sol",
+    "v1": "298",
+    "v2": "57",
+    "b1": "Sol",
+    "b2": "Fable 5",
+    "axis": "plasticity",
+    "unit": "points per $1,000: a rate, not a total",
+    "est": "These are estimates.",
+    "src": "Paper, Sec. 3.4, p. 7"
+   },
+   "sfx": [
+    {
+     "cue": "best",
+     "kind": "tick"
+    },
+    {
+     "cue": "but",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "plasticity",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "why",
+   "say": "Luna almost never used its programs and notes. Models that used them less gained less. This is a link, not proof.",
+   "text": "Luna almost never used its programs and notes. Models that used them less gained less. This is a link, not proof.",
+   "data": {
+    "big": "98%",
+    "bigLab": "of the moves where one applied: not used.",
+    "key1": "One square is one move where a program or note applied.",
+    "key2": "Filled: used. Hollow: not used.",
+    "used": "Used: it runs the program or follows the note.",
+    "least": "used least",
+    "most": "used most",
+    "nl": "Luna",
+    "nf": "Fable 5",
+    "ns": "Sol",
+    "caveat": "Models that used them most did not all gain a lot.",
+    "link": "This is a link, not proof.",
+    "judged": "A second model judged this from the game logs.",
+    "src": "Paper, Sec. 3.5, p. 8"
+   },
+   "sfx": [
+    {
+     "cue": "never",
+     "kind": "impact"
+    },
+    {
+     "cue": "link",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "why",
+   "say": "Models that used them most made fewer bad moves, but some remain.",
+   "text": "Models that used them most made fewer bad moves, but some remain.",
+   "data": {
+    "left": "Models that used them most",
+    "who": "Fable 5, Sol and two other models",
+    "right": "The other models",
+    "x": "X: a bad move.",
+    "fewer": "Fewer bad moves than the other models, but not none.",
+    "sketch": "The X counts here are a sketch.",
+    "src": "Paper, Sec. 3.5, p. 8"
+   },
+   "voice": {
+    "preset": "aiden",
+    "seed": 17
+   },
+   "sfx": [
+    {
+     "cue": "fewer",
+     "kind": "tick"
+    },
+    {
+     "cue": "some",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "why",
+   "say": "The paper does not know which causes bad moves: weak programs, notes or poor use.",
+   "text": "The paper does not know which causes bad moves: weak programs, notes or poor use.",
+   "data": {
+    "c1": "weak programs?",
+    "c2": "weak notes?",
+    "c3": "poor use?",
+    "unk": "The paper does not know which.",
+    "quote": "We leave separating these causes to future work.",
+    "src": "Paper, Sec. 3.5, p. 8"
+   },
+   "sfx": [
+    {
+     "cue": "which",
+     "kind": "impact"
+    },
+    {
+     "cue": "weak",
+     "kind": "pop"
+    },
+    {
+     "cue": "notes",
+     "kind": "pop"
+    },
+    {
+     "cue": "poor",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "close",
+   "say": "These plasticity numbers depend on games and prices, so they do not rank models.",
+   "text": "These plasticity numbers depend on games and prices, so they do not rank models.",
+   "data": {
+    "d1": "games",
+    "d2": "prices",
+    "b1": "Sol",
+    "b2": "Fable 5",
+    "v1": "298",
+    "v2": "57",
+    "stamp": "NOT A RANKING",
+    "sol": "Sol gained in board games but lost score in another game.",
+    "receipt": "FROM THE PAPER · Sec. 3.4, p. 7",
+    "unit": "points per $1,000: a rate, not a total"
+   },
+   "sfx": [
+    {
+     "cue": "games",
+     "kind": "tick"
+    },
+    {
+     "cue": "prices",
+     "kind": "tick"
+    },
+    {
+     "cue": "rank",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l14",
+   "scene": "end",
+   "say": "A score shows skill today. Plasticity shows how well a model learns.",
+   "text": "A score shows skill today. Plasticity shows how well a model learns.",
+   "data": {
+    "dot": "score today",
+    "arrow": "how well it learns",
+    "word": "PLASTICITY",
+    "title1": "Agent Plasticity: Measuring",
+    "title2": "Self-Improvement Through Experience",
+    "handle": "hemanth_with_ai",
+    "credit": "arXiv 2610.08902 · unofficial explainer"
+   },
+   "sfx": [
+    {
+     "cue": "Plasticity",
+     "kind": "chime"
+    },
+    {
+     "cue": "model",
+     "kind": "impact"
+    }
+   ]
+  }
+ ]
+}

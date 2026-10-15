@@ -1,0 +1,187 @@
+<template id="jar-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #jar-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 170px; }
+    #jar-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #jar-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #jar-stage, #jar-tagl { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #jar-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #jar-marbles { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .jar-m { position: absolute; width: 34px; height: 34px; border-radius: 50%; background: #cfe9f7; box-shadow: inset -5px -6px 0 rgba(7,29,53,.35); opacity: 0; }
+    .jar-m.amb { background: var(--amber); }
+    #jar-ex { left: 450px; top: 1048px; font-size: 26px; }
+    #jar-lab4 { position: absolute; left: 40px; top: 560px; width: 270px; height: 200px; }
+    #jar-lab4 .t { position: absolute; left: 0; top: 0; font: 600 30px "Mono", monospace; color: var(--cyan); }
+    .jar-bar { position: absolute; left: 0; width: 240px; height: 26px; border: 3px solid var(--cyan); }
+    .jar-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--amber); transform-origin: 0 50%; }
+    #jar-real { position: absolute; left: 780px; top: 560px; width: 260px; height: 200px; }
+    #jar-real .t { position: absolute; left: 0; top: 0; font: 600 30px "Mono", monospace; color: var(--cyan); }
+    #jar-match { left: 410px; top: 300px; font-size: 40px; color: var(--white); border-color: var(--white); }
+    #jar-lid { position: absolute; left: 370px; top: 380px; width: 340px; height: 96px; background: var(--deep); border: 7px solid var(--cyan); color: var(--cyan); font: 400 70px/82px "Marker", sans-serif; text-align: center; box-shadow: 8px 8px 0 var(--shadow); opacity: 0; }
+    #jar-task { left: 60px; top: 190px; font-size: 30px; }
+    #jar-model { left: 470px; top: 190px; font-size: 30px; color: var(--white); border-color: var(--white); }
+    #jar-grp { left: 60px; top: 268px; font-size: 28px; }
+    #jar-lab5 { position: absolute; left: 40px; top: 520px; width: 290px; height: 300px; }
+    #jar-lab5-t { position: absolute; left: 0; top: 0; width: 280px; font: 600 28px/1.25 "Mono", monospace; color: var(--cyan); white-space: normal; }
+    #jar-lab5-v { position: absolute; left: 0; top: 112px; font: 400 92px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; text-shadow: 6px 6px 0 var(--shadow); }
+    #jar-lab5 .jar-bar { top: 226px; }
+    #jar-big { position: absolute; left: 770px; top: 520px; font: 400 170px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; text-shadow: 8px 8px 0 var(--shadow); opacity: 0; }
+    #jar-bigl { left: 770px; top: 710px; font-size: 32px; }
+    #jar-cards { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .jar-card { position: absolute; top: 1110px; width: 86px; height: 118px; border: 4px solid var(--white); border-radius: 8px; background: var(--panel); opacity: 0; overflow: hidden; }
+    .jar-card i { position: absolute; left: 12px; height: 10px; border-radius: 5px; background: var(--dim); }
+    .jar-core { position: absolute; left: 25px; top: 66px; width: 36px; height: 36px; border-radius: 50%; background: radial-gradient(circle, rgba(255,180,84,.9), rgba(255,180,84,0) 70%); opacity: 0; }
+    .jar-bold { position: absolute; left: 10px; top: 20px; width: 64px; height: 22px; background: var(--white); opacity: 0; }
+    .jar-st { position: absolute; left: -6px; top: 34px; width: 98px; text-align: center; font: 400 30px/40px "Marker", sans-serif; color: var(--cyan); border: 3px solid var(--cyan); background: rgba(7,29,53,.85); transform: rotate(-12deg); opacity: 0; }
+    #jar-ei { left: 46px; top: 1040px; font-size: 26px; color: var(--white); border-color: var(--white); }
+    #jar-noei { left: 330px; top: 1260px; font-size: 30px; }
+    #jar-scan { position: absolute; left: 150px; top: 1096px; width: 14px; height: 146px; background: var(--cyan); box-shadow: 0 0 26px var(--cyan); opacity: 0; }
+    #jar-src { left: 60px; top: 1340px; font-size: 26px; }
+    #jar-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="jar" data-width="1080" data-height="1920">
+    <div id="jar-world"><div id="jar-beat">
+      <svg id="jar-svg" class="ink sketch" viewBox="0 0 1080 1920">
+        <path id="jar-glass" class="ln thick" d="M400 420 L400 470 Q330 500 330 560 L330 960 Q330 1010 380 1010 L700 1010 Q750 1010 750 960 L750 560 Q750 500 680 470 L680 420" />
+        <path class="ln dim thin" d="M360 600 L360 900" />
+      </svg>
+      <div id="jar-marbles"></div>
+      <div id="jar-ex" class="tag cyan" data-bind="l04.ex"></div>
+      <div id="jar-lab4"><div class="t" data-bind="l04.label"></div><div class="jar-bar" style="top:56px"><div id="jar-f4" class="jar-fill"></div></div></div>
+      <div id="jar-real"><div class="t" data-bind="l04.inside"></div><div class="jar-bar" style="top:56px"><div id="jar-fr" class="jar-fill"></div></div></div>
+      <div id="jar-match" class="tag" data-bind="l04.match"></div>
+      <div id="jar-lid" data-bind="l04.lid"></div>
+      <div id="jar-task" class="tag cyan" data-bind="l05.task"></div>
+      <div id="jar-model" class="tag" data-bind="l05.model"></div>
+      <div id="jar-grp" class="tag cyan" data-bind="l05.grp"></div>
+      <div id="jar-lab5"><div id="jar-lab5-t" data-bind="l05.lab"></div><div id="jar-lab5-v" data-bind="l05.value" data-to=""></div><div class="jar-bar"><div id="jar-f5" class="jar-fill"></div></div></div>
+      <div id="jar-big" data-bind="l06.value"></div>
+      <div id="jar-bigl" class="tag" data-bind="l06.lab"></div>
+      <div id="jar-cards"></div>
+      <div id="jar-scan"></div>
+      <div id="jar-ei" class="tag" data-bind="l07.ei"></div>
+      <div id="jar-noei" class="tag" data-bind="l07.noei"></div>
+      <div id="jar-src" class="tag cyan" data-bind="l07.src"></div>
+    </div></div>
+    <div id="jar-cam"><div id="jar-stage"></div></div>
+    <div id="jar-tagl"></div>
+    <div id="jar-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c4 = (w, n) => KIT.cue('l04', w, n), c5 = (w, n) => KIT.cue('l05', w, n), c6 = (w, n) => KIT.cue('l06', w, n), c7 = (w, n) => KIT.cue('l07', w, n);
+      const D = KIT.sceneDur('jar');
+      KIT.bind('#jar-world');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.18) => tl.fromTo('#jar-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // 100 marbles in the jar, filled from the bottom row up
+      const host = document.getElementById('jar-marbles'), M = [];
+      for (let k = 0; k < 100; k++) {
+        const e = document.createElement('div'); e.className = 'jar-m'; e.id = `jar-m${k}`;
+        e.style.left = `${358 + (k % 10) * 37}px`; e.style.top = `${960 - Math.floor(k / 10) * 38}px`;
+        host.appendChild(e); M.push(e);
+      }
+      // example jar (l04, no numbers): the same share on the label and inside
+      const EX = KIT.data('l04')._ex / 100, rnd = KIT.rng(7), exIdx = new Set();
+      while (exIdx.size < Math.round(EX * 100)) exIdx.add(Math.floor(rnd() * 100));
+      exIdx.forEach((k) => M[k].classList.add('amb'));
+
+      // ---- l04: the example jar, a match, then the paper's sentence
+      tl.fromTo('#jar-glass', { y: -300, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'bounce.out' }, Math.max(0.05, c4('Calibration') - 0.15));
+      KIT.pop(tl, '#jar-ex', c4('Calibration') + 0.25, { from: 0.4 });
+      KIT.rise(tl, '#jar-lab4', c4('means'), { x: -40, y: 0 });
+      KIT.grow(tl, '#jar-f4', c4('probabilities'), 0.5, { to: EX });
+      pulse(0.08, 0.14); pulse(c4('Calibration'));
+      tl.fromTo(M, { y: -560, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'bounce.out', stagger: 0.007 }, c4('match') - 0.35);
+      KIT.rise(tl, '#jar-real', c4('match'), { x: 40, y: 0 });
+      KIT.grow(tl, '#jar-fr', c4('how'), 0.5, { to: EX });
+      KIT.slam(tl, '#jar-match', c4('often'), { from: 1.8, shakeTarget: '#jar-beat', amp: 6 });
+      pulse(c4('often'));
+      tl.to([...exIdx].map((k) => M[k]), { scale: 1.25, duration: 0.18, yoyo: true, repeat: 1, stagger: 0.01 }, c4('unsafe'));
+      // shrink the jar to the top so the receipt can be read at full size below it
+      tl.to('#jar-world', { scale: 0.62, y: 10, duration: 0.45, ease: 'power3.inOut' }, c4('A') - 0.5);
+      tl.to('#jar-match', { opacity: 0, duration: 0.2 }, c4('A') - 0.5);
+      const R = KIT.read(tl, { cam: '#jar-cam', parent: '#jar-stage', hud: '#jar-tagl', tagY: 790, id: 'abstract', t: c4('A') - 0.45, label: KIT.data('l04').receipt,
+        x: 40, y: 900, width: 1000, zoom: 2.4, fx: 60, fy: 930, follow: 0,
+        marks: [[c4('good'), c4('hide') + 0.3], [c4('attacks'), c4('safe') + 0.25]],
+        circles: [{ word: 'safe', t: c4('safe') }] });
+      tl.set(R.el, { rotationZ: 0, rotationX: 0 }, c4('A') + 0.15);
+      // events inside the hold: the attack marbles in the small jar pulse on "hide", and a flash on "confidently"
+      tl.to([...exIdx].map((k) => M[k]), { scale: 1.4, duration: 0.16, yoyo: true, repeat: 1, stagger: 0.008 }, c4('hide'));
+      pulse(c4('hide'), 0.14); pulse(c4('confidently'), 0.16);
+      // cut back: the page leaves, the jar returns and a SAFE lid slams onto it, attacks still inside
+      const back = c4('safe') + 0.3;
+      tl.to(R.el, { opacity: 0, duration: 0.2 }, back);
+      tl.to('#jar-tagl', { opacity: 0, duration: 0.2 }, back);
+      tl.to('#jar-cam', { x: 0, y: 0, scale: 1, duration: 0.01 }, back + 0.2);
+      tl.to('#jar-world', { scale: 1, y: 0, duration: 0.35, ease: 'power3.out' }, back);
+      KIT.slam(tl, '#jar-lid', back + 0.12, { from: 2.4, shakeTarget: '#jar-beat', amp: 12 });
+      pulse(back + 0.3, 0.22);
+
+      // ---- l05: a new jar for one model on prompt injection; marbles pour in pale; the label counts to 0.2%
+      const t5 = KIT.cue('l05', 0);
+      tl.to('#jar-lid', { y: -260, rotation: -14, opacity: 0, duration: 0.4, ease: 'power2.in' }, t5 + 0.05);
+      tl.to(M, { y: 380, opacity: 0, duration: 0.3, ease: 'power2.in', stagger: 0.002 }, t5 + 0.05);
+      tl.to(['#jar-ex', '#jar-lab4', '#jar-real'], { opacity: 0, duration: 0.25 }, t5 + 0.05);
+      [...exIdx].forEach((k) => tl.set(M[k], { backgroundColor: '#cfe9f7' }, t5 + 0.4));
+      KIT.pop(tl, '#jar-task', c5('prompt'), { from: 0.5 });
+      KIT.pop(tl, '#jar-model', c5('model'), { from: 0.5 });
+      KIT.rise(tl, '#jar-grp', c5('most'), { y: 24 });
+      tl.set(M, { y: -560 }, c5('inputs') - 0.4);
+      tl.to(M, { y: 0, opacity: 1, duration: 0.45, ease: 'bounce.out', stagger: 0.006 }, c5('inputs') - 0.3);
+      pulse(c5('prompt')); pulse(c5('inputs'));
+      KIT.rise(tl, '#jar-lab5', c5('average') - 0.1, { x: -40, y: 0 });
+      const lv = document.getElementById('jar-lab5-v'); lv.dataset.to = KIT.data('l05').value;
+      KIT.count(tl, lv, c5('zero'), 0.7);
+      // the label bar is drawn to the storyboard value (0.205 of 100 is almost nothing; at least a hairline shows)
+      KIT.grow(tl, '#jar-f5', c5('zero'), 0.6, { to: Math.max(0.012, KIT.data('l05')._predicted / 100) });
+      pulse(c5('zero'), 0.22);
+      tl.to('#jar-beat', { scale: 1.16, x: 150, y: 30, duration: 0.5, ease: 'power3.out' }, c5('average'));
+
+      // ---- l06: about 9% of those inputs were attacks: marbles turn amber from the bottom, 9% slams beside the jar
+      const nA = Math.round(KIT.data('l06')._observed), r2 = KIT.rng(11), hit = new Set();
+      while (hit.size < nA) hit.add(Math.floor(r2() * 40));
+      const HIT = [...hit].sort((a, b) => a - b).map((k) => M[k]);
+      tl.to('#jar-beat', { scale: 1, x: 0, y: 0, duration: 0.35, ease: 'power2.inOut' }, c6('About'));
+      tl.to(HIT, { backgroundColor: '#ffb454', scale: 1.3, duration: 0.15, stagger: 0.05 }, c6('nine') - 0.05);
+      tl.to(HIT, { scale: 1, duration: 0.2, stagger: 0.05 }, c6('nine') + 0.12);
+      KIT.slam(tl, '#jar-big', c6('nine') - 0.08, { from: 2.6, shakeTarget: '#jar-world', amp: 14 });
+      KIT.pop(tl, '#jar-bigl', c6('percent') + 0.1, { from: 0.5 });
+      pulse(c6('nine'), 0.24);
+      tl.to('#jar-beat', { scale: 0.94, y: -10, duration: 0.5, ease: 'power2.out' }, c6('attacks'));
+
+      // ---- l07: the attack marbles become cards; nearly all hold no direct instruction; every one of those gets SAFE
+      const cards = document.getElementById('jar-cards'), CD = [], CORE = [], ST = [];
+      HIT.forEach((m, k) => {
+        const e = document.createElement('div'); e.className = 'jar-card'; e.id = `jar-c${k}`;
+        e.style.left = `${70 + k * 96}px`;
+        e.innerHTML = `<i style="top:20px;width:58px"></i><i style="top:40px;width:44px"></i>`;
+        const core = document.createElement('div'); core.className = k === 0 ? 'jar-bold' : 'jar-core'; core.id = `jar-k${k}`; e.appendChild(core);
+        const st = document.createElement('div'); st.className = 'jar-st'; st.id = `jar-s${k}`; st.textContent = KIT.data('l07').stamp; e.appendChild(st);
+        cards.appendChild(e); CD.push(e); CORE.push(core); if (k > 0) ST.push(st);
+      });
+      const t7 = c7('Nearly');
+      tl.to(HIT, { opacity: 0.25, duration: 0.3 }, t7);
+      CD.forEach((e, k) => {
+        const m = HIT[k], dx = parseFloat(m.style.left) - parseFloat(e.style.left), dy = parseFloat(m.style.top) - 1110;
+        tl.fromTo(e, { x: dx, y: dy, scale: 0.3, opacity: 0 }, { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.5, ease: 'power3.out' }, t7 + k * 0.05);
+      });
+      tl.to(['#jar-big', '#jar-bigl', '#jar-lab5', '#jar-grp'], { opacity: 0.3, duration: 0.3 }, t7);
+      pulse(t7);
+      tl.fromTo(CORE[0], { opacity: 0 }, { opacity: 1, duration: 0.2 }, c7('direct') - 0.1);
+      KIT.pop(tl, '#jar-ei', c7('direct') - 0.1, { from: 0.5 });
+      tl.fromTo(CORE.slice(1), { opacity: 0 }, { opacity: 1, duration: 0.3, stagger: 0.03 }, c7('instruction'));
+      KIT.pop(tl, '#jar-noei', c7('instruction'), { from: 0.5 });
+      pulse(c7('instruction'));
+      tl.fromTo('#jar-scan', { x: 0, opacity: 0 }, { x: 760, opacity: 0.9, duration: 0.5, ease: 'none', immediateRender: false }, c7('missed') - 0.1);
+      tl.to('#jar-scan', { opacity: 0, duration: 0.1 }, c7('missed') + 0.4);
+      tl.fromTo(ST, { scale: 2, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.14, ease: 'power4.in', stagger: 0.07 }, c7('every'));
+      KIT.shake(tl, '#jar-world', c7('every') + 0.3, { amp: 8, dur: 0.3 });
+      pulse(c7('every'), 0.22);
+      KIT.fade(tl, '#jar-src', c7('kind'));
+      tl.to('#jar-beat', { scale: 1.08, y: -150, duration: 0.6, ease: 'power3.inOut' }, t7 + 0.2);
+      window.__timelines["jar"] = tl;
+    })();
+  </script>
+</template>

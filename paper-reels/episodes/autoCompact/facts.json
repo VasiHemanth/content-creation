@@ -1,0 +1,72 @@
+{
+ "note": "AutoCompact (arXiv 2610.02163v1, submitted 2026-10-01). Headline numbers on screen: 30.4% and 39.6%, SWE-bench Verified pass rates of the base model with its full 256K context (no learned compaction; no run reaches the forced-compaction threshold) and of AutoCompact (SFT then RL, 256K), full agent runs without a cost cap, averaged over three runs (Table 1, sec 3.1). 19.9 points and 1.9 points: absolute pass-rate differences between the same trained checkpoint running its compact() calls and skipping them, at the smallest ($0.10) and largest ($4.00) per-task budget (sec 3.3, Figure 3(d)); the paper writes them with a % sign, the video says points. All authors' runs, one base model (not named on screen) and one scaffold.",
+ "paper": "llm-wiki/raw/sources/arxiv-2610-02163.md, PDF at llm-wiki/raw/assets/2610.02163/paper-v1.pdf",
+ "numbers": {
+  "30.4": "Base pass rate on SWE-bench Verified, 30.4% (Table 1 p.6, Base row, Context 256K; sec 1 p.2; Figure 3(a) label 30.4%). Average of three runs (sec 3.1). On screen in results (l09).",
+  "39.6": "AutoCompact pass rate on SWE-bench Verified, 39.6% (Table 1 p.6, AutoCompact row, SFT then RL, 256K; sec 1 p.2 'achieving pass rates of 39.6%'; abstract +9.2 absolute). Average of three runs. On screen in results (l09).",
+  "19.9": "Advantage of normal execution over the Summary-ignored variant (compact() calls skipped, same parameters) at $0.10 per task: 'The advantage is 19.9% at $0.10' (sec 3.3 p.8; Figure 3(d) +100 tasks per 500). Absolute difference in pass rate, shown as '19.9 points'. The largest gap of the six-budget sweep; l11 names the smallest budget. On screen in caveat (l11).",
+  "1.9": "Same comparison at $4.00 per task: 'remains 1.9% at $4.00' (sec 3.3 p.8; Figure 3(d) endpoint labels 39.6% and 37.7%). Absolute difference, shown as '1.9 points'. The smallest gap of the sweep; l12 names the largest budget. On screen in caveat (l12).",
+  "2.2": "Section number in the receipt tag 'FROM THE PAPER · Section 2.2' (l05); sec 2.2 'Judge-guided data collection and SFT'.",
+  "3.3": "Section number in the receipt tags 'FROM THE PAPER · Section 3.3' (l10, l11); sec 3.3 'Further analysis'.",
+  "2610.02163": "arXiv id in the closing credit."
+ },
+ "evidence_incidental": {
+  "19.9%": "Visible in receipts adv1 and adv2 (p.8, sec 3.3); same value as 19.9 above.",
+  "1.9%": "Visible in receipts adv1 and adv2 (p.8, sec 3.3); same value as 1.9 above.",
+  "0.10": "Visible in receipts adv1 and adv2: '$0.10', the smallest per-task inference budget (sec 3.1: six budgets from $0.10 to $4.00). Labelled 'smallest budget' on screen, never printed outside the crop.",
+  "4.00": "Visible in receipts adv1 and adv2: '$4.00', the largest per-task inference budget (sec 3.1). Labelled 'largest budget' on screen, never printed outside the crop."
+ },
+ "drawn": {
+  "l10._g": "Figure 3(c) gap labels +55, +44, +44, +46, +46, +46 extra solved tasks per 500 (AutoCompact over Base at 16K with a shared forced-compaction fallback). They set the vertical gap between the two lines of the small-context chart; never printed. The chart has no axis numbers; budget ends are labelled with the words 'smallest' and 'largest'.",
+  "l11._g": "Figure 3(d) gap labels +100, +62, +30, +11, +9, +9 extra solved tasks per 500 (compaction runs over compact calls skipped). They set the gap between the two caveat chart lines; never printed. +100 per 500 = the 19.9-point gap at $0.10 (sec 3.3 rounds it to 19.9).",
+  "results bars": "Bar heights use the printed values 30.4 and 39.6 on a scale from 0 (no axis break, no printed ticks)."
+ },
+ "claims": {
+  "l01": "Sec 5 Limitations (p.9): 'Widely used agent harnesses ... currently compact the context automatically when it approaches the window limit, which is the length-triggered design discussed in Section 1.' Sec 1 (p.1): length-triggered methods 'compact only when the remaining context budget falls below a fixed threshold'. 'Wrong moment?' stays a question; the paper's reason is l03. No product is named in the video.",
+  "l02": "Sec 2.1 (p.3): 'Compaction replaces earlier interaction history with a model-generated working-state summary ... while retaining the original task unchanged.' Card rows 'state, target file, next step' are the words of Figure 2.",
+  "l03": "Abstract (p.1), word for word: 'As a task progresses, earlier exploration becomes stale' (receipt R1, id stale). Sec 1 (p.1): 'compaction may then occur in the middle of an unresolved stage whose evidence is still needed.' The video says 'can', matching the paper's 'may'; no count of lost evidence is claimed.",
+  "l04": "Abstract and sec 1: AutoCompact 'trains a coding agent to decide when to compact, what to preserve, and how to continue as part of its policy'. Figure 1 header: 'decide when to compact, what to keep, and how to continue'.",
+  "l05": "Sec 2.2 (p.3): 'In our preliminary experiments, the base model rarely invoked compact() before the context limit, even when compaction rules were specified in the agent prompt.' Receipt R2 (id rarely).",
+  "l06": "Sec 2.2 (p.4): the judge reviews each proposed action using only the history available at the current step; 'Corrections are applied before execution'; the environment executes the corrected output 'in place of the original; the policy then generates the following actions from this corrected history.' Ghost label 'search repo' and fix 'compact()': Figure 2 (replacing a search after the bug is localized with compact()).",
+  "l07": "Sec 2.2 (p.4), continuation correction: 'such as re-running a search whose result is already recorded in the working-state summary'. Figure 2: 'Search repo again / ignores the summary', 'Repair / follow the summary', 'Edit file / continue from the summary'; caption: 'redirecting a repeated search toward the edit planned in the summary'.",
+  "l08": "Sec 2.2 (p.4): 'The judge is used only during data collection; the trained agent runs without the judge at inference time.' Sec 2.3 (p.4-5): each rollout receives a binary outcome reward (final patch passes the task tests); the shared advantage covers 'regular coding actions, the decision to invoke compact(), the generated context summary, and the continuation'; no compaction-specific reward; 'the binary outcome reward is the only training signal for both coding and compaction.' The SFT stage before RL is not narrated.",
+  "l09": "Table 1 (p.6): Base 30.4, AutoCompact 39.6 on SWE-bench Verified; caption 'All methods share the same base model and scaffold.' Sec 3.1: averaged over three runs, full agent runs without an inference-cost cap. 'Full context' = Base keeps the full history in a 256K window that no run fills (sec 1, Figure 3 caption). The 9.2-point gap is the whole SFT-then-RL recipe against an untrained base; l11 and l12 qualify it.",
+  "l10": "Sec 3.3 (p.7-8) and Figure 3(c): Base and AutoCompact under a shared 16K forced-compaction threshold; 'AutoCompact achieves a higher pass rate than Base across all evaluated inference budgets.' 'It also indicates that compaction based on task progress is more effective than compaction based solely on the length of the context.' (receipt R3, id progress). The voice attributes the second sentence to the authors.",
+  "l11": "Sec 3.3 (p.8): Summary-ignored variant of the same trained checkpoint, 'compact() calls are skipped: no summary is generated, and execution continues with the existing history'; 'Figure 3 (d) shows that normal execution achieves higher pass rates'; 'The advantage is 19.9% at $0.10' (receipt R4a, id adv1).",
+  "l12": "First sentence: sec 3.3 (p.8) 'The advantage is 19.9% at $0.10 and remains 1.9% at $4.00' (receipt R4b, id adv2); the advantage is normal execution over the Summary-ignored variant of the same checkpoint, as in l11. Second sentence restates sec 1 (p.2): 'Comparing the same trained checkpoint with and without executing compaction further shows that compaction is particularly beneficial under tight inference budgets'; sec 3.3: 'with the largest advantage under tight inference budgets'. The scene pulses the smallest-budget column (the largest gap, 19.9 points at $0.10). No claim is made about how much of the 9.2-point gain comes from training versus compaction. Tag 'one base model · one scaffold': sec 3.1 and sec 5 ('We study this co-design within a single scaffold').",
+  "l13": "Takeaway; adds no claim."
+ },
+ "labels": {
+  "COMPACT AT THE LIMIT. / WRONG MOMENT?": "Hook title; l01 and sec 5 Limitations, sec 1.",
+  "search / tool output / test log / code (chips)": "Sec 1: trajectories accumulate code snippets, tool outputs and intermediate findings from inspecting code, searching, editing and running tests; Figure 1 'SEARCH REPO', 'TOOL OUTPUT'. Schematic only.",
+  "context / limit (gauge strap)": "Sec 1 and Figure 1 'COMPACTION LIMIT'.",
+  "compact() (press, peg, corrected print)": "Sec 2.1: the compact() action.",
+  "summary / state / target file / next step": "Sec 2.1 working-state summary; Figure 2 'state, target file, next step'.",
+  "bug localized / edit file / run tests (flags)": "Figure 1 labels BUG LOCALIZED, EDIT FILE, RUN TESTS.",
+  "stage: find the bug / evidence still needed": "Sec 1: 'an unresolved stage whose evidence is still needed'; Figure 1 caption 'after the bug is localized'.",
+  "stale": "Abstract, 'earlier exploration becomes stale'.",
+  "AutoCompact / when / what / how": "Figure 1 (1) when to compact, (2) what to keep, (3) how to continue.",
+  "base model": "Sec 2.2 and Table 1 'Base'.",
+  "compaction rules": "Sec 2.2 'even when compaction rules were specified in the agent prompt'.",
+  "judge": "Sec 2.2.",
+  "search repo": "Figure 2 'Search repo / bug already localized / Replace / time to compact'.",
+  "ignores the summary / follow the summary": "Figure 2 labels.",
+  "judge removed": "Sec 2.2 'the trained agent runs without the judge at inference time'; sec 3.1 'the judge is removed during evaluation'.",
+  "pass / fail": "Sec 2.3 binary outcome reward (final patch passes the task tests or not).",
+  "coding": "Sec 2.3 'regular coding actions'.",
+  "SWE-bench Verified / real GitHub tasks": "Benchmark name, Table 1. 'Real GitHub tasks': the cited SWE-bench paper is titled 'SWE-bench: Can language models resolve real-world GitHub issues?' (reference list, Jimenez et al., 2024).",
+  "pass rate · average of three runs": "Sec 3.1 'All reported quantitative evaluation results are averaged over three runs'; Table 1 'pass rates'.",
+  "base model · full context": "Table 1 Base row (full-history baseline, 256K).",
+  "same model, same scaffold": "Table 1 caption 'All methods share the same base model and scaffold'.",
+  "forced compaction / limit / base model: compacts at the limit / AutoCompact: same limit, plus its own choice": "Sec 3.3: both use forced compaction at a shared 16K threshold as a fallback, 'while AutoCompact can also invoke compact() proactively before reaching the threshold'.",
+  "budget per task / smallest / largest / smallest budget / largest budget": "Sec 3.1: six per-task inference budgets from $0.10 to $4.00; Figure 3 x-axis 'Inference budget (USD / task)'.",
+  "higher at every budget": "Sec 3.3 'higher pass rate than Base across all evaluated inference budgets' (Figure 3(c)).",
+  "skipped / compaction runs / compact calls skipped": "Sec 3.3 Summary-ignored variant: 'compact() calls are skipped'.",
+  "19.9 points / 1.9 points": "Sec 3.3; see numbers.",
+  "one base model · one scaffold": "Sec 3.1; sec 5.",
+  "THE QUESTION / IS WHEN.": "Close, l13.",
+  "FROM THE PAPER · Abstract / Section 2.2 / Section 3.3": "Receipt source tags.",
+  "AutoCompact · arXiv 2610.02163 · unofficial explainer": "Closing credit (end card).",
+  "compaction helps most here": "Sec 1 'compaction is particularly beneficial under tight inference budgets'; sec 3.3 'the largest advantage under tight inference budgets'. Points at the smallest-budget column ($0.10)."
+ }
+}

@@ -1,0 +1,7 @@
+{
+  "note": "Sample post. The two numbers on slide 2 are counted from the text on that slide. The video excerpt (slide 3) shows no number.",
+  "numbers": {
+    "22": "words in the sentence s02.x_before, counted with the word splitter of hf/bin/ste.mjs (one sentence of 22 words)",
+    "10": "words in the longest sentence of s02.after (its two sentences have 5 and 10 words), counted with the same splitter"
+  }
+}

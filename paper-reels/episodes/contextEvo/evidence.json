@@ -1,0 +1,30 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2609.34649/paper-v1.pdf",
+ "note": "Receipts: real crops of arXiv 2609.34649v1. Every number readable in a crop must be in facts.json (numbers or evidence_incidental); qa checks it. R1 is p.1 (abstract), R2 p.7 (sec 6.1), R3 p.9 (sec 7). Fragments stop before the pdfium soft hyphens (U+FFFE).",
+ "items": [
+  {
+   "id": "buried",
+   "page": 1,
+   "context": [1, 1],
+   "scale": 7,
+   "circle": ["buried"],
+   "find": ["useful evidence can be buried"]
+  },
+  {
+   "id": "skills",
+   "page": 7,
+   "context": [1, 1],
+   "scale": 7,
+   "circle": ["0.370"],
+   "find": ["0.417 to 0.370"]
+  },
+  {
+   "id": "vary",
+   "page": 9,
+   "context": [1, 1],
+   "scale": 7,
+   "circle": ["vary"],
+   "find": ["held-out changes vary by setting."]
+  }
+ ]
+}

@@ -1,0 +1,34 @@
+{
+  "source": "https://www.anthropic.com/engineering/redesigning-source-control",
+  "source_title": "Redesigning source control at Anthropic, Anthropic Engineering, published Oct 13, 2026",
+  "note": "Every number is reported by Anthropic about its own systems. None is an independent benchmark. Drawn counts (mirror icons, dot grids, tiles) are schematic and carry no digits.",
+  "numbers": {
+    "25": "Growing our monorepo: 'We perform on the order of 25 million code checkouts per day for CI, before counting developer environments, agent sandboxes, and research jobs.' Shown as 'about 25 million', with 'CI alone · Anthropic's estimate'.",
+    "30,000": "Opening: 'as of September, we merged over 30,000 per day.' The merges-per-day figure labels the peak '30,401 merged on Sep 9'. Shown as 'over 30,000 in one day' (a single-day peak, never a rate).",
+    "99": "Scaling Scion: 'Each tier of this system maintains a cache hit rate of over 99%'. Always shown as 'over 99%'; the counter is drawn up to 99.",
+    "7": "Figure 'Observed performance improvements on native Scion repos', Agent environments, 'New worktree' row: git 7.1 min (median time). Shown as 'about 7 min', labelled median. Archived capture: llm-wiki/raw/assets/anthropic-scion/figure-performance-2x.png.",
+    "5": "Same figure and row: scn 5.1 s (median time). Shown as 'about 5 s', labelled median. Only this named operation; the CI checkout rows are 31 s to 3.5 s and 175 s to 22 s. Archived capture: llm-wiki/raw/assets/anthropic-scion/figure-performance-2x.png.",
+    "200": "Scaling Scion: 'Our Scion infrastructure footprint is now 200x smaller than our previous git mirroring infrastructure in terms of CPU and memory requirements.' Infrastructure CPU and memory only, not speed or cost.",
+    "20": "What we learned building Scion: the Claude Mythos Preview rewrite of the git-to-Scion ingestion pipeline prototype 'consumed 20x less memory'. A prototype pipeline, not Scion itself.",
+    "13": "Article date line: 'Published Oct 13, 2026' (source credit tag).",
+    "2026": "Article date line: 'Published Oct 13, 2026' (source credit tag)."
+  },
+  "evidence_incidental": {
+    "30,401": "Raster text inside the merges crop (figure 'Changes merged to our monorepo per day, from January to September 2026'): callout '30,401 merged on Sep 9'. Typed by hand from the 2x capture. Archived capture: llm-wiki/raw/assets/anthropic-scion/figure-merges-2x.png.",
+    "9": "Same callout: 'Sep 9', the day of the 30,401 peak."
+  },
+  "claims": {
+    "l01": "Growing our monorepo: on the order of 25 million CI checkouts per day. Headline: 'ANTHROPIC RUNS ABOUT 25 MILLION CI CHECKOUTS A DAY', with the tag 'CI alone · Anthropic's estimate'.",
+    "l02": "Opening: 'as of September, we merged over 30,000 per day' (merges figure peak: 30,401 merged on Sep 9, the only number shown on screen in this line; 30,000 is in voice and caption). Opening paragraph: 'As our merges per day grew more than tenfold, source control became our biggest development bottleneck.'",
+    "l03": "Growing our monorepo and Principles: 'we operated several hundred internal git mirrors to deal with the load'; they 'no longer scaled once the repo outgrew the mirrors' disks or memory limits'.",
+    "l04": "Growing our monorepo and Principles: 'nearly all of our clients were agents and jobs that are online by definition'; Data structures: 'Changesets are created server-side'; the server creates commits, merges and rebases.",
+    "l06": "Scaling Scion: the client asks only for the trees and blobs it wants; scion-daemon stores objects for the whole node.",
+    "l07": "Scaling Scion: daemon asks regional scion-cache, which asks scion-server on a miss; 'Every request is for a specific object that never changes, so any cache can answer it.'",
+    "l08": "Scaling Scion: each tier keeps a cache hit rate of over 99%.",
+    "l09": "Performance figure, Agent environments, New worktree: git 7.1 min, scn 5.1 s, median time.",
+    "l10": "Scaling Scion: infrastructure footprint 200x smaller than the previous git mirroring infrastructure in CPU and memory.",
+    "l11": "What we learned: an early internal snapshot of Claude Mythos Preview rewrote the handwritten git-to-Scion ingestion prototype; the rewrite 'consumed 20x less memory'. On screen: 'early internal Claude model (Claude Mythos Preview)'.",
+    "l12": "What we learned: 'Agents will sometimes violate core system constraints ... This was particularly common in our migration. For example, there were multiple systems that tried to brute force looking up when a change merged to main by linearly reading the commit log instead of asking our code review tool'; 'Very often, we found that the role of the engineers was to tell Claude no' (we say 'often'). Narration: 'In the migration, Claude sometimes broke core rules. For example, it read the commit log line by line to find when a change merged.' (the validator's wording, split in two for STE).",
+    "l13": "Contributing to the wider ecosystem: 'Scion is by no means a suitable replacement for git for general use.' Growing our monorepo: 'on the order of 25 million code checkouts per day for CI'."
+  }
+}

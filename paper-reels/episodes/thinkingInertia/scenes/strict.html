@@ -1,0 +1,187 @@
+<template id="strict-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #strict-all, #strict-shk, #strict-hud0 { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #strict-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #strict-mode { left: 60px; top: 190px; font: 600 30px "Mono", monospace; color: var(--cyan); }
+    #strict-pill { position: absolute; left: 330px; top: 180px; width: 150px; height: 56px; border-radius: 28px; border: 4px solid var(--coral); background: #071d35; box-sizing: border-box; }
+    #strict-knob { position: absolute; left: 8px; top: 6px; width: 36px; height: 36px; border-radius: 18px; background: var(--amber); }
+    #strict-off { position: absolute; left: 62px; top: 8px; font: 700 28px "Mono", monospace; color: var(--coral); }
+    #strict-bub { position: absolute; left: 110px; top: 400px; width: 820px; height: 460px; transform-origin: 410px 0; }
+    #strict-box { position: absolute; left: 0; top: 0; width: 820px; height: 460px; background: var(--deep); border: 4px solid var(--cyan); border-radius: 26px; box-shadow: 10px 10px 0 var(--shadow); box-sizing: border-box; }
+    #strict-prompt { position: absolute; left: 40px; top: 110px; width: 740px; font: 700 52px/1.24 "Mono", monospace; color: var(--white); }
+    .strict-ul { position: absolute; left: 40px; width: 740px; height: 8px; background: var(--amber); transform-origin: 0 50%; transform: scaleX(0); }
+    #strict-ul1 { top: 330px; } #strict-ul2 { top: 348px; }
+    #strict-tag { left: 500px; top: -70px; font-size: 80px; padding: 2px 28px; border-width: 8px; outline-offset: -20px; }
+    #strict-src { left: 110px; top: 892px; font-size: 28px; }
+    #strict-bars { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #strict-btag { left: 120px; top: 470px; font-size: 28px; }
+    #strict-bval { left: 440px; top: 462px; font: 400 64px/1 "Marker", sans-serif; color: var(--cyan); }
+    .strict-bar { position: absolute; left: 120px; height: 80px; transform-origin: 0 50%; }
+    #strict-b1 { top: 540px; background: var(--cyan); } #strict-b2 { top: 760px; background: var(--amber); }
+    #strict-axis { position: absolute; left: 116px; top: 520px; width: 6px; height: 340px; background: var(--white); }
+    #strict-ctag { left: 120px; top: 690px; font-size: 28px; }
+    #strict-val { left: 120px; top: 880px; font: 400 150px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); }
+    #strict-hlbl { left: 534px; top: 862px; font-size: 26px; padding: 4px 12px; }
+    #strict-pooled { left: 120px; top: 1080px; font-size: 28px; }
+    #strict-varies { left: 120px; top: 1146px; font-size: 28px; }
+    #strict-gem { left: 120px; top: 1212px; font-size: 28px; }
+    #strict-bsvg { z-index: 1; } #strict-btag, #strict-ctag, #strict-hlbl, #strict-bval, #strict-val { z-index: 2; }
+    #strict-saw { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #strict-ssvg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #strict-plank { position: absolute; left: 140px; top: 812px; width: 800px; height: 28px; background: var(--white); border-radius: 8px; transform-origin: 400px 14px; }
+    .strict-seat { position: absolute; top: -78px; width: 170px; height: 78px; background: var(--panel); border: 5px solid var(--white); border-bottom: 0; box-sizing: border-box; }
+    #strict-sl { left: 20px; } #strict-sr { left: 610px; }
+    .strict-st { top: -140px; font-size: 28px; }
+    #strict-lt { left: 10px; } #strict-rt { left: 610px; }
+    #strict-base { position: absolute; left: 340px; top: 968px; width: 400px; text-align: center; }
+    #strict-base .tag { position: relative; display: inline-block; font-size: 28px; }
+    #strict-drop { left: 120px; top: 1040px; font: 400 68px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 6px 6px 0 var(--shadow); }
+    #strict-avg { left: 120px; top: 1140px; font-size: 28px; }
+    #strict-var2 { left: 120px; top: 1206px; font-size: 28px; }
+    #strict-gem2 { left: 120px; top: 1272px; font-size: 28px; }
+    #strict-price { position: absolute; left: 760px; top: 960px; transform-origin: 0 0; }
+    #strict-cost { position: relative; left: 0; top: 34px; font-size: 34px; padding: 8px 20px; border-radius: 8px; }
+    #strict-dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #061a30; opacity: 0; }
+    #strict-rcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #strict-rstage, #strict-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #strict-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="strict" data-width="1080" data-height="1920">
+    <div id="strict-all">
+      <div id="strict-shk"><div id="strict-cam">
+        <div id="strict-bub">
+          <div id="strict-box"></div>
+          <div id="strict-prompt" data-bind="l07.prompt"></div>
+          <div id="strict-ul1" class="strict-ul"></div><div id="strict-ul2" class="strict-ul"></div>
+          <div id="strict-tag" class="stamp amber" data-bind="l07.tag" data-layout-allow-occlusion></div>
+        </div>
+        <div id="strict-src" class="tag cyan" data-bind="l07.src"></div>
+        <div id="strict-bars">
+          <svg id="strict-bsvg" class="ink" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"></svg>
+          <div id="strict-axis"></div>
+          <div id="strict-btag" class="tag cyan" data-bind="l08.beforeTag"></div>
+          <div id="strict-bval" class="abs" data-bind="l08.before"></div>
+          <div id="strict-b1" class="strict-bar"></div>
+          <div id="strict-ctag" class="tag" data-bind="l08.cond"></div>
+          <div id="strict-b2" class="strict-bar"></div>
+          <div id="strict-hlbl" class="tag cyan" data-bind="l08.half"></div>
+          <div id="strict-val" class="abs" data-bind="l08.value"></div>
+        </div>
+        <div id="strict-saw">
+          <svg id="strict-ssvg" class="ink" viewBox="0 0 1080 1920"></svg>
+          <div id="strict-plank">
+            <div id="strict-sl" class="strict-seat"></div><div id="strict-sr" class="strict-seat"></div>
+            <div id="strict-lt" class="tag cyan strict-st" data-bind="l09.left"></div>
+            <div id="strict-rt" class="tag cyan strict-st" data-bind="l09.right"></div>
+          </div>
+          <div id="strict-base"><div class="tag" data-bind="l09.base"></div></div>
+          <div id="strict-price"><svg class="ink" style="left:0;top:0;width:80px;height:40px" viewBox="0 0 80 40"><path d="M10 0 L30 34" stroke="#ffb454" stroke-width="4" fill="none"/></svg><div id="strict-cost" class="tag" data-bind="l10.cost"></div></div>
+        </div>
+      </div></div>
+      <div id="strict-hud0">
+        <div id="strict-mode" class="abs" data-bind="l07.mode"></div>
+        <div id="strict-pill"><div id="strict-knob"></div><div id="strict-off" data-bind="l07.off"></div></div>
+        <div id="strict-pooled" class="tag cyan" data-bind="l08.pooled"></div>
+        <div id="strict-varies" class="tag cyan" data-bind="l08.varies"></div>
+        <div id="strict-gem" class="tag cyan" data-bind="l08.gem"></div>
+        <div id="strict-drop" class="abs" data-bind="l09.drop"></div>
+        <div id="strict-avg" class="tag" data-bind="l09.avg"></div>
+        <div id="strict-var2" class="tag cyan" data-bind="l09.varies"></div>
+        <div id="strict-gem2" class="tag cyan" data-bind="l09.gem"></div>
+      </div>
+      <div id="strict-dim"></div>
+      <div id="strict-rcam"><div id="strict-rstage"></div></div>
+      <div id="strict-hud"></div>
+      <div id="strict-flash"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const c7 = (w, n) => KIT.cue('l07', w, n), c8 = (w, n) => KIT.cue('l08', w, n), c9 = (w, n) => KIT.cue('l09', w, n), c10 = (w, n) => KIT.cue('l10', w, n);
+      const D = KIT.sceneDur('strict'), S = KIT.svgEl, d8 = KIT.data('l08');
+      KIT.bind('#strict-all');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.2) => tl.fromTo('#strict-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const L8 = KIT.cue('l08', 0), L9 = KIT.cue('l09', 0), L10 = KIT.cue('l10', 0);
+
+      // ---- l07: the strict prompt types on word by word with the voice; the switch stays OFF ----
+      tl.fromTo('#strict-bub', { y: 80, opacity: 0, scale: 1 }, { y: 0, opacity: 1, scale: 1, duration: 0.4, ease: 'power3.out' }, 0.1);
+      KIT.rise(tl, ['#strict-mode', '#strict-pill'], 0.1, { x: -40, y: 0, dur: 0.3 });
+      const sw = SplitText.create('#strict-prompt', { type: 'words' }).words;
+      const spoken = [['give'], ['the', 1], ['final'], ['answer'], ['directly'], ['without'], ['any'], ['reasoning']];
+      sw.forEach((w, k) => tl.fromTo(w, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.12, ease: 'power2.out' }, c7(...spoken[Math.min(k, spoken.length - 1)])));
+      tl.fromTo('#strict-tag', { scale: 2.4, opacity: 0, rotation: 8, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, rotation: 8, duration: 0.2, ease: 'power4.in' }, c7('strict') - 0.15);
+      KIT.shake(tl, '#strict-shk', c7('strict') + 0.05, { amp: 12, dur: 0.28 });
+      pulse(c7('strict') + 0.05, 0.25);
+      KIT.pop(tl, '#strict-src', c7('prompt'), { from: 0.5 });
+      tl.fromTo('#strict-cam', { x: 0, y: 0, scale: 1 }, { x: 520 * (1 - 1.05), y: 630 * (1 - 1.05), scale: 1.05, duration: L8 - 0.2, ease: 'sine.inOut' }, 0.1);
+      pulse(c7('final'), 0.1); pulse(c7('without'), 0.1);
+      tl.fromTo(['#strict-ul1', '#strict-ul2'], { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: 'power2.out', stagger: 0.12 }, c7('reasoning'));
+      pulse(c7('reasoning'), 0.18);
+
+      // ---- l08: the prompt shrinks to the corner; two bars, one per condition, on one axis from zero ----
+      tl.to('#strict-cam', { x: 0, y: 0, scale: 1, duration: 0.4, ease: 'power3.inOut' }, L8);
+      tl.to('#strict-bub', { x: 190, y: -205, scale: 0.5, duration: 0.45, ease: 'power3.inOut' }, L8);
+      tl.to('#strict-src', { opacity: 0, duration: 0.2 }, L8);
+      const AX = 800, w1 = AX * d8._before / 100, w2 = AX * d8._after / 100;
+      document.getElementById('strict-b1').style.width = `${w1}px`; document.getElementById('strict-b2').style.width = `${w2}px`;
+      tl.fromTo('#strict-axis', { scaleY: 0, transformOrigin: '50% 0%' }, { scaleY: 1, duration: 0.3 }, L8 + 0.15);
+      KIT.rise(tl, '#strict-btag', L8 + 0.2, { x: -40, y: 0, dur: 0.3 });
+      tl.fromTo('#strict-b1', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: 'power3.out' }, L8 + 0.25);
+      KIT.fade(tl, '#strict-bval', L8 + 0.5);
+      pulse(L8 + 0.25, 0.12);
+      KIT.pop(tl, '#strict-ctag', c8('fell'), { from: 0.5 });
+      tl.fromTo('#strict-b2', { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: 'power2.out' }, c8('fell') + 0.1);
+      tl.fromTo('#strict-val', { scale: 2.4, opacity: 0, transformOrigin: '0% 50%' }, { scale: 1, opacity: 1, duration: 0.2, ease: 'power4.in' }, c8('sixty') - 0.05);
+      KIT.shake(tl, '#strict-shk', c8('sixty') + 0.15, { amp: 14, dur: 0.3 });
+      pulse(c8('sixty') + 0.15, 0.28);
+      KIT.pop(tl, '#strict-pooled', c8('open'), { from: 0.5 });
+      KIT.pop(tl, '#strict-varies', c8('That'), { from: 0.5 });
+      // "most": a dashed line at half of the axis; the strict-prompt bar passes it
+      const half = S('path', { d: `M${120 + AX / 2} 520 V855`, class: 'ln dash thick', id: 'strict-half' }, document.getElementById('strict-bsvg'));
+      KIT.draw(tl, half, c8('most') - 0.1, 0.3);
+      KIT.pop(tl, '#strict-hlbl', c8('most'), { from: 0.5 });
+      tl.fromTo('#strict-b2', { filter: 'brightness(1)' }, { filter: 'brightness(1.6)', duration: 0.2, yoyo: true, repeat: 1, immediateRender: false }, c8('most') + 0.1);
+      KIT.pop(tl, '#strict-gem', c8('replies'), { from: 0.5 });
+      pulse(c8('most'), 0.14);
+
+      // ---- l09: the bars leave; a seesaw on open-ended math: answer only up, accuracy down ----
+      tl.to('#strict-bars', { x: -1080, opacity: 0, duration: 0.35, ease: 'power3.in' }, L9);
+      tl.to(['#strict-pooled', '#strict-varies', '#strict-gem'], { opacity: 0, duration: 0.2 }, L9);
+      const SV = document.getElementById('strict-ssvg');
+      const piv = S('path', { d: 'M540 840 L470 955 L610 955 Z', fill: '#0a2340', stroke: '#f2f8ff', 'stroke-width': 6, 'stroke-linejoin': 'round', id: 'strict-piv' }, SV);
+      tl.fromTo(piv, { opacity: 0, scale: 0.4, transformOrigin: '50% 100%' }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' }, L9 + 0.36);
+      tl.fromTo('#strict-plank', { opacity: 0, scaleX: 0.2 }, { opacity: 1, scaleX: 1, duration: 0.35, ease: 'power3.out' }, L9 + 0.42);
+      KIT.rise(tl, '#strict-base', L9 + 0.5, { y: 20, dur: 0.3 });
+      pulse(L9 + 0.42, 0.14);
+      tl.fromTo('#strict-rt', { scale: 1 }, { scale: 1.25, duration: 0.18, yoyo: true, repeat: 1, ease: 'sine.inOut', immediateRender: false }, c9('Accuracy'));
+      KIT.pop(tl, '#strict-avg', c9('average'), { from: 0.5 });
+      tl.fromTo('#strict-plank', { rotation: 0 }, { rotation: 7, duration: 0.5, ease: 'back.out(2.5)', immediateRender: false }, c9('dropped'));
+      KIT.shake(tl, '#strict-shk', c9('dropped') + 0.25, { amp: 10, dur: 0.25 });
+      pulse(c9('dropped') + 0.2, 0.2);
+      tl.fromTo('#strict-drop', { scale: 2.2, opacity: 0, transformOrigin: '0% 50%' }, { scale: 1, opacity: 1, duration: 0.2, ease: 'power4.in' }, c9('fifteen') - 0.05);
+      pulse(c9('fifteen') + 0.15, 0.22);
+      tl.to('#strict-cam', { x: 700 * (1 - 1.07), y: 830 * (1 - 1.07), scale: 1.07, duration: 1.4, ease: 'power2.inOut' }, c9('dropped') + 0.3);
+      KIT.pop(tl, '#strict-var2', c9('across'), { from: 0.5 });
+      KIT.pop(tl, '#strict-gem2', c9('models'), { from: 0.5 });
+      pulse(c9('models'), 0.12);
+
+      // ---- l10: the paper's own sentence, then a price tag swings onto the seesaw ----
+      const tR = L10 + 0.1, tEnd = KIT.cueEnd('l10', 'cost') + 0.1;
+      tl.fromTo('#strict-dim', { opacity: 0 }, { opacity: 0.88, duration: 0.25 }, tR);
+      const RD = KIT.read(tl, { cam: '#strict-rcam', parent: '#strict-rstage', hud: '#strict-hud', tagY: 560, id: 'cost', t: tR, label: KIT.data('l10').receipt,
+        x: 40, y: 900, width: 1000, zoom: 2.6, fx: 90, fy: 820, follow: 0,
+        marks: [[c10('On'), c10('no') - 0.04, [[c10('open'), 0.15], [c10('tasks'), 0.7]]], [c10('no'), tEnd, [[c10('comes'), 0.43], [c10('at'), 0.64], [c10('cost'), 0.82]]]],
+        circles: [{ word: 'cost', t: c10('cost') + 0.05 }] });
+      tl.set(RD.el, { rotationZ: 0, rotationX: 0 }, tR + 0.6);
+      const tB = tEnd + 0.05;
+      tl.set([RD.el, '#strict-hud'], { opacity: 0 }, tB);
+      tl.set('#strict-rcam', { x: 0, y: 0, scale: 1 }, tB);
+      tl.set('#strict-dim', { opacity: 0 }, tB);
+      tl.fromTo('#strict-price', { opacity: 0, rotation: -70 }, { opacity: 1, rotation: 0, duration: 0.5, ease: 'elastic.out(1.2, 0.4)' }, tB);
+      pulse(tB, 0.22);
+      window.__timelines["strict"] = tl;
+    })();
+  </script>
+</template>

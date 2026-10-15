@@ -1,0 +1,121 @@
+<template id="close-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #close-cam, #close-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 640px; }
+    .close-t { left: 0; width: 1080px; text-align: center; font-size: 98px; line-height: 1.05; }
+    .close-t .word { display: inline-block; }
+    #close-c1 { top: 186px; }
+    #close-c2 { top: 300px; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); }
+    #close-handle { left: 0; top: 236px; width: 1080px; text-align: center; }
+    #close-handle span { display: inline-block; padding: 12px 32px; font: 700 50px "Mono", monospace; color: var(--amber); background: var(--deep); border: 4px solid var(--amber); box-shadow: 10px 10px 0 var(--shadow); }
+    #close-credit { left: 0; top: 368px; width: 1080px; text-align: center; font-size: 28px; }
+    #close-screen { position: absolute; left: 300px; top: 572px; width: 470px; height: 610px; border: 6px solid var(--white); border-radius: 26px;
+      background: var(--panel); overflow: hidden; box-shadow: 12px 12px 0 var(--shadow); }
+    #close-feed { position: absolute; left: 0; top: 0; width: 458px; height: 1200px; }
+    .close-bub { position: absolute; height: 62px; border: 4px solid var(--dim); border-radius: 18px; background: #0f3a60; padding: 13px 18px 0;
+      font: 600 28px/1 "Mono", monospace; color: var(--white); white-space: nowrap; overflow: hidden; }
+    .close-bub.ev { border-color: var(--amber); color: var(--amber); background: #2e2614; }
+    .close-bub i { position: absolute; left: 18px; height: 10px; border-radius: 5px; background: #2b5f8a; }
+    #close-pin { position: absolute; left: 234px; top: 4px; width: 34px; height: 46px; }
+    #close-mfill { position: absolute; left: 834px; top: 608px; width: 48px; height: 544px; background: var(--amber); transform-origin: 50% 100%; }
+    #close-score { left: 818px; top: 548px; font-size: 28px; }
+    #close-start { left: 906px; top: 678px; font-size: 28px; }
+    .close-book { position: absolute; border: 5px solid var(--cyan); border-radius: 5px; background: #0d3358; box-shadow: 5px 5px 0 var(--shadow); }
+    .close-book::after { content: ""; position: absolute; left: 4px; right: 4px; top: 22%; height: 7px; background: var(--amber); }
+  </style>
+  <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+    <div id="close-cam"><div id="close-beat">
+      <div id="close-c1" class="hd close-t" data-bind="l13.c1"></div>
+      <div id="close-c2" class="hd close-t" data-bind="l13.c2"></div>
+      <div id="close-handle" class="abs"><span data-bind="l13.handle"></span></div>
+      <div id="close-credit" class="lbl" data-bind="l13.credit"></div>
+      <div id="close-mfill"></div>
+      <svg class="ink sketch" id="close-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path id="close-shelf" class="ln thick" d="M58 882 L292 882 M74 882 L74 904 M276 882 L276 904" />
+        <path id="close-desk" class="ln thick" d="M70 1394 L600 1394" />
+        <rect id="close-meter" x="826" y="600" width="64" height="560" rx="10" fill="none" stroke="#f2f8ff" stroke-width="6" />
+        <path id="close-tick" class="ln cyan thick dash" d="" />
+        <g id="close-arm"><path d="M226 1318 L300 1236" stroke="#f2f8ff" stroke-width="9" stroke-linecap="round" /><circle cx="304" cy="1230" r="15" fill="#0a2340" stroke="#f2f8ff" stroke-width="6" /></g>
+        <g id="close-bot"></g>
+      </svg>
+      <div id="close-score" class="lbl" data-bind="l01.score"></div>
+      <div id="close-start" class="lbl" data-bind="l01.start"></div>
+      <div id="close-books"></div>
+      <div id="close-screen"><div id="close-feed"></div>
+        <svg id="close-pin" viewBox="0 0 34 46"><circle cx="17" cy="14" r="11" fill="#ffb454" stroke="#071d35" stroke-width="3" /><path d="M17 24 L17 44" stroke="#ffb454" stroke-width="5" stroke-linecap="round" /></svg>
+      </div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'close', c = (w, n) => KIT.cue('l13', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#close-cam');
+      const d1 = KIT.data('l01'), tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+
+      // ---- the opening drawing, in its frame-0 positions (the loop lands back on the hook) ----
+      const r10 = KIT.data('l10'), vStart = parseFloat(r10.v1), TOP = 0.5, IN_H = 544, BOT = 1152, yOf = (v) => BOT - IN_H * v / TOP;
+      q('#close-tick').setAttribute('d', `M808 ${yOf(vStart).toFixed(1)} L902 ${yOf(vStart).toFixed(1)}`);
+      q('#close-start').style.top = `${(yOf(vStart) - 20).toFixed(0)}px`;
+      gsap.set('#close-mfill', { scaleY: vStart / TOP });
+      const G = 16, LONG = 116, SHORT = 62, IW = 458;
+      const spec = [['ev', 'L', 232], ['log', 'R', 330, 1], ['file', 'L', 150], ['tool', 'R', 262], ['log', 'L', 330, 1], ['file', 'R', 150],
+        ['tool', 'L', 262], ['log', 'R', 330, 1]];
+      const feed = q('#close-feed'), bubs = [];
+      let y = G;
+      spec.forEach(([k, side, w, long], i) => {
+        const el = document.createElement('div'); el.className = `close-bub${k === 'ev' ? ' ev' : ''}`; el.id = `close-b${i}`; el.textContent = d1[k];
+        const h = long ? LONG : SHORT;
+        el.style.cssText = `left:${side === 'L' ? 16 : IW - 16 - w}px;top:${y}px;width:${w}px;height:${h}px`;
+        if (long) for (let s = 0; s < 2; s++) { const st = document.createElement('i'); st.style.top = `${56 + s * 24}px`; st.style.width = `${(s ? 52 : 70)}%`; el.appendChild(st); }
+        feed.appendChild(el); bubs.push(el); y += h + G;
+      });
+      const R = KIT.robot('#close-bot', { id: 'close-r', x: 190, y: 1190, s: 0.72 });
+      const eyes = ['#close-r-eyeL', '#close-r-eyeR'];
+      const books = q('#close-books'), BK = [[76, 742, 44, 138], [126, 760, 52, 120], [184, 732, 44, 148], [236, 772, 40, 108]];
+      BK.forEach(([x, yy, w, h], i) => { const el = document.createElement('div'); el.className = 'close-book'; el.id = `close-bk${i}`; el.style.cssText = `left:${x}px;top:${yy}px;width:${w}px;height:${h}px`; books.appendChild(el); });
+      gsap.set('#close-bk3', { rotation: 12, transformOrigin: '50% 100%' });
+
+      // the evidence starts out of view, above the top of the screen
+      tl.fromTo(bubs[0], { y: -110 }, { y: -110, duration: 0.01 }, 0);
+      tl.fromTo('#close-pin', { scale: 0, opacity: 0, transformOrigin: '50% 100%' }, { scale: 0, opacity: 0, duration: 0.01 }, 0);
+      tl.fromTo('#close-arm', { opacity: 0, rotation: 120, svgOrigin: '226 1318' }, { opacity: 0, rotation: 120, svgOrigin: '226 1318', duration: 0.01 }, 0);
+
+      // "So before you add skills": a skill book lifts off the shelf toward the robot...
+      tl.to('#close-bk0', { x: 190, y: 150, rotation: 24, duration: 0.7, ease: 'power2.out' }, c('before') - 0.05);
+      tl.to(eyes, { x: -8, y: -6, duration: 0.2 }, c('before'));
+      // ...the robot raises a hand and the book stops in mid-air
+      tl.to('#close-arm', { opacity: 1, rotation: 0, svgOrigin: '226 1318', duration: 0.25, ease: 'back.out(2)' }, c('add') - 0.1);
+      tl.to('#close-bk0', { keyframes: [{ x: 200, y: 140, rotation: 18, duration: 0.1 }, { x: 196, y: 146, rotation: 22, duration: 0.12 }] }, c('skills') - 0.1);
+      // "check what your agent can see": the screen lights up, the evidence comes back into view with a pin
+      tl.to('#close-screen', { borderColor: '#a8dcf2', boxShadow: '0 0 46px rgba(168,220,242,.55), 12px 12px 0 rgba(2,12,24,.62)', duration: 0.25 }, c('check') - 0.1);
+      tl.to(bubs[0], { y: 0, duration: 0.35, ease: 'back.out(1.4)' }, c('check') - 0.05);
+      tl.to('#close-pin', { scale: 1, opacity: 1, duration: 0.22, ease: 'back.out(3)' }, c('your'));
+      tl.to(eyes, { x: 14, y: -9, duration: 0.25 }, c('what'));
+      // the big type writes on, one word per spoken word, in the hook title's box
+      const w1 = SplitText.create('#close-c1', { type: 'words' }).words, w2 = SplitText.create('#close-c2', { type: 'words' }).words;
+      [...w1, ...w2].forEach((w) => w.setAttribute('data-layout-allow-overlap', ''));
+      const cues = [c('check'), c('what'), c('your'), c('agent'), c('can')];
+      [...w1, ...w2].forEach((w, k) => {
+        if (k < 5) tl.fromTo(w, { opacity: 0, y: -26, scale: 1.3 }, { opacity: 1, y: 0, scale: 1, duration: 0.16, ease: 'power3.out' }, cues[k] - 0.04);
+        else tl.fromTo(w, { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.18, ease: 'power4.in' }, c('see') - 0.15);
+      });
+      KIT.shake(tl, '#close-beat', c('see') + 0.05, { amp: 12, dur: 0.28 });
+      // end card: the type gives way to the handle; the drawing settles back into the opening layout
+      const tE = c('see') + 0.55;
+      tl.to(['#close-c1', '#close-c2'], { opacity: 0, y: -20, duration: 0.3, ease: 'power2.in' }, tE);
+      tl.fromTo('#close-handle', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'back.out(2)' }, tE + 0.2);
+      tl.fromTo('#close-credit', { opacity: 0 }, { opacity: 1, duration: 0.35 }, tE + 0.45);
+      tl.to('#close-bk0', { x: 0, y: 0, rotation: 0, duration: 0.6, ease: 'power2.inOut' }, tE + 0.1);
+      tl.to('#close-arm', { opacity: 0, rotation: 120, svgOrigin: '226 1318', duration: 0.35, ease: 'power2.in' }, tE + 0.1);
+      tl.to(eyes, { x: 0, y: 0, duration: 0.3 }, tE + 0.2);
+      tl.to('#close-screen', { borderColor: '#f2f8ff', boxShadow: '0 0 0 rgba(168,220,242,0), 12px 12px 0 rgba(2,12,24,.62)', duration: 0.4 }, tE + 0.3);
+      tl.to('#close-pin', { scale: 0, opacity: 0, duration: 0.25, ease: 'power2.in' }, tE + 0.5);
+
+      KIT.beats(tl, '#close-beat', [c('before'), c('add'), c('check'), c('agent')], { amp: 0.02, shift: 14, reset: tE });
+      tl.fromTo('#close-cam', { scale: 1.03 }, { scale: 1, duration: D, ease: 'sine.inOut' }, 0);
+
+      window.__timelines["close"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,93 @@
+{
+ "checkouts": {
+  "img": "evidence/checkouts.png",
+  "w": 3740,
+  "h": 138,
+  "page": 3,
+  "rects": [
+   {
+    "x": 0.37629601552072983,
+    "y": 0.16532005454009435,
+    "w": 0.4409626994827696,
+    "h": 0.6504919663915094
+   }
+  ],
+  "text": "GB. We perform on the order of 25 million code checkouts per day for CI, before",
+  "circles": {
+   "25": {
+    "x": 0.37629601552072983,
+    "y": 0.18392387726022014,
+    "w": 0.024319131179421808,
+    "h": 0.4779260023584906
+   }
+  }
+ },
+ "online": {
+  "img": "evidence/online.png",
+  "w": 3740,
+  "h": 275,
+  "page": 3,
+  "rects": [
+   {
+    "x": 0.02659848768734181,
+    "y": 0.5790945868280767,
+    "w": 0.4829811066367164,
+    "h": 0.3280241689222921
+   }
+  ],
+  "text": "centralized system with one authoritative copy, but nearly all of our clients were\r\nagents and jobs that are online by definition. The properties that make git excellent",
+  "circles": {
+   "online": {
+    "x": 0.2927591350348388,
+    "y": 0.5790945868280767,
+    "w": 0.06942739599232899,
+    "h": 0.2503853581890575
+   }
+  }
+ },
+ "footprint": {
+  "img": "evidence/footprint.png",
+  "w": 3728,
+  "h": 277,
+  "page": 8,
+  "rects": [
+   {
+    "x": 0.5660025238046459,
+    "y": 0.08274002883903157,
+    "w": 0.40004731005951266,
+    "h": 0.32202695107498924
+   },
+   {
+    "x": 0.0794557097661032,
+    "y": 0.5926646729163723,
+    "w": 0.6555656820825008,
+    "h": 0.3236321080187051
+   }
+  ],
+  "text": "long-lived state, so it’s easy to scale up if needed. Our Scion infrastructure footprint is\r\nnow 200x smaller than our previous git mirroring infrastructure in terms of CPU and",
+  "circles": {
+   "200x": {
+    "x": 0.0794557097661032,
+    "y": 0.6019755437865393,
+    "w": 0.05493597825914018,
+    "h": 0.2391923995290387
+   }
+  }
+ },
+ "enormous": {
+  "img": "evidence/enormous.png",
+  "w": 3729,
+  "h": 319,
+  "page": 12,
+  "rects": [
+   {
+    "x": 0.3174562217534988,
+    "y": 0.6455901932846653,
+    "w": 0.5293356378243683,
+    "h": 0.28259010523394806
+   }
+  ],
+  "text": "Scion is by no means a suitable replacement for git for general use. The concepts\r\nwe’ve outlined here really only make sense for truly enormous monorepos, with either",
+  "circles": {}
+ }
+}

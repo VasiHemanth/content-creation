@@ -1,0 +1,215 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam, #hook-beat, #hook-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #hook-cam { transform-origin: 540px 900px; }
+    #hook-beat { transform-origin: 540px 900px; }
+    #hook-titles { position: absolute; left: 0; top: 0; width: 1080px; height: 460px; transform-origin: 540px 300px; }
+    .hook-t { left: 0; width: 1080px; text-align: center; line-height: 1.05; }
+    #hook-t1 { top: 172px; font-size: 68px; }
+    #hook-t2 { top: 268px; font-size: 92px; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); }
+    #hook-q { left: 610px; top: 560px; font-size: 120px; padding: 0 30px; }
+    .ac-chip { position: absolute; padding: 8px 16px 6px; font: 700 28px/1 "Mono", monospace; color: var(--white); background: #0f3a60; border: 4px solid var(--cyan);
+      border-radius: 12px; white-space: nowrap; box-shadow: 5px 5px 0 var(--shadow); transform-origin: 50% 50%; }
+    .ac-chip.old { color: var(--dim); border-color: var(--faint); background: #0b2a4a; }
+    .ac-press { position: absolute; height: 190px; }
+    .ac-rod { position: absolute; top: 0; width: 10px; height: 130px; background: var(--dim); }
+    .ac-plate { position: absolute; left: 0; top: 120px; height: 62px; background: var(--deep); border: 5px solid var(--amber); box-shadow: 8px 8px 0 var(--shadow);
+      font: 700 32px/52px "Mono", monospace; color: var(--amber); text-align: center; box-sizing: border-box; }
+    .ac-gauge { position: absolute; width: 46px; border: 5px solid var(--white); border-radius: 10px; box-sizing: border-box; background: var(--panel); overflow: visible; }
+    .ac-gfill { position: absolute; left: 4px; right: 4px; bottom: 4px; top: 4px; background: var(--cyan); transform-origin: 50% 100%; border-radius: 4px; }
+    .ac-gtick { position: absolute; left: -22px; width: 80px; height: 6px; background: var(--coral); }
+    .ac-card { position: absolute; background: var(--paper); color: var(--ink); border: 4px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); padding: 10px 0 8px; }
+    .ac-chead { font: 400 40px/1.1 "Marker", sans-serif; color: var(--ink); padding: 0 18px 6px; border-bottom: 3px solid #c9bfa8; }
+    .ac-crow { font: 700 28px/1 "Mono", monospace; color: var(--ink); padding: 12px 18px 4px; white-space: nowrap; transform-origin: 0 0; }
+    .ac-peg { position: absolute; width: 24px; height: 120px; }
+    .ac-stake { position: absolute; left: 8px; top: 0; width: 8px; height: 120px; background: var(--amber); border-radius: 3px; }
+    .ac-hand { position: absolute; width: 220px; height: 330px; }
+    .ac-cuff { position: absolute; left: 34px; top: 34px; width: 150px; text-align: center; font: 700 30px/1 "Mono", monospace; color: var(--cyan); }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam"><div id="hook-beat"><div id="hook-world">
+      <div id="hook-titles">
+        <div id="hook-t1" class="hd hook-t" data-bind="l01.t1"></div>
+        <div id="hook-t2" class="hd hook-t" data-bind="l01.t2"></div>
+      </div>
+      <svg class="ink sketch" id="hook-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"></svg>
+      <div id="hook-q" class="stamp amber" data-bind="l01.q"></div>
+    </div></div></div>
+  </div>
+  <script>
+    (function () {
+      // ---- shared drawing kit for this episode (same code in every scene, so the hook and the close match) ----
+      const AC = (() => {
+        const W = '#f2f8ff', PANEL = '#0a2340', AMB = '#ffb454', COR = '#ff6b6b', CY = '#a8dcf2', DIM = '#6aa9d0';
+        const $ = (s) => (typeof s === 'string' ? document.querySelector(s) : s);
+        const svg = (tag, attrs, parent) => KIT.svgEl(tag, attrs, parent);
+        const div = (cls, id, css, parent, txt) => { const e = document.createElement('div'); if (cls) e.className = cls; e.id = id; if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; $(parent).appendChild(e); return e; };
+        const ln = (d, parent, o = {}) => svg('path', { d, fill: 'none', stroke: o.c || W, 'stroke-width': o.w || 3.4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', id: o.id, 'stroke-dasharray': o.dash }, parent);
+
+        /** A hiker facing right. (x, y) = ground point between the feet; s = scale (1 = about 230 px tall).
+         *  Animate `${id}` (x in local units = px / s), `${id}-body` (turns), `${id}-legF/-legB`, `${id}-pack`, `${id}-arm`. */
+        function hiker(host, { id, x, y, s = 1, mag = false, pack = 1 }) {
+          const pos = svg('g', { transform: `translate(${x} ${y}) scale(${s})` }, host);
+          const g = svg('g', { id }, pos), body = svg('g', { id: `${id}-body` }, g);
+          const legB = svg('g', { id: `${id}-legB` }, body); ln('M2 -86 L-8 -42 L-14 0 L-1 0', legB, { c: DIM, w: 4.2 });
+          const pk = svg('g', { id: `${id}-pack` }, body);
+          svg('rect', { x: -66, y: -184, width: 56, height: 100, rx: 15, fill: PANEL, stroke: W, 'stroke-width': 3.6 }, pk);
+          ln('M-66 -160 L-10 -160', pk, { w: 2.6 }); ln('M-50 -132 L-26 -132', pk, { c: DIM, w: 2.6 });
+          ln('M-60 -84 L-62 -76 M-16 -84 L-14 -76', pk, { w: 2.6 });
+          ln('M-10 -172 L4 -148', body, { c: AMB, w: 3 });
+          ln('M2 -150 L-8 -116 L-4 -94', body, { c: DIM, w: 4 });
+          ln('M2 -170 L2 -86', body, { w: 5 });
+          const legF = svg('g', { id: `${id}-legF` }, body); ln('M2 -86 L14 -42 L12 0 L26 0', legF, { w: 4.4 });
+          svg('circle', { cx: 6, cy: -194, r: 19, fill: PANEL, stroke: W, 'stroke-width': 3.6 }, body);
+          ln('M-14 -200 Q6 -228 26 -201 L36 -199', body, { w: 3.4 });
+          svg('circle', { cx: 15, cy: -196, r: 2.6, fill: W }, body);
+          const arm = svg('g', { id: `${id}-arm` }, body);
+          if (mag) { ln('M2 -150 L30 -122 L52 -110', arm, { w: 4.2 }); svg('circle', { cx: 64, cy: -98, r: 14, fill: 'rgba(168,220,242,.18)', stroke: AMB, 'stroke-width': 3.6 }, arm); ln('M54 -108 L50 -112', arm, { c: AMB, w: 4 }); }
+          else ln('M2 -150 L18 -116 L26 -94', arm, { w: 4.2 });
+          gsap.set(`#${id}-pack`, { scale: pack, svgOrigin: '-38 -84' });
+          return { pos, g, body, x, y, s, packTop: [x - 38 * s, y - 184 * s * pack], packBox: [x - 66 * s, y - 184 * s * pack, 56 * s, 100 * s * pack] };
+        }
+        /** Walk cycle: legs swing on keyframes (tl.to only, so several walks can follow each other). */
+        function walk(tl, id, t0, dur, step = 0.26) {
+          const n = Math.max(2, Math.round(dur / step)), kf = (sgn) => { const k = []; for (let i = 0; i < n; i++) k.push({ rotation: (i % 2 ? -1 : 1) * 20 * sgn, duration: dur / n, ease: 'sine.inOut' }); k.push({ rotation: 0, duration: 0.12 }); return k; };
+          tl.to(`#${id}-legF`, { keyframes: kf(1), svgOrigin: '2 -86' }, t0);
+          tl.to(`#${id}-legB`, { keyframes: kf(-1), svgOrigin: '2 -86' }, t0);
+        }
+        /** A trail flag on the ground line; the label sits above the cloth (right-aligned when `right`). */
+        function flag(host, parent, { id, x, y, h = 210, label, right = false, color = AMB, below = false }) {
+          const g = svg('g', { id }, host);
+          ln(`M${x} ${y} L${x} ${y - h}`, g, { w: 5 });
+          const cloth = svg('path', { d: `M${x + 2} ${y - h} L${x + 74} ${y - h + 22} L${x + 2} ${y - h + 46} Z`, fill: color, stroke: color, 'stroke-width': 2, id: `${id}-cloth` }, g);
+          const lab = label != null ? div('lbl white', `${id}-lab`, `top:${below ? y + 30 : y - h - 48}px;${right ? `right:${1080 - x - 6}px` : `left:${x - 6}px`};font-size:28px`, parent, label) : null;
+          return { g, cloth, lab };
+        }
+        /** A chip of carried context (search, tool output, ...). */
+        const chip = (parent, id, txt, x, y) => div('ac-chip', id, `left:${x}px;top:${y}px`, parent, txt);
+        /** The press: rods and a plate labelled compact(). Slam it with tl.to(`#${id}`, { y }). */
+        function press(parent, { id, x, y, w = 200, label }) {
+          const p = div('ac-press', id, `left:${x}px;top:${y - 120}px;width:${w}px`, parent);
+          div('ac-rod', `${id}-r1`, `left:${w * 0.25 - 5}px`, p); div('ac-rod', `${id}-r2`, `left:${w * 0.75 - 5}px`, p);
+          div('ac-plate', `${id}-plate`, `width:${w}px`, p, label);
+          return p;
+        }
+        /** The context gauge strap: outline, fill (scaleY), red limit tick and labels. */
+        function gauge(parent, { id, x, y, h = 300, lim = 0.9, limitTxt, ctxTxt, fill = 0.5 }) {
+          const g = div('ac-gauge', id, `left:${x}px;top:${y}px;height:${h}px`, parent);
+          const f = div('ac-gfill', `${id}-fill`, '', g);
+          const tk = div('ac-gtick', `${id}-tick`, `top:${(1 - lim) * h - 3}px`, g);
+          div('lbl', `${id}-lim`, `left:${x - 96}px;top:${y + (1 - lim) * h - 20}px;font-size:28px;color:#ff9d9d`, parent, limitTxt);
+          div('lbl', `${id}-ctx`, `left:${x - 40}px;top:${y + h + 12}px;font-size:28px`, parent, ctxTxt);
+          gsap.set(f, { scaleY: fill });
+          return { g, f, tk };
+        }
+        /** The summary card: a header and three rows (rows hidden until shown). */
+        function card(parent, { id, x, y, w = 330, head, rows }) {
+          const c = div('ac-card', id, `left:${x}px;top:${y}px;width:${w}px`, parent);
+          div('ac-chead', `${id}-h`, '', c, head);
+          const rs = rows.map((r, i) => div('ac-crow', `${id}-r${i}`, '', c, r));
+          return { c, rs };
+        }
+        /** A compact() peg: stake plus tag. */
+        function peg(parent, { id, x, y, label }) {
+          const p = div('ac-peg', id, `left:${x - 12}px;top:${y - 120}px`, parent);
+          div('ac-stake', `${id}-s`, '', p); div('tag', `${id}-t`, 'left:-8px;top:-52px;font-size:26px;padding:4px 12px', p, label);
+          return p;
+        }
+        /** The judge's hand, pointing down, with a labelled cuff. */
+        function hand(parent, { id, x, y, label }) {
+          const h = div('ac-hand', id, `left:${x}px;top:${y}px`, parent);
+          const sv = KIT.svgEl('svg', { viewBox: '0 0 220 330', width: 220, height: 330, style: 'position:absolute;left:0;top:0;overflow:visible' }, h);
+          svg('rect', { x: 34, y: 0, width: 150, height: 120, rx: 10, fill: PANEL, stroke: CY, 'stroke-width': 6 }, sv);
+          svg('path', { d: 'M44 120 L44 210 C44 236 60 250 84 250 L150 250 C170 250 182 236 182 214 L182 120 Z', fill: PANEL, stroke: W, 'stroke-width': 6, 'stroke-linejoin': 'round' }, sv);
+          [[52, 300], [86, 322], [120, 318], [152, 296]].forEach(([fx, fy]) => svg('path', { d: `M${fx} 236 L${fx} ${fy}`, stroke: W, 'stroke-width': 24, 'stroke-linecap': 'round' }, sv));
+          [[52, 300], [86, 322], [120, 318], [152, 296]].forEach(([fx, fy]) => svg('path', { d: `M${fx} 238 L${fx} ${fy - 2}`, stroke: PANEL, 'stroke-width': 12, 'stroke-linecap': 'round' }, sv));
+          svg('path', { d: 'M182 170 C214 180 220 214 206 236', fill: 'none', stroke: W, 'stroke-width': 18, 'stroke-linecap': 'round' }, sv);
+          div('ac-cuff', `${id}-cuff`, '', h, label);
+          return h;
+        }
+        /** A pair of footprints on the ground. */
+        const prints = (host, id, x, y, c = DIM) => { const g = svg('g', { id }, host); svg('ellipse', { cx: x, cy: y - 7, rx: 15, ry: 5.5, fill: c }, g); svg('ellipse', { cx: x + 22, cy: y + 5, rx: 15, ry: 5.5, fill: c }, g); return g; };
+        return { $, svg, div, ln, hiker, walk, flag, chip, press, gauge, card, peg, hand, prints, C: { W, PANEL, AMB, COR, CY, DIM } };
+      })();
+      // ---- the opening drawing (frame 0 of the hook and the end of the close use the same layout) ----
+      // hiker mid-stretch between two flags, magnifier on the footprints, pack bulging, gauge just under the limit, press open above
+      const HERO = (P, world, sv) => {
+        const d1 = KIT.data('l01');
+        AC.ln('M60 1330 L930 1330', sv, { w: 6, id: `${P}-ground` });
+        const fA = AC.flag(sv, world, { id: `${P}-flagA`, x: 100, y: 1330, h: 190, color: AC.C.DIM });
+        const fB = AC.flag(sv, world, { id: `${P}-flagB`, x: 850, y: 1330, h: 190 });
+        [150, 222, 294].forEach((x, i) => AC.prints(sv, `${P}-fp${i}`, x, 1350));
+        const look = [640, 716].map((x, i) => AC.prints(sv, `${P}-fq${i}`, x, 1350, AC.C.AMB));
+        const H = AC.hiker(sv, { id: `${P}-hk`, x: 520, y: 1330, s: 2.3, mag: true, pack: 1.12 });
+        const G = AC.gauge(world, { id: `${P}-gauge`, x: 250, y: 870, h: 300, lim: 0.9, limitTxt: d1.limit, ctxTxt: d1.ctx, fill: 0.8 });
+        const top1 = AC.chip(world, `${P}-c-log`, d1.log, 336, 834);
+        const top2 = AC.chip(world, `${P}-c-code`, d1.code, 404, 790);
+        const PR = AC.press(world, { id: `${P}-press`, x: 330, y: 720, w: 200, label: d1.press });
+        return { H, G, top1, top2, PR, fA, fB, look, PACK_BOTTOM: 1330 - 84 * 2.3, PACK_H: 100 * 2.3, PLATE_BOTTOM: 782 };
+      };
+      const S = 'hook', a = (w, n) => KIT.cue('l01', w, n), b = (w, n) => KIT.cue('l02', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#hook-cam');
+      const d1 = KIT.data('l01'), d2 = KIT.data('l02'), tl = gsap.timeline({ paused: true });
+      const R = HERO('hook', '#hook-world', '#hook-svg');
+      const PK = '#hook-hk-pack';
+
+      // frame 0 is the whole picture; the big type only settles, the camera pushes slowly
+      tl.fromTo('#hook-titles', { scale: 1.04 }, { scale: 1, duration: 0.4, ease: 'power2.out' }, 0);
+      tl.fromTo('#hook-cam', { scale: 1 }, { scale: 1.03, duration: a('moment') - 0.05, ease: 'sine.inOut' }, 0);
+      // idle: the magnifier sweeps over the footprints
+      tl.to('#hook-hk-arm', { keyframes: [{ rotation: 6, duration: 0.5, ease: 'sine.inOut' }, { rotation: -4, duration: 0.5, ease: 'sine.inOut' }, { rotation: 4, duration: 0.5, ease: 'sine.inOut' }], svgOrigin: '2 -150' }, 0.1);
+
+      // a chip arcs into the pack, the pack bulges, the gauge ticks up
+      const drop = (id, txt, t, fill) => {
+        const c = AC.chip('#hook-world', id, txt, 700, 600);
+        tl.fromTo(c, { opacity: 0, scale: 0.5, x: 0, y: 0 }, { opacity: 1, scale: 1, duration: 0.14, ease: 'back.out(2)' }, t - 0.12);
+        tl.to(c, { keyframes: [{ x: -190, y: 90, duration: 0.16, ease: 'power1.out' }, { x: -300, y: 270, scale: 0.5, duration: 0.18, ease: 'power2.in' }] }, t + 0.02);
+        tl.to(c, { opacity: 0, duration: 0.06 }, t + 0.34);
+        tl.to(PK, { keyframes: [{ scale: 1.2, duration: 0.08 }, { scale: 1.12, duration: 0.16 }], svgOrigin: '-38 -84' }, t + 0.34);
+        tl.to(R.G.f, { scaleY: fill, duration: 0.25, ease: 'power2.out' }, t + 0.34);
+      };
+      drop('hook-c-tool', d1.tool, a('coding'), 0.85);
+      // "compact": the press twitches
+      tl.to('#hook-press', { keyframes: [{ y: 22, duration: 0.08, ease: 'power2.in' }, { y: 0, duration: 0.2, ease: 'power2.out' }] }, a('compact'));
+      drop('hook-c-search', d1.search, a('context'), 0.88);
+      // "nears": the gauge reaches the limit, the tick flashes
+      tl.to(R.G.f, { scaleY: 0.92, backgroundColor: '#ff6b6b', duration: 0.25, ease: 'power2.in' }, a('nears') - 0.1);
+      tl.to(R.G.tk, { keyframes: [{ scaleX: 1.5, opacity: 0.4, duration: 0.08 }, { scaleX: 1, opacity: 1, duration: 0.08 }, { scaleX: 1.5, opacity: 0.4, duration: 0.08 }, { scaleX: 1, opacity: 1, duration: 0.1 }] }, a('nears'));
+      // "limit": the press slams onto the pack, the magnifier jolts off the footprints
+      const squash = 0.7, newTop = R.PACK_BOTTOM - R.PACK_H * squash, Dy = newTop - R.PLATE_BOTTOM, tS = a('limit') - 0.12;
+      tl.to('#hook-press', { y: Dy, duration: 0.14, ease: 'power4.in' }, tS);
+      tl.to(PK, { scaleY: squash, scaleX: 1.22, svgOrigin: '-38 -84', duration: 0.1, ease: 'power3.out' }, tS + 0.12);
+      tl.to([R.top1, R.top2], { y: Dy - 4, scaleY: 0.35, scaleX: 1.15, duration: 0.12, ease: 'power3.in' }, tS + 0.04);
+      KIT.shake(tl, '#hook-beat', tS + 0.14, { amp: 14, dur: 0.3 });
+      tl.to('#hook-hk-arm', { rotation: -34, svgOrigin: '2 -150', duration: 0.12, ease: 'power3.out' }, tS + 0.14);
+      tl.to(R.look, { opacity: 0.35, duration: 0.2 }, tS + 0.16);
+      // "Wrong moment?": the title bumps, a question mark stamps beside the press, the camera punches in
+      tl.to('#hook-t2', { keyframes: [{ scale: 1.12, duration: 0.1, ease: 'power2.out' }, { scale: 1, duration: 0.3, ease: 'power2.inOut' }] }, a('Wrong'));
+      KIT.slam(tl, '#hook-q', a('moment') - 0.1, { from: 2.4, amp: 10, shakeTarget: '#hook-beat' });
+      tl.to('#hook-cam', { scale: 1.07, duration: 0.25, ease: 'power3.out' }, a('moment'));
+
+      // l02 "Compaction": the press lifts, a folded card slides out of the flat pack
+      const C = AC.card('#hook-world', { id: 'hook-card', x: 600, y: 470, w: 330, head: d2.card, rows: [d2.r1, d2.r2, d2.r3] });
+      tl.to('#hook-press', { y: -30, duration: 0.3, ease: 'power2.out' }, b('Compaction') - 0.05);
+      tl.to('#hook-q', { opacity: 0, scale: 0.6, duration: 0.2 }, b('Compaction') - 0.05);
+      tl.to('#hook-cam', { scale: 1.02, duration: 0.4, ease: 'power2.inOut' }, b('Compaction'));
+      tl.fromTo(C.c, { x: -230, y: 420, scale: 0.25, rotation: -14, opacity: 0 }, { x: 0, y: 0, scale: 1, rotation: -2, opacity: 1, duration: 0.45, ease: 'back.out(1.6)' }, b('Compaction') + 0.05);
+      gsap.set(C.rs, { opacity: 0, scaleY: 0 });
+      // "replaces the agent's context": the squashed chips stream into the card, the gauge empties
+      tl.to(R.top1, { x: 330, y: -340, scale: 0.2, opacity: 0, duration: 0.4, ease: 'power2.in' }, b('replaces'));
+      tl.to(R.top2, { x: 280, y: -300, scale: 0.2, opacity: 0, duration: 0.4, ease: 'power2.in' }, b('replaces') + 0.1);
+      tl.to(R.G.f, { scaleY: 0.25, backgroundColor: '#a8dcf2', duration: 0.45, ease: 'power2.inOut' }, b('context'));
+      tl.to(PK, { scaleY: 0.8, scaleX: 1, svgOrigin: '-38 -84', duration: 0.3, ease: 'back.out(2)' }, b('context'));
+      tl.to('#hook-hk-arm', { rotation: 0, svgOrigin: '2 -150', duration: 0.3 }, b('context'));
+      tl.to(R.look, { opacity: 1, duration: 0.3 }, b('context'));
+      // "short summary": the card unfolds into three rows
+      [b('short') - 0.05, b('summary') - 0.05, b('summary') + 0.18].forEach((t, i) => tl.to(C.rs[i], { opacity: 1, scaleY: 1, duration: 0.16, ease: 'back.out(2)' }, t));
+      // the camera dives toward the pack's opening (the zoom transition lands inside it)
+      tl.to('#hook-cam', { scale: 1.35, x: 120, y: -40, duration: 0.55, ease: 'power2.in' }, D - 0.55);
+
+      KIT.beats(tl, '#hook-beat', [a('coding'), a('context'), b('replaces'), b('summary') + 0.3], { amp: 0.02, shift: 14 });
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

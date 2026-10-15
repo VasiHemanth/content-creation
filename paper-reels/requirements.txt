@@ -1,0 +1,7 @@
+# Python packages for .venv (create with: uv venv .venv && uv pip install --python .venv/bin/python -r requirements.txt)
+# kokoro-onnx + soundfile: voice synthesis (both renderers). pypdfium2 + pillow: paper crops for HyperFrames receipts.
+# The Kokoro model files are downloaded by `npx hyperframes tts` into ~/.cache/hyperframes/tts/.
+kokoro-onnx==0.4.7
+soundfile==0.14.0
+pypdfium2==5.14.0
+pillow==12.3.0

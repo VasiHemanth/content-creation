@@ -1,0 +1,181 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 960px; }
+    #hook-world { position: absolute; left: 0; top: 0; width: 1080px; height: 3200px; }
+    #hook-title { left: 0; top: 150px; width: 1080px; text-align: center; font-size: 200px; letter-spacing: .02em; }
+    #hook-title .char { display: inline-block; }
+    #hook-kicker { left: 0; top: 432px; width: 1080px; text-align: center; font-size: 34px; color: var(--cyan); letter-spacing: .08em; }
+    #hook-val { position: absolute; left: 0; top: 1010px; width: 1080px; text-align: center; font: 400 250px/1 "Marker", sans-serif;
+      color: var(--amber); text-shadow: 10px 10px 0 var(--shadow); transform-origin: 540px 120px; }
+    #hook-metric { left: 120px; top: 1300px; font-size: 32px; }
+    #hook-src { left: 600px; top: 1392px; font-size: 30px; transform-origin: 0 50%; }
+    .hook-sheet { position: absolute; width: 400px; height: 520px; background: var(--white); box-shadow: 14px 14px 0 var(--shadow); }
+    #hook-scratch { left: 0; top: 1670px; width: 1080px; text-align: center; font-size: 82px; color: var(--amber); }
+    #hook-scratch .char { display: inline-block; }
+    #hook-fix { left: 600px; top: 2548px; font-size: 34px; }
+    #hook-up { left: 96px; top: 2838px; font-size: 34px; }
+    #hook-stamp { left: 120px; top: 2600px; font-size: 118px; }
+    #hook-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #fff7e6; opacity: 0; pointer-events: none; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam">
+      <div id="hook-world">
+        <div id="hook-title" class="hd" data-bind="l01.title"></div>
+        <svg class="ink" id="hook-dimsvg" style="left:0;top:0;width:1080px;height:520px" viewBox="0 0 1080 520">
+          <path id="hook-dim" class="ln cyan thin" d="M150 404 L930 404" />
+          <path id="hook-dimL" class="ln cyan thin" d="M150 388 L150 420 M150 404 L172 396 M150 404 L172 412" />
+          <path id="hook-dimR" class="ln cyan thin" d="M930 388 L930 420 M930 404 L908 396 M930 404 L908 412" />
+        </svg>
+        <div id="hook-kicker" class="lbl" data-bind="l01.kicker"></div>
+        <svg class="ink sketch" id="hook-gauge" style="left:0;top:420px;width:1080px;height:760px" viewBox="0 0 1080 760">
+          <path id="hook-track" d="M210 560 A330 330 0 0 1 870 560" fill="none" stroke="#123d66" stroke-width="78" />
+          <path id="hook-arc" d="M210 560 A330 330 0 0 1 870 560" fill="none" stroke="#ffb454" stroke-width="78" />
+          <path id="hook-outer" class="ln cyan thin" d="M160 560 A380 380 0 0 1 920 560" />
+          <path id="hook-inner" class="ln cyan thin" d="M260 560 A280 280 0 0 1 820 560" />
+          <g id="hook-ticks"></g>
+          <circle id="hook-ring" cx="540" cy="560" r="70" fill="none" stroke="#ffb454" stroke-width="8" opacity="0" />
+          <circle id="hook-ring2" cx="540" cy="560" r="70" fill="none" stroke="#a8dcf2" stroke-width="4" opacity="0" />
+          <g id="hook-needle">
+            <path class="ln heavy" d="M540 560 L248 560" />
+            <circle class="fl" cx="540" cy="560" r="30" />
+            <circle class="fl amber" cx="540" cy="560" r="13" />
+          </g>
+        </svg>
+        <div id="hook-val" data-bind="l01.value" data-to=""></div>
+        <div id="hook-metric" class="tag cyan" data-bind="l01.metric"></div>
+        <div id="hook-src" class="tag" data-bind="l01.src"></div>
+        <div id="hook-sparks" style="position:absolute;left:0;top:0;width:1080px;height:1400px"></div>
+
+        <!-- part 2: written from scratch, never merged -->
+        <div class="hook-sheet" id="hook-sh1" style="left:340px;top:1850px"></div>
+        <div class="hook-sheet" id="hook-sh2" style="left:360px;top:1830px"></div>
+        <div class="hook-sheet" id="hook-sh3" style="left:380px;top:1810px">
+          <svg class="ink" style="left:0;top:0;width:400px;height:520px" viewBox="0 0 400 520">
+            <path id="hook-w1" d="M40 80 L330 80" stroke="#3d78a6" stroke-width="12" stroke-linecap="round" />
+            <path id="hook-w2" d="M40 140 L360 140" stroke="#3d78a6" stroke-width="12" stroke-linecap="round" />
+            <path id="hook-w3" d="M40 200 L260 200" stroke="#3d78a6" stroke-width="12" stroke-linecap="round" />
+            <path id="hook-w4" d="M70 270 L350 270" stroke="#ffb454" stroke-width="12" stroke-linecap="round" />
+            <path id="hook-w5" d="M70 330 L300 330" stroke="#ffb454" stroke-width="12" stroke-linecap="round" />
+            <path id="hook-w6" d="M40 400 L230 400" stroke="#3d78a6" stroke-width="12" stroke-linecap="round" />
+          </svg>
+        </div>
+        <svg class="ink" id="hook-pencil" style="left:0;top:0;width:120px;height:120px;overflow:visible" viewBox="0 0 120 120">
+          <g transform="rotate(-38 0 0)">
+            <path d="M0 0 L22 -10 L180 -10 L180 10 L22 10 Z" fill="#ffb454" stroke="#071d35" stroke-width="3" />
+            <path d="M0 0 L22 -10 L22 10 Z" fill="#f2f8ff" stroke="#071d35" stroke-width="3" />
+            <path d="M180 -10 L210 -10 L210 10 L180 10 Z" fill="#ff6b6b" stroke="#071d35" stroke-width="3" />
+          </g>
+        </svg>
+        <div id="hook-scratch" class="hd" data-bind="l02.scratch"></div>
+        <svg class="ink sketch" id="hook-git" style="left:0;top:2440px;width:1080px;height:520px" viewBox="0 0 1080 520">
+          <path id="hook-main" class="ln thick" d="M90 360 L990 360" />
+          <g id="hook-mdots">
+            <circle class="fl" cx="150" cy="360" r="16" /><circle class="fl" cx="300" cy="360" r="16" /><circle class="fl" cx="450" cy="360" r="16" />
+            <circle class="fl" cx="600" cy="360" r="16" /><circle class="fl" cx="750" cy="360" r="16" /><circle class="fl" cx="900" cy="360" r="16" />
+          </g>
+          <path id="hook-branch" class="ln amber thick" d="M300 360 C 330 200, 380 150, 460 150 L 760 150" />
+          <g id="hook-bdots"><circle class="fl amber" cx="560" cy="150" r="16" /><circle class="fl amber" cx="660" cy="150" r="16" /><circle class="fl amber" cx="760" cy="150" r="16" /></g>
+          <path id="hook-merge" class="ln coral thick dash" d="M760 150 C 830 150, 880 230, 900 345" />
+          <path id="hook-x" class="ln coral heavy" d="M845 215 L905 275 M905 215 L845 275" />
+        </svg>
+        <div id="hook-fix" class="lbl amber" data-bind="l02.fix"></div>
+        <div id="hook-up" class="lbl white" data-bind="l02.upstream"></div>
+        <div id="hook-stamp" class="stamp" data-bind="l02.stamp" data-layout-allow-overlap></div>
+      </div>
+    </div>
+    <div id="hook-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'hook', $ = (s) => document.querySelector(s);
+      KIT.bind('#hook-world');
+      const tl = gsap.timeline({ paused: true });
+      const c1 = (w, n) => KIT.cue('l01', w, n), c2 = (w, n) => KIT.cue('l02', w, n);
+      const D = KIT.sceneDur(S);
+      // gauge geometry follows the number in the storyboard, never a literal
+      const V = parseFloat(KIT.data('l01').value) / 100, ROT = 180 * V, TH = Math.PI * (1 + V);
+      const TIP = [540 + 292 * Math.cos(TH), 420 + 560 + 292 * Math.sin(TH)];
+
+      // gauge ticks (51, a major every 10%)
+      const g = $('#hook-ticks'), NS = 'http://www.w3.org/2000/svg';
+      for (let i = 0; i <= 50; i++) {
+        const a = Math.PI + Math.PI * i / 50, major = i % 5 === 0, r0 = 392, r1 = major ? 432 : 410;
+        const p = document.createElementNS(NS, 'path');
+        p.setAttribute('d', `M${540 + Math.cos(a) * r0} ${560 + Math.sin(a) * r0} L${540 + Math.cos(a) * r1} ${560 + Math.sin(a) * r1}`);
+        p.setAttribute('class', major ? 'ln' : 'ln cyan thin'); p.setAttribute('id', `hook-tick-${i}`);
+        g.appendChild(p);
+      }
+
+      // ---- line 1: title, gauge, 74%
+      const split = SplitText.create('#hook-title', { type: 'chars' });
+      tl.fromTo(split.chars, { y: -160, rotationX: 90, opacity: 0, transformOrigin: '50% 100%' },
+        { y: 0, rotationX: 0, opacity: 1, duration: 0.5, ease: 'back.out(2.2)', stagger: 0.05 }, 0.04);
+      KIT.draw(tl, '#hook-dim', 0.42, 0.45, { ease: 'power3.out' });
+      KIT.fade(tl, '#hook-dimL, #hook-dimR', 0.42, { dur: 0.2 });
+      tl.fromTo('#hook-kicker', { opacity: 0, scaleX: 1.7 }, { opacity: 1, scaleX: 1, duration: 0.6, ease: 'power3.out' }, 0.55);
+      KIT.draw(tl, '#hook-outer', 0.2, 0.8); KIT.draw(tl, '#hook-inner', 0.3, 0.8);
+      tl.fromTo('#hook-track', { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.7, ease: 'power2.out' }, 0.25);
+      tl.fromTo('#hook-ticks path', { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.12, stagger: 0.016 }, 0.3);
+      tl.fromTo('#hook-needle', { rotation: 0, svgOrigin: '540 560', opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.5);
+      const t0 = c1('setups'), tHit = c1('seventy');
+      const sweep = tHit - t0;
+      tl.fromTo('#hook-arc', { drawSVG: '0%' }, { drawSVG: `${V * 100}%`, duration: sweep, ease: 'power2.inOut' }, t0);
+      tl.to('#hook-needle', { rotation: ROT + 6, svgOrigin: '540 560', duration: sweep, ease: 'power2.inOut' }, t0);
+      tl.to('#hook-needle', { rotation: ROT, svgOrigin: '540 560', duration: 0.6, ease: 'elastic.out(1.2, 0.35)' }, tHit);
+      KIT.fade(tl, '#hook-val', t0, { dur: 0.15 });
+      KIT.count(tl, '#hook-val', t0, sweep, { ease: 'power2.inOut' });
+      tl.fromTo('#hook-val', { scale: 1 }, { scale: 1.32, duration: 0.07, ease: 'power2.out' }, tHit - 0.02);
+      tl.to('#hook-val', { scale: 1, duration: 0.45, ease: 'back.out(3)' }, tHit + 0.05);
+      KIT.sparks(tl, '#hook-sparks', TIP[0], TIP[1], tHit, { n: 14, r: 300 });
+      KIT.sparks(tl, '#hook-sparks', 540, 1130, tHit + 0.04, { n: 10, r: 420, color: '#a8dcf2' });
+      KIT.shake(tl, '#hook-cam', tHit, { amp: 18, dur: 0.35 });
+      tl.fromTo('#hook-flash', { opacity: 0 }, { opacity: 0.42, duration: 0.04 }, tHit);
+      tl.to('#hook-flash', { opacity: 0, duration: 0.32, ease: 'power2.out' }, tHit + 0.04);
+      tl.fromTo('#hook-ring', { scale: 0.6, opacity: 1, svgOrigin: '540 560' }, { scale: 7, opacity: 0, duration: 0.7, ease: 'power3.out' }, tHit);
+      tl.fromTo('#hook-ring2', { scale: 0.6, opacity: 0.9, svgOrigin: '540 560' }, { scale: 10, opacity: 0, duration: 0.9, ease: 'power2.out' }, tHit + 0.06);
+      KIT.glitch(tl, '#hook-val', tHit + 0.02, { amp: 14, dur: 0.24 });
+      tl.fromTo('#hook-cam', { scale: 1 }, { scale: 1.06, duration: tHit, ease: 'sine.inOut' }, 0);
+      tl.to('#hook-cam', { scale: 1.11, duration: 0.08, ease: 'power2.out' }, tHit);
+      tl.to('#hook-cam', { scale: 1.07, duration: 0.6, ease: 'power3.out' }, tHit + 0.08);
+      KIT.rise(tl, '#hook-metric', c1('percent'), { y: 40 });
+      tl.fromTo('#hook-src', { scale: 0, rotation: -25, opacity: 0 }, { scale: 1, rotation: -4, opacity: 1, duration: 0.45, ease: 'back.out(2.5)' }, c1('Deep'));
+
+      // ---- line 2: tilt down the sheet to the task pages and the git graph
+      const tPan = c2('Every') - 0.15;
+      tl.to('#hook-world', { y: -1500, duration: 0.95, ease: 'power3.inOut' }, tPan);
+      tl.to('#hook-cam', { scale: 1, duration: 0.95, ease: 'power3.inOut' }, tPan);
+      tl.to('#hook-world', { y: -1545, duration: D - tPan - 0.95, ease: 'none' }, tPan + 0.95);
+      ['#hook-sh1', '#hook-sh2', '#hook-sh3'].forEach((s, k) => {
+        tl.fromTo(s, { x: 700, rotation: 18, opacity: 0 }, { x: 0, rotation: [-9, -4, 2][k], opacity: 1, duration: 0.55, ease: 'power3.out' }, c2('task') - 0.25 + k * 0.08);
+      });
+      const tW = c2('written');
+      const strokes = ['#hook-w1', '#hook-w2', '#hook-w3', '#hook-w4', '#hook-w5', '#hook-w6'];
+      const pts = [[420, 1890], [420, 1950], [420, 2010], [450, 2080], [450, 2140], [420, 2210]];
+      const ends = [[710, 1890], [740, 1950], [640, 2010], [730, 2080], [680, 2140], [610, 2210]];
+      tl.fromTo('#hook-pencil', { x: 900, y: 1700, opacity: 0 }, { x: pts[0][0], y: pts[0][1], opacity: 1, duration: 0.3, ease: 'power2.out' }, tW - 0.3);
+      strokes.forEach((s, k) => {
+        const t = tW + k * 0.24;
+        tl.fromTo(s, { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.2, ease: 'none' }, t);
+        tl.fromTo('#hook-pencil', { x: pts[k][0], y: pts[k][1] }, { x: ends[k][0], y: ends[k][1], duration: 0.2, ease: 'none', immediateRender: false }, t);
+      });
+      tl.to('#hook-pencil', { x: 980, y: 1760, rotation: 20, opacity: 0, duration: 0.35, ease: 'power2.in' }, tW + 6 * 0.24);
+      const sc = SplitText.create('#hook-scratch', { type: 'chars' });
+      tl.fromTo(sc.chars, { opacity: 0, y: 40, scale: 0.4 }, { opacity: 1, y: 0, scale: 1, duration: 0.22, ease: 'back.out(2.5)', stagger: (c2('scratch') + 0.25 - tW) / sc.chars.length }, tW);
+
+      KIT.draw(tl, '#hook-main', c2('and') - 0.1, 0.5, { ease: 'power3.out' });
+      tl.fromTo('#hook-mdots circle', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.25, stagger: 0.05, ease: 'back.out(3)' }, c2('and'));
+      KIT.fade(tl, '#hook-up', c2('and') + 0.1);
+      KIT.draw(tl, '#hook-branch', c2('fixes') - 0.1, 0.45);
+      tl.fromTo('#hook-bdots circle', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.22, stagger: 0.07, ease: 'back.out(3)' }, c2('fixes') + 0.15);
+      KIT.rise(tl, '#hook-fix', c2('fixes') + 0.05, { y: 24 });
+      KIT.draw(tl, '#hook-merge', c2('were'), 0.3, { frac: 0.78 });
+      const tN = c2('never');
+      tl.fromTo('#hook-x', { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.16, ease: 'power2.out' }, tN - 0.05);
+      KIT.slam(tl, '#hook-stamp', tN, { from: 2.8, amp: 14, shakeTarget: '#hook-cam' });
+      tl.fromTo('#hook-stamp', { rotation: -2 }, { rotation: -8, duration: 0.25, ease: 'power3.out' }, tN);
+
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

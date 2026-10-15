@@ -1,0 +1,101 @@
+<template id="caveat-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #cv-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 820px; }
+    #cv-svg, #cv-svg2 { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #cv-ev { left: 362px; top: 300px; font-size: 28px; }
+    .cv-card { position: absolute; top: 420px; width: 290px; height: 112px; box-sizing: border-box; padding: 14px 16px; background: #0a2340; border: 4px solid var(--cyan);
+      font: 600 28px/1.15 "Mono", monospace; color: var(--white); white-space: normal; box-shadow: 8px 8px 0 var(--shadow); }
+    #cv-c1 { left: 70px; } #cv-c2 { left: 395px; } #cv-c3 { left: 720px; }
+    .cv-st { position: absolute; top: 560px; font-size: 40px; padding: 2px 16px; border-width: 5px; outline-width: 2px; outline-offset: -11px; }
+    #cv-s1 { left: 120px; } #cv-s2 { left: 445px; } #cv-s3 { left: 770px; }
+    #cv-fog { position: absolute; left: 160px; top: 690px; width: 740px; height: 110px; border: 5px dashed var(--dim); border-radius: 56px; background: rgba(106,169,208,.16);
+      font: 700 40px/100px "Mono", monospace; color: var(--cyan); text-align: center; }
+    #cv-unt { left: 0; top: 820px; width: 1080px; text-align: center; }
+    #cv-unt span { position: relative; display: inline-block; font-size: 64px; padding: 2px 24px; border-width: 7px; outline-width: 3px; outline-offset: -16px; }
+    #cv-sla { left: 300px; top: 1000px; font-size: 30px; }
+    #cv-wb { left: 120px; top: 1262px; font-size: 28px; padding: 4px 12px; }
+    #cv-nt { left: 480px; top: 1262px; }
+    #cv-nt span { position: relative; display: inline-block; font-size: 64px; padding: 2px 24px; border-width: 7px; outline-width: 3px; outline-offset: -16px; }
+    #cv-chips { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #cv-chip { left: 60px; top: 170px; font-size: 30px; }
+    #cv-src { left: 60px; top: 1400px; font-size: 26px; color: var(--dim); }
+    #cv-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="caveat" data-width="1080" data-height="1920">
+    <div id="cv-cam"><div id="cv-shk" class="fill">
+      <svg id="cv-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="cv-ev" class="tag" data-bind="l13.ev"></div>
+      <div id="cv-c1" class="cv-card" data-bind="l13.c1"></div>
+      <div id="cv-c2" class="cv-card" data-bind="l13.c2"></div>
+      <div id="cv-c3" class="cv-card" data-bind="l13.c3"></div>
+      <div id="cv-s1" class="stamp amber cv-st" data-bind="l13.stamp"></div>
+      <div id="cv-s2" class="stamp amber cv-st" data-bind="l13.stamp"></div>
+      <div id="cv-s3" class="stamp amber cv-st" data-bind="l13.stamp"></div>
+      <div id="cv-fog" data-bind="l13.fog"></div>
+      <div id="cv-unt" class="abs"><span class="stamp amber" data-bind="l13.unt"></span></div>
+      <svg id="cv-svg2" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="cv-sla" class="tag" data-bind="l13.sla"></div>
+      <div id="cv-wb" class="tag cyan" data-bind="l13.wb"></div>
+      <div id="cv-nt" class="abs"><span class="stamp amber" data-bind="l13.nt"></span></div>
+    </div></div>
+    <div id="cv-chips">
+      <div id="cv-chip" class="tag cyan" data-bind="l13.chip"></div>
+      <div id="cv-src" class="lbl" data-bind="l13.src"></div>
+    </div>
+    <div id="cv-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l13', w, n), D = KIT.sceneDur('caveat');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('cv-svg'), svg2 = document.getElementById('cv-svg2'), E = (tag, at, p) => KIT.svgEl(tag, at, p || svg);
+      const pulse = (t, o = 0.18) => tl.fromTo('#cv-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // ---- "Every task had an automatic evaluator": the inspector booth stamps each task card ----
+      const booth = E('g', { id: 'cv-booth' });
+      E('rect', { x: 330, y: 272, width: 420, height: 112, fill: '#123a62', stroke: '#f2f8ff', 'stroke-width': 6 }, booth);
+      E('path', { d: 'M310 272 L540 240 L770 272 Z', fill: '#3d78a6', stroke: '#f2f8ff', 'stroke-width': 5 }, booth);
+      tl.fromTo('#cv-cam', { scale: 1.06 }, { scale: 1, duration: 1, ease: 'power3.out' }, 0);
+      tl.fromTo(booth, { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: 0.4, ease: 'back.out(1.6)' }, 0.02);
+      KIT.pop(tl, '#cv-ev', c('automatic') - 0.1, { from: 0.5 });
+      KIT.rise(tl, '#cv-chip', c('Every') - 0.1, { x: -40, y: 0 });
+      KIT.rise(tl, ['#cv-c1', '#cv-c2', '#cv-c3'], c('task') - 0.2, { y: 40, stagger: 0.1 });
+      pulse(0.05, 0.12); pulse(c('task'), 0.12);
+      ['#cv-s1', '#cv-s2', '#cv-s3'].forEach((s, i) => {
+        tl.fromTo(s, { opacity: 0, scale: 2.2, rotation: -14 }, { opacity: 1, scale: 1, rotation: -6, duration: 0.16, ease: 'power4.in' }, c('score') - 0.1 + i * 0.16);
+        KIT.shake(tl, '#cv-shk', c('score') + 0.06 + i * 0.16, { amp: 7, dur: 0.15 });
+      });
+      pulse(c('score'));
+      // "Vague or slow goals remain untested": a fog card drifts in, gets no stamp
+      tl.to('#cv-cam', { scale: 1.05, y: 0, duration: 0.5, ease: 'power3.out' }, c('score') + 0.1);
+      tl.fromTo('#cv-fog', { opacity: 0, x: 260 }, { opacity: 1, x: 0, duration: 0.45, ease: 'power2.out' }, c('score') + 0.15);
+      tl.to('#cv-fog', { x: -16, duration: 0.8, ease: 'sine.inOut', yoyo: true, repeat: 1 }, c('score') + 0.6);
+      
+      KIT.slam(tl, '#cv-unt span', c('score') + 0.5, { from: 2.2, shakeTarget: '#cv-shk', amp: 10 });
+      pulse(c('score') + 0.55);
+      // "No test let SLA agents keep their conversations": a robot with its wheelbarrow, inside a dashed outline
+      const box = E('rect', { id: 'cv-box', x: 80, y: 950, width: 830, height: 430, rx: 18, class: 'ln dim thick dash' }, svg2);
+      const rob = E('g', { id: 'cv-rob' }, svg2);
+      KIT.robot(rob, { id: 'cv-r', x: 230, y: 1000, s: 0.6, eye: '#a8dcf2' });
+      const barrow = E('g', { id: 'cv-barrow' }, svg2);
+      E('path', { d: 'M280 1130 L340 1145', stroke: '#f2f8ff', 'stroke-width': 8, 'stroke-linecap': 'round' }, barrow);
+      for (let k = 0; k < 5; k++) E('rect', { x: 380 + (k % 2) * 12, y: 1110 - k * 26, width: 180, height: 20, rx: 9, fill: k % 2 ? '#a8dcf2' : '#f2f8ff' }, barrow);
+      E('path', { d: 'M340 1130 L650 1130 L605 1190 L385 1190 Z', fill: '#3d78a6', stroke: '#f2f8ff', 'stroke-width': 5 }, barrow);
+      const wheel = E('circle', { id: 'cv-wheel', cx: 495, cy: 1215, r: 26, fill: '#071d35', stroke: '#f2f8ff', 'stroke-width': 6 }, barrow);
+      tl.to('#cv-cam', { scale: 1.03, y: 0, x: -10, duration: 0.4, ease: 'power3.inOut' }, c('No') + 0.12);
+      KIT.draw(tl, box, c('No'), 0.5);
+      tl.fromTo([rob, barrow, '#cv-wb'], { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 0.45, ease: 'power3.out' }, c('test'));
+      tl.fromTo(wheel, { rotation: -200, svgOrigin: '495 1215' }, { rotation: 0, svgOrigin: '495 1215', duration: 0.45, ease: 'power3.out' }, c('test'));
+      KIT.pop(tl, '#cv-sla', c('these') - 0.05, { from: 0.4 });
+      pulse(c('test'), 0.12);
+      tl.to(barrow, { rotation: 3, svgOrigin: '495 1190', duration: 0.18, yoyo: true, repeat: 3, ease: 'sine.inOut' }, c('keep'));
+      KIT.slam(tl, '#cv-nt span', c('conversations') - 0.1, { from: 2.2, shakeTarget: '#cv-shk', amp: 12 });
+      pulse(c('conversations'));
+      KIT.fade(tl, '#cv-src', c('conversations') + 0.2, { to: 0.9 });
+      tl.to('#cv-cam', { scale: 1.01, x: 0, y: 0, duration: D - c('conversations') - 0.1, ease: 'sine.inOut' }, c('conversations') + 0.3);
+      window.__timelines["caveat"] = tl;
+    })();
+  </script>
+</template>

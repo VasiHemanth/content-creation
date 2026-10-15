@@ -1,0 +1,86 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 960px; }
+    #hook-tag { left: 60px; top: 150px; font-size: 28px; }
+    #hook-bigs { position: absolute; left: 0; top: 0; width: 1080px; height: 740px; transform-origin: 540px 400px; }
+    .hook-big { position: absolute; left: 0; width: 1080px; text-align: center; font: 400 82px/1 "Marker", sans-serif; color: var(--white); white-space: nowrap; text-shadow: 7px 7px 0 var(--shadow); }
+    #hook-b1 { top: 250px; }
+    #hook-b2 { top: 352px; }
+    #hook-b3 { top: 454px; color: var(--amber); }
+    .hook-panel { position: absolute; top: 690px; width: 460px; height: 590px; border: 4px solid; background: rgba(7, 29, 53, 0.72); box-shadow: 10px 10px 0 var(--shadow); }
+    #hook-pS { left: 60px; border-color: var(--mint); }
+    #hook-pL { left: 560px; border-color: var(--coral); }
+    #hook-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #hook-n1 { left: 96px; top: 1210px; color: var(--mint); border-color: var(--mint); }
+    #hook-n2 { left: 596px; top: 1210px; }
+    .hook-card { position: absolute; width: 84px; height: 84px; border: 4px solid var(--cyan); border-radius: 8px; background: conic-gradient(var(--cyan) 25%, transparent 0 50%, var(--cyan) 0 75%, transparent 0) 0 0 / 42px 42px; }
+    #hook-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam">
+      <div id="hook-tag" class="tag cyan" data-bind="l01.tag"></div>
+      <div id="hook-bigs">
+        <div id="hook-b1" class="hook-big" data-bind="l01.b1"></div>
+        <div id="hook-b2" class="hook-big" data-bind="l01.b2"></div>
+        <div id="hook-b3" class="hook-big" data-bind="l01.b3"></div>
+      </div>
+      <div id="hook-pS" class="hook-panel"></div>
+      <div id="hook-pL" class="hook-panel"></div>
+      <svg id="hook-svg" class="ink sketch" viewBox="0 0 1080 1920">
+        <rect class="ln dim thick" x="436" y="720" width="46" height="440" />
+        <rect class="ln dim thick" x="936" y="720" width="46" height="440" />
+        <rect id="hook-fS" class="fl mint" x="438" y="722" width="42" height="436" />
+        <rect id="hook-fL" class="fl coral" x="938" y="722" width="42" height="436" />
+      </svg>
+      <div id="hook-n1" class="tag" data-bind="l01.n1"></div>
+      <div id="hook-n2" class="tag coral" data-bind="l01.n2"></div>
+      <div id="hook-piles"></div>
+    </div>
+    <div id="hook-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l01', w, n);
+      KIT.bind('#hook-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t) => tl.fromTo('#hook-flash', { opacity: 0.2 }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // the two models: same drawing, one eye colour each (Sol green, Luna red)
+      const S = KIT.robot('#hook-svg', { id: 'hkS', x: 200, y: 770, s: 1.0, eye: '#7be3b0' });
+      const L = KIT.robot('#hook-svg', { id: 'hkL', x: 700, y: 770, s: 1.0, eye: '#ff6b6b' });
+
+      // the same stack of four game cards for each model (checker faces), dropped on the cue "same"
+      const piles = document.getElementById('hook-piles'), cards = [];
+      [[300, 'S'], [800, 'L']].forEach(([x0, who]) => {
+        for (let k = 0; k < 4; k++) {
+          const d = document.createElement('div'); d.className = 'hook-card'; d.id = `hook-c${who}${k}`;
+          d.style.left = `${x0 + (k % 2) * 8}px`; d.style.top = `${1096 - k * 22}px`; d.style.zIndex = String(10 + k);
+          piles.appendChild(d); cards.push([d, who, k]);
+        }
+      });
+
+      // 0.0 s: the claim in big type is already on screen at full opacity; it only settles in scale
+      tl.fromTo('#hook-bigs', { scale: 1.08 }, { scale: 1, duration: 0.3, ease: 'power2.out' }, 0);
+      pulse(0.04);
+      tl.fromTo(['#hook-pS', '#hook-pL', '#hook-svg', '#hook-n1', '#hook-n2'], { y: 46 }, { y: 0, duration: 0.4, ease: 'power3.out', stagger: 0.04 }, 0.05);
+      // the score bars start where Fig. 1 starts the two models: Luna below Sol
+      tl.fromTo('#hook-fS', { scaleY: 0.18, svgOrigin: '459 1160' }, { scaleY: 0.56, svgOrigin: '459 1160', duration: 1.0, ease: 'power3.out' }, c('improves'));
+      tl.fromTo('#hook-fL', { scaleY: 0.07, svgOrigin: '959 1160' }, { scaleY: 0.045, svgOrigin: '959 1160', duration: 1.0, ease: 'power2.out' }, c('improves'));
+
+      cards.forEach(([d, who, k]) => tl.fromTo(d, { y: -380, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: 'bounce.out' }, c('same') + k * 0.11 + (who === 'L' ? 0.05 : 0)));
+      pulse(c('same'));
+      KIT.shake(tl, '#hook-cam', c('same') + 0.55, { amp: 8, dur: 0.25 });
+
+      pulse(c('Only'));
+      pulse(c('improves'));
+      tl.to('#hkS', { y: -16, duration: 0.18, yoyo: true, repeat: 1, ease: 'power2.out' }, c('improves'));
+      tl.to('#hkL', { y: 10, duration: 0.4, ease: 'power2.out' }, c('improves'));
+      tl.to(L.eyes, { opacity: 0.3, duration: 0.4 }, c('improves'));
+      KIT.shake(tl, '#hook-cam', c('improves') + 0.2, { amp: 10, dur: 0.3 });
+      tl.fromTo('#hook-cam', { scale: 1 }, { scale: 1.035, duration: KIT.sceneDur('hook'), ease: 'sine.inOut', immediateRender: false }, 0.3);
+
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

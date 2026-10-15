@@ -1,0 +1,64 @@
+{
+ "note": "ContextEvo (arXiv 2609.34649v1, submitted 2026-09-28). Headline numbers on screen: 0.417, 0.370 and 0.448, the average Long-Horizon-Terminal-Bench (LHTB) task score (mean partial reward per task, 0 to 1, App. A.2 eq. 7) over all 46 tasks, including the 20 held-in tasks the skills and the policy were learned from, for the Pi-agent baseline, the skill-only arm and ContextEvo after one evolution round (sec 6.1, Table 3). Each task is attempted once (App. A.2). Authors' runs. Sec 6.1 names no model; the values equal the DeepSeek-V4-Flash LHTB 'All' entries of Table 2 (41.7, iter-1 44.8). No model is named on screen. All three are measured averages, never per-task claims.",
+ "paper": "llm-wiki/raw/sources/arxiv-2609-34649.md, PDF at llm-wiki/raw/assets/2609.34649/paper-v1.pdf",
+ "numbers": {
+  "0.417": "LHTB-46 average task score of the starting Pi-agent harness (sec 6.1 p.7 'skill-only reward falls from 0.417 to 0.370'; Table 3 'Baseline (Pi) 0.417'; same value as Table 2 Pi-agent LHTB All 41.7). One run per task (App. A.2). On screen in results (l10) and as the hook/close meter's start tick.",
+  "0.370": "LHTB-46 average task score of the skill-only arm: procedural skills derived from the same held-in LHTB tasks (following Zhang et al. 2026a), context-policy generation off (sec 6.1 p.7; Table 3 'Skill-only 0.370'; App. C.1 p.23). On screen in results (l10); drawn as the hook meter's lowered level.",
+  "0.448": "LHTB-46 average task score of ContextEvo after one evolution round (sec 6.1 p.7 'CONTEXTEVO reaches 0.448'; Table 3; same value as Table 2 iter-1 LHTB All 44.8). On screen in results (l11); drawn as the hook meter's raised level.",
+  "2609.34649": "arXiv id in the closing credit"
+ },
+ "evidence_incidental": {
+  "46": "Visible in receipt R2 (p.7, sec 6.1): 'Across 46 tasks' = all LHTB tasks (Table 6: 20 held-in, 26 held-out). Not narrated; the chart says 'all tasks'.",
+  "3": "Visible in receipt R2: '(Table 3)'.",
+  "8.57": "Visible in receipt R2: baseline mean tokens per run, 8.57M (Table 3). Drawn (not printed) as the first token stack.",
+  "9.61": "Visible in receipt R2: skill-only mean tokens per run, 9.61M (Table 3). Drawn (not printed) as the second token stack.",
+  "7.52": "Visible in receipt R2: ContextEvo mean tokens per run, 7.52M (Table 3). Drawn (not printed) as the third token stack; basis for 'uses fewer tokens on average'.",
+  "0.419": "Visible in receipt R2: ContextEvo plus skills scores 0.419 (Table 3). Not narrated.",
+  "9.69": "Visible in receipt R2: ContextEvo plus skills mean tokens 9.69M (Table 3). Not narrated."
+ },
+ "drawn": {
+  "l04._read / l04._runs": "20 of 44 inspectable skill-only trajectories read a skill body (sec 6.1, p.7-8). The run-chip grid has _runs chips, _read of them open; the counts are never printed. 'In over half the skill runs, the agent never opened a skill' = 24 of 44.",
+  "l10._tok1 / l10._tok2 / l11._tok3": "Mean tokens per run 8.57M, 9.61M, 7.52M (Table 3). Token stacks on a zero-based scale, not printed.",
+  "l12._in / l12._out": "LHTB held-in / held-out split 20 / 26 (Table 6, p.15). Sets the proportion of task cards in each group of the caveat drawing; not printed.",
+  "meter and bar heights": "Hook/close meter and results bars use the printed values 0.417, 0.370, 0.448 on a scale from 0 (no axis break) to 0.5 (not printed)."
+ },
+ "claims": {
+  "l01": "Sec 6.1 and Table 3: the skill-only arm (skills derived from runs on the same held-in LHTB tasks, 'following recent trajectory-driven harness evolution') averages 0.370 against the starting harness's 0.417 on all 46 LHTB tasks; App. C.1 describes the arm. Kicker 'on long tasks': one benchmark of long-horizon terminal workflows.",
+  "l02": "Sec 6.1 and Table 3: ContextEvo, which evolves the context policy from the same held-in runs with the same harness and model, averages 0.448. Sec 3.2: the context policy governs how information is presented, maintained and shared, and produces the model-visible context.",
+  "l03": "Abstract (p.1), word for word: 'useful evidence can be buried by redundant or outdated context'. Receipt R1.",
+  "l04": "Sec 6.1 (p.7-8): 'only 20 of 44 inspectable skill-only trajectories read a skill body'. 'Never opened a skill' = never read a skill body; 24 of 44 is over half.",
+  "l05": "Sec 3.2: the context policy P produces the model-visible context c_t = P(I<=t). Sec 3.1: 'the base model M remains fixed, while the harness H evolves'. Screen controls: Table 1 roles (context entry preparation; historical context management; context access and sharing across agents and subtasks) and Table 11 intervention points (observation entry; memory writer and retriever; parent-to-child dispatch and child-to-parent return).",
+  "l06": "Sec 4 and 4.1: ContextEvo learns the policy from held-in execution trajectories; the paginated review reviews the trajectory in segments called pages while reconstructing the model-visible context, and keeps a running note of task progress, unresolved events and context changes. 'open items' paraphrases 'unresolved events' (Table 14 uses 'open items').",
+  "l07": "Sec 4.2 eq. 5: failure type b in {missing, degraded, buried, polluted}. Sec 4.1: the review distinguishes failures that may instead arise from the model, tools or environment; the judge prompt (App. B.2) rejects explanations attributable to model capability. The 'buried' stamp landing on the page illustrates one case, not a share of cases.",
+  "l08": "Sec 4.2 eq. 4: counterfactual replay holds the execution prefix fixed, edits only the model-visible context at one decision point, and compares sampled next actions under the original and edited context. 'Can' because replay is used when the observed evidence does not resolve the attribution. The '?' is never answered: replay measures only local next-action sensitivity (sec 7).",
+  "l09": "Sec 4.2: an attribution is retained only when the evidence (cross-case comparison, replay) distinguishes failed from successful executions. Sec 4.3 eq. 6: if the evidence does not support an update, the update is empty and the policy stays the same; App. B.2: the editor may commit an empty changeset. Card line 'keep a record of verified facts': App. C.5, the LHTB policy keeps 'a bounded record of verified facts, unresolved items, and recovery paths'.",
+  "l10": "Sec 6.1 and Table 3: skill-only reward falls from 0.417 to 0.370 across 46 LHTB tasks. Receipt R2. The chart subtitle states the averages include the tasks it learned from.",
+  "l11": "Sec 6.1 and Table 3: ContextEvo reaches 0.448 with 7.52M mean tokens per run, against 8.57M (baseline) and 9.61M (skill-only).",
+  "l12": "App. A.2 (p.16): 'Each task is attempted once'. Conclusion (p.9): 'the selected policies improve several full-benchmark point estimates over the Pi-agent baseline, while held-out changes vary by setting'. Receipt R3. 'Setting' = benchmark and model pair (sec 5.1 'benchmark-model setting').",
+  "l13": "Takeaway; adds no claim."
+ },
+ "labels": {
+  "score (hook and close meter)": "The paper's task score: LHTB reports a mean partial reward per task (App. A.2 eq. 7); sec 6.1 and Table 3 call it reward. The meter shows the same three values as the results chart.",
+  "start (meter tick, chart line)": "The starting Pi-agent harness, 0.417 (Table 3 'Baseline (Pi)').",
+  "log / file / tool output / evidence (message bubbles)": "Sec 3.2: information entering the system includes task instructions, observations and tool outputs; the abstract and sec 6.1 speak of evidence. Schematic only.",
+  "entry / history / sharing (policy controls)": "Table 1 roles: context entry preparation, historical context management, context access and sharing across agents and subtasks.",
+  "sub-agent": "Figure 2 ('Subagent'); Table 11 points 7-8 (parent-to-child context dispatch, child-to-parent result return); Table 1 'across agents and subtasks'.",
+  "same model": "Sec 3.1: 'the base model M remains fixed, while the harness H evolves'.",
+  "running note / progress / open items / context changes": "Sec 4.1: the reviewer keeps a running note of task progress, unresolved events and relevant context changes; 'open items' follows Table 14.",
+  "what the model saw": "Sec 4.1: paginated review reconstructs the model-visible context at decision points.",
+  "missing / degraded / buried / polluted": "Sec 4.2 eq. 5, failure types b.",
+  "model's own mistake / context": "Sec 4.1 (failures from the model, tools or environment are separated); App. B.2 judge prompt (reject explanations attributable to model capability).",
+  "fixed / not run / edited context / before / after": "Sec 4.2 eq. 4: the execution prefix is held fixed, only the context at decision t is edited, and next actions are compared under the original and edited context; later steps are not executed.",
+  "compare runs / replay": "Sec 4.2: cross-case comparison of successful and failed trajectories, and counterfactual replay.",
+  "keep a record of verified facts": "App. C.5: the LHTB policy keeps 'a bounded record of verified facts, unresolved items, and recovery paths'.",
+  "no edit": "Sec 4.3 eq. 6 and App. B.2: an empty changeset leaves the policy unchanged.",
+  "starting agent / with skills / ContextEvo": "Table 3 rows Baseline (Pi), Skill-only, CONTEXTEVO.",
+  "mean tokens per run": "Table 3 caption: 'Reward and mean token usage per run'.",
+  "fewer tokens, on average": "Table 3: 7.52M against 8.57M and 9.61M mean tokens per run.",
+  "average score · all tasks, including the ones it learned from": "Sec 6.1 'Across 46 tasks'; Table 6: 20 of the 46 LHTB tasks are held-in (the tasks it learned from).",
+  "learned from / did not learn from / held-out = tasks it did not learn from": "Sec 5.1 and Table 6: held-in tasks feed evolution, held-out tasks are reserved for evaluation.",
+  "setting = benchmark + model": "Sec 5.1: 'Within each benchmark-model setting'.",
+  "ran once": "App. A.2: 'Each task is attempted once'.",
+  "one limit": "Caveat line l12."
+ }
+}

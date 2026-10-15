@@ -1,0 +1,37 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/anthropic-scion/article-print-clean.pdf",
+ "note": "Receipts: real crops of the saved Chrome print of the Anthropic article (article-print-clean.pdf, 18 pages). Page numbers checked against article-print-clean-text.txt. Every number readable in a crop must be in facts.json (numbers or evidence_incidental); qa checks it.",
+ "items": [
+  {
+   "id": "checkouts",
+   "page": 3,
+   "context": [0, 0],
+   "scale": 7,
+   "circle": ["25"],
+   "find": ["25 million code checkouts per day for CI"]
+  },
+  {
+   "id": "online",
+   "page": 3,
+   "context": [1, 0],
+   "scale": 7,
+   "circle": ["online"],
+   "find": ["agents and jobs that are online by definition"]
+  },
+  {
+   "id": "footprint",
+   "page": 8,
+   "context": [0, 0],
+   "scale": 7,
+   "circle": ["200x"],
+   "find": ["Our Scion infrastructure footprint is", "200x smaller than our previous git mirroring infrastructure"]
+  },
+  {
+   "id": "enormous",
+   "page": 12,
+   "context": [1, 0],
+   "scale": 7,
+   "find": ["only make sense for truly enormous monorepos"]
+  }
+ ]
+}

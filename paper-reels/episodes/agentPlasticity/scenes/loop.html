@@ -1,0 +1,245 @@
+<template id="loop-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #loop-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 860px; }
+    #loop-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    .loop-gt { left: 420px; font-size: 34px; }
+    .loop-rl { left: 420px; font-size: 30px; }
+    #loop-note { left: 70px; top: 1384px; font-size: 32px; }
+    #loop-stackl { left: 60px; top: 1000px; font-size: 30px; }
+    #loop-wrote { left: 60px; top: 1090px; width: 340px; font-size: 30px; line-height: 1.25; white-space: normal; color: var(--amber); }
+    #loop-src4 { left: 60px; top: 1420px; font-size: 22px; color: var(--dim); }
+    #loop-src5 { left: 60px; top: 1440px; font-size: 22px; color: var(--dim); }
+    #loop-mag { position: absolute; left: 0; top: 0; width: 116px; height: 116px; box-sizing: border-box; border: 9px solid var(--amber); border-radius: 50%; background: rgba(168, 220, 242, 0.16); z-index: 30; }
+    #loop-magh { position: absolute; left: 92px; top: 100px; width: 62px; height: 14px; border-radius: 7px; background: var(--amber); transform: rotate(45deg); transform-origin: 0 50%; }
+    .loop-card { position: absolute; width: 580px; height: 330px; box-sizing: border-box; transform-origin: 0 0; }
+    #loop-prog { left: 430px; top: 660px; background: var(--deep); border: 4px solid var(--cyan); box-shadow: 10px 10px 0 var(--shadow); }
+    #loop-note2 { left: 430px; top: 1020px; background: var(--paper); border: 4px solid var(--ink); box-shadow: 10px 10px 0 var(--shadow); color: var(--ink); }
+    .loop-fn { position: absolute; left: 24px; top: 18px; font: 700 34px "Mono", monospace; }
+    .loop-kind { position: absolute; right: 22px; top: 20px; padding: 4px 14px; font: 700 26px "Mono", monospace; }
+    #loop-prog .loop-fn { color: var(--cyan); }
+    #loop-prog .loop-kind { color: var(--amber); border: 3px solid var(--amber); }
+    #loop-note2 .loop-fn { color: var(--ink); }
+    #loop-note2 .loop-kind { color: var(--ink); border: 3px solid var(--ink); }
+    .loop-code { position: absolute; left: 24px; height: 14px; border-radius: 7px; background: var(--faint); transform-origin: 0 50%; }
+    #loop-h1 { position: absolute; left: 24px; top: 84px; font: 400 48px/1 "Marker", sans-serif; color: #c0392b; white-space: nowrap; }
+    #loop-h2 { position: absolute; left: 24px; top: 148px; font: 400 42px/1 "Marker", sans-serif; color: var(--ink); white-space: nowrap; }
+    .loop-rule { position: absolute; left: 24px; height: 6px; border-radius: 3px; background: #9db8d3; }
+    #loop-jump { position: absolute; left: 0; top: 690px; width: 1080px; height: 96px; background: var(--amber); }
+    #loop-jumpt { left: 0; top: 700px; width: 1080px; text-align: center; font: 400 72px/1 "Marker", sans-serif; color: var(--deep); white-space: nowrap; }
+    .loop-bl { font-size: 26px; line-height: 1.25; white-space: normal; }
+    #loop-bef { left: 70px; top: 1196px; width: 320px; color: var(--coral); }
+    #loop-aft { left: 440px; top: 1290px; width: 580px; font-size: 33px; color: var(--mint); }
+    #loop-lockl { left: 74px; top: 286px; font-size: 26px; }
+    #loop-r1 { left: 78px; top: 590px; font-size: 28px; color: var(--white); }
+    #loop-r2 { left: 598px; top: 590px; font-size: 28px; color: var(--white); }
+    #loop-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="loop" data-width="1080" data-height="1920">
+    <div id="loop-cam">
+      <svg id="loop-svg" class="ink sketch" viewBox="0 0 1080 1920"></svg>
+      <div id="loop-gt0" class="tag loop-gt" style="top:310px" data-bind="l03.g1"></div>
+      <div id="loop-gt1" class="tag cyan loop-gt" style="top:690px" data-bind="l03.g2"></div>
+      <div id="loop-gt2" class="tag loop-gt" style="top:1070px" data-bind="l03.g3"></div>
+      <div id="loop-rl0" class="lbl loop-rl" style="top:395px" data-bind="l03.rnd"></div>
+      <div id="loop-rl1" class="lbl loop-rl" style="top:775px" data-bind="l03.rnd"></div>
+      <div id="loop-rl2" class="lbl loop-rl" style="top:1155px" data-bind="l03.rnd"></div>
+      <div id="loop-note" class="tag cyan" data-bind="l03.note"></div>
+
+      <div id="loop-stackl" class="lbl white" data-bind="l04.stack"></div>
+      <div id="loop-stack"></div>
+      <div id="loop-mag"><div id="loop-magh"></div></div>
+      <div id="loop-prog" class="loop-card">
+        <div class="loop-fn" data-bind="l04.fileA"></div><div class="loop-kind" data-bind="l04.kindA"></div>
+      </div>
+      <div id="loop-note2" class="loop-card">
+        <div class="loop-fn" data-bind="l04.fileB"></div><div class="loop-kind" data-bind="l04.kindB"></div>
+        <div id="loop-h1" data-bind="l04.h1"></div><div id="loop-h2" data-bind="l04.h2"></div>
+      </div>
+      <div id="loop-wrote" class="lbl" data-bind="l04.wrote"></div>
+      <div id="loop-src4" class="lbl" data-bind="l04.src"></div>
+
+      <div id="loop-lockl" class="tag cyan" data-bind="l05.lock"></div>
+      <div id="loop-r1" class="lbl" data-bind="l05.r1"></div>
+      <div id="loop-r2" class="lbl" data-bind="l05.r2"></div>
+      <div id="loop-jump"></div>
+      <div id="loop-jumpt" class="abs" data-bind="l05.jump"></div>
+      <div id="loop-bef" class="lbl loop-bl" data-bind="l05.before"></div>
+      <div id="loop-aft" class="lbl loop-bl" data-bind="l05.after"></div>
+      <div id="loop-src5" class="lbl" data-bind="l05.src"></div>
+    </div>
+    <div id="loop-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c3 = (w, n) => KIT.cue('l03', w, n), c4 = (w, n) => KIT.cue('l04', w, n), c5 = (w, n) => KIT.cue('l05', w, n), D = KIT.sceneDur('loop');
+      KIT.bind('#loop-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t) => tl.fromTo('#loop-flash', { opacity: 0.2 }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const svg = document.getElementById('loop-svg'), E = (tag, a, p) => KIT.svgEl(tag, a, p || svg);
+      const DARKSQ = 'rgba(61,120,166,0.62)', WHITE = '#f2f8ff', INK = '#071d35', SOL = '#7be3b0';
+
+      // ---------- helpers: boards and pieces (all drawn, no text) ----------
+      function board(id, x, y, S) {
+        const g = E('g', { id }), q = S / 8;
+        E('rect', { x, y, width: S, height: S, fill: 'rgba(7,29,53,0.92)', stroke: WHITE, 'stroke-width': 4 }, g);
+        for (let r = 0; r < 8; r++) for (let k = 0; k < 8; k++) if ((r + k) % 2 === 1) E('rect', { x: x + k * q, y: y + r * q, width: q, height: q, fill: DARKSQ }, g);
+        return { g, x, y, q, S };
+      }
+      function hilite(B, id, col, row, color) {
+        return E('rect', { id, x: B.x + col * B.q, y: B.y + row * B.q, width: B.q, height: B.q, fill: color, opacity: 0 }, B.g);
+      }
+      const SHAPES = {
+        p: ['<circle cx="50" cy="32" r="14"/>', '<path d="M34 80 Q34 56 50 50 Q66 56 66 80 Z"/>', '<rect x="28" y="80" width="44" height="10" rx="3"/>'],
+        r: ['<path d="M30 20 H40 V30 H46 V20 H54 V30 H60 V20 H70 V44 L64 52 V72 L72 82 V90 H28 V82 L36 72 V52 L30 44 Z"/>'],
+        b: ['<path d="M50 14 C68 28 68 44 50 54 C32 44 32 28 50 14 Z"/>', '<path d="M38 80 Q38 62 50 56 Q62 62 62 80 Z"/>', '<rect x="28" y="80" width="44" height="10" rx="3"/>'],
+        q: ['<path d="M28 38 L32 18 L42 32 L50 14 L58 32 L68 18 L72 38 Q66 50 66 60 L72 80 V90 H28 V80 L34 60 Q34 50 28 38 Z"/>'],
+        k: ['<path d="M34 46 Q50 32 66 46 Q60 58 66 70 L72 80 V90 H28 V80 L34 70 Q40 58 34 46 Z"/>', '<path d="M50 8 V30 M40 18 H60" fill="none"/>'],
+      };
+      function piece(B, id, type, side, col, row) {
+        const g = E('g', { id }), fill = side === 's' ? SOL : side === 'd' ? '#0a2340' : WHITE, stroke = side === 'd' ? WHITE : INK;
+        const inner = E('g', { transform: `scale(${B.q / 100})`, fill, stroke, 'stroke-width': 5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, g);
+        inner.innerHTML = SHAPES[type].join('');
+        gsap.set(g, { x: B.x + col * B.q, y: B.y + row * B.q });
+        return { g, B, col, row };
+      }
+      const slide = (P, col, row, t, d = 0.35) => { tl.to(P.g, { x: P.B.x + col * P.B.q, y: P.B.y + row * P.B.q, duration: d, ease: 'power2.inOut' }, t); };
+      const rows = [290, 670, 1050];
+
+      // ---------- l03: three games, each with its own row of round dots ----------
+      const chess = board('loop-bd0', 70, rows[0], 300);
+      const cw = [piece(chess, 'loop-w1', 'k', 'w', 4, 7), piece(chess, 'loop-w2', 'r', 'w', 7, 7), piece(chess, 'loop-w3', 'p', 'w', 4, 6), piece(chess, 'loop-w4', 'b', 'w', 2, 7), piece(chess, 'loop-w5', 'p', 'w', 3, 6)];
+      const cb = [piece(chess, 'loop-d1', 'k', 'd', 4, 0), piece(chess, 'loop-d2', 'q', 'd', 3, 0), piece(chess, 'loop-d3', 'p', 'd', 4, 1), piece(chess, 'loop-d4', 'r', 'd', 0, 0), piece(chess, 'loop-d5', 'p', 'd', 3, 1)];
+      // Go: 5 x 5 points, stones appear one by one
+      const go = E('g', { id: 'loop-bd1' }); E('rect', { x: 70, y: rows[1], width: 300, height: 300, fill: 'rgba(7,29,53,0.92)', stroke: WHITE, 'stroke-width': 4 }, go);
+      for (let k = 0; k < 5; k++) { const o = 45 + k * 52.5; E('path', { d: `M${70 + 45} ${rows[1] + o} H${70 + 255} M${70 + o} ${rows[1] + 45} V${rows[1] + 255}`, fill: 'none', stroke: '#6aa9d0', 'stroke-width': 3 }, go); }
+      const stonesAt = [[2, 2], [1, 2], [2, 1], [3, 2], [2, 3], [1, 1], [3, 3], [1, 3]];
+      const stones = stonesAt.map(([a, b], k) => E('circle', { id: `loop-st${k}`, cx: 70 + 45 + a * 52.5, cy: rows[1] + 45 + b * 52.5, r: 19, fill: k % 2 ? '#0a2340' : WHITE, stroke: k % 2 ? WHITE : INK, 'stroke-width': 3, opacity: 0 }, go));
+      // Hex: 6 x 6 cells in a rhombus
+      const hx = E('g', { id: 'loop-bd2' }); E('rect', { x: 70, y: rows[2], width: 300, height: 300, fill: 'rgba(7,29,53,0.92)', stroke: WHITE, 'stroke-width': 4 }, hx);
+      const rr = 20, ww = Math.sqrt(3) * rr, hexCells = [];
+      for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) {
+        const cx = 70 + 20 + ww * (j + i / 2), cy = rows[2] + 75 + 1.5 * rr * i, pts = [];
+        for (let a = 0; a < 6; a++) { const th = (-90 + 60 * a) * Math.PI / 180; pts.push(`${(cx + rr * Math.cos(th)).toFixed(1)},${(cy + rr * Math.sin(th)).toFixed(1)}`); }
+        hexCells.push(E('polygon', { points: pts.join(' '), fill: 'rgba(61,120,166,0.18)', stroke: '#6aa9d0', 'stroke-width': 2 }, hx));
+      }
+      const hexFill = [14, 15, 21, 20, 27, 26, 8, 33];   // cells that take a colour as the dots fill
+      // dots: each row fills on its own clock
+      const dots = rows.map((y0, k) => Array.from({ length: 8 }, (_, i) => E('circle', { id: `loop-dot${k}-${i}`, cx: 440 + 68 * i, cy: y0 + 220, r: 15, fill: '#a8dcf2', 'fill-opacity': 0, stroke: '#a8dcf2', 'stroke-width': 3 })));
+      const rowT = [c3('chess'), c3('Go'), c3('Hex')], step = [0.27, 0.31, 0.22], t1 = [c3('chess') + 0.25, c3('Go') + 0.25, c3('Hex') + 0.25];
+
+      [0, 1, 2].forEach((k) => { const g = ['#loop-bd0', '#loop-bd1', '#loop-bd2'][k]; tl.fromTo(g, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 0.1 + 0.12 * k); });
+      [0, 1, 2].forEach((k) => { KIT.pop(tl, `#loop-gt${k}`, rowT[k], { from: 0.4 }); KIT.rise(tl, `#loop-rl${k}`, rowT[k] + 0.15, { y: 14 }); });
+      // dots fill row by row; each fill is one move on that board
+      const chessMoves = [[cw[2], 4, 4], [cb[2], 4, 3], [cw[3], 5, 4], [cb[1], 7, 4], [cw[4], 3, 5], [cb[4], 3, 2], [cw[1], 4, 6], [cb[3], 1, 0]];
+      dots[0].forEach((d, i) => {
+        const t = t1[0] + i * step[0];
+        tl.fromTo(d, { fillOpacity: 0, scale: 0.6, svgOrigin: `${440 + 68 * i} ${rows[0] + 220}` }, { fillOpacity: 1, scale: 1, svgOrigin: `${440 + 68 * i} ${rows[0] + 220}`, duration: 0.22, ease: 'back.out(3)' }, t);
+        const [P, col, row] = chessMoves[i]; slide(P, col, row, t, 0.25);
+      });
+      dots[1].forEach((d, i) => {
+        const t = t1[1] + i * step[1];
+        tl.fromTo(d, { fillOpacity: 0, scale: 0.6, svgOrigin: `${440 + 68 * i} ${rows[1] + 220}` }, { fillOpacity: 1, scale: 1, svgOrigin: `${440 + 68 * i} ${rows[1] + 220}`, duration: 0.22, ease: 'back.out(3)' }, t);
+        tl.fromTo(stones[i], { opacity: 0, scale: 0.3, svgOrigin: `${70 + 45 + stonesAt[i][0] * 52.5} ${rows[1] + 45 + stonesAt[i][1] * 52.5}` }, { opacity: 1, scale: 1, svgOrigin: `${70 + 45 + stonesAt[i][0] * 52.5} ${rows[1] + 45 + stonesAt[i][1] * 52.5}`, duration: 0.2, ease: 'back.out(3)' }, t);
+      });
+      dots[2].forEach((d, i) => {
+        const t = t1[2] + i * step[2];
+        tl.fromTo(d, { fillOpacity: 0, scale: 0.6, svgOrigin: `${440 + 68 * i} ${rows[2] + 220}` }, { fillOpacity: 1, scale: 1, svgOrigin: `${440 + 68 * i} ${rows[2] + 220}`, duration: 0.22, ease: 'back.out(3)' }, t);
+        tl.to(hexCells[hexFill[i]], { fill: i % 2 ? 'rgba(242,248,255,0.85)' : 'rgba(168,220,242,0.85)', duration: 0.2 }, t);
+      });
+      KIT.pop(tl, '#loop-note', c3('after'), { from: 0.5 });
+      pulse(c3('chess')); pulse(c3('Go')); pulse(c3('Hex')); pulse(c3('round', 1));
+
+      // ---------- l04: in chess, it reviews its games and writes a program and notes ----------
+      const t4 = c4('In');
+      tl.to(['#loop-bd1', '#loop-bd2', '#loop-gt1', '#loop-gt2', '#loop-rl1', '#loop-rl2', '#loop-note', ...dots[1], ...dots[2], ...stones, ...hexCells.map((h) => h)], { opacity: 0, duration: 0.3 }, t4 - 0.1);
+      // a stack of the round's games (HTML cards with a checker face) and a magnifier that reviews them
+      const stack = document.getElementById('loop-stack'), sc = [];
+      for (let k = 0; k < 4; k++) {
+        const d = document.createElement('div'); d.id = `loop-sc${k}`;
+        d.style.cssText = `position:absolute;left:${70 + k * 22}px;top:${860 - k * 24}px;width:210px;height:210px;border:5px solid #a8dcf2;border-radius:10px;background:conic-gradient(rgba(168,220,242,0.55) 25%, rgba(7,29,53,0.9) 0 50%, rgba(168,220,242,0.55) 0 75%, rgba(7,29,53,0.9) 0) 0 0 / 52px 52px;z-index:${k}`;
+        stack.appendChild(d); sc.push(d);
+      }
+      const mag = document.getElementById('loop-mag');
+      gsap.set(mag, { x: 120, y: 760, opacity: 0 });
+      sc.forEach((d, k) => tl.fromTo(d, { y: -300, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }, c4('it') + k * 0.1));
+      KIT.rise(tl, '#loop-stackl', c4('its'), { y: 14 });
+      tl.fromTo(mag, { opacity: 0 }, { opacity: 1, duration: 0.15 }, c4('reviews'));
+      tl.to(mag, { x: 250, y: 880, duration: 0.7, ease: 'sine.inOut' }, c4('reviews'));
+      tl.to(mag, { x: 110, y: 940, duration: 0.6, ease: 'sine.inOut' }, c4('reviews') + 0.7);
+      tl.to(sc, { borderColor: '#ffb454', duration: 0.2, stagger: 0.12 }, c4('games'));
+      tl.to(mag, { opacity: 0, duration: 0.25 }, c4('each'));
+      pulse(c4('reviews'));
+      // the dots of the chess row flicker once on "each round"
+      tl.to(dots[0], { opacity: 0.35, duration: 0.14, yoyo: true, repeat: 1, stagger: 0.04 }, c4('round'));
+      // the two cards land beside the stack: the program first, then the note with its whole heading
+      KIT.pop(tl, '#loop-prog', c4('writes'), { from: 0.5, origin: '0 0' });
+      const lines = [[24, 82, 330, 'var(--cyan)'], [24, 110, 250, 'var(--faint)'], [24, 138, 380, 'var(--faint)'], [24, 166, 190, 'var(--cyan)'], [24, 194, 300, 'var(--faint)'], [24, 222, 220, 'var(--faint)'], [24, 250, 340, 'var(--faint)']];
+      const prog = document.getElementById('loop-prog'), codeEls = lines.map(([x, y, w, col]) => { const d = document.createElement('div'); d.className = 'loop-code'; d.style.cssText = `left:${x}px;top:${y}px;width:${w}px;background:${col}`; prog.appendChild(d); return d; });
+      tl.fromTo(codeEls, { scaleX: 0 }, { scaleX: 1, duration: 0.25, stagger: 0.07, ease: 'power2.out' }, c4('program'));
+      KIT.pop(tl, '#loop-note2', c4('and', 1), { from: 0.5, origin: '0 0' });
+      const note = document.getElementById('loop-note2');
+      [[24, 232, 420], [24, 258, 360], [24, 284, 300]].forEach(([x, y, w]) => { const d = document.createElement('div'); d.className = 'loop-rule'; d.style.cssText = `left:${x}px;top:${y}px;width:${w}px`; note.appendChild(d); });
+      KIT.slam(tl, '#loop-h1', c4('notes') - 0.1, { from: 1.8, shake: false, origin: '0 50%' });
+      KIT.slam(tl, '#loop-h2', c4('notes') + 0.25, { from: 1.6, shake: false, origin: '0 50%' });
+      KIT.shake(tl, '#loop-cam', c4('notes') + 0.2, { amp: 9, dur: 0.25 });
+      KIT.rise(tl, '#loop-wrote', c4('program'), { y: 14 });
+      KIT.fade(tl, '#loop-src4', c4('notes'), { to: 0.8 });
+      pulse(c4('writes')); pulse(c4('notes'));
+
+      // ---------- l05: the model never changes, but each round starts with its programs and notes ----------
+      const t5 = c5('The');
+      tl.to(['#loop-bd0', ...cw.map((p) => p.g), ...cb.map((p) => p.g), '#loop-gt0', '#loop-rl0', ...dots[0], ...sc, '#loop-stackl', '#loop-wrote', '#loop-src4'], { opacity: 0, duration: 0.3 }, t5 - 0.15);
+      // two round cards with a model each; the padlock shuts on the first
+      const cardL = E('rect', { id: 'loop-rcL', x: 60, y: 270, width: 440, height: 360, rx: 10, class: 'ln cyan thick', fill: 'rgba(7,29,53,0.8)', opacity: 0 });
+      const cardR = E('rect', { id: 'loop-rcR', x: 580, y: 270, width: 440, height: 360, rx: 10, class: 'ln cyan thick', fill: 'rgba(7,29,53,0.8)', opacity: 0 });
+      const arr = E('path', { id: 'loop-arr', d: 'M512 450 H566 M566 450 L550 436 M566 450 L550 464', class: 'ln amber heavy', opacity: 0 });
+      const botL = KIT.robot('#loop-svg', { id: 'loopbL', x: 190, y: 392, s: 0.72, eye: '#a8dcf2' }), botR = KIT.robot('#loop-svg', { id: 'loopbR', x: 710, y: 392, s: 0.72, eye: '#a8dcf2' });
+      const lock = E('g', { id: 'loop-lock', opacity: 0 }); E('path', { d: 'M292 396 V372 a27 27 0 0 1 54 0 V396', fill: 'none', stroke: '#f2f8ff', 'stroke-width': 9, 'stroke-linecap': 'round' }, lock); E('rect', { x: 278, y: 394, width: 82, height: 62, rx: 10, fill: '#ffb454' }, lock); E('circle', { cx: 319, cy: 421, r: 8, fill: '#071d35' }, lock); E('rect', { x: 316, y: 425, width: 6, height: 18, rx: 3, fill: '#071d35' }, lock);
+      [botL.g, botR.g].forEach((g) => gsap.set(g, { opacity: 0 }));
+      tl.to([cardL, cardR, arr], { opacity: 1, duration: 0.3, stagger: 0.08 }, t5 - 0.05);
+      tl.to(botL.g, { opacity: 1, duration: 0.3 }, t5);
+      KIT.rise(tl, '#loop-lockl', c5('never'), { y: 14 });
+      tl.fromTo(lock, { y: -50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25, ease: 'bounce.out' }, c5('never'));
+      KIT.shake(tl, '#loop-cam', c5('never') + 0.2, { amp: 9, dur: 0.25 });
+      KIT.rise(tl, '#loop-r1', c5('never'), { y: 10 });
+      // the program and note cards shrink and ride to the next round
+      tl.to('#loop-prog', { scale: 0.22, x: -68, y: -224, duration: 0.5, ease: 'power3.inOut' }, c5('changes') - 0.1);
+      tl.to('#loop-note2', { scale: 0.22, x: -68, y: -494, duration: 0.5, ease: 'power3.inOut' }, c5('changes') - 0.05);
+      tl.to('#loop-prog', { x: 452, duration: 0.5, ease: 'power2.inOut' }, c5('but'));
+      tl.to('#loop-note2', { x: 452, duration: 0.5, ease: 'power2.inOut' }, c5('but') + 0.05);
+      tl.to(botR.g, { opacity: 1, duration: 0.3 }, c5('but'));
+      KIT.rise(tl, '#loop-r2', c5('but'), { y: 10 });
+      pulse(c5('never')); pulse(c5('but'));
+      // time jump, then one board from each of the two games of Fig. 14
+      tl.fromTo('#loop-jump', { clipPath: 'inset(0 100% 0 0)', opacity: 1 }, { clipPath: 'inset(0 0% 0 0)', duration: 0.3, ease: 'power3.out' }, c5('each'));
+      KIT.slam(tl, '#loop-jumpt', c5('each') + 0.15, { from: 1.5, shake: false });
+      const bf = board('loop-bdB', 70, 880, 290), af = board('loop-bdA', 440, 830, 440);
+      // before (first game, round 0): Sol, in green, is mated by a rook
+      const bfPieces = [['r', 'o', 6, 0], ['k', 'o', 3, 1], ['p', 'o', 7, 1], ['p', 'o', 2, 2], ['p', 'o', 5, 2], ['p', 'o', 1, 3], ['b', 'o', 3, 3], ['p', 'o', 0, 4], ['p', 's', 7, 2], ['p', 's', 5, 3], ['p', 's', 3, 4], ['p', 's', 0, 5], ['p', 's', 1, 6], ['k', 's', 7, 6]].map(([t, s, c, r], i) => piece(bf, `loop-bp${i}`, t, s, c, r));
+      const rookMate = piece(bf, 'loop-bpR', 'r', 'o', 5, 4);
+      const bfFrom = hilite(bf, 'loop-bhF', 5, 4, '#cdd16f'), bfTo = hilite(bf, 'loop-bhT', 7, 4, '#cdd16f'), bfK = hilite(bf, 'loop-bhK', 7, 6, '#c8553d');
+      // after (second game, a later round): Sol's program plays every move, and Sol mates
+      const afPieces = [['b', 's', 2, 0], ['b', 's', 5, 2], ['k', 's', 0, 5], ['p', 's', 2, 4], ['p', 's', 3, 4], ['p', 's', 1, 6], ['k', 'o', 0, 3], ['p', 'o', 0, 1], ['p', 'o', 1, 2], ['p', 'o', 7, 2], ['p', 'o', 2, 3], ['p', 'o', 3, 3]].map(([t, s, c, r], i) => piece(af, `loop-ap${i}`, t, s, c, r));
+      const queen = piece(af, 'loop-apQ', 'q', 's', 4, 0);
+      const afFrom = hilite(af, 'loop-ahF', 4, 0, '#cdd16f'), afTo = hilite(af, 'loop-ahT', 1, 3, '#cdd16f'), afK = hilite(af, 'loop-ahK', 0, 3, '#c8553d');
+      const bGroups = [bf.g, ...bfPieces.map((p) => p.g), rookMate.g, af.g, ...afPieces.map((p) => p.g), queen.g];
+      bGroups.forEach((g) => gsap.set(g, { opacity: 0 }));
+      const beforeSet = [bf.g, ...bfPieces.map((p) => p.g), rookMate.g], afterSet = [af.g, ...afPieces.map((p) => p.g), queen.g];
+      tl.to(beforeSet, { opacity: 1, duration: 0.3, stagger: 0.012 }, c5('round'));
+      KIT.rise(tl, '#loop-bef', c5('round') + 0.15, { y: 12 });
+      slide(rookMate, 7, 4, c5('starts'), 0.3);
+      tl.to([bfFrom, bfTo], { opacity: 0.85, duration: 0.15 }, c5('starts') + 0.3);
+      tl.to(bfK, { opacity: 0.9, duration: 0.2 }, c5('starts') + 0.4);
+      tl.to(afterSet, { opacity: 1, duration: 0.3, stagger: 0.012 }, c5('starts') + 0.05);
+      KIT.rise(tl, '#loop-aft', c5('starts') + 0.2, { y: 12 });
+      slide(queen, 1, 3, c5('with'), 0.4);
+      tl.to([afFrom, afTo], { opacity: 0.85, duration: 0.15 }, c5('with') + 0.35);
+      tl.to(afK, { opacity: 0.9, duration: 0.2 }, c5('with') + 0.45);
+      KIT.fade(tl, '#loop-src5', c5('starts'), { to: 0.8 });
+      pulse(c5('each')); pulse(c5('starts')); pulse(c5('with'));
+      tl.fromTo('#loop-cam', { scale: 1 }, { scale: 1.03, duration: D, ease: 'sine.inOut', immediateRender: false }, 0);
+      window.__timelines["loop"] = tl;
+    })();
+  </script>
+</template>

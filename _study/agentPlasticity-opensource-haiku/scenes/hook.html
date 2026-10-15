@@ -1,0 +1,41 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 860px; }
+    .hook-line { position: absolute; left: 0; width: 1080px; text-align: center; font: 400 92px/1 "Marker", sans-serif; color: var(--white); white-space: nowrap; }
+    #hook-a { top: 330px; }
+    #hook-b { top: 620px; color: var(--cyan); }
+    #hook-not { left: 380px; top: 436px; font-size: 110px; text-transform: uppercase; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam">
+      <div id="hook-a" class="hook-line" data-bind="l01.a"></div>
+      <div id="hook-b" class="hook-line" data-bind="l01.b"></div>
+      <svg class="ink sketch" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path class="ln dim thick" d="M300 1280 A240 240 0 0 1 780 1280" />
+        <path class="ln faint" d="M300 1280 A240 240 0 0 1 780 1280" stroke-dasharray="6 14" />
+        <path class="ln cyan thin" d="M540 1280 L700 1110" />
+        <circle class="fl cyan" cx="540" cy="1280" r="16" />
+        <path class="ln amber" d="M420 1150 L440 1132 M540 1040 L540 1062 M660 1150 L640 1132" />
+      </svg>
+      <div id="hook-not" class="stamp" data-bind="l01.not"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'hook', c = (w, n) => KIT.cue('l01', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#hook-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // the claim is already on screen at 0.0 s: both halves start at full opacity and settle
+      tl.fromTo('#hook-a', { scale: 1.12, opacity: 1 }, { scale: 1, duration: 0.22, ease: 'power4.in' }, 0);
+      tl.fromTo('#hook-b', { scale: 1.12, opacity: 1 }, { scale: 1, duration: 0.22, ease: 'power4.in' }, 0.02);
+      // NOT is stamped on the spoken "not"
+      KIT.slam(tl, '#hook-not', c('not'), { from: 2.6, amp: 18 });
+      // the frozen gauge needle stays put; the camera pushes in slowly
+      tl.fromTo('#hook-cam', { scale: 1 }, { scale: 1.06, duration: D, ease: 'sine.inOut' }, 0);
+
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

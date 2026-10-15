@@ -1,0 +1,20 @@
+{
+  "_note": "Limits that code enforces per video format. storyboard.format selects one; a storyboard without it is a paper. The prose rules for each format are in <format>.md next to this file.",
+  "paper": {
+    "status": "stable",
+    "minSeconds": 45,
+    "maxSeconds": 90,
+    "targetSeconds": [60, 80],
+    "termIntroHard": false,
+    "crf": 20
+  },
+  "system-design": {
+    "status": "draft",
+    "minSeconds": 90,
+    "maxSeconds": 178,
+    "targetSeconds": [120, 170],
+    "termIntroHard": true,
+    "crf": 23
+  },
+  "maxVideoBytes": 100000000
+}

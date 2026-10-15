@@ -1,0 +1,88 @@
+/* Blueprint design tokens and shared classes for the HyperFrames renderer.
+   Same identity as engine/styles/blueprint*.mjs: prussian-blue sheet, white linework, amber for values, coral for
+   rejection. Canvas 1080x1920. Safe zones: top 140 px, bottom 330 px (captions sit at y 1490..1586), and
+   x > 940 for y 1000..1700 (platform buttons). Content lives in y 160..1450. */
+
+@font-face { font-family: "Brush";  src: url("kit/fonts/brush.ttf"); }
+@font-face { font-family: "Marker"; src: url("kit/fonts/marker.ttf"); }
+@font-face { font-family: "Mono";   src: url("kit/fonts/mono.ttf"); font-weight: 100 800; }
+
+:root {
+  --bg: #0b2a4a; --deep: #071d35; --panel: #0a2340; --white: #f2f8ff; --cyan: #a8dcf2;
+  --dim: #6aa9d0; --faint: #3d78a6; --amber: #ffb454; --coral: #ff6b6b; --mint: #7be3b0;
+  --paper: #f4efe3; --ink: #12263f; --shadow: rgba(2, 12, 24, .62);
+}
+
+.fill { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+.abs  { position: absolute; }
+.center { display: flex; align-items: center; justify-content: center; }
+.marker { font-family: "Marker", sans-serif; }
+.mono   { font-family: "Mono", monospace; }
+.brush  { font-family: "Brush", cursive; }
+.nowrap { white-space: nowrap; }
+.glow-amber { filter: drop-shadow(0 0 22px rgba(255, 180, 84, .55)); }
+.glow-cyan  { filter: drop-shadow(0 0 18px rgba(168, 220, 242, .45)); }
+
+/* a white card with a hard offset shadow, like the plates in the canvas style */
+.plate { position: absolute; background: var(--white); color: var(--deep); border: 3px solid var(--white);
+  box-shadow: 10px 10px 0 var(--shadow); font-family: "Mono", monospace; font-weight: 700; }
+.plate.deep { background: var(--deep); color: var(--white); border-color: var(--cyan); }
+.tag { position: absolute; padding: 8px 18px; font: 700 28px "Mono", monospace; color: var(--amber);
+  background: var(--deep); border: 3px solid var(--amber); white-space: nowrap; }
+.tag.cyan { color: var(--cyan); border-color: var(--cyan); }
+.tag.coral { color: var(--coral); border-color: var(--coral); }
+.stamp { position: absolute; padding: 6px 34px; font: 400 120px/1.15 "Marker", sans-serif; color: var(--coral);
+  background: var(--deep); border: 10px solid var(--coral); outline: 4px solid var(--coral); outline-offset: -26px;
+  white-space: nowrap; transform-origin: 50% 50%; }
+.stamp.mint { color: var(--mint); border-color: var(--mint); outline-color: var(--mint); }
+.stamp.amber { color: var(--amber); border-color: var(--amber); outline-color: var(--amber); }
+
+/* paper evidence page */
+.paper { position: absolute; background: #fbfaf6; box-shadow: 0 50px 110px rgba(0, 0, 0, .6), 0 0 0 2px rgba(255,255,255,.08); transform-style: preserve-3d; }
+.paper img { display: block; width: 100%; height: 100%; }
+.paper .hl { position: absolute; background: rgba(255, 190, 70, .55); mix-blend-mode: multiply; transform-origin: 0 50%; }
+.paper .ring { position: absolute; border: 5px solid var(--coral); border-radius: 10px; }
+
+/* caption band: y 1490..1586, x 60..1020 (the validator ignores this band when it counts events) */
+#cap { position: absolute; left: 60px; top: 1490px; width: 960px; height: 96px; background: rgba(7, 29, 53, .92);
+  border: 2.5px solid var(--cyan); box-sizing: border-box; }
+#cap .corner { position: absolute; width: 26px; height: 26px; border: 0 solid var(--amber); }
+#cap .corner.tl { left: -2px; top: -2px; border-left-width: 4px; border-top-width: 4px; }
+#cap .corner.tr { right: -2px; top: -2px; border-right-width: 4px; border-top-width: 4px; }
+#cap .corner.bl { left: -2px; bottom: -2px; border-left-width: 4px; border-bottom-width: 4px; }
+#cap .corner.br { right: -2px; bottom: -2px; border-right-width: 4px; border-bottom-width: 4px; }
+#cap .chunk { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: flex; align-items: center;
+  justify-content: center; text-align: center; padding: 0 28px; box-sizing: border-box; opacity: 0;
+  font: 600 44px/1.12 "Mono", monospace; color: var(--white); }
+#cap .chunk.two { font-size: 34px; }
+#cap .w { display: inline-block; white-space: pre; }
+
+/* ---- SVG linework: white ink on the sheet, with a faint offset ghost stroke like the canvas style ---- */
+svg.ink { position: absolute; overflow: visible; }
+.ln { fill: none; stroke: var(--white); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.ln.cyan { stroke: var(--cyan); } .ln.amber { stroke: var(--amber); } .ln.coral { stroke: var(--coral); } .ln.mint { stroke: var(--mint); }
+.ln.dim { stroke: var(--dim); } .ln.faint { stroke: var(--faint); }
+.ln.thin { stroke-width: 1.8; } .ln.thick { stroke-width: 6; } .ln.heavy { stroke-width: 10; }
+.ln.dash { stroke-dasharray: 14 10; }
+.fl { stroke: none; fill: var(--white); } .fl.amber { fill: var(--amber); } .fl.deep { fill: var(--deep); } .fl.panel { fill: var(--panel); }
+.fl.coral { fill: var(--coral); } .fl.cyan { fill: var(--cyan); } .fl.mint { fill: var(--mint); }
+.ghost { filter: drop-shadow(3px 2px 0 rgba(242, 248, 255, .28)); }
+.sketch { filter: url(#bp-sketch) drop-shadow(3px 2px 0 rgba(242, 248, 255, .25)); }
+.lbl { position: absolute; font: 600 30px/1.15 "Mono", monospace; color: var(--cyan); white-space: nowrap; }
+.lbl.amber { color: var(--amber); } .lbl.white { color: var(--white); } .lbl.coral { color: var(--coral); }
+.hd { position: absolute; font: 400 120px/1 "Marker", sans-serif; color: var(--white); white-space: nowrap; }
+.world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 960px; }
+.receipt-tag { position: absolute; padding: 12px 24px 10px; font: 700 34px "Mono", monospace; letter-spacing: .04em; color: var(--deep);
+  background: var(--amber); white-space: nowrap; box-shadow: 6px 6px 0 var(--shadow); }
+
+/* board actors (paper-reels/formats/system-design.md): one colour per role, the same in every scene.
+   An .actor reads var(--role); KIT.recolor tweens it, so a Git server can turn into the new server where it stands. */
+:root { --role-old: var(--coral); --role-new: #c3a6ff; --role-compute: var(--cyan); --role-hero: #ff8fc4; --role-store: var(--amber); }
+.actor { --role: var(--white); position: absolute; padding: 18px 22px; background: var(--deep); color: var(--role);
+  border: 3px solid var(--role); box-shadow: 8px 8px 0 var(--shadow); font: 400 34px/1.1 "Marker", sans-serif; }
+.actor.old { --role: var(--role-old); } .actor.new { --role: var(--role-new); } .actor.compute { --role: var(--role-compute); }
+.actor.hero { --role: var(--role-hero); } .actor.store { --role: var(--role-store); }
+.actor .sub { display: block; margin-top: 8px; font: 700 22px "Mono", monospace; color: var(--dim); }
+.chip { position: absolute; padding: 4px 12px; font: 700 22px "Mono", monospace; color: var(--deep); background: var(--role, var(--role-hero)); white-space: nowrap; }
+.packet { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; background: var(--role-store); box-shadow: 0 0 18px var(--role-store); }
+.cell { position: absolute; border: 2px solid var(--role-compute); background: rgba(168, 220, 242, .08); }

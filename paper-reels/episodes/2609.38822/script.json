@@ -1,0 +1,12 @@
+[
+ {"id":"l1","text":"AI agents can pick up skills: reusable instructions for a task. Here is a new paper about how they find the right one."},
+ {"id":"l2","text":"Open-source collections of skills have now grown past two hundred thirty thousand."},
+ {"id":"l3","text":"So the hard part is no longer writing a skill. It is choosing which one to use."},
+ {"id":"l4","text":"A common fix lets a language model search, refine, and search again. Every task pays for that loop."},
+ {"id":"l5","text":"SkillSeek uses plain retrieval instead. A fast bi-encoder shortlists skills, then a cross-encoder re-ranks them."},
+ {"id":"l6","text":"On SkillsBench, a benchmark of eighty-nine tasks, it matches the language model approaches."},
+ {"id":"l7","text":"Even plain BM25 keyword search matches the refined loops in three of four settings."},
+ {"id":"l8","text":"The cost per trial drops from fifty-one dollars thirty to twenty-seven dollars fifty-four. The no-skill baseline is about twenty-seven."},
+ {"id":"l9","text":"The takeaway: start with classic retrieval, and bring in a language model only when it falls short."},
+ {"id":"l10","text":"The paper is SkillSeek, on arXiv. Thanks for watching."}
+]

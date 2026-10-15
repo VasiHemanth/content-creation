@@ -1,0 +1,402 @@
+{
+  "item": "anthropic-scion-v2",
+  "name": "Scion",
+  "renderer": "hyperframes",
+  "authors": [
+    "Anthropic source control team"
+  ],
+  "voice": {
+    "preset": "aiden",
+    "speed": 1.12
+  },
+  "ste": {
+    "names": [
+      "Anthropic",
+      "Scion",
+      "Git",
+      "CI",
+      "CPU",
+      "Claude",
+      "scion-daemon",
+      "scion-cache",
+      "scion-server",
+      "Spanner"
+    ],
+    "terms": [
+      {
+        "term": "changeset",
+        "avoid": [
+          "change set",
+          "patch",
+          "diff"
+        ]
+      },
+      {
+        "term": "trees",
+        "avoid": [
+          "directories",
+          "folders",
+          "directory objects"
+        ]
+      },
+      {
+        "term": "blobs",
+        "avoid": [
+          "file contents",
+          "file objects",
+          "payloads"
+        ]
+      },
+      {
+        "term": "derived data",
+        "avoid": [
+          "indexes",
+          "indices",
+          "metadata"
+        ]
+      },
+      {
+        "term": "checkouts",
+        "avoid": [
+          "fetches",
+          "pulls",
+          "downloads"
+        ]
+      },
+      {
+        "term": "Git mirrors",
+        "avoid": [
+          "mirror servers",
+          "replicas",
+          "mirror fleet"
+        ]
+      },
+      {
+        "term": "footprint",
+        "avoid": [
+          "cost",
+          "savings",
+          "bill"
+        ]
+      },
+      {
+        "term": "node",
+        "avoid": [
+          "machine",
+          "host",
+          "box"
+        ]
+      }
+    ],
+    "allow": []
+  },
+  "scenes": {
+    "hook": {
+      "transition": "whip"
+    },
+    "mirrors": {
+      "transition": "whip"
+    },
+    "online": {
+      "transition": "zoom"
+    },
+    "path": {
+      "transition": "punch"
+    },
+    "result": {
+      "transition": "whip"
+    },
+    "claude": {
+      "transition": "blur"
+    },
+    "scope": {
+      "transition": "cut"
+    }
+  },
+  "lines": [
+    {
+      "id": "l01",
+      "scene": "hook",
+      "say": "How do you serve about twenty five million C I checkouts a day?",
+      "text": "How do you serve about 25M CI checkouts a day?",
+      "data": {
+        "about": "ANTHROPIC RUNS ABOUT",
+        "value": "25 MILLION",
+        "unit": "CI CHECKOUTS A DAY",
+        "how": "HOW?",
+        "neck": "Git mirrors",
+        "tag": "CI alone · Anthropic's estimate"
+      },
+      "sfx": [
+        {
+          "cue": "twenty",
+          "kind": "riser",
+          "offset": -1.1
+        },
+        {
+          "cue": "twenty",
+          "kind": "impact"
+        }
+      ]
+    },
+    {
+      "id": "l02",
+      "scene": "hook",
+      "say": "One September day, Anthropic merged over thirty thousand changes. Source control became its biggest bottleneck.",
+      "text": "One September day, Anthropic merged over 30,000 changes. Source control became its biggest bottleneck.",
+      "data": {
+        "src": "Anthropic's chart · changes merged per day",
+        "big1": "source control",
+        "big2": "biggest bottleneck"
+      },
+      "sfx": [
+        {
+          "cue": "Source",
+          "kind": "thud"
+        }
+      ]
+    },
+    {
+      "id": "l03",
+      "scene": "mirrors",
+      "say": "Several hundred Git mirrors helped, until the repo outgrew their disks and memory.",
+      "text": "Several hundred Git mirrors helped, until the repo outgrew their disks and memory.",
+      "data": {
+        "header": "several hundred Git mirrors",
+        "disk": "disk",
+        "memory": "memory"
+      },
+      "sfx": [
+        {
+          "cue": "helped",
+          "kind": "pop"
+        },
+        {
+          "cue": "outgrew",
+          "kind": "tick"
+        }
+      ]
+    },
+    {
+      "id": "l04",
+      "scene": "online",
+      "say": "Almost all clients are agents and jobs, always online. So the server writes each changeset.",
+      "text": "Almost all clients are agents and jobs, always online. So the server writes each changeset.",
+      "data": {
+        "agents": "agents",
+        "jobs": "jobs",
+        "online": "ALWAYS ONLINE",
+        "server": "scion-server",
+        "changeset": "changeset",
+        "row": "changed file",
+        "foot": "only the changed files"
+      },
+      "sfx": [
+        {
+          "cue": "online",
+          "kind": "pop"
+        },
+        {
+          "cue": "changeset",
+          "kind": "chime"
+        }
+      ]
+    },
+    {
+      "id": "l06",
+      "scene": "path",
+      "say": "One checkout asks Scion daemon for only the trees and blobs it needs.",
+      "text": "One checkout asks scion-daemon for only the trees and blobs it needs.",
+      "data": {
+        "jobs": "jobs",
+        "daemon": "scion-daemon",
+        "daemonSub": "per node",
+        "cache": "scion-cache",
+        "cacheSub": "regional",
+        "server": "scion-server",
+        "spanner": "Spanner",
+        "storage": "cloud storage",
+        "trees": "trees",
+        "blobs": "blobs"
+      },
+      "sfx": [
+        {
+          "cue": "trees",
+          "kind": "pop"
+        },
+        {
+          "cue": "blobs",
+          "kind": "pop"
+        }
+      ]
+    },
+    {
+      "id": "l07",
+      "scene": "path",
+      "say": "Misses go to Scion cache, then Scion server. Each tree and blob never changes. So any cache can answer.",
+      "text": "Misses go to scion-cache, then scion-server. Each tree and blob never changes. So any cache can answer.",
+      "data": {
+        "miss": "miss",
+        "never": "never change",
+        "credit": "Anthropic Engineering · Oct 13, 2026"
+      },
+      "sfx": [
+        {
+          "cue": "never",
+          "kind": "tick"
+        },
+        {
+          "cue": "never",
+          "kind": "tick",
+          "offset": 0.35
+        },
+        {
+          "cue": "never",
+          "kind": "tick",
+          "offset": 0.7
+        },
+        {
+          "cue": "answer",
+          "kind": "chime"
+        }
+      ]
+    },
+    {
+      "id": "l08",
+      "scene": "result",
+      "say": "Anthropic reports over ninety nine percent cache hits on every tier.",
+      "text": "Anthropic reports over 99% cache hits on every tier.",
+      "data": {
+        "value": "99",
+        "hit": "over 99%",
+        "label": "cache hits",
+        "src": "Anthropic reports"
+      },
+      "sfx": [
+        {
+          "cue": "percent",
+          "kind": "impact"
+        }
+      ],
+      "voice": {
+        "preset": "aiden",
+        "seed": 21
+      }
+    },
+    {
+      "id": "l09",
+      "scene": "result",
+      "say": "A new agent worktree took about seven minutes. Now it is about five seconds.",
+      "text": "A new agent worktree took about 7 minutes. Now it is about 5 seconds.",
+      "data": {
+        "label": "new agent worktree · median",
+        "git": "Git",
+        "gitT": "about 7 min",
+        "scion": "Scion",
+        "scionT": "about 5 s",
+        "src": "Anthropic's figure"
+      },
+      "sfx": [
+        {
+          "cue": "Now",
+          "kind": "whoosh"
+        },
+        {
+          "cue": "five",
+          "kind": "pop"
+        }
+      ]
+    },
+    {
+      "id": "l10",
+      "scene": "result",
+      "say": "Scion infrastructure is two hundred times smaller in C P U and memory than the old Git mirrors.",
+      "text": "Scion infrastructure is 200 times smaller in CPU and memory than the old Git mirrors.",
+      "data": {
+        "value": "200",
+        "big": "200×",
+        "old": "old Git mirrors",
+        "scion": "Scion",
+        "sqOld": "Git mirrors · CPU + memory",
+        "scope": "Scion infrastructure vs old Git mirrors",
+        "scope2": "CPU + memory · Anthropic reports"
+      },
+      "sfx": [
+        {
+          "cue": "two",
+          "kind": "impact"
+        }
+      ]
+    },
+    {
+      "id": "l11",
+      "scene": "claude",
+      "say": "A Claude rewrite of one prototype used twenty times less memory.",
+      "text": "A Claude rewrite of one prototype used 20 times less memory.",
+      "data": {
+        "value": "20",
+        "model": "early internal Claude model (Claude Mythos Preview)",
+        "left": "git-to-Scion ingestion prototype",
+        "leftSub": "handwritten",
+        "right": "Claude rewrite",
+        "memory": "memory",
+        "tag": "20× less memory"
+      },
+      "sfx": [
+        {
+          "cue": "prototype",
+          "kind": "pop"
+        }
+      ],
+      "voice": {
+        "preset": "aiden",
+        "seed": 3
+      }
+    },
+    {
+      "id": "l12",
+      "scene": "claude",
+      "say": "In the migration, Claude sometimes broke core rules. For example, it read the commit log line by line to find when a change merged. Engineers often had to tell Claude no.",
+      "text": "In the migration, Claude sometimes broke core rules. For example, it read the commit log, line by line to find when a change merged. Engineers often had to tell Claude no.",
+      "data": {
+        "log": "commit log",
+        "tool": "code review tool",
+        "no": "NO",
+        "engineer": "engineer"
+      },
+      "sfx": [
+        {
+          "cue": "line",
+          "kind": "tick"
+        },
+        {
+          "cue": "tell",
+          "kind": "stamp"
+        }
+      ]
+    },
+    {
+      "id": "l13",
+      "scene": "scope",
+      "say": "Scion is by no means a suitable replacement for Git for general use. It serves about twenty five million C I checkouts a day.",
+      "text": "Scion is by no means a suitable replacement for Git for general use. It serves about 25 million CI checkouts a day.",
+      "data": {
+        "git": "Git",
+        "scion": "Scion",
+        "t1": "partial clones",
+        "t2": "sparse checkouts",
+        "handle": "hemanth_with_ai"
+      },
+      "sfx": [
+        {
+          "cue": "twenty",
+          "kind": "pop"
+        }
+      ],
+      "voice": {
+        "preset": "aiden",
+        "seed": 42
+      }
+    }
+  ]
+}

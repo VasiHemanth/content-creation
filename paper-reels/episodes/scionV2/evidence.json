@@ -1,0 +1,51 @@
+{
+  "note": "Captured from the live article by capture-evidence.mjs (viewport 1280, deviceScaleFactor 2). Text items hold the exact phrase only. The merges figure crop is raster; its legible text (30,401 merged on Sep 9) is typed into facts.json evidence_incidental by hand.",
+  "items": [
+    {
+      "id": "merges",
+      "figure": "Changes merged to our monorepo per day",
+      "crop": [
+        0.7943,
+        0.2303,
+        0.946,
+        0.602
+      ],
+      "rects": [
+        [
+          0.015,
+          0.215,
+          0.786,
+          0.245
+        ]
+      ],
+      "text": "30,401 merged on Sep 9"
+    },
+    {
+      "id": "cache",
+      "find": [
+        "any cache can answer"
+      ]
+    },
+    {
+      "id": "footprint",
+      "find": [
+        "200x smaller",
+        "CPU and memory"
+      ],
+      "row": true,
+      "gap": 40
+    },
+    {
+      "id": "no",
+      "find": [
+        "tell Claude “no.”"
+      ]
+    },
+    {
+      "id": "scope",
+      "find": [
+        "by no means a suitable replacement for git"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+<template id="results-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #results-a, #results-b { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #results-acam, #results-bcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 700px; }
+    .results-title { left: 70px; top: 190px; font-size: 100px; }
+    #results-unit { left: 76px; top: 320px; font-size: 34px; }
+    .results-row { position: absolute; left: 70px; width: 940px; height: 170px; }
+    .results-row .lb { position: absolute; left: 0; top: 0; font: 700 40px "Mono", monospace; white-space: nowrap; }
+    .results-row .bar { position: absolute; left: 0; top: 60px; height: 72px; background: var(--white); transform-origin: 0 50%; box-shadow: 8px 8px 0 var(--shadow); }
+    .results-row .val { position: absolute; top: 44px; font: 400 104px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; text-shadow: 6px 6px 0 var(--shadow); }
+    #results-faster { left: 270px; top: 905px; font-size: 34px; color: var(--mint); border-color: var(--mint); }
+    #results-band { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #results-g1 { left: 150px; top: 820px; width: 300px; text-align: center; font-size: 30px; color: var(--white); }
+    #results-g2 { left: 630px; top: 820px; width: 300px; text-align: center; font-size: 30px; color: var(--amber); }
+    #results-same { left: 0; top: 880px; width: 1080px; text-align: center; }
+    #results-same span { display: inline-block; font-size: 34px; }
+    #results-upto { left: 150px; top: 1110px; font-size: 40px; color: var(--cyan); }
+    #results-big { position: absolute; left: 340px; top: 1065px; font: 400 190px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 10px 10px 0 var(--shadow); transform-origin: 50% 60%; }
+    #results-fewer { left: 0; top: 1350px; width: 1080px; text-align: center; font-size: 60px; }
+    .results-chip { position: absolute; width: 52px; height: 34px; border-radius: 6px; box-shadow: 4px 4px 0 var(--shadow); }
+  </style>
+  <div id="root" data-composition-id="results" data-width="1080" data-height="1920">
+    <div id="results-a"><div id="results-abeat" style="position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 760px"><div id="results-acam">
+      <div id="results-ta" class="hd results-title" data-bind="l09.title"></div>
+      <div id="results-unit" class="lbl" data-bind="l09.unit"></div>
+      <div class="results-row" id="results-r0" style="top:420px"><div class="lb" style="color:var(--amber)" data-bind="l09.rows.1.label"></div><div class="bar" id="results-b0"></div><div class="val" id="results-v0" data-bind="l09.rows.1.value" data-to=""></div></div>
+      <div class="results-row" id="results-r1" style="top:640px"><div class="lb" style="color:var(--white)" data-bind="l09.rows.0.label"></div><div class="bar" id="results-b1"></div><div class="val" id="results-v1" data-bind="l09.rows.0.value" data-to=""></div></div>
+      <svg class="ink sketch" id="results-watch" style="left:80px;top:850px;width:170px;height:170px" viewBox="0 0 170 170">
+        <circle cx="85" cy="95" r="66" fill="#0a2340" stroke="#f2f8ff" stroke-width="7" />
+        <path d="M70 18 L100 18 M85 18 L85 29" stroke="#f2f8ff" stroke-width="7" stroke-linecap="round" />
+        <path id="results-hand" d="M85 95 L85 45" stroke="#7be3b0" stroke-width="8" stroke-linecap="round" />
+      </svg>
+      <div id="results-faster" class="tag" data-bind="l09.faster"></div>
+      <div id="results-band"></div>
+    </div></div></div>
+    <div id="results-b"><div id="results-bbeat" style="position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 760px"><div id="results-bcam">
+      <div id="results-tb" class="hd results-title" data-bind="l10.title"></div>
+      <svg class="ink sketch" id="results-chip" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <g id="results-pins"></g>
+        <rect id="results-chipbody" x="400" y="330" width="280" height="280" rx="14" fill="#0a2340" stroke="#f2f8ff" stroke-width="7" />
+        <rect id="results-die" x="455" y="385" width="170" height="170" rx="6" fill="none" stroke="#ffb454" stroke-width="5" />
+        <g id="results-diegrid"></g>
+        <path id="results-gauge1" d="M180 760 A120 120 0 0 1 420 760" fill="none" stroke="#123d66" stroke-width="34" />
+        <path id="results-gauge2" d="M660 760 A120 120 0 0 1 900 760" fill="none" stroke="#123d66" stroke-width="34" />
+        <path id="results-fill1" d="M180 760 A120 120 0 0 1 420 760" fill="none" stroke="#f2f8ff" stroke-width="34" />
+        <path id="results-fill2" d="M660 760 A120 120 0 0 1 900 760" fill="none" stroke="#ffb454" stroke-width="34" />
+        <g id="results-n1"><path d="M300 760 L200 760" stroke="#f2f8ff" stroke-width="8" stroke-linecap="round" /><circle cx="300" cy="760" r="12" fill="#f2f8ff" /></g>
+        <g id="results-n2"><path d="M780 760 L680 760" stroke="#ffb454" stroke-width="8" stroke-linecap="round" /><circle cx="780" cy="760" r="12" fill="#ffb454" /></g>
+      </svg>
+      <div id="results-g1" class="lbl" data-bind="l09.rows.0.label"></div>
+      <div id="results-g2" class="lbl" data-bind="l09.rows.1.label"></div>
+      <div id="results-same" class="abs"><span class="tag" style="position:relative;color:var(--mint);border-color:var(--mint)" data-bind="l10.same"></span></div>
+      <div id="results-chips"></div>
+      <div id="results-upto" class="lbl" data-bind="l10.upto"></div>
+      <div id="results-big" data-bind="l10.value"></div>
+      <div id="results-fewer" class="hd" data-bind="l10.label"></div>
+    </div></div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'results', a = (w, n) => KIT.cue('l09', w, n), b = (w, n) => KIT.cue('l10', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#results-a'); KIT.bind('#results-b');
+      const d9 = KIT.data('l09'), tl = gsap.timeline({ paused: true });
+
+      // part A: Lasso, 317 attempts where a fixed policy used 550 (bar lengths from the storyboard values)
+      const vD = parseFloat(d9.rows[1].value), vF = parseFloat(d9.rows[0].value), FULL = 760;
+      const wD = FULL * vD / Math.max(vD, vF), wF = FULL * vF / Math.max(vD, vF);
+      document.querySelector('#results-b0').style.width = `${wD}px`; document.querySelector('#results-b1').style.width = `${wF}px`;
+      document.querySelector('#results-v0').style.left = `${wD + 26}px`; document.querySelector('#results-v1').style.left = `${Math.min(wF + 26, 760)}px`;
+      const tt = SplitText.create('#results-ta', { type: 'chars' });
+      tl.fromTo(tt.chars, { y: -90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, stagger: 0.03, ease: 'back.out(2)' }, a('Lasso') - 0.3);
+      KIT.fade(tl, '#results-unit', a('solver'));
+      KIT.rise(tl, '#results-r0 .lb', a('used') - 0.2, { x: -40, y: 0 });
+      KIT.grow(tl, '#results-b0', a('three') - 0.05, a('attempts') - a('three') + 0.1, { ease: 'power2.out' });
+      KIT.fade(tl, '#results-v0', a('three') - 0.05, { dur: 0.1 });
+      KIT.count(tl, '#results-v0', a('three') - 0.05, a('attempts') - a('three') + 0.1, { ease: 'power2.out' });
+      KIT.rise(tl, '#results-r1 .lb', a('fixed') - 0.2, { x: -40, y: 0 });
+      KIT.grow(tl, '#results-b1', a('five') - 0.05, a('fifty') - a('five') + 0.25, { ease: 'power2.out' });
+      KIT.fade(tl, '#results-v1', a('five') - 0.05, { dur: 0.1 });
+      KIT.count(tl, '#results-v1', a('five') - 0.05, a('fifty') - a('five') + 0.25, { ease: 'power2.out' });
+      KIT.shake(tl, '#results-acam', a('fifty') + 0.2, { amp: 10, dur: 0.25 });
+      // the receipt: the paper's own sentence with both numbers, then its runtime figures
+      const P = KIT.paper('#results-band', 'lasso', { width: 2600, x: 0, y: 1110 }), r0 = P.ev.rects[0], r1 = P.ev.rects[1];
+      const L0 = 540 - (r0.x + r0.w / 2) * P.width, L1 = 540 - (r1.x + r1.w / 2) * P.width;
+      P.el.style.left = `${L0}px`;
+      const tag = document.createElement('div'); tag.className = 'receipt-tag'; tag.id = 'results-rtag'; tag.textContent = d9.receipt; tag.style.left = '60px'; tag.style.top = '1040px';
+      document.querySelector('#results-band').appendChild(tag);
+      tl.fromTo(P.el, { y: 260, opacity: 0, rotationX: 50 }, { y: 0, opacity: 1, rotationX: 0, duration: 0.45, ease: 'power3.out' }, a('where') - 0.3);
+      tl.fromTo(tag, { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, a('where') - 0.15);
+      tl.fromTo(P.hls[0], { scaleX: 0 }, { scaleX: 1, duration: a('fifty') + 0.3 - a('where'), ease: 'none' }, a('where'));
+      KIT.circle(tl, P, '317', a('where') + 0.1);
+      tl.to(P.el, { x: L1 - L0, duration: 0.45, ease: 'power3.inOut' }, a('Its') - 0.1);
+      tl.fromTo(P.hls[1], { scaleX: 0 }, { scaleX: 1, duration: 0.55, ease: 'none' }, a('ran') - 0.1);
+      tl.fromTo('#results-watch', { scale: 0, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(2.4)' }, a('Its') - 0.1);
+      tl.fromTo('#results-hand', { rotation: 0, svgOrigin: '85 95' }, { rotation: 300, svgOrigin: '85 95', duration: 0.6, ease: 'power3.inOut' }, a('ran') - 0.1);
+      tl.fromTo('#results-faster', { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, a('faster') - 0.1);
+      tl.fromTo('#results-acam', { scale: 1 }, { scale: 1.04, duration: KIT.line('l10').t0, ease: 'sine.inOut' }, 0);
+      // camera beats while the 317 bar grows (small motion alone does not hold the eye); level again before the receipt rises
+      KIT.beats(tl, '#results-abeat', [a('used'), a('three')], { reset: a('where') - 0.6 });
+
+      // whip inside the scene to part B
+      const tB = KIT.line('l10').t0;
+      tl.fromTo('#results-a', { x: 0, filter: 'blur(0px)' }, { x: -1080, filter: 'blur(14px)', duration: 0.32, ease: 'power3.in' }, tB - 0.1);
+      tl.to('#results-band', { opacity: 0, duration: 0.15 }, tB - 0.1);   // the paper strip is wider than the frame
+      tl.fromTo('#results-b', { x: 1080, filter: 'blur(14px)' }, { x: 0, filter: 'blur(0px)', duration: 0.32, ease: 'power3.out' }, tB - 0.1);
+
+      // part B: GPU kernels: about the same speed with up to 2.43 times fewer attempts
+      const tb = SplitText.create('#results-tb', { type: 'chars' });
+      tl.fromTo(tb.chars, { y: -90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, stagger: 0.03, ease: 'back.out(2)' }, b('G') - 0.2);
+      const pins = document.querySelector('#results-pins');
+      for (let i = 0; i < 6; i++) {
+        const p = 352 + i * 46;
+        KIT.svgEl('path', { d: `M${p} 330 L${p} 300 M${p} 610 L${p} 640 M400 ${p} L370 ${p} M680 ${p} L710 ${p}`.replace(/(\d+) (\d+)/g, '$1 $2'), class: 'ln thick', id: `results-pin${i}` }, pins);
+      }
+      const dg = document.querySelector('#results-diegrid');
+      for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) KIT.svgEl('rect', { x: 468 + i * 40, y: 398 + j * 40, width: 30, height: 30, fill: (i + j) % 3 ? '#1d5a8c' : '#ffb454', id: `results-cell${i}${j}` }, dg);
+      KIT.draw(tl, '#results-chipbody', b('kernels') - 0.3, 0.4);
+      tl.fromTo('#results-pins path', { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.2, stagger: 0.03 }, b('kernels') - 0.1);
+      tl.fromTo('#results-diegrid rect', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.15, stagger: 0.02, ease: 'back.out(3)' }, b('kernels'));
+      // two gauges reach about the same speed
+      KIT.draw(tl, '#results-gauge1, #results-gauge2', b('reached') - 0.2, 0.3);
+      KIT.fade(tl, '#results-g1, #results-g2, #results-n1, #results-n2', b('reached'), { dur: 0.25 });
+      const tS = b('speed') - 0.1;
+      tl.fromTo('#results-fill1', { drawSVG: '0%' }, { drawSVG: '72%', duration: 0.6, ease: 'power2.out' }, tS);
+      tl.fromTo('#results-fill2', { drawSVG: '0%' }, { drawSVG: '72%', duration: 0.6, ease: 'power2.out' }, tS);
+      tl.fromTo('#results-n1', { rotation: 0, svgOrigin: '300 760' }, { rotation: 130, svgOrigin: '300 760', duration: 0.6, ease: 'power2.out' }, tS);
+      tl.fromTo('#results-n2', { rotation: 0, svgOrigin: '780 760' }, { rotation: 130, svgOrigin: '780 760', duration: 0.6, ease: 'power2.out' }, tS);
+      // the tag also names what the spoken line leaves out: "as a fixed policy"
+      tl.fromTo('#results-same', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, b('same') - 0.1);
+      // attempts: a fixed policy's row and Dream-RSI's row; the second is 2.43 times shorter (from the storyboard value)
+      const ratio = parseFloat(KIT.data('l10').value), NF = 12, ND = Math.max(1, Math.round(NF / ratio)), chips = document.querySelector('#results-chips');
+      const mkRow = (n, y, col, id, t0) => { for (let i = 0; i < n; i++) {
+        const el = document.createElement('div'); el.className = 'results-chip'; el.id = `${id}${i}`; el.style.left = `${150 + i * 66}px`; el.style.top = `${y}px`; el.style.background = col; chips.appendChild(el);
+        tl.fromTo(el, { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.18, ease: 'back.out(2.5)' }, t0 + i * 0.035);
+      } };
+      mkRow(NF, 960, '#f2f8ff', 'results-cf', b('with') - 0.2);
+      mkRow(ND, 1004, '#ffb454', 'results-cd', b('up') - 0.1);
+      const tHit = b('two');
+      tl.to('#results-chips', { opacity: 0.35, duration: 0.3 }, tHit - 0.1);
+      KIT.fade(tl, '#results-upto', b('up') - 0.05, { dur: 0.2 });
+      KIT.slam(tl, '#results-big', tHit - 0.05, { from: 2.8, amp: 16, shakeTarget: '#results-bcam' });
+      KIT.glitch(tl, '#results-big', tHit + 0.1, { amp: 10, dur: 0.22 });
+      KIT.sparks(tl, '#results-bcam', 560, 1170, tHit + 0.15, { n: 14, r: 320 });
+      tl.fromTo('#results-fewer', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, b('fewer') - 0.1);
+      tl.fromTo('#results-bcam', { scale: 1 }, { scale: 1.05, duration: D - tB, ease: 'sine.inOut' }, tB);
+
+      KIT.beats(tl, '#results-bbeat', [b('kernels'), b('reached'), b('speed'), b('with'), b('fewer'), b('attempts')]);
+
+      window.__timelines["results"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,566 @@
+{
+ "item": "2609.33401",
+ "name": "System One Security Judges",
+ "renderer": "hyperframes",
+ "authors": [
+  "Yixuan Liu"
+ ],
+ "voice": {
+  "preset": "aiden",
+  "speed": 1.25
+ },
+ "ste": {
+  "names": [
+   "System One",
+   "Jev"
+  ],
+  "terms": [
+   {
+    "term": "judge",
+    "avoid": [
+     "guard",
+     "guardrail",
+     "detector",
+     "filter",
+     "screener",
+     "moderator"
+    ]
+   },
+   {
+    "term": "unsafe probability",
+    "avoid": [
+     "risk score",
+     "confidence score",
+     "safety score",
+     "danger score",
+     "threat score"
+    ]
+   },
+   {
+    "term": "escalate",
+    "avoid": [
+     "defer",
+     "hand off",
+     "flag",
+     "send up"
+    ]
+   },
+   {
+    "term": "policy",
+    "avoid": [
+     "rule set",
+     "decision rule",
+     "router"
+    ]
+   },
+   {
+    "term": "threshold",
+    "avoid": [
+     "cutoff",
+     "cut-off"
+    ]
+   },
+   {
+    "term": "separate thresholds",
+    "avoid": [
+     "independent thresholds",
+     "asymmetric thresholds"
+    ]
+   },
+   {
+    "term": "calibration",
+    "avoid": [
+     "honesty",
+     "trustworthiness"
+    ]
+   },
+   {
+    "term": "direct instruction",
+    "avoid": [
+     "explicit instruction",
+     "direct command",
+     "explicit command"
+    ]
+   },
+   {
+    "term": "benign",
+    "avoid": [
+     "harmless",
+     "clean",
+     "legitimate",
+     "innocent"
+    ]
+   },
+   {
+    "term": "automatically",
+    "avoid": [
+     "on its own",
+     "hands-free"
+    ]
+   }
+  ],
+  "allow": []
+ },
+ "scenes": {
+  "hook": {
+   "transition": "whip"
+  },
+  "policy": {
+   "transition": "zoom"
+  },
+  "jar": {
+   "transition": "whip"
+  },
+  "tie": {
+   "transition": "cut"
+  },
+  "judge": {
+   "transition": "whip"
+  },
+  "limit": {
+   "transition": "blur"
+  },
+  "close": {}
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "Your agent's security judge says safe. When can you trust it?",
+   "text": "Your agent's security judge says safe. When can you trust it?",
+   "data": {
+    "b1": "IT SAYS SAFE.",
+    "b2": "WHEN CAN YOU",
+    "b3": "TRUST IT?",
+    "stamp": "SAFE",
+    "judge": "security judge",
+    "agent": "your agent",
+    "inp": "input"
+   },
+   "sfx": [
+    {
+     "cue": "judge",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "safe",
+     "kind": "stamp"
+    },
+    {
+     "cue": "trust",
+     "kind": "glitch"
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "scene": "policy",
+   "say": "The paper tests System One models as security judges. Each returns a decision and an unsafe probability.",
+   "text": "The paper tests System One models as security judges. Each returns a decision and an unsafe probability.",
+   "data": {
+    "box": "System One model",
+    "role": "security judge",
+    "t1": "prompt injection",
+    "t2": "interaction risk",
+    "t3": "harmful requests",
+    "agent": "AI agent",
+    "chipA": "safe",
+    "chipB": "unsafe",
+    "gauge": "unsafe probability",
+    "g0": "low",
+    "g1": "high"
+   },
+   "sfx": [
+    {
+     "cue": "System",
+     "kind": "thud"
+    },
+    {
+     "cue": "judges",
+     "kind": "pop"
+    },
+    {
+     "cue": "decision",
+     "kind": "click"
+    },
+    {
+     "cue": "probability",
+     "kind": "tick"
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "policy",
+   "say": "A policy maps that probability to allow, block or escalate for review.",
+   "text": "A policy maps that probability to allow, block or escalate for review.",
+   "data": {
+    "pol": "policy",
+    "allow": "allow",
+    "block": "block",
+    "esc": "escalate",
+    "review": "review",
+    "r0": "low",
+    "r1": "high"
+   },
+   "sfx": [
+    {
+     "cue": "allow",
+     "kind": "pop"
+    },
+    {
+     "cue": "block",
+     "kind": "thud"
+    },
+    {
+     "cue": "escalate",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "jar",
+   "say": "Calibration means probabilities match how often inputs are unsafe. A good average can hide attacks the model confidently calls safe.",
+   "text": "Calibration means probabilities match how often inputs are unsafe. A good average can hide attacks the model confidently calls safe.",
+   "data": {
+    "label": "predicted",
+    "inside": "real",
+    "ex": "example",
+    "match": "match",
+    "lid": "SAFE",
+    "receipt": "FROM THE PAPER · Abstract, p. 1",
+    "_ex": 30
+   },
+   "sfx": [
+    {
+     "cue": "Calibration",
+     "kind": "pop"
+    },
+    {
+     "cue": "match",
+     "kind": "chime"
+    },
+    {
+     "cue": "hide",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "safe",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "jar",
+   "say": "On prompt injection, one model gave most inputs a low unsafe probability. The average was about zero point two percent.",
+   "text": "On prompt injection, one model gave most inputs a low unsafe probability. The average was about 0.2%.",
+   "data": {
+    "task": "prompt injection",
+    "model": "Jev",
+    "grp": "most inputs: low unsafe probability",
+    "value": "0.2%",
+    "lab": "average unsafe probability",
+    "_predicted": 0.205
+   },
+   "sfx": [
+    {
+     "cue": "model",
+     "kind": "pop"
+    },
+    {
+     "cue": "average",
+     "kind": "tick"
+    },
+    {
+     "cue": "zero",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "zero",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "jar",
+   "say": "About nine percent of those inputs were attacks.",
+   "text": "About 9% of those inputs were attacks.",
+   "data": {
+    "value": "9%",
+    "lab": "were attacks",
+    "_observed": 9.2
+   },
+   "sfx": [
+    {
+     "cue": "nine",
+     "kind": "impact"
+    },
+    {
+     "cue": "attacks",
+     "kind": "whoosh"
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "jar",
+   "say": "Nearly all of them held no direct instruction. The model missed every attack of that kind.",
+   "text": "Nearly all of them held no direct instruction. The model missed every attack of that kind.",
+   "data": {
+    "ei": "direct instruction",
+    "noei": "no direct instruction",
+    "stamp": "SAFE",
+    "src": "Sec. 4.2 and 5.2 · exploratory analysis"
+   },
+   "sfx": [
+    {
+     "cue": "direct",
+     "kind": "pop"
+    },
+    {
+     "cue": "missed",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "every",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "scene": "tie",
+   "say": "Some missed attacks shared the lowest possible unsafe probability with many benign inputs.",
+   "text": "Some missed attacks shared the lowest possible unsafe probability with many benign inputs.",
+   "data": {
+    "bucket": "lowest possible unsafe probability",
+    "missed": "missed attacks",
+    "benign": "benign inputs",
+    "allow": "allow",
+    "esc": "escalate",
+    "block": "block",
+    "_tieAll": 1320,
+    "_tieMiss": 102
+   },
+   "sfx": [
+    {
+     "cue": "missed",
+     "kind": "pop"
+    },
+    {
+     "cue": "shared",
+     "kind": "click"
+    },
+    {
+     "cue": "lowest",
+     "kind": "thud"
+    },
+    {
+     "cue": "benign",
+     "kind": "whoosh"
+    }
+   ],
+   "voice": {
+    "preset": "aiden",
+    "seed": 11
+   }
+  },
+  {
+   "id": "l09",
+   "scene": "tie",
+   "say": "Thresholds cannot separate correct and incorrect decisions with the same score.",
+   "text": "Thresholds cannot separate correct and incorrect decisions with the same score.",
+   "data": {
+    "receipt": "FROM THE PAPER · Sec. 6.5, p. 21",
+    "pin": "allow threshold",
+    "all": "all or none"
+   },
+   "sfx": [
+    {
+     "cue": "cannot",
+     "kind": "thud"
+    },
+    {
+     "cue": "same",
+     "kind": "stamp"
+    },
+    {
+     "cue": "score",
+     "kind": "whoosh"
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "judge",
+   "say": "A policy that reviews only uncertain inputs leaves confident mistakes unreviewed. In a separate test, second judges caught only a few.",
+   "text": "A policy that reviews only uncertain inputs leaves confident mistakes unreviewed. In a separate test, second judges caught only a few.",
+   "data": {
+    "receipt": "FROM THE PAPER · Sec. 6.6, p. 22",
+    "insp": "second judge",
+    "unsure": "uncertain",
+    "conf": "confident",
+    "allow": "allow",
+    "esc": "escalate",
+    "sep": "separate test · exploratory analysis",
+    "stamp": "SAFE",
+    "_confident": 130,
+    "_fixed": 5
+   },
+   "sfx": [
+    {
+     "cue": "uncertain",
+     "kind": "tick"
+    },
+    {
+     "cue": "confident",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "separate",
+     "kind": "pop"
+    },
+    {
+     "cue": "few",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "limit",
+   "say": "Set a limit: allow at most one percent of attacks. The policy then escalated every test input.",
+   "text": "Set a limit: allow at most 1% of attacks. The policy then escalated every test input.",
+   "data": {
+    "value": "1%",
+    "dial": "miss limit",
+    "set": "a setting, not a result",
+    "allow": "allow",
+    "esc": "escalate",
+    "block": "block",
+    "review": "review",
+    "every": "every test input"
+   },
+   "sfx": [
+    {
+     "cue": "limit",
+     "kind": "click"
+    },
+    {
+     "cue": "one",
+     "kind": "impact"
+    },
+    {
+     "cue": "escalated",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "every",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "limit",
+   "say": "With separate thresholds, it decided about seven percent of inputs automatically. Every one was a block.",
+   "text": "With separate thresholds, it decided about 7% of inputs automatically. Every one was a block.",
+   "data": {
+    "sep": "separate thresholds · exploratory analysis",
+    "value": "7%",
+    "lab": "decided automatically",
+    "blk": "block",
+    "alw": "allow: none",
+    "_cov": 6.7,
+    "_block": 108,
+    "_allow": 0
+   },
+   "sfx": [
+    {
+     "cue": "separate",
+     "kind": "click"
+    },
+    {
+     "cue": "seven",
+     "kind": "impact"
+    },
+    {
+     "cue": "automatically",
+     "kind": "thud"
+    },
+    {
+     "cue": "block",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "close",
+   "say": "The tests use public text benchmarks. Results may differ for adaptive attacks and other languages.",
+   "text": "The tests use public text benchmarks. Results may differ for adaptive attacks and other languages.",
+   "data": {
+    "frame": "public text benchmarks",
+    "adapt": "adaptive attacks",
+    "lang": "other languages",
+    "differ": "results may differ"
+   },
+   "sfx": [
+    {
+     "cue": "public",
+     "kind": "pop"
+    },
+    {
+     "cue": "adaptive",
+     "kind": "glitch"
+    },
+    {
+     "cue": "languages",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l14",
+   "scene": "close",
+   "say": "Test accuracy, calibration and the policy together, before you trust a judge that says safe.",
+   "text": "Test accuracy, calibration and the policy together, before you trust a judge that says safe.",
+   "data": {
+    "t1": "accuracy",
+    "t2": "calibration",
+    "t3": "policy",
+    "stamp": "SAFE",
+    "q": "WHEN CAN YOU TRUST IT?",
+    "handle": "hemanth_with_ai",
+    "title": "Evaluating System One Models for Agent Security Decisions",
+    "credit": "arXiv 2609.33401 · unofficial explainer"
+   },
+   "sfx": [
+    {
+     "cue": "accuracy",
+     "kind": "pop"
+    },
+    {
+     "cue": "calibration",
+     "kind": "pop"
+    },
+    {
+     "cue": "policy",
+     "kind": "pop"
+    },
+    {
+     "cue": "together",
+     "kind": "thud"
+    },
+    {
+     "cue": "safe",
+     "kind": "stamp"
+    }
+   ]
+  }
+ ]
+}

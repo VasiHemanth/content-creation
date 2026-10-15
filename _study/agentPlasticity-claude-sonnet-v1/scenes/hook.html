@@ -1,0 +1,101 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 860px; }
+    .hk { position: absolute; left: 0; width: 1080px; text-align: center; font: 400 100px/1 "Marker", sans-serif; color: var(--white); white-space: nowrap; text-shadow: 6px 6px 0 var(--shadow); }
+    #hook-a { top: 176px; }
+    #hook-b { top: 316px; }
+    .hk2 { font-size: 82px; color: var(--amber); }
+    #hook-c1 { top: 1030px; }
+    #hook-c2 { top: 1136px; }
+    #hook-game { left: 110px; top: 468px; }
+    #hook-panel { left: 90px; top: 520px; width: 900px; height: 480px; }
+    #hook-panel svg { left: 0; top: 0; width: 900px; height: 480px; }
+    #hook-flash { position: absolute; left: 0; top: 0; width: 900px; height: 480px; background: var(--coral); opacity: 0; }
+    #hook-over { left: 250px; top: 640px; font-size: 96px; }
+    #hook-msg { left: 120px; top: 930px; font-size: 32px; }
+    #hook-nb { position: absolute; left: 120px; top: 1262px; width: 800px; height: 190px; border-radius: 12px; border: 5px solid var(--ink); background: var(--paper); box-shadow: 8px 8px 0 var(--shadow); overflow: hidden; }
+    #hook-nb .sp { position: absolute; left: 10px; top: 8px; bottom: 8px; width: 34px; background: radial-gradient(circle at 17px 16px, var(--ink) 7px, transparent 8px) repeat-y; background-size: 34px 38px; }
+    #hook-nb .ru { position: absolute; left: 56px; right: 0; top: 0; bottom: 0; background: repeating-linear-gradient(to bottom, transparent 0, transparent 54px, #9db8d3 54px, #9db8d3 56px); }
+    #hook-ruleline { position: absolute; left: 70px; top: 24px; font: 400 44px/1 "Marker", sans-serif; color: var(--ink); white-space: nowrap; }
+    #hook-pencil { position: absolute; left: 62px; top: 46px; width: 74px; height: 16px; background: linear-gradient(to right, var(--ink) 0 14px, var(--amber) 14px 60px, #f3d9a8 60px); transform: rotate(-32deg); transform-origin: 0 50%; opacity: 0; }
+    #hook-stamp { left: 630px; top: 1346px; font-size: 46px; border-width: 6px; transform: rotate(-6deg); }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam">
+      <div id="hook-a" class="hk" data-bind="l01.a"></div>
+      <div id="hook-b" class="hk" data-bind="l01.b"></div>
+      <div id="hook-game" class="tag cyan" data-bind="l01.game"></div>
+      <div id="hook-panel" class="plate deep">
+        <svg class="ink sketch" viewBox="0 0 900 480">
+          <path class="ln faint" d="M50 70 H850 V420 H50 Z" />
+          <path class="ln faint thin" d="M50 395 H850" />
+          <g id="hook-vortex"><g id="hook-spin">
+            <path class="ln cyan thick" d="M640 300 a60 60 0 1 1 60 60" />
+            <path class="ln cyan" d="M664 300 a36 36 0 1 1 36 36" />
+            <path class="ln cyan thin" d="M684 300 a16 16 0 1 1 16 16" />
+            <path class="ln cyan thin" d="M640 340 L610 360 M760 250 L790 235 M690 230 L690 205" />
+          </g></g>
+          <g id="hook-hero">
+            <circle class="fl" cx="250" cy="230" r="20" />
+            <path class="ln" d="M250 250 L250 330 M250 275 L218 238 M250 275 L282 238 M250 330 L226 392 M250 330 L274 392" />
+            <ellipse id="hook-halo" class="ln amber" cx="250" cy="196" rx="30" ry="10" />
+          </g>
+          <path id="hook-tomb" class="ln" d="M215 395 V330 Q215 300 250 300 Q285 300 285 330 V395 Z M250 322 V360 M236 334 H264" opacity="0" />
+        </svg>
+        <div id="hook-flash"></div>
+      </div>
+      <div id="hook-over" class="stamp" data-bind="l01.over"></div>
+      <div id="hook-msg" class="lbl" data-bind="l01.msg"></div>
+      <div id="hook-c1" class="hk hk2" data-bind="l01.c1"></div>
+      <div id="hook-c2" class="hk hk2" data-bind="l01.c2"></div>
+      <div id="hook-nb">
+        <div class="sp"></div><div class="ru"></div>
+        <div id="hook-ruleline" data-bind="l01.line"></div>
+        <div id="hook-pencil"></div>
+      </div>
+      <div id="hook-stamp" class="stamp amber" data-bind="l01.stamp"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l01', w, n), D = KIT.sceneDur('hook');
+      KIT.bind('#hook-cam');
+      const tl = gsap.timeline({ paused: true });
+      const tD = c('died');
+
+      // the claim is on screen at 0.0 s: the big type starts at full opacity and settles
+      tl.fromTo('#hook-cam .hk', { scale: 1.08, opacity: 1 }, { scale: 1, duration: 0.25, ease: 'power4.in' }, 0);
+      // the dust vortex spins and closes in on the praying figure
+      tl.fromTo('#hook-spin', { rotation: 0, svgOrigin: '700 300' }, { rotation: 720, svgOrigin: '700 300', duration: D, ease: 'none' }, 0);
+      tl.fromTo('#hook-vortex', { x: 0, scale: 0.55, svgOrigin: '700 300' }, { x: -380, scale: 1.1, svgOrigin: '700 300', duration: tD - 0.02, ease: 'power2.in' }, 0);
+
+      // "died": the hit. Flash, shake, the figure falls, a grave rises, GAME OVER slams
+      tl.fromTo('#hook-flash', { opacity: 0 }, { opacity: 0.5, duration: 0.05 }, tD);
+      tl.to('#hook-flash', { opacity: 0, duration: 0.35 }, tD + 0.05);
+      KIT.shake(tl, '#hook-cam', tD, { amp: 18, dur: 0.35 });
+      tl.to('#hook-halo', { scale: 3, opacity: 0, svgOrigin: '250 196', duration: 0.35, ease: 'power2.out' }, tD);
+      tl.to('#hook-hero', { rotation: 90, opacity: 0, svgOrigin: '250 392', duration: 0.3, ease: 'power2.in' }, tD);
+      tl.to('#hook-vortex', { opacity: 0, duration: 0.2 }, tD + 0.15);
+      tl.fromTo('#hook-tomb', { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.25, ease: 'bounce.out' }, tD + 0.1);
+      KIT.slam(tl, '#hook-over', tD + 0.1, { from: 2.2, shake: false });
+      // the death message types out across "while it prayed"
+      KIT.typeOn(tl, '#hook-msg', c('while'), 46);
+
+      // "Then it wrote itself a rule": the notebook rises, the pencil writes, the stamp lands on "rule"
+      tl.fromTo('#hook-nb', { y: 220, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, c('Then') - 0.3);
+      const wr = c('rule') - c('wrote') + 0.1;
+      KIT.wipe(tl, '#hook-ruleline', c('wrote'), wr, { dir: 'left', ease: 'none' });
+      tl.fromTo('#hook-pencil', { x: 0, opacity: 0 }, { x: 0, opacity: 1, duration: 0.05 }, c('wrote') - 0.02);
+      tl.to('#hook-pencil', { x: 650, duration: wr, ease: 'none' }, c('wrote'));
+      tl.to('#hook-pencil', { opacity: 0, duration: 0.15 }, c('rule') + 0.15);
+      KIT.slam(tl, '#hook-stamp', c('rule') - 0.05, { from: 2.4, shake: false });
+      KIT.shake(tl, '#hook-cam', c('rule') + 0.15, { amp: 10, dur: 0.25 });
+
+      // slow push through the whole line
+      tl.fromTo('#hook-cam', { scale: 1 }, { scale: 1.05, duration: D, ease: 'sine.inOut' }, 0);
+
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

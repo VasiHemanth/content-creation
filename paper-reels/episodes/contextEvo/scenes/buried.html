@@ -1,0 +1,161 @@
+<template id="buried-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #buried-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #buried-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #buried-world { position: absolute; left: 0; top: 0; width: 2160px; height: 1920px; }
+    #buried-stage, #buried-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #buried-scrim { position: absolute; left: -1500px; top: -1500px; width: 4000px; height: 5000px; background: #061a30; opacity: 0; }
+    #buried-scrbg { position: absolute; left: 90px; top: 400px; width: 840px; height: 1040px; background: var(--panel); border-radius: 0 0 30px 30px; }
+    #buried-clip { position: absolute; left: 90px; top: 160px; width: 840px; height: 1280px; overflow: hidden; }
+    #buried-feed { position: absolute; left: 0; top: 240px; width: 840px; height: 2000px; }
+    .buried-bub { position: absolute; height: 84px; border: 5px solid var(--dim); border-radius: 24px; background: #0f3a60; padding: 20px 26px 0;
+      font: 600 36px/1 "Mono", monospace; color: var(--white); white-space: nowrap; }
+    .buried-bub.ev { border-color: var(--amber); color: var(--amber); background: #2e2614; }
+    .buried-bub i { position: absolute; left: 26px; height: 13px; border-radius: 7px; background: #2b5f8a; }
+    .buried-st { position: absolute; padding: 2px 18px; font: 400 46px/1.15 "Marker", sans-serif; color: var(--coral); background: var(--deep);
+      border: 5px solid var(--coral); white-space: nowrap; transform-origin: 50% 50%; }
+    #buried-dark { position: absolute; left: 90px; top: 160px; width: 840px; height: 240px;
+      background: repeating-linear-gradient(-45deg, rgba(3,12,24,.80) 0 18px, rgba(3,12,24,.68) 18px 36px); }
+    #buried-frame { position: absolute; left: 84px; top: 394px; width: 852px; height: 1052px; border: 6px solid var(--white); border-top-color: var(--amber);
+      border-radius: 0 0 34px 34px; box-shadow: 12px 12px 0 var(--shadow); }
+    #buried-out { left: 456px; top: 214px; font-size: 34px; color: var(--amber); }
+    .buried-chip { position: absolute; width: 66px; height: 110px; border: 4px solid var(--cyan); border-radius: 9px; background: var(--panel); }
+    .buried-chip svg { position: absolute; left: 4px; top: 30px; width: 50px; height: 46px; }
+    .buried-book { position: absolute; border: 5px solid var(--cyan); border-radius: 5px; background: #0d3358; box-shadow: 5px 5px 0 var(--shadow); }
+    .buried-book::after { content: ""; position: absolute; left: 4px; right: 4px; top: 22%; height: 7px; background: var(--amber); }
+    #buried-not { left: 1190px; top: 1176px; font-size: 32px; }
+  </style>
+  <div id="root" data-composition-id="buried" data-width="1080" data-height="1920">
+    <div id="buried-cam">
+      <div id="buried-beat"><div id="buried-world">
+        <div id="buried-scrbg"></div>
+        <div id="buried-clip"><div id="buried-feed"></div></div>
+        <div id="buried-dark"></div>
+        <div id="buried-frame"></div>
+        <div id="buried-out" class="lbl" data-bind="l03.out"></div>
+        <svg class="ink sketch" id="buried-svg" style="left:0;top:0;width:2160px;height:1920px" viewBox="0 0 2160 1920">
+          <path id="buried-shelf" class="ln thick" d="M1196 562 L2040 562 M1216 562 L1216 592 M2020 562 L2020 592" />
+          <path id="buried-arrow" class="ln amber thick" d="M420 300 L420 205 M395 232 L420 205 L445 232" />
+        </svg>
+        <div id="buried-books"></div>
+        <div id="buried-grid"></div>
+        <div id="buried-not" class="tag coral" data-bind="l04.notopened"></div>
+      </div></div>
+      <div id="buried-scrim"></div>
+      <div id="buried-stage"></div>
+    </div>
+    <div id="buried-hud"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'buried', a = (w, n) => KIT.cue('l03', w, n), b = (w, n) => KIT.cue('l04', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#buried-world');
+      const d1 = KIT.data('l01'), d3 = KIT.data('l03'), d4 = KIT.data('l04'), tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+
+      // ---- the feed, zoomed in. Feed y 0 is the screen's top edge; older messages sit above it, in the dark ----
+      const G = 22, SH = 84, LG = 150, IW = 840;
+      const spec = [['tool', 'R', 300], ['file', 'L', 220], ['log', 'R', 470, 1], ['tool', 'L', 330], ['ev', 'L', 300],
+        ['log', 'R', 470, 1, 'rep'], ['log', 'R', 470, 1, 'rep'], ['file', 'L', 220], ['tool', 'R', 330], ['log', 'L', 300],
+        ['file', 'R', 220], ['log', 'L', 470, 1], ['tool', 'R', 330], ['file', 'L', 220], ['log', 'R', 300]];
+      const feed = q('#buried-feed'), bubs = [];
+      let y = 344 - 4 * G - 3 * SH - LG;                     // the evidence bubble (index 4) starts at feed y 344
+      spec.forEach(([k, side, w, long], i) => {
+        const el = document.createElement('div'); el.className = `buried-bub${k === 'ev' ? ' ev' : ''}`; el.id = `buried-b${i}`;
+        el.textContent = d1[k];
+        const h = long ? LG : SH;
+        el.style.cssText = `left:${side === 'L' ? 16 : IW - 16 - w}px;top:${y}px;width:${w}px;height:${h}px`;
+        if (long) for (let s = 0; s < 2; s++) { const st = document.createElement('i'); st.style.top = `${74 + s * 32}px`; st.style.width = `${s ? 55 : 78}%`; el.appendChild(st); }
+        feed.appendChild(el); bubs.push({ el, y, h }); y += h + G;
+      });
+      const EV = bubs[4].el;
+      // stamps ride on their bubbles
+      const stamp = (host, txt, id, x, yy, rot) => { const s = document.createElement('div'); s.className = 'buried-st'; s.id = id; s.textContent = txt; s.style.left = `${x}px`; s.style.top = `${yy}px`; host.appendChild(s); gsap.set(s, { rotation: rot }); return s; };
+      const stR = stamp(bubs[6].el, d3.redundant, 'buried-st1', 150, 38, -7);
+      const stO = stamp(bubs[7].el, d3.outdated, 'buried-st2', 110, 4, 6);
+
+      // "On long tasks": new messages pour in from the bottom and push the feed up
+      const steps = [[0.12, SH + G], [0.47, LG + G]];
+      let sc = 0;
+      steps.forEach(([t, dy]) => { sc -= dy; tl.to(feed, { y: sc, duration: 0.28, ease: 'power2.out' }, t); });
+
+      // the paper says it: "useful evidence can be buried" (camera holds the start of the phrase in frame)
+      const tR = a('useful') - 0.55;
+      KIT.beats(tl, '#buried-beat', [a('On'), a('tasks')], { amp: 0.025, shift: 18, reset: tR - 0.05 });
+      tl.to('#buried-scrim', { opacity: 0.88, duration: 0.3 }, tR);
+      tl.to('#buried-world', { opacity: 0, duration: 0.25 }, tR + 0.3);
+      const P = KIT.read(tl, { cam: '#buried-cam', parent: '#buried-stage', hud: '#buried-hud', tagY: 560, id: 'buried', t: tR, label: d3.receipt,
+        x: 40, y: 820, width: 1000, zoom: 2.8, fx: 90, fy: 860, follow: 0,
+        marks: [[a('useful'), a('buried') + 0.34, [[a('evidence'), 0.24], [a('can'), 0.55], [a('be'), 0.69], [a('buried'), 0.79]]]],
+        circles: [{ word: 'buried', t: a('buried') + 0.04 }] });
+      // cut back to the feed on "redundant"
+      // a hard cut back (no zoom-out through unreadable framings)
+      const tB = a('redundant') - 0.12;
+      tl.set('#buried-cam', { x: 0, y: 0, scale: 1 }, tB);
+      tl.set(P.el, { opacity: 0 }, tB);
+      tl.set('#buried-hud', { opacity: 0 }, tB);
+      tl.set('#buried-scrim', { opacity: 0 }, tB);
+      tl.set('#buried-world', { opacity: 1 }, tB);
+
+      // "redundant", "outdated": stamps land; more messages push the evidence over the top edge, into the dark
+      tl.fromTo(stR, { scale: 2.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.18, ease: 'power4.in' }, a('redundant') - 0.1);
+      KIT.shake(tl, bubs[6].el, a('redundant') + 0.08, { amp: 8, dur: 0.22 });
+      [[a('redundant') + 0.12, SH + G], [a('or') + 0.05, SH + G]].forEach(([t, dy]) => { sc -= dy; tl.to(feed, { y: sc, duration: 0.3, ease: 'power2.out' }, t); });
+      tl.fromTo(stO, { scale: 2.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.18, ease: 'power4.in' }, a('outdated') - 0.1);
+      KIT.shake(tl, bubs[7].el, a('outdated') + 0.08, { amp: 8, dur: 0.22 });
+      tl.to(EV, { borderColor: '#8a6a3a', color: '#d9a35a', duration: 0.35 }, a('or'));
+      // "context": the camera tilts up after it; it is still in the history, but out of view
+      tl.to('#buried-world', { y: 56, duration: 0.45, ease: 'power2.out' }, a('context') - 0.15);
+      KIT.draw(tl, '#buried-arrow', a('context') - 0.05, 0.3);
+      tl.fromTo('#buried-out', { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, a('context'));
+      tl.to(EV, { y: -26, duration: 0.9, ease: 'sine.inOut' }, a('context'));
+
+      // ---- l04: the skill shelf and one chip per inspectable skill run (counts from the storyboard, never printed) ----
+      const books = q('#buried-books'), BK = [[150, 56, 160], [214, 64, 140], [286, 58, 176], [352, 62, 150], [422, 56, 168], [486, 64, 136], [558, 58, 158]].map(([x, w, h]) => [1080 + x, 560 - h, w, h]);
+      BK.forEach(([x, yy, w, h], i) => { const el = document.createElement('div'); el.className = 'buried-book'; el.id = `buried-bk${i}`; el.style.cssText = `left:${x}px;top:${yy}px;width:${w}px;height:${h}px`; books.appendChild(el); });
+      const N = Math.round(d4._runs), NR = Math.round(d4._read), COLS = 11, ROWS = Math.ceil(N / COLS), CW = 66, CH = 110, GX = 10, GY = 16;
+      const gx0 = 1080 + 110, gy0 = 646;
+      const rnd = KIT.rng(34), idx = Array.from({ length: N }, (_, i) => i);
+      for (let i = N - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+      const readSet = new Set(idx.slice(0, NR)), grid = q('#buried-grid'), chips = [];
+      const OPEN = 'M23 8 C 16 3 6 3 2 6 L2 36 C 6 33 16 33 23 38 C 30 33 40 33 44 36 L44 6 C 40 3 30 3 23 8 Z M23 8 L23 38';
+      const SHUT = 'M8 4 L38 4 L38 38 L8 38 Z M14 4 L14 38';
+      for (let i = 0; i < N; i++) {
+        const r = Math.floor(i / COLS), c = i % COLS, el = document.createElement('div'); el.className = 'buried-chip'; el.id = `buried-c${i}`;
+        el.style.left = `${gx0 + c * (CW + GX)}px`; el.style.top = `${gy0 + r * (CH + GY)}px`;
+        const sv = KIT.svgEl('svg', { viewBox: '0 0 46 42' }, el), read = readSet.has(i);
+        const g = KIT.svgEl('path', { d: read ? OPEN : SHUT, fill: read ? 'rgba(255,180,84,.22)' : 'rgba(106,169,208,.18)', stroke: read ? '#ffb454' : '#6aa9d0', 'stroke-width': 3.5, 'stroke-linejoin': 'round', id: `buried-g${i}` }, sv);
+        gsap.set(g, { opacity: 0 });
+        grid.appendChild(el); chips.push({ el, g, r, c, read });
+      }
+
+      // "In over half": pan right to the shelf; the chips pop in row by row
+      const tP = b('In') - 0.35;
+      tl.to('#buried-world', { x: -1080, y: 0, duration: 0.5, ease: 'power3.inOut' }, tP);
+      for (let r = 0; r < ROWS; r++) tl.fromTo(chips.filter((x) => x.r === r).map((x) => x.el), { scale: 0, opacity: 0, transformOrigin: '50% 50%' },
+        { scale: 1, opacity: 1, duration: 0.2, stagger: 0.012, ease: 'back.out(2.5)' }, b('In') + r * 0.1);
+      // "the skill runs": the runs that read a skill flip to an open book, left to right
+      const flip = (list, t0, span) => list.sort((p, q2) => p.c - q2.c || p.r - q2.r).forEach((x, k) => {
+        const t = t0 + span * (k / Math.max(1, list.length - 1));
+        tl.to(x.el, { scaleX: 0, duration: 0.07, ease: 'power1.in' }, t);
+        tl.to(x.g, { opacity: 1, duration: 0.01 }, t + 0.07);
+        tl.to(x.el, { scaleX: 1, duration: 0.09, ease: 'power1.out' }, t + 0.07);
+      });
+      flip(chips.filter((x) => x.read), b('skill') - 0.1, 0.55);
+      // "never opened a skill": the rest show a shut book and dim
+      const shut = chips.filter((x) => !x.read);
+      flip(shut, b('never') - 0.05, 0.35);
+      tl.to(shut.map((x) => x.el), { borderColor: '#3d78a6', duration: 0.3 }, b('opened'));
+      tl.to(shut.map((x) => x.g), { opacity: 0.55, duration: 0.3 }, b('opened') + 0.1);
+      KIT.slam(tl, '#buried-not', b('opened') - 0.18, { from: 2.4, amp: 10, shakeTarget: '#buried-beat' });
+      // the top book on the shelf rattles and puffs dust
+      KIT.shake(tl, '#buried-bk2', b('skill', 1) - 0.05, { amp: 10, dur: 0.4 });
+      KIT.sparks(tl, '#buried-world', BK[2][0] + BK[2][2] / 2, BK[2][1], b('skill', 1) + 0.1, { n: 9, r: 110, color: '#6aa9d0' });
+
+      KIT.beats(tl, '#buried-beat', [a('redundant') + 0.25, a('outdated'), b('half'), b('skill'), b('opened'), b('skill', 1) + 0.2], { amp: 0.025, shift: 18 });
+
+      window.__timelines["buried"] = tl;
+    })();
+  </script>
+</template>

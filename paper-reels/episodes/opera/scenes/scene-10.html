@@ -1,0 +1,46 @@
+<template id="scene-10-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; background: #111; color: white; }
+    #scene-10-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 960px; }
+    #scene-10-text { position: absolute; left: 100px; top: 1200px; width: 880px; font-size: 60px; text-align: center; color: var(--magenta); font-family: sans-serif; }
+    #scene-10-box { position: absolute; left: 500px; top: 500px; width: 80px; height: 80px; background: cyan; border-radius: 40px; }
+  </style>
+  <div id="root" data-composition-id="scene-10" data-width="1080" data-height="1920">
+    <div id="scene-10-cam">
+      <div id="scene-10-text" data-bind="scene-10.text"></div>
+      <div id="scene-10-box"></div>
+      
+      <div id="scene-10-hud"></div>
+      <div id="scene-10-stage"></div>
+        
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'scene-10', D = KIT.sceneDur(S);
+      KIT.bind('#scene-10-cam');
+      const tl = gsap.timeline({ paused: true });
+      
+      tl.fromTo('#scene-10-cam', { scale: 1 }, { scale: 1.1, duration: D, ease: 'sine.inOut' }, 0);
+      tl.fromTo('#scene-10-text', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.5 }, 0.0);
+      
+      const counts = {};
+      const words = (KIT.data(S).text || "").replace(/[^\w\s]/g, '').split(' ').filter(Boolean);
+      words.forEach((w) => {
+         let wNorm = w.toLowerCase();
+         let nth = counts[wNorm] || 0;
+         counts[wNorm] = nth + 1;
+         try {
+           let t = KIT.cue(S, w, nth);
+           tl.to('#' + S + '-text', { y: 20, duration: 0.15, yoyo: true, repeat: 1, ease: 'power1.inOut' }, t);
+         } catch (e) {}
+      });
+
+      
+      KIT.read(tl, { cam: '#scene-10-cam', parent: '#scene-10-stage', hud: '#scene-10-hud', id: 'triggers', t: 0.2, x: 40, y: 860, width: 1000, zoom: 3.4, fx: 600, fy: 860, marks: [[0.5, 1.5], [1.6, 2.5]], circles: [{ word: 'triggers', t: 1.0 }] });
+        
+      
+      window.__timelines['scene-10'] = tl;
+    })();
+  </script>
+</template>

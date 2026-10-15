@@ -1,0 +1,31 @@
+{
+  "_note": "Edit the models here. Run: node scripts/sync-agents.mjs. List OpenCode names with: opencode models",
+  "opencode": {
+    "aliases": {
+      "opus": "opencode-go/deepseek-v4.1-flash",
+      "sonnet": "opencode-go/kimi-k3"
+    },
+    "default": "opencode-go/deepseek-v4.1-flash",
+    "overrides": {}
+  },
+  
+  "codex": {
+    "aliases": {
+      "opus": "gpt-6.1-sol",
+      "sonnet": "gpt-5.6-terra",
+      "haiku": "gpt-6-luna"
+    },
+    "default": null,
+    "overrides": {}
+},
+  "antigravity": {
+    "aliases": {
+      "opus": "pro",
+      "sonnet": "flash",
+      "haiku": "flash_lite"
+    },
+    "default": "inherit",
+    "commandExecutionPolicy": "auto",
+    "overrides": {}
+  }
+}

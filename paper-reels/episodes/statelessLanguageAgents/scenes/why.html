@@ -1,0 +1,107 @@
+<template id="why-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #why-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #why-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    .why-f { position: absolute; top: 352px; width: 300px; text-align: center; font: 600 28px/1.15 "Mono", monospace; color: var(--cyan); white-space: normal; }
+    #why-f1 { left: 60px; } #why-f2 { left: 390px; } #why-f3 { left: 720px; }
+    #why-head { left: 0; top: 470px; width: 1080px; text-align: center; font: 400 112px/1 "Marker", sans-serif; color: var(--white); text-shadow: 7px 7px 0 var(--shadow); }
+    .why-plate { position: absolute; left: 80px; width: 840px; height: 250px; box-sizing: border-box; border: 5px solid var(--amber); background: #0a2340; box-shadow: 12px 12px 0 var(--shadow); }
+    #why-p1 { top: 640px; } #why-p2 { top: 950px; }
+    .why-fill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: #123a62; transform-origin: 0 50%; }
+    .why-pt { position: absolute; left: 250px; top: 50px; width: 560px; font: 700 46px/1.15 "Mono", monospace; color: var(--white); white-space: normal; }
+    .why-ic { position: absolute; left: 40px; top: 35px; width: 180px; height: 180px; }
+    #why-src { left: 80px; top: 1236px; font-size: 26px; color: var(--dim); }
+    .why-wb { position: absolute; font-size: 28px; padding: 4px 12px; }
+    #why-wb1 { left: 400px; top: 850px; } #why-wb2 { left: 400px; top: 1290px; }
+    #why-chips { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #why-chip { left: 60px; top: 170px; font-size: 30px; }
+    #why-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="why" data-width="1080" data-height="1920">
+    <div id="why-cam">
+      <svg id="why-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="why-f1" class="why-f" data-bind="l04.f1"></div>
+      <div id="why-f2" class="why-f" data-bind="l04.f2"></div>
+      <div id="why-f3" class="why-f" data-bind="l04.f3"></div>
+      <div id="why-head" class="abs" data-bind="l04.head"></div>
+      <div id="why-p1" class="why-plate"><div class="why-fill"></div><svg class="why-ic ink" viewBox="0 0 180 180"><rect x="40" y="14" width="100" height="156" fill="#ffb454" /><rect x="54" y="28" width="72" height="142" fill="#071d35" /><circle cx="112" cy="100" r="8" fill="#ffb454" /></svg><div class="why-pt" data-bind="l04.p1"></div></div>
+      <div id="why-p2" class="why-plate"><div class="why-fill"></div><svg class="why-ic ink" viewBox="0 0 180 180"><path d="M20 120 Q20 40 90 36 Q160 40 160 120 Z" fill="#ffb454" /><rect x="8" y="118" width="164" height="22" rx="8" fill="#ffb454" /><rect x="82" y="30" width="16" height="70" fill="#071d35" /></svg><div class="why-pt" data-bind="l04.p2"></div></div>
+      <div id="why-src" class="lbl" data-bind="l04.src"></div>
+      <svg id="why-svg2" class="ink" viewBox="0 0 1080 1920" style="left:0;top:0;width:1080px;height:1920px"></svg>
+      <div id="why-wb1" class="tag cyan why-wb" data-bind="l05.wb"></div>
+      <div id="why-wb2" class="tag cyan why-wb" data-bind="l05.wb"></div>
+    </div>
+    <div id="why-chips"><div id="why-chip" class="tag cyan" data-bind="l05.chip"></div></div>
+    <div id="why-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l04', w, n), b = (w, n) => KIT.cue('l05', w, n), D = KIT.sceneDur('why');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('why-svg'), svg2 = document.getElementById('why-svg2'), E = (tag, at, p) => KIT.svgEl(tag, at, p || svg);
+      const pulse = (t, o = 0.18) => tl.fromTo('#why-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // ---- l04: the three failures from the abstract, as filled icons ----
+      const g1 = E('g', { id: 'why-i1' }), g2 = E('g', { id: 'why-i2' }), g3 = E('g', { id: 'why-i3' });
+      [0, 1, 2, 3].forEach((k) => E('rect', { x: 150 + k * 6, y: 300 - k * 34, width: 120, height: 28, rx: 10, fill: k % 2 ? '#a8dcf2' : '#f2f8ff' }, g1));
+      E('rect', { x: 452, y: 230, width: 82, height: 70, fill: '#ffb454', stroke: '#ffe2b0', 'stroke-width': 4 }, g2);
+      E('rect', { x: 546, y: 230, width: 82, height: 70, fill: '#ffb454', stroke: '#ffe2b0', 'stroke-width': 4 }, g2);
+      E('rect', { x: 830, y: 220, width: 30, height: 90, rx: 6, fill: '#f2f8ff' }, g3);
+      E('rect', { x: 882, y: 220, width: 30, height: 90, rx: 6, fill: '#f2f8ff' }, g3);
+      [g1, g2, g3].forEach((g, i) => tl.fromTo(g, { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: 0.35, ease: 'back.out(2)' }, a('paper') + i * 0.12));
+      KIT.rise(tl, ['#why-f1', '#why-f2', '#why-f3'], a('traces'), { y: 16, stagger: 0.1 });
+      pulse(a('paper'), 0.12);
+      // "two choices": the header, then two plates drop and stack
+      KIT.slam(tl, '#why-head', a('two') - 0.05, { from: 2, shake: false });
+      tl.to(['#why-i1', '#why-i2', '#why-i3', '#why-f1', '#why-f2', '#why-f3'], { opacity: 0.35, duration: 0.3 }, a('two'));
+      tl.fromTo('#why-p1', { opacity: 0, y: -260 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.in' }, a('choices') - 0.15);
+      tl.fromTo('#why-p2', { opacity: 0, y: -260 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.in' }, a('choices'));
+      KIT.shake(tl, '#why-cam', a('choices') + 0.35, { amp: 10, dur: 0.25 });
+      pulse(a('two'));
+      const ic1 = '#why-p1 .why-ic', ic2 = '#why-p2 .why-ic', t1 = '#why-p1 .why-pt', t2 = '#why-p2 .why-pt';
+      gsap.set([ic1, ic2, t1, t2], { opacity: 0 });
+      // "Where does research state live?": plate one fills, its door icon and words
+      KIT.grow(tl, '#why-p1 .why-fill', a('Where'), 0.5);
+      tl.to('#why-cam', { scale: 1.1, y: 80, duration: 0.45, ease: 'power3.out' }, a('Where'));
+      tl.fromTo(ic1, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2)', immediateRender: false }, a('research'));
+      tl.fromTo(t1, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.35, ease: 'power3.out', immediateRender: false }, a('state'));
+      pulse(a('live'), 0.12);
+      // "Who picks the next experiment?": plate two
+      KIT.grow(tl, '#why-p2 .why-fill', a('Who'), 0.5);
+      tl.to('#why-cam', { scale: 1.1, y: -180, duration: 0.45, ease: 'power3.out' }, a('Who'));
+      tl.fromTo(ic2, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2)', immediateRender: false }, a('picks'));
+      tl.fromTo(t2, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.35, ease: 'power3.out', immediateRender: false }, a('next'));
+      KIT.fade(tl, '#why-src', a('picks'), { to: 0.85 });
+      pulse(a('experiment'), 0.12);
+
+      // ---- l05: two baselines; each agent pushes its own conversation, and it piles up ----
+      tl.to(['#why-i1', '#why-i2', '#why-i3', '#why-f1', '#why-f2', '#why-f3', '#why-head', '#why-p1', '#why-p2', '#why-src'], { opacity: 0, duration: 0.25 }, b('In') - 0.2);
+      tl.to('#why-cam', { scale: 1, y: 0, duration: 0.3, ease: 'power2.inOut' }, b('In') - 0.2);
+      KIT.rise(tl, '#why-chip', b('two'), { x: -40, y: 0 });
+      const rows = [[560, 'why-wb1'], [1000, 'why-wb2']].map(([y, tag], i) => {
+        const g = E('g', { id: `why-row${i}` }, svg2);
+        KIT.robot(g, { id: `why-r${i}`, x: 170, y, s: 0.72, eye: '#a8dcf2' });
+        E('path', { d: `M230 ${y + 150} L330 ${y + 170}`, stroke: '#f2f8ff', 'stroke-width': 8, 'stroke-linecap': 'round' }, g);
+        const pile = E('g', { id: `why-pile${i}` }, g);
+        for (let k = 0; k < 7; k++) E('rect', { x: 400 + (k % 2) * 14, y: y + 150 - k * 30, width: 200, height: 24, rx: 10, fill: k % 2 ? '#a8dcf2' : '#f2f8ff', id: `why-s${i}-${k}` }, pile);
+        E('path', { d: `M330 ${y + 150} L680 ${y + 150} L630 ${y + 220} L380 ${y + 220} Z`, fill: '#3d78a6', stroke: '#f2f8ff', 'stroke-width': 5 }, g);
+        const wheel = E('circle', { cx: 505, cy: y + 250, r: 30, fill: '#071d35', stroke: '#f2f8ff', 'stroke-width': 7, id: `why-wh${i}` }, g);
+        return { g, pile, wheel, y, tag: `#${tag}` };
+      });
+      rows.forEach((r, i) => {
+        tl.fromTo(r.g, { opacity: 0, x: -520 }, { opacity: 1, x: 0, duration: 0.55, ease: 'power3.out' }, b('baselines') + i * 0.12);
+        tl.fromTo(r.tag, { opacity: 0, x: -520 }, { opacity: 1, x: 0, duration: 0.55, ease: 'power3.out' }, b('baselines') + i * 0.12);
+        tl.to([r.g, r.tag], { x: 150, duration: 1.4, ease: 'power1.out' }, b('agents'));
+        tl.fromTo(r.wheel, { rotation: 0, svgOrigin: `505 ${r.y + 250}` }, { rotation: 360, svgOrigin: `505 ${r.y + 250}`, duration: 1.4, ease: 'power1.out', immediateRender: false }, b('agents'));
+        Array.from(r.pile.children).forEach((s, k) => tl.fromTo(s, { opacity: 0, y: -260 }, { opacity: 1, y: 0, duration: 0.25, ease: 'power2.in' }, b('long') + i * 0.05 + k * 0.1));
+        tl.to(r.pile, { rotation: i ? 5 : -5, svgOrigin: `500 ${r.y + 150}`, duration: 0.25, ease: 'sine.inOut', yoyo: true, repeat: 3 }, b('conversations') + 0.4);
+      });
+      pulse(b('baselines'), 0.12); pulse(b('long'), 0.12); pulse(b('conversations'));
+      // push toward the door of the site office (the zoom transition goes through it)
+      tl.to('#why-cam', { scale: 1.12, x: -60, duration: 0.6, ease: 'power2.in' }, D - 0.7);
+      window.__timelines["why"] = tl;
+    })();
+  </script>
+</template>

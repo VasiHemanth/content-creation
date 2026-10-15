@@ -1,0 +1,88 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 860px; }
+    #hook-title { left: 0; top: 150px; width: 1080px; text-align: center; font-size: 180px; }
+    #hook-title .char { display: inline-block; }
+    #hook-kicker { left: 0; top: 352px; width: 1080px; text-align: center; font-size: 34px; color: var(--cyan); }
+    .hook-z { position: absolute; font: 400 64px/1 "Marker", sans-serif; color: var(--cyan); }
+    #hook-c1 { left: 90px; top: 436px; font-size: 46px; }
+    #hook-c2 { left: 540px; top: 436px; font-size: 46px; }
+    #hook-glow { position: absolute; left: 240px; top: 470px; width: 600px; height: 560px; border-radius: 50%;
+      background: radial-gradient(closest-side, rgba(168,220,242,.22), rgba(168,220,242,0)); }
+    #hook-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #fff7e6; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam">
+      <div id="hook-title" class="hd" data-bind="l01.title"></div>
+      <div id="hook-kicker" class="lbl" data-bind="l01.kicker"></div>
+      <div id="hook-glow"></div>
+      <svg class="ink sketch" id="hook-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path id="hook-cloud" class="ln thick" d="M300 940 C 190 940 170 820 260 790 C 220 690 330 610 420 650 C 450 540 640 530 680 630 C 770 580 900 650 860 760 C 950 790 930 930 820 940 Z" />
+        <circle id="hook-b1" class="ln" cx="560" cy="1000" r="20" />
+        <circle id="hook-b2" class="ln" cx="590" cy="1052" r="13" />
+        <g id="hook-treebox"></g>
+        <path id="hook-path" class="ln amber heavy" d="" />
+        <g id="hook-bot"></g>
+      </svg>
+      <div id="hook-z1" class="hook-z" style="left:660px;top:1120px" data-bind="l01.zzz" data-layout-allow-overlap></div>
+      <div id="hook-z2" class="hook-z" style="left:700px;top:1090px;font-size:52px" data-bind="l01.zzz" data-layout-allow-overlap></div>
+      <div id="hook-z3" class="hook-z" style="left:735px;top:1060px;font-size:40px" data-bind="l01.zzz" data-layout-allow-overlap></div>
+      <div id="hook-c1" class="tag" style="color:var(--mint);border-color:var(--mint)" data-bind="l01.c1"></div>
+      <div id="hook-c2" class="tag" data-bind="l01.c2"></div>
+    </div>
+    <div id="hook-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'hook', c = (w, n) => KIT.cue('l01', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#hook-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // title
+      const sp = SplitText.create('#hook-title', { type: 'chars' });
+      tl.fromTo(sp.chars, { y: -150, rotationX: 90, opacity: 0, transformOrigin: '50% 100%' }, { y: 0, rotationX: 0, opacity: 1, duration: 0.45, stagger: 0.04, ease: 'back.out(2.2)' }, 0.03);
+      tl.fromTo('#hook-kicker', { opacity: 0, scaleX: 1.6 }, { opacity: 1, scaleX: 1, duration: 0.5, ease: 'power3.out' }, 0.45);
+
+      // the sleeping agent
+      const bot = KIT.robot('#hook-bot', { id: 'hook-r', x: 540, y: 1160, s: 1.1, asleep: true });
+      tl.fromTo('#hook-bot', { y: 260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'back.out(1.6)' }, 0.15);
+      ['#hook-z1', '#hook-z2', '#hook-z3'].forEach((z, k) => {
+        const t = 0.4 + k * 0.35;
+        tl.fromTo(z, { y: 30, x: 0, scale: 0.6 }, { y: -170, x: 50, scale: 1.2, duration: 1.8, ease: 'sine.out' }, t);
+        tl.fromTo(z, { opacity: 0 }, { opacity: 1, duration: 0.3 }, t);
+        tl.to(z, { opacity: 0, duration: 0.6 }, t + 1.2);
+      });
+      // the dream bubble opens on "practices", a discovery tree grows inside it on "dreams"
+      KIT.draw(tl, '#hook-b2', c('system'), 0.2); KIT.draw(tl, '#hook-b1', c('system') + 0.12, 0.2);
+      KIT.draw(tl, '#hook-cloud', c('practices') - 0.1, 0.55, { ease: 'power2.inOut' });
+      tl.fromTo('#hook-glow', { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }, c('practices'));
+      const T = KIT.tree('#hook-treebox', { id: 'hook-t', x: 545, y: 655, w: 470, dy: 78, levels: [3, 5, 7], seed: 4, r: 11, edgeClass: 'ln cyan thin' });
+      const tGrow = c('in');
+      T.byLevel.forEach((row, li) => row.forEach((n, k) => {
+        const t = tGrow + li * 0.22 + k * 0.03;
+        if (n.edge) KIT.draw(tl, n.edge, t, 0.2, { ease: 'none' });
+        tl.fromTo(n.el, { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.18, ease: 'back.out(3)' }, t + 0.12);
+      }));
+      // a search path races to the best leaf: "then it finds faster code"
+      const leaves = T.byLevel[3], best = leaves.reduce((a, b) => (b.score > a.score ? b : a));
+      const chain = []; for (let n = best; n; n = n.parent) chain.unshift(n);
+      document.querySelector('#hook-path').setAttribute('d', chain.map((n, i) => `${i ? 'L' : 'M'}${n.x.toFixed(1)} ${n.y.toFixed(1)}`).join(' '));
+      KIT.draw(tl, '#hook-path', c('Then') - 0.1, c('faster') - c('Then') + 0.05, { ease: 'power1.in' });
+      const tHit = c('faster');
+      tl.to(best.el, { attr: { r: 20 }, fill: '#ffb454', duration: 0.15, ease: 'back.out(3)' }, tHit);
+      KIT.sparks(tl, '#hook-cam', best.x, best.y, tHit, { n: 12, r: 200 });
+      tl.fromTo('#hook-flash', { opacity: 0 }, { opacity: 0.3, duration: 0.04 }, tHit);
+      tl.to('#hook-flash', { opacity: 0, duration: 0.3 }, tHit + 0.04);
+      KIT.shake(tl, '#hook-cam', tHit, { amp: 14, dur: 0.3 });
+      tl.fromTo('#hook-c1', { scale: 2.2, opacity: 0, rotation: -10 }, { scale: 1, opacity: 1, rotation: -4, duration: 0.2, ease: 'power4.in' }, tHit - 0.05);
+      // "with fewer attempts": the other branches fade back, the tag lands
+      tl.to(T.nodes.filter((n) => !chain.includes(n)).map((n) => n.el), { opacity: 0.25, duration: 0.4, stagger: 0.01 }, c('fewer') - 0.15);
+      tl.fromTo('#hook-c2', { scale: 2.2, opacity: 0, rotation: 10 }, { scale: 1, opacity: 1, rotation: 3, duration: 0.2, ease: 'power4.in' }, c('fewer') - 0.05);
+      // camera: slow push toward the bubble, a small jolt on the hit
+      tl.fromTo('#hook-cam', { scale: 1 }, { scale: 1.08, duration: D, ease: 'sine.inOut' }, 0);
+
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,174 @@
+<template id="replay-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #replay-cam, #replay-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 820px; }
+    #replay-world { position: absolute; left: 0; top: 0; width: 2160px; height: 1920px; }
+    .replay-fr { position: absolute; top: 300px; width: 96px; height: 128px; border: 4px solid var(--white); border-radius: 10px; background: var(--panel); box-shadow: 6px 6px 0 var(--shadow); }
+    .replay-fr i { position: absolute; left: 10px; height: 10px; border-radius: 5px; background: #2b5f8a; }
+    #replay-fixed { left: 300px; top: 450px; font-size: 30px; color: var(--amber); }
+    #replay-notrun { left: 806px; top: 452px; font-size: 30px; color: var(--dim); }
+    #replay-big { position: absolute; left: 240px; top: 560px; width: 600px; height: 540px; border: 6px solid var(--white); border-radius: 26px; background: var(--panel);
+      overflow: hidden; box-shadow: 12px 12px 0 var(--shadow); }
+    .replay-bub { position: absolute; height: 58px; border: 4px solid var(--dim); border-radius: 16px; background: #0f3a60; padding: 11px 16px 0;
+      font: 600 30px/1 "Mono", monospace; color: var(--white); white-space: nowrap; }
+    .replay-bub.ev { border-color: var(--amber); color: var(--amber); background: #2e2614; }
+    #replay-edited { left: 560px; top: 500px; font-size: 30px; color: var(--amber); }
+    #replay-before { left: 196px; top: 1120px; font-size: 30px; color: var(--dim); }
+    #replay-after { left: 690px; top: 1120px; font-size: 30px; color: var(--amber); }
+    #replay-q { left: 470px; top: 1170px; width: 140px; text-align: center; font-size: 190px; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); }
+    .replay-card { position: absolute; left: 1240px; width: 620px; background: var(--white); border: 3px solid var(--white); box-shadow: 12px 12px 0 var(--shadow); }
+    .replay-card i { position: absolute; left: 28px; height: 14px; border-radius: 7px; background: #b8c6d4; }
+    .replay-ct { position: absolute; left: 28px; top: 24px; font: 700 34px/1 "Mono", monospace; color: #1d5a8c; white-space: nowrap; }
+    #replay-rule { position: absolute; left: 28px; top: 252px; font: 700 28px/1 "Mono", monospace; color: var(--deep); white-space: nowrap; }
+    .replay-box { position: absolute; top: 300px; width: 44px; height: 44px; border: 5px solid var(--cyan); border-radius: 8px; background: var(--deep); }
+    .replay-boxl { top: 306px; font-size: 30px; color: var(--cyan); }
+    #replay-noedit { left: 1420px; top: 1006px; font-size: 76px; padding: 2px 26px; border-width: 7px; outline-offset: -18px; outline-width: 3px; }
+  </style>
+  <div id="root" data-composition-id="replay" data-width="1080" data-height="1920">
+    <div id="replay-cam"><div id="replay-beat"><div id="replay-world">
+      <svg class="ink" id="replay-track" style="left:0;top:0;width:2160px;height:1920px" viewBox="0 0 2160 1920">
+        <path id="replay-rail" class="ln dim thick" d="M90 446 L990 446" />
+        <g id="replay-streaks"></g>
+      </svg>
+      <div id="replay-frames"></div>
+      <svg class="ink" id="replay-head" style="left:0;top:0;width:1080px;height:600px" viewBox="0 0 1080 600">
+        <path d="M0 270 L0 452" stroke="#ffb454" stroke-width="7" stroke-linecap="round" /><path d="M-18 252 L18 252 L0 278 Z" fill="#ffb454" />
+      </svg>
+      <div id="replay-locks"></div>
+      <div id="replay-fixed" class="lbl" data-bind="l08.fixed"></div>
+      <div id="replay-notrun" class="lbl" data-bind="l08.notrun"></div>
+      <div id="replay-big"><div id="replay-feed" style="position:absolute;left:0;top:0;width:588px;height:900px"></div></div>
+      <div id="replay-evw"></div>
+      <svg class="ink" id="replay-hand" style="left:0;top:0;width:90px;height:110px" viewBox="0 0 90 110"><path d="M20 8 L20 74 L36 60 L48 88 L60 82 L48 55 L70 55 Z" fill="#f2f8ff" stroke="#071d35" stroke-width="5" stroke-linejoin="round" /></svg>
+      <div id="replay-edited" class="lbl" data-bind="l08.edited"></div>
+      <svg class="ink sketch" id="replay-doors" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path id="replay-dA" class="ln dim thick" d="M180 1420 L180 1250 L290 1250 L290 1420 M270 1340 L270 1340" />
+        <circle id="replay-kA" cx="270" cy="1340" r="7" fill="#6aa9d0" />
+        <path id="replay-dB" class="ln thick" d="M760 1420 L760 1250 L870 1250 L870 1420" />
+        <circle id="replay-kB" cx="850" cy="1340" r="7" fill="#f2f8ff" />
+        <path id="replay-aA" class="ln dim thick dash" d="M520 1110 C 470 1160, 330 1170, 250 1240" />
+        <path id="replay-aAh" class="ln dim thick" d="M262 1212 L250 1240 L280 1238" />
+        <path id="replay-aB" class="ln amber heavy" d="M560 1110 C 610 1160, 730 1170, 805 1240" />
+        <path id="replay-aBh" class="ln amber heavy" d="M778 1236 L805 1240 L800 1212" />
+      </svg>
+      <div id="replay-before" class="lbl" data-bind="l08.before"></div>
+      <div id="replay-after" class="lbl" data-bind="l08.after"></div>
+      <div id="replay-q" class="hd" data-bind="l08.q"></div>
+
+      <div class="replay-box" id="replay-b1" style="left:1240px"></div><div class="lbl replay-boxl" id="replay-l1" style="left:1300px" data-bind="l09.c1"></div>
+      <div class="replay-box" id="replay-b2" style="left:1600px"></div><div class="lbl replay-boxl" id="replay-l2" style="left:1660px" data-bind="l09.c2"></div>
+      <div class="replay-card" id="replay-card" style="top:400px;height:330px"><div class="replay-ct" data-bind="l05.policy"></div>
+        <i style="top:92px;width:420px"></i><i style="top:136px;width:500px"></i><i style="top:180px;width:360px"></i>
+        <div id="replay-rule" data-bind="l09.rule"></div></div>
+      <svg class="ink" id="replay-pencil" style="left:0;top:0;width:110px;height:110px" viewBox="0 0 110 110"><path d="M14 96 L26 66 L80 12 L98 30 L44 84 Z" fill="#ffb454" stroke="#071d35" stroke-width="5" stroke-linejoin="round" /><path d="M14 96 L26 66 L44 84 Z" fill="#f4efe3" stroke="#071d35" stroke-width="5" stroke-linejoin="round" /></svg>
+      <div class="replay-card" id="replay-card2" style="top:880px;height:300px"><div class="replay-ct" id="replay-ct2" data-bind="l05.policy"></div>
+        <i style="top:92px;width:420px"></i><i style="top:136px;width:500px"></i><i style="top:180px;width:360px"></i></div>
+      <div id="replay-noedit" class="stamp amber" data-bind="l09.noedit"></div>
+    </div></div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'replay', a = (w, n) => KIT.cue('l08', w, n), b = (w, n) => KIT.cue('l09', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#replay-world');
+      const d1 = KIT.data('l01'), tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+      const mkEl = (tag, cls, id, css, parent, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; e.id = id; if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; (typeof parent === 'string' ? q(parent) : parent).appendChild(e); return e; };
+
+      // ---- the failed run as a timeline of steps; the flagged step is the sixth ----
+      const N = 8, FLAG = 5, X0 = 107, STEP = 110, cx = (i) => X0 + i * STEP + 48;
+      const frames = [];
+      for (let i = 0; i < N; i++) {
+        const f = mkEl('div', 'replay-fr', `replay-f${i}`, `left:${X0 + i * STEP}px`, '#replay-frames');
+        [[16, 60], [36, 46], [56, 66], [76, 40]].forEach(([yy, w], k) => mkEl('i', '', `replay-f${i}l${k}`, `top:${yy}px;width:${w}px`, f));
+        if (i === FLAG) f.style.borderColor = '#ff6b6b';
+        frames.push(f);
+        tl.fromTo(f, { y: 24 }, { y: 0, duration: 0.3, ease: 'back.out(2)' }, i * 0.035);
+      }
+      const flag = KIT.svgEl('svg', { class: 'ink', id: 'replay-flag', style: `left:${cx(FLAG) + 14}px;top:240px;width:60px;height:70px`, viewBox: '0 0 70 80' }, q('#replay-world'));
+      KIT.svgEl('path', { d: 'M10 78 L10 6', stroke: '#f2f8ff', 'stroke-width': 6, 'stroke-linecap': 'round' }, flag);
+      KIT.svgEl('path', { d: 'M12 8 L60 20 L12 34 Z', fill: '#ff6b6b' }, flag);
+      tl.fromTo(flag, { scale: 0, opacity: 0, transformOrigin: '15% 100%' }, { scale: 1, opacity: 1, duration: 0.22, ease: 'back.out(3)' }, a('fix') - 0.1);
+      // the playhead starts at the end of the run
+      tl.fromTo('#replay-head', { x: 1000, opacity: 0 }, { x: 1000, opacity: 1, duration: 0.2 }, a('test'));
+
+      // "it can replay": rewind to the flagged step; earlier steps are fixed, later steps are not run
+      const tW = a('can') - 0.05;
+      tl.to('#replay-head', { x: cx(FLAG), duration: 0.45, ease: 'power3.inOut' }, tW);
+      const sk = q('#replay-streaks');
+      [312, 344, 380, 412].forEach((yy, k) => {
+        const p = KIT.svgEl('path', { d: `M${cx(FLAG) + 40} ${yy} L${980 - k * 30} ${yy}`, class: 'ln cyan thin', id: `replay-sk${k}` }, sk);
+        tl.fromTo(p, { drawSVG: '100% 100%', opacity: 1 }, { drawSVG: '0% 100%', duration: 0.25, ease: 'power2.in' }, tW + 0.05 + k * 0.03);
+        tl.to(p, { opacity: 0, duration: 0.15 }, tW + 0.35 + k * 0.03);
+      });
+      KIT.shake(tl, '#replay-frames', tW + 0.42, { amp: 6, dur: 0.2 });
+      const locks = q('#replay-locks');
+      for (let i = 0; i < FLAG; i++) {
+        const lk = KIT.svgEl('svg', { class: 'ink', id: `replay-lk${i}`, style: `left:${X0 + i * STEP + 58}px;top:278px;width:36px;height:42px`, viewBox: '0 0 36 42' }, locks);
+        KIT.svgEl('path', { d: 'M9 20 L9 13 C9 3 27 3 27 13 L27 20', fill: 'none', stroke: '#ffb454', 'stroke-width': 5 }, lk);
+        KIT.svgEl('rect', { x: 3, y: 18, width: 30, height: 22, rx: 4, fill: '#ffb454' }, lk);
+        tl.fromTo(lk, { scale: 0, opacity: 0, transformOrigin: '50% 100%' }, { scale: 1, opacity: 1, duration: 0.18, ease: 'back.out(3)' }, a('replay') + 0.05 + i * 0.05);
+      }
+      tl.fromTo('#replay-fixed', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25 }, a('replay') + 0.15);
+      tl.to(frames.slice(FLAG + 1), { opacity: 0.32, duration: 0.3 }, a('only') - 0.05);
+      tl.fromTo('#replay-notrun', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25 }, a('only'));
+
+      // "only that step": the flagged frame lifts out and grows into a large screen
+      const feed = q('#replay-feed'), FS = [['log', 'R', 220], ['tool', 'L', 260], ['file', 'R', 170], ['log', 'L', 220], ['tool', 'R', 260], ['file', 'L', 170], ['log', 'R', 220]];
+      FS.forEach(([k, side, w], i) => mkEl('div', 'replay-bub', `replay-fb${i}`, `left:${side === 'L' ? 18 : 588 - 18 - w}px;top:${94 + i * 74}px;width:${w}px`, feed, d1[k]));
+      const tG = a('that') - 0.15;
+      tl.fromTo('#replay-big', { x: cx(FLAG) - 540, y: 364 - 830, scale: 0.16, opacity: 0 }, { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.45, ease: 'power3.inOut' }, tG);
+      tl.to(frames[FLAG], { opacity: 0.2, duration: 0.2 }, tG);
+      tl.to('#replay-cam', { scale: 1.04, duration: 0.6, ease: 'power2.out' }, tG);
+      // "with an edited context": a hand drags the evidence back into view and pins it
+      const ev = mkEl('div', 'replay-bub ev', 'replay-ev', 'left:264px;top:494px;width:250px', '#replay-evw', d1.ev);
+      const tE = a('with') - 0.05;
+      tl.fromTo(ev, { opacity: 0, y: -40 }, { opacity: 0.55, y: 0, duration: 0.25 }, tE);
+      tl.fromTo('#replay-hand', { x: 520, y: 400, opacity: 0 }, { x: 420, y: 502, opacity: 1, duration: 0.3, ease: 'power2.out' }, tE);
+      tl.to(ev, { y: 80, opacity: 1, duration: 0.35, ease: 'power2.inOut' }, a('an') - 0.08);
+      tl.to('#replay-hand', { y: 502 + 80, duration: 0.35, ease: 'power2.inOut' }, a('an') - 0.08);
+      tl.to('#replay-hand', { x: 640, y: 700, opacity: 0, duration: 0.3, ease: 'power2.in' }, a('edited') + 0.2);
+      const pin = KIT.svgEl('svg', { class: 'ink', id: 'replay-pin', style: 'left:500px;top:556px;width:34px;height:46px', viewBox: '0 0 34 46' }, q('#replay-evw'));
+      KIT.svgEl('circle', { cx: 17, cy: 14, r: 11, fill: '#ffb454', stroke: '#071d35', 'stroke-width': 3 }, pin);
+      KIT.svgEl('path', { d: 'M17 24 L17 44', stroke: '#ffb454', 'stroke-width': 5, 'stroke-linecap': 'round' }, pin);
+      tl.fromTo(pin, { scale: 0, opacity: 0, transformOrigin: '50% 100%' }, { scale: 1, opacity: 1, duration: 0.22, ease: 'back.out(3)' }, a('edited'));
+      KIT.typeOn(tl, '#replay-edited', a('edited') + 0.1, 30);
+      // "Does the next move improve?": before and after, and the question stays open
+      KIT.draw(tl, ['#replay-dA', '#replay-dB'], a('Does') - 0.15, 0.3);
+      tl.fromTo(['#replay-kA', '#replay-kB'], { opacity: 0 }, { opacity: 1, duration: 0.2 }, a('Does'));
+      KIT.draw(tl, '#replay-aA', a('Does'), 0.3);
+      KIT.draw(tl, '#replay-aAh', a('Does') + 0.25, 0.1);
+      tl.fromTo('#replay-before', { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.25 }, a('Does') + 0.1);
+      KIT.draw(tl, '#replay-aB', a('next') - 0.05, 0.35, { ease: 'power2.out' });
+      KIT.draw(tl, '#replay-aBh', a('next') + 0.28, 0.1);
+      tl.fromTo('#replay-after', { opacity: 0, x: 16 }, { opacity: 1, x: 0, duration: 0.25 }, a('move') - 0.05);
+      KIT.pop(tl, '#replay-q', a('improve') - 0.1, { from: 0.2, dur: 0.35 });
+      tl.to('#replay-q', { scale: 1.12, duration: 0.25, yoyo: true, repeat: 3, ease: 'sine.inOut' }, a('improve') + 0.35);
+      tl.to('#replay-cam', { scale: 1.0, duration: 0.8, ease: 'power2.inOut' }, a('improve'));
+
+      // ---- l09: to the context policy card ----
+      const tP = b('If') - 0.4;
+      tl.to('#replay-world', { x: -1080, duration: 0.5, ease: 'power3.inOut' }, tP);
+      tl.fromTo('#replay-card', { y: 40, opacity: 0, rotation: -2 }, { y: 0, opacity: 1, rotation: 0, duration: 0.35, ease: 'back.out(1.6)' }, tP + 0.25);
+      tl.fromTo(['#replay-b1', '#replay-l1', '#replay-b2', '#replay-l2'], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.2, stagger: 0.04 }, tP + 0.3);
+      tl.to('#replay-b1', { backgroundColor: '#a8dcf2', duration: 0.12 }, b('checks'));
+      KIT.shake(tl, '#replay-b1', b('checks') + 0.1, { amp: 5, dur: 0.15 });
+      tl.to('#replay-b2', { backgroundColor: '#a8dcf2', duration: 0.12 }, b('support'));
+      KIT.shake(tl, '#replay-b2', b('support') + 0.1, { amp: 5, dur: 0.15 });
+      // "it updates the context policy": the pencil writes one new line, the card flexes
+      tl.fromTo('#replay-pencil', { x: 1250, y: 560, opacity: 0, rotation: -10 }, { x: 1250, y: 580, opacity: 1, rotation: 0, duration: 0.25 }, b('updates') - 0.3);
+      KIT.typeOn(tl, '#replay-rule', b('updates'), 30);
+      tl.to('#replay-pencil', { x: 1250 + 520, duration: 31 / 30, ease: 'none' }, b('updates'));
+      tl.to('#replay-pencil', { opacity: 0, y: 520, duration: 0.25 }, b('updates') + 31 / 30 + 0.05);
+      tl.to('#replay-card', { scaleY: 1.04, scaleX: 0.985, duration: 0.12, yoyo: true, repeat: 1, ease: 'power2.out', transformOrigin: '50% 100%' }, b('policy') + 0.05);
+      // "If not, it changes nothing": a second card, stamped, unchanged
+      tl.fromTo('#replay-card2', { x: 300, opacity: 0, rotation: 4 }, { x: 0, opacity: 1, rotation: 0, duration: 0.35, ease: 'back.out(1.6)' }, b('If', 1) - 0.1);
+      KIT.slam(tl, '#replay-noedit', b('changes') - 0.18, { from: 2.4, amp: 10, shakeTarget: '#replay-beat' });
+      tl.to(['#replay-card2', '#replay-noedit'], { rotation: 2, duration: 0.1, yoyo: true, repeat: 3, ease: 'sine.inOut' }, b('nothing'));
+      tl.to('#replay-world', { x: -1080 - 50, duration: D - b('nothing'), ease: 'sine.in' }, b('nothing'));
+
+      KIT.beats(tl, '#replay-beat', [a('test'), a('replay'), a('step'), a('edited'), a('next'), b('checks'), b('updates'), b('changes')], { amp: 0.018, shift: 14 });
+
+      window.__timelines["replay"] = tl;
+    })();
+  </script>
+</template>

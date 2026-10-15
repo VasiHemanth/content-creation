@@ -1,0 +1,192 @@
+<template id="why-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #why-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 860px; }
+    #why-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    .why-big { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap; }
+    #why-98 { top: 236px; font: 400 190px/1 "Marker", sans-serif; color: var(--coral); text-shadow: 7px 7px 0 var(--shadow); }
+    #why-98l { left: 0; top: 452px; width: 1080px; text-align: center; font-size: 32px; color: var(--coral); }
+    .why-sq { position: absolute; box-sizing: border-box; }
+    .why-sq.hollow { background: rgba(7, 29, 53, 0); border: 6px solid var(--coral); border-radius: 12px; }
+    .why-sq.used { background: #3d78a6; border: 6px solid var(--cyan); border-radius: 12px; }
+    .why-sq.fill { background: #3d78a6; border: 3px solid var(--cyan); border-radius: 8px; }
+    .why-sq.plain { background: rgba(7, 29, 53, 0.5); border: 3px solid var(--dim); border-radius: 8px; }
+    .why-x { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+    .why-x::before, .why-x::after { content: ""; position: absolute; left: 7px; top: 20px; width: 38px; height: 6px; border-radius: 3px; background: var(--white); box-shadow: 0 0 0 2px #071d35; }
+    .why-x::before { transform: rotate(45deg); }
+    .why-x::after { transform: rotate(-45deg); }
+    #why-k1 { left: 128px; top: 1086px; width: 824px; font-size: 30px; white-space: normal; color: var(--white); }
+    #why-k2 { left: 128px; top: 1166px; font-size: 30px; color: var(--cyan); }
+    #why-k3 { left: 128px; top: 1226px; width: 824px; font-size: 30px; white-space: normal; color: var(--cyan); }
+    #why-jd { left: 128px; top: 1316px; font-size: 24px; color: var(--dim); }
+    #why-s10 { left: 60px; top: 1428px; font-size: 22px; color: var(--dim); }
+    #why-nl { left: 525px; top: 940px; font-size: 28px; }
+    #why-nf { left: 560px; top: 522px; font-size: 28px; }
+    #why-ns { left: 640px; top: 742px; font-size: 28px; color: var(--mint); border-color: var(--mint); }
+    #why-least { left: 525px; top: 996px; font-size: 28px; color: var(--coral); }
+    #why-most { left: 560px; top: 478px; font-size: 28px; color: var(--white); }
+    #why-cav { left: 70px; top: 1110px; width: 940px; font-size: 34px; line-height: 1.25; white-space: normal; color: var(--amber); }
+    #why-link { left: 179px; top: 1260px; font-size: 44px; padding: 10px 20px; border-width: 4px; }
+    .why-t { font-size: 30px; line-height: 1.2; white-space: normal; }
+    #why-tl { left: 62px; top: 590px; width: 458px; color: var(--white); }
+    #why-tr { left: 560px; top: 590px; width: 458px; color: var(--white); }
+    #why-who { left: 62px; top: 1000px; width: 458px; font-size: 26px; line-height: 1.25; white-space: normal; color: var(--cyan); }
+    #why-xk { left: 62px; top: 1100px; font-size: 34px; color: var(--white); }
+    #why-fw { left: 62px; top: 1170px; width: 956px; font-size: 36px; line-height: 1.25; white-space: normal; color: var(--amber); }
+    #why-sk { left: 62px; top: 1310px; font-size: 28px; color: var(--cyan); }
+    #why-s11 { left: 60px; top: 1428px; font-size: 22px; color: var(--dim); }
+    #why-q { left: 0; top: 170px; width: 1080px; text-align: center; font: 400 210px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); }
+    #why-xbig { position: absolute; left: 250px; top: 248px; width: 120px; height: 120px; }
+    #why-xbig::before, #why-xbig::after { content: ""; position: absolute; left: 4px; top: 54px; width: 112px; height: 14px; border-radius: 7px; background: var(--white); box-shadow: 0 0 0 3px #071d35; }
+    #why-xbig::before { transform: rotate(45deg); }
+    #why-xbig::after { transform: rotate(-45deg); }
+    #why-unk { left: 0; top: 440px; width: 1080px; text-align: center; font-size: 38px; color: var(--cyan); }
+    .why-card { position: absolute; top: 540px; width: 300px; height: 380px; box-sizing: border-box; }
+    #why-c1 { left: 60px; background: var(--deep); border: 4px solid var(--cyan); box-shadow: 8px 8px 0 var(--shadow); }
+    #why-c2 { left: 390px; background: var(--paper); border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--shadow); }
+    #why-c3 { left: 720px; background: var(--panel); border: 4px solid var(--amber); box-shadow: 8px 8px 0 var(--shadow); }
+    .why-cl { position: absolute; left: 14px; bottom: 16px; width: 270px; font: 700 30px/1.15 "Mono", monospace; white-space: normal; }
+    #why-c1 .why-cl { color: var(--cyan); } #why-c2 .why-cl { color: var(--ink); } #why-c3 .why-cl { color: var(--amber); }
+    .why-run { position: absolute; left: 36px; top: 112px; width: 120px; height: 120px; box-sizing: border-box; border: 5px solid var(--amber); border-radius: 18px; }
+    .why-run::after { content: ""; position: absolute; left: 38px; top: 28px; border-left: 40px solid var(--amber); border-top: 26px solid transparent; border-bottom: 26px solid transparent; }
+    .why-qm { position: absolute; right: 14px; top: 6px; font: 400 96px/1 "Marker", sans-serif; color: var(--coral); }
+    .why-bar { position: absolute; left: 20px; height: 14px; border-radius: 7px; transform-origin: 0 50%; }
+    #why-qt { left: 70px; top: 990px; width: 940px; font-size: 34px; line-height: 1.3; white-space: normal; color: var(--white); }
+    #why-s12 { left: 60px; top: 1428px; font-size: 22px; color: var(--dim); }
+    #why-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="why" data-width="1080" data-height="1920">
+    <div id="why-cam">
+      <svg id="why-svg" class="ink sketch" viewBox="0 0 1080 1920"></svg>
+      <!-- l10 -->
+      <div id="why-98" class="why-big" data-bind="l10.big"></div>
+      <div id="why-98l" class="lbl" data-bind="l10.bigLab"></div>
+      <div id="why-grid10"></div>
+      <div id="why-k1" class="lbl" data-bind="l10.key1"></div>
+      <div id="why-k2" class="lbl" data-bind="l10.key2"></div>
+      <div id="why-k3" class="lbl" data-bind="l10.used"></div>
+      <div id="why-jd" class="lbl" data-bind="l10.judged"></div>
+      <div id="why-s10" class="lbl" data-bind="l10.src"></div>
+      <div id="why-nl" class="tag coral" data-bind="l10.nl"></div>
+      <div id="why-nf" class="tag" data-bind="l10.nf"></div>
+      <div id="why-ns" class="tag" data-bind="l10.ns"></div>
+      <div id="why-least" class="lbl" data-bind="l10.least"></div>
+      <div id="why-most" class="lbl" data-bind="l10.most"></div>
+      <div id="why-cav" class="lbl" data-bind="l10.caveat"></div>
+      <div id="why-link" class="tag" data-bind="l10.link"></div>
+      <!-- l11 -->
+      <div id="why-tl" class="lbl why-t" data-bind="l11.left"></div>
+      <div id="why-tr" class="lbl why-t" data-bind="l11.right"></div>
+      <div id="why-gridL"></div>
+      <div id="why-gridR"></div>
+      <div id="why-who" class="lbl" data-bind="l11.who"></div>
+      <div id="why-xk" class="lbl" data-bind="l11.x"></div>
+      <div id="why-fw" class="lbl" data-bind="l11.fewer"></div>
+      <div id="why-sk" class="lbl" data-bind="l11.sketch"></div>
+      <div id="why-s11" class="lbl" data-bind="l11.src"></div>
+      <!-- l12 -->
+      <div id="why-q" class="abs">?</div>
+      <div id="why-xbig"></div>
+      <div id="why-unk" class="lbl" data-bind="l12.unk"></div>
+      <div id="why-c1" class="why-card"><div class="why-qm">?</div><div class="why-cl" data-bind="l12.c1"></div></div>
+      <div id="why-c2" class="why-card"><div class="why-qm">?</div><div class="why-cl" data-bind="l12.c2"></div></div>
+      <div id="why-c3" class="why-card"><div class="why-run"></div><div class="why-qm">?</div><div class="why-cl" data-bind="l12.c3"></div></div>
+      <div id="why-qt" class="lbl" data-bind="l12.quote"></div>
+      <div id="why-s12" class="lbl" data-bind="l12.src"></div>
+      <svg id="why-svg2" class="ink" viewBox="0 0 1080 1920" style="left:0;top:0;width:1080px;height:1920px"></svg>
+    </div>
+    <div id="why-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l10', w, n), b = (w, n) => KIT.cue('l11', w, n), c = (w, n) => KIT.cue('l12', w, n), D = KIT.sceneDur('why');
+      KIT.bind('#why-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t) => tl.fromTo('#why-flash', { opacity: 0.2 }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const svg = document.getElementById('why-svg'), E = (tag, at, p) => KIT.svgEl(tag, at, p || svg);
+      const mk = (cls, x, y, w, parent, id) => { const d = document.createElement('div'); d.className = cls; if (id) d.id = id; d.style.cssText = `left:${x}px;top:${y}px;width:${w}px;height:${w}px`; parent.appendChild(d); return d; };
+
+      // ---------- l10: Luna's moves where a program or note applied: one square each, nearly all hollow ----------
+      const g10 = document.getElementById('why-grid10'), sq10 = [];
+      for (let r = 0; r < 5; r++) for (let k = 0; k < 8; k++) { const i = r * 8 + k; sq10.push(mk('why-sq ' + (i === 21 ? 'used' : 'hollow'), 128 + k * 104, 540 + r * 104, 96, g10, `why-s10-${i}`)); }
+      sq10.forEach((d, i) => tl.fromTo(d, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(2)' }, a('Luna') + i * 0.012));
+      KIT.slam(tl, '#why-98', a('never') - 0.05, { from: 2.2, shake: false });
+      KIT.shake(tl, '#why-cam', a('never') + 0.15, { amp: 12, dur: 0.3 });
+      KIT.rise(tl, '#why-98l', a('used'), { y: 12 });
+      KIT.rise(tl, '#why-k1', a('its'), { y: 12 });
+      KIT.rise(tl, '#why-k2', a('programs'), { y: 12 });
+      KIT.rise(tl, '#why-k3', a('and'), { y: 12 });
+      tl.to(sq10[21], { scale: 1.3, duration: 0.18, yoyo: true, repeat: 3, ease: 'sine.inOut' }, a('and'));
+      KIT.fade(tl, '#why-jd', a('notes'), { to: 0.85 });
+      KIT.fade(tl, '#why-s10', a('notes'), { to: 0.8 });
+      pulse(a('Luna')); pulse(a('never')); pulse(a('notes'));
+      // "Models that used them less gained less": the sketch of Fig. 1 again, now labelled by how much each model used its programs and notes
+      const grpA = ['#why-98', '#why-98l', '#why-grid10', '#why-k1', '#why-k2', '#why-k3', '#why-jd'];
+      tl.to(grpA, { opacity: 0, duration: 0.3 }, a('Models') - 0.1);
+      const chart = E('g', { id: 'why-chart' }), X = (cc) => 170 + 660 * (Math.log10(cc) + 1) / 4.3, Y = (s) => 1000 - 5.2 * s;
+      const sig = (z) => 1 / (1 + Math.exp(-z));
+      const fable = (cc) => 43 + 40 * sig((Math.log10(cc) - 2.3) / 0.3), solf = (cc) => 18 + 38 * sig((Math.log10(cc) - 1.75) / 0.2), luna = (cc) => 7 - 3 * (Math.log10(cc) + 0.854) / 2.03;
+      const path = (f, c0, c1, n = 60) => { let d = ''; for (let k = 0; k <= n; k++) { const cc = c0 * Math.pow(c1 / c0, k / n); d += `${k ? 'L' : 'M'}${X(cc).toFixed(1)} ${Y(f(cc)).toFixed(1)} `; } return d; };
+      E('path', { id: 'why-ay', d: 'M170 1000 L170 470 M170 470 L154 498 M170 470 L186 498', class: 'ln thick' }, chart);
+      E('path', { id: 'why-ax', d: 'M170 1000 L860 1000 M860 1000 L832 984 M860 1000 L832 1016', class: 'ln thick' }, chart);
+      E('path', { id: 'why-lf', d: path(fable, 0.14, 1600), class: 'ln amber heavy', opacity: 0 }, chart);
+      E('path', { id: 'why-ls', d: path(solf, 0.14, 500), class: 'ln mint heavy', opacity: 0 }, chart);
+      E('path', { id: 'why-ll', d: path(luna, 0.14, 15, 20), class: 'ln coral heavy dash' }, chart);
+      KIT.draw(tl, '#why-ay', a('Models') + 0.05, 0.4); KIT.draw(tl, '#why-ax', a('Models') + 0.1, 0.4);
+      KIT.draw(tl, '#why-ll', a('Models') + 0.2, 0.5, { ease: 'power1.out' }); KIT.pop(tl, '#why-nl', a('Models') + 0.3, { from: 0.4 });
+      KIT.rise(tl, '#why-least', a('that'), { y: 12 });
+      tl.fromTo(['#why-lf', '#why-ls'], { opacity: 0 }, { opacity: 1, duration: 0.01, immediateRender: false }, a('used', 1));
+      KIT.draw(tl, '#why-lf', a('used', 1), 0.9, { ease: 'power2.inOut' }); KIT.draw(tl, '#why-ls', a('used', 1) + 0.1, 0.9, { ease: 'power2.inOut' });
+      KIT.pop(tl, '#why-nf', a('them') + 0.25, { from: 0.4 }); KIT.pop(tl, '#why-ns', a('them') + 0.4, { from: 0.4 });
+      KIT.rise(tl, '#why-most', a('less'), { y: 12 });
+      KIT.rise(tl, '#why-cav', a('gained'), { y: 12 });
+      pulse(a('Models')); pulse(a('them')); pulse(a('gained'));
+      // "This is a link, not proof."
+      KIT.slam(tl, '#why-link', a('link') - 0.1, { from: 1.8, shake: false });
+      KIT.shake(tl, '#why-cam', a('link') + 0.12, { amp: 10, dur: 0.3 });
+      pulse(a('link')); pulse(a('proof'));
+
+      // ---------- l11: two equal grids; the left group used its programs and notes most and made fewer bad moves ----------
+      tl.to(['#why-chart', '#why-nl', '#why-nf', '#why-ns', '#why-least', '#why-most', '#why-cav', '#why-link', '#why-s10'], { opacity: 0, duration: 0.3 }, b('Models') - 0.15);
+      const gL = document.getElementById('why-gridL'), gR = document.getElementById('why-gridR'), sqL = [], sqR = [];
+      for (let r = 0; r < 5; r++) for (let k = 0; k < 8; k++) { sqL.push(mk('why-sq fill', 62 + k * 58, 700 + r * 58, 52, gL)); sqR.push(mk('why-sq plain', 560 + k * 58, 700 + r * 58, 52, gR)); }
+      const xL = [3, 9, 14, 20, 27, 33], xR = [1, 4, 6, 8, 11, 13, 16, 19, 21, 24, 26, 29, 32, 35, 38];
+      const marks = (arr, sq) => arr.map((i) => { const m = document.createElement('div'); m.className = 'why-x'; sq[i].appendChild(m); return m; });
+      const mL = marks(xL, sqL), mR = marks(xR, sqR);
+      KIT.rise(tl, '#why-tl', b('Models'), { y: 12 });
+      sqL.forEach((d, i) => tl.fromTo(d, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(2)' }, b('Models') + 0.05 + i * 0.012));
+      KIT.rise(tl, '#why-who', b('used') + 0.1, { y: 12 });
+      KIT.rise(tl, '#why-tr', b('made'), { y: 12 });
+      sqR.forEach((d, i) => tl.fromTo(d, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(2)' }, b('made') + 0.05 + i * 0.012));
+      KIT.rise(tl, '#why-xk', b('fewer') - 0.1, { y: 12 });
+      mL.forEach((m, i) => tl.fromTo(m, { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'power4.in' }, b('fewer') + i * 0.13));
+      mR.forEach((m, i) => tl.fromTo(m, { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'power4.in' }, b('bad') + 0.1 + i * 0.07));
+      KIT.rise(tl, '#why-fw', b('but'), { y: 12 });
+      tl.to(mL.map((m) => m.parentNode), { scale: 1.25, duration: 0.14, yoyo: true, repeat: 1, stagger: 0.05 }, b('some'));
+      KIT.rise(tl, '#why-sk', b('remain'), { y: 12 });
+      KIT.fade(tl, '#why-s11', b('but'), { to: 0.8 });
+      pulse(b('Models')); pulse(b('fewer')); pulse(b('some'));
+
+      // ---------- l12: the paper does not know which: weak programs, weak notes or poor use ----------
+      tl.to(['#why-tl', '#why-tr', '#why-gridL', '#why-gridR', '#why-who', '#why-xk', '#why-fw', '#why-sk', '#why-s11'], { opacity: 0, duration: 0.3 }, c('The') - 0.15);
+      KIT.slam(tl, '#why-q', c('which') - 0.05, { from: 2.4, shake: false });
+      KIT.shake(tl, '#why-cam', c('which') + 0.15, { amp: 12, dur: 0.3 });
+      KIT.rise(tl, '#why-unk', c('know'), { y: 12 });
+      KIT.pop(tl, '#why-xbig', c('bad'), { from: 0.3 });
+      // the three cards: a program, a note, and how the model uses them
+      const c1 = document.getElementById('why-c1'), c2 = document.getElementById('why-c2'), c3 = document.getElementById('why-c3');
+      [[20, 90, 220, 'var(--cyan)'], [20, 124, 160, 'var(--faint)'], [20, 158, 250, 'var(--faint)'], [20, 192, 130, 'var(--cyan)'], [20, 226, 200, 'var(--faint)']].forEach(([x, y, w, col]) => { const d = document.createElement('div'); d.className = 'why-bar'; d.style.cssText = `left:${x}px;top:${y}px;width:${w}px;background:${col}`; c1.appendChild(d); });
+      [[20, 90, 230], [20, 124, 190], [20, 158, 240], [20, 192, 150], [20, 226, 200]].forEach(([x, y, w]) => { const d = document.createElement('div'); d.className = 'why-bar'; d.style.cssText = `left:${x}px;top:${y}px;width:${w}px;background:#9db8d3;height:8px`; c2.appendChild(d); });
+      const cur = E('path', { id: 'why-cur', d: 'M0 0 L0 78 L20 62 L34 94 L48 88 L34 56 L58 56 Z', fill: '#f2f8ff', stroke: '#071d35', 'stroke-width': 5, 'stroke-linejoin': 'round' }, document.getElementById('why-svg2'));
+      gsap.set(cur, { x: 830, y: 700, opacity: 0 });
+      [['#why-c1', c('weak'), 0], ['#why-c2', c('notes'), 0], ['#why-c3', c('poor'), 0]].forEach(([id, t]) => tl.fromTo(id, { y: 120, opacity: 0, scale: 0.8 }, { y: 0, opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, t));
+      tl.fromTo(cur, { opacity: 0 }, { opacity: 1, duration: 0.2 }, c('poor') + 0.1);
+      tl.to(cur, { x: 798, y: 672, duration: 0.25, yoyo: true, repeat: 3, ease: 'sine.inOut' }, c('poor') + 0.3);
+      KIT.rise(tl, '#why-qt', c('moves'), { y: 12 });
+      KIT.fade(tl, '#why-s12', c('weak'), { to: 0.8 });
+      pulse(c('which')); pulse(c('weak')); pulse(c('notes')); pulse(c('poor'));
+      tl.fromTo('#why-cam', { scale: 1 }, { scale: 1.03, duration: D, ease: 'sine.inOut', immediateRender: false }, 0);
+      window.__timelines["why"] = tl;
+    })();
+  </script>
+</template>

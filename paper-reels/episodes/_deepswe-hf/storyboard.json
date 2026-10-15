@@ -1,0 +1,395 @@
+{
+ "item": "2607.07946",
+ "name": "DeepSWE",
+ "renderer": "hyperframes",
+ "note": "v3 remake of the posted DeepSWE episode with the HyperFrames renderer, for comparison. Same facts as episodes/2607.07946 (facts.json), new script and visuals. Scratch folder: it reuses the live item id, so register it only in a copied database.",
+ "authors": [
+  "Wenqi Huang",
+  "Charley Lee",
+  "Leonard Tng",
+  "Serena Ge"
+ ],
+ "voice": {
+  "preset": "heart",
+  "speed": 1.2
+ },
+ "scenes": {
+  "hook": {
+   "transition": "zoom"
+  },
+  "leak": {
+   "transition": "whip"
+  },
+  "lock": {
+   "transition": "whip"
+  },
+  "build": {
+   "transition": "zoom"
+  },
+  "anatomy": {
+   "transition": "whip"
+  },
+  "verify": {
+   "transition": "punch"
+  },
+  "audit": {
+   "transition": "whip"
+  },
+  "board": {
+   "transition": "whip"
+  },
+  "scope": {
+   "transition": "blur"
+  },
+  "close": {}
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "Top agent setups now pass seventy four percent of Deep S W E.",
+   "text": "Top agent setups now pass 74% of DeepSWE.",
+   "data": {
+    "title": "DeepSWE",
+    "value": "74%",
+    "metric": "pass@1, best agent setups",
+    "src": "live board v1.1",
+    "kicker": "a coding benchmark"
+   },
+   "sfx": [
+    {
+     "t": 0.02,
+     "kind": "whoosh"
+    },
+    {
+     "cue": "seventy",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "seventy",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "scene": "hook",
+   "say": "Every task was written from scratch, and the fixes were never merged upstream.",
+   "text": "Every task was written from scratch, and the fixes were never merged upstream.",
+   "data": {
+    "scratch": "written from scratch",
+    "fix": "task fix",
+    "upstream": "upstream repo",
+    "stamp": "never merged"
+   },
+   "sfx": [
+    {
+     "cue": "written",
+     "kind": "type"
+    },
+    {
+     "cue": "never",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "leak",
+   "say": "Most public coding benchmarks reuse merged GitHub fixes, so a high score can reflect recall, not problem solving.",
+   "text": "Most public coding benchmarks reuse merged GitHub fixes, so a high score can reflect recall, not problem solving.",
+   "data": {
+    "card": "merged fix",
+    "pool": "pretraining data",
+    "score": "high score",
+    "recall": "recall?",
+    "solving": "problem solving?",
+    "receipt": "FROM THE PAPER · Introduction"
+   },
+   "sfx": [
+    {
+     "cue": "reuse",
+     "kind": "pop"
+    },
+    {
+     "cue": "recall",
+     "kind": "click"
+    },
+    {
+     "cue": "problem",
+     "kind": "whoosh",
+     "offset": 0.3
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "lock",
+   "say": "And their tests were written for one particular fix, so a different fix that works can still fail.",
+   "text": "And their tests were written for one particular fix, so a different fix that works can still fail.",
+   "data": {
+    "lock": "shipped tests",
+    "keyA": "the merged fix",
+    "keyB": "another working fix",
+    "pass": "PASS",
+    "stamp": "REJECTED",
+    "receipt": "FROM THE PAPER · Introduction",
+    "shear": "shear line",
+    "works": "works"
+   },
+   "sfx": [
+    {
+     "cue": "particular",
+     "kind": "click"
+    },
+    {
+     "cue": "fail",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "build",
+   "say": "Deep S W E has a hundred and thirteen new tasks, in real open source repos, across five languages.",
+   "text": "DeepSWE has 113 new tasks, in real open-source repos, across five languages.",
+   "data": {
+    "value": "113",
+    "label": "original tasks",
+    "repos": "real open-source repos",
+    "langs": [
+     "TypeScript",
+     "Go",
+     "Python",
+     "JavaScript",
+     "Rust"
+    ],
+    "receipt": "FROM THE PAPER · Abstract"
+   },
+   "sfx": [
+    {
+     "cue": "hundred",
+     "kind": "riser",
+     "offset": -0.9
+    },
+    {
+     "cue": "thirteen",
+     "kind": "impact"
+    },
+    {
+     "cue": "five",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "anatomy",
+   "say": "Each agent gets a short prompt, a repo pinned at one commit with no git history, and one bash tool.",
+   "text": "Each agent gets a short prompt, a repo pinned at one commit with no git history, and one bash tool.",
+   "data": {
+    "box": "task container",
+    "prompt": "prompt",
+    "repo": "repo @ base commit",
+    "history": ".git history",
+    "cut": "shallow clone",
+    "tool": "$ bash",
+    "same": "same harness for every agent",
+    "receipt": "FROM THE PAPER · Novel tasks"
+   },
+   "sfx": [
+    {
+     "cue": "prompt",
+     "kind": "pop"
+    },
+    {
+     "cue": "history",
+     "kind": "glitch"
+    },
+    {
+     "cue": "bash",
+     "kind": "type"
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "verify",
+   "say": "Grading checks behavior, not the diff. Any working solution passes, and regression checks catch breakage.",
+   "text": "Grading checks behavior, not the diff. Any working solution passes, and regression checks catch breakage.",
+   "data": {
+    "machine": "verifier",
+    "behavior": "checks behavior",
+    "notdiff": "not the diff",
+    "pass": "PASS",
+    "fail": "FAIL",
+    "feature": "feature works",
+    "regress": "regression checks",
+    "receipt": "FROM THE PAPER · Verifiers"
+   },
+   "sfx": [
+    {
+     "cue": "passes",
+     "kind": "chime"
+    },
+    {
+     "cue": "breakage",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l08a",
+   "scene": "audit",
+   "say": "Does that grading hold up? An L L M judge re-checked graded runs.",
+   "text": "Does that grading hold up? An LLM judge re-checked graded runs.",
+   "data": {
+    "q1": "Does it",
+    "q2": "hold up?",
+    "judge": "LLM judge",
+    "runs": "graded runs",
+    "pass": "PASS",
+    "fail": "FAIL"
+   },
+   "sfx": [
+    {
+     "cue": "hold",
+     "kind": "thud"
+    },
+    {
+     "cue": "judge",
+     "kind": "click"
+    }
+   ]
+  },
+  {
+   "id": "l08b",
+   "scene": "audit",
+   "say": "It disagreed with S W E Bench Pro's grader on thirty two point four percent of runs, and Deep S W E's on one point four.",
+   "text": "It disagreed with SWE-Bench Pro's grader on 32.4% of runs, and DeepSWE's on 1.4%.",
+   "data": {
+    "title": "judge disagreed with the grader",
+    "rows": [
+     {
+      "label": "SWE-Bench Pro",
+      "value": "32.4%"
+     },
+     {
+      "label": "DeepSWE",
+      "value": "1.4%"
+     }
+    ],
+    "tags": [
+     "authors' own audit",
+     "disagreement, not error",
+     "judge = the paper's top model"
+    ],
+    "receipt": "FROM THE PAPER · Abstract"
+   },
+   "sfx": [
+    {
+     "cue": "thirty",
+     "kind": "thud"
+    },
+    {
+     "cue": "one",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l09",
+   "scene": "board",
+   "say": "On the live board, three agent setups now tie at seventy four percent, at very different costs per task.",
+   "text": "On the live board, three agent setups now tie at 74%, at very different costs per task.",
+   "data": {
+    "title": "DeepSWE board v1.1",
+    "owner": "Datacurve, the benchmark's owner",
+    "date": "updated Sep 22, 2026 · accessed Oct 6",
+    "rows": [
+     {
+      "name": "gpt-6-astra",
+      "effort": "xhigh",
+      "_err": 3,
+      "_cost": 4.43
+     },
+     {
+      "name": "gemini-3.8-flash",
+      "effort": "high",
+      "_err": 1,
+      "_cost": 2.36
+     },
+     {
+      "name": "claude-opus-5",
+      "effort": "max",
+      "_err": 4,
+      "_cost": 11.84
+     }
+    ],
+    "value": "74%",
+    "overlap": "run intervals overlap",
+    "cost": "cost per task"
+   },
+   "sfx": [
+    {
+     "cue": "seventy",
+     "kind": "impact"
+    },
+    {
+     "cue": "costs",
+     "kind": "tick"
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "scope",
+   "say": "With a clear prompt, top agents finish most of these long, multi file changes. Not measured: code quality, partial credit, vague requests.",
+   "text": "With a clear prompt, top agents finish most of these long, multi-file changes. Not measured: code quality, partial credit, vague requests.",
+   "data": {
+    "shows": "SHOWS",
+    "showsItems": [
+     "clear, specified prompt",
+     "pass/fail correctness",
+     "long, multi-file changes"
+    ],
+    "not": "NOT MEASURED",
+    "notItems": [
+     "code quality",
+     "partial credit",
+     "vague requests"
+    ],
+    "receipt": "FROM THE PAPER · Introduction"
+   },
+   "sfx": [
+    {
+     "cue": "Not",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "close",
+   "say": "A score is only as good as its grader. Check who graded it.",
+   "text": "A score is only as good as its grader. Check who graded it.",
+   "data": {
+    "line": "Check who graded it.",
+    "handle": "hemanth_with_ai",
+    "credit": "DeepSWE · arXiv 2607.07946 · unofficial explainer",
+    "receipt": "FROM THE PAPER · Functional verifiers"
+   },
+   "sfx": [
+    {
+     "cue": "Check",
+     "kind": "impact"
+    }
+   ]
+  }
+ ],
+ "ste": {
+  "enforce": false,
+  "why": "script written before the STE narration profile (2026-10-07)"
+ }
+}

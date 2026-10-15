@@ -1,0 +1,154 @@
+<template id="inertia-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #inertia-all, #inertia-shk, #inertia-hud0 { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #inertia-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #inertia-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #inertia-lever { left: 60px; top: 180px; font-size: 32px; }
+    .inertia-t { left: 60px; font-size: 28px; }
+    #inertia-t1 { top: 496px; } #inertia-t2 { top: 716px; } #inertia-t3 { top: 936px; }
+    #inertia-rare { left: 300px; top: 316px; font-size: 28px; }
+    #inertia-half { left: 600px; top: 534px; font-size: 28px; }
+    #inertia-pooled { left: 60px; top: 1380px; font-size: 28px; }
+    #inertia-val { left: 60px; top: 1040px; font: 400 150px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); }
+    #inertia-cond { left: 60px; top: 1214px; font-size: 28px; }
+    #inertia-gem { left: 60px; top: 1280px; font-size: 28px; }
+    #inertia-pm { left: 60px; top: 1346px; font-size: 28px; }
+    #inertia-title { left: 0; top: 172px; width: 1080px; text-align: center; font: 400 92px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; text-shadow: 7px 7px 0 var(--shadow); }
+    #inertia-stamp { left: 220px; top: 806px; font-size: 64px; padding: 4px 26px; border-width: 8px; outline-offset: -20px; }
+    #inertia-dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #061a30; opacity: 0; }
+    #inertia-rcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #inertia-rstage, #inertia-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #inertia-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="inertia" data-width="1080" data-height="1920">
+    <div id="inertia-all">
+      <div id="inertia-shk"><div id="inertia-cam">
+        <svg id="inertia-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="inertia-lever" class="tag" data-bind="l04.lever"></div>
+        <div id="inertia-t1" class="tag cyan inertia-t" data-bind="l04.t1"></div>
+        <div id="inertia-t2" class="tag cyan inertia-t" data-bind="l04.t2"></div>
+        <div id="inertia-t3" class="tag inertia-t" data-bind="l04.t3"></div>
+        <div id="inertia-rare" class="tag cyan" data-bind="l04.rare"></div>
+        <div id="inertia-half" class="tag cyan" data-bind="l04.half"></div>
+      </div></div>
+      <div id="inertia-hud0">
+        <div id="inertia-pooled" class="tag cyan" data-bind="l04.pooled"></div>
+        <div id="inertia-val" class="abs" data-bind="l05.value"></div>
+        <div id="inertia-cond" class="tag" data-bind="l05.cond"></div>
+        <div id="inertia-gem" class="tag cyan" data-bind="l05.gem"></div>
+        <div id="inertia-pm" class="tag cyan" data-bind="l05.pm"></div>
+        <div id="inertia-title" class="abs" data-bind="l06.title"></div>
+        <div id="inertia-stamp" class="stamp amber" data-bind="l06.title"></div>
+      </div>
+      <div id="inertia-dim"></div>
+      <div id="inertia-rcam"><div id="inertia-rstage"></div></div>
+      <div id="inertia-hud"></div>
+      <div id="inertia-flash"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l04', w, n), b = (w, n) => KIT.cue('l05', w, n), e = (w, n) => KIT.cue('l06', w, n), D = KIT.sceneDur('inertia'), S = KIT.svgEl;
+      KIT.bind('#inertia-all');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.2) => tl.fromTo('#inertia-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const G = document.getElementById('inertia-svg'), d4 = KIT.data('l04');
+      const L5 = KIT.cue('l05', 0), L6 = KIT.cue('l06', 0);
+
+      // lever (pulled at line start), three tracks with sleepers, three carts
+      const lev = S('g', { id: 'inertia-levg' }, G);
+      S('rect', { x: 520, y: 236, width: 70, height: 26, rx: 6, fill: '#0a2340', stroke: '#f2f8ff', 'stroke-width': 5 }, lev);
+      const arm = S('g', { id: 'inertia-arm' }, lev);
+      S('path', { d: 'M555 240 L555 150', stroke: '#ffb454', 'stroke-width': 12, 'stroke-linecap': 'round' }, arm);
+      S('circle', { cx: 555, cy: 146, r: 16, fill: '#ffb454' }, arm);
+      const TY = [470, 690, 910];
+      TY.forEach((y, k) => {
+        for (let x = 70; x < 1010; x += 40) S('rect', { x, y: y + 6, width: 16, height: 14, fill: '#3d78a6' }, G);
+        S('path', { d: `M60 ${y} H1020`, stroke: '#6aa9d0', 'stroke-width': 7, 'stroke-linecap': 'round', fill: 'none', id: `inertia-rail${k}` }, G);
+      });
+      function cart(k) {
+        const g = S('g', { id: `inertia-cart${k}` }, G), ig = S('g', { transform: `translate(80 ${TY[k]})` }, g);
+        S('rect', { x: 0, y: -92, width: 160, height: 64, rx: 8, fill: '#0a2340', stroke: '#f2f8ff', 'stroke-width': 6 }, ig);
+        S('path', { d: 'M14 -76 H146 M14 -58 H110', stroke: k === 2 ? '#ffb454' : '#a8dcf2', 'stroke-width': 6, 'stroke-linecap': 'round' }, ig);
+        const w = [34, 126].map((cx, j) => { const wg = S('g', { id: `inertia-w${k}${j}` }, ig); S('circle', { cx, cy: -16, r: 15, fill: '#0a2340', stroke: '#f2f8ff', 'stroke-width': 5 }, wg); S('path', { d: `M${cx - 10} -16 H${cx + 10}`, stroke: '#a8dcf2', 'stroke-width': 4 }, wg); return wg; });
+        return { g, ig, w };
+      }
+      const C = [0, 1, 2].map(cart);
+      // roll distances: carts 1 and 2 from the pooled rates (drawing only), cart 3 keeps going
+      const X1 = 140 + d4._bool * 8, X2 = 140 + d4._mcq * 8;
+      const t0 = 0.12, tRare = a('rarely'), tHalf = a('half');
+      const roll = (k, t, dur, dx, ease) => { tl.to(C[k].g, { x: dx, duration: dur, ease }, t); tl.to(C[k].w, { rotation: Math.round(dx / 94 * 360), transformOrigin: '50% 50%', duration: dur, ease }, t); };
+      tl.fromTo('#inertia-arm', { rotation: -40, svgOrigin: '555 240' }, { rotation: 40, svgOrigin: '555 240', duration: 0.18, ease: 'power4.in' }, 0.02);
+      KIT.shake(tl, '#inertia-shk', t0, { amp: 10, dur: 0.25 });
+      pulse(t0, 0.22);
+      [0, 1, 2].forEach((k) => KIT.sparks(tl, '#inertia-cam', 80 + 34, TY[k] - 4, t0 + 0.05 + k * 0.05, { n: 6, r: 90 }));
+      roll(0, t0, tRare - t0, X1, 'power2.out');
+      roll(1, t0, tHalf - t0, X2, 'power2.out');
+      // cart 3: fast to the right during l04, then slower; it never stops in this scene
+      const K3 = [[t0, 0], [tHalf, 600], [L6, 720], [D, 770]];
+      for (let i = 1; i < K3.length; i++) roll(2, K3[i - 1][0], K3[i][0] - K3[i - 1][0], K3[i][1], i === 1 ? 'power1.in' : 'none');
+      const x3 = (t) => { for (let i = 1; i < K3.length; i++) if (t <= K3[i][0]) { const [ta, xa] = K3[i - 1], [tb, xb] = K3[i]; const f = Math.max(0, (t - ta) / (tb - ta)); return xa + (xb - xa) * (i === 1 ? f * f : f); } return K3[K3.length - 1][1]; };
+      KIT.rise(tl, '#inertia-lever', 0.0, { x: -40, y: 0, dur: 0.2 });
+      KIT.pop(tl, '#inertia-pooled', a('Across'), { from: 0.5 });
+      ['#inertia-t1', '#inertia-t2', '#inertia-t3'].forEach((s, k) => KIT.rise(tl, s, 0.3 + k * 0.08, { x: -40, y: 0, dur: 0.3 }));
+      // "rarely": cart 1 skids to a stop
+      document.getElementById('inertia-rare').style.left = `${80 + X1 + 180}px`;
+      KIT.pop(tl, '#inertia-rare', tRare);
+      KIT.sparks(tl, '#inertia-cam', 80 + X1 + 34, TY[0] - 4, tRare - 0.25, { n: 8, r: 110 });
+      pulse(tRare, 0.15);
+      tl.to('#inertia-cam', { x: -30, y: 0, scale: 1, duration: L5 - a('Multiple') + 0.6, ease: 'sine.inOut' }, a('Multiple') - 0.6);
+      // "almost half": cart 2 stops mid-track
+      document.getElementById('inertia-half').style.left = `${Math.min(80 + X2 + 180, 700)}px`;
+      KIT.pop(tl, '#inertia-half', tHalf);
+      KIT.sparks(tl, '#inertia-cam', 80 + X2 + 34, TY[1] - 4, tHalf - 0.25, { n: 8, r: 110 });
+      pulse(tHalf, 0.15);
+
+      // slips: one short line each, dropped behind cart 3 from the start, piling under its track
+      const r = KIT.rng(41), slips = [];
+      for (let t = 0.6; t < D - 0.3; t += 0.42) {
+        const x = 80 + x3(t) - 20 + r() * 24, yLand = TY[2] + 30 + r() * 46, rot = (r() - 0.5) * 50;
+        const g = S('g', { opacity: 0 }, G);
+        S('rect', { x: -26, y: -17, width: 52, height: 34, rx: 3, fill: '#f4efe3' }, g);
+        S('path', { d: 'M-16 -2 H14', stroke: '#12263f', 'stroke-width': 5, 'stroke-linecap': 'round' }, g);
+        tl.fromTo(g, { opacity: 0, x, y: TY[2] - 60, rotation: 0 }, { opacity: 1, duration: 0.01, immediateRender: false }, t);
+        tl.to(g, { y: yLand, rotation: rot, duration: 0.35, ease: 'bounce.out' }, t + 0.01);
+        slips.push(g);
+      }
+
+      // ---- l05: push toward track 3; the rate and its condition, held in the HUD ----
+      tl.to('#inertia-pooled', { opacity: 0, duration: 0.25 }, L5);
+      const s5 = 1.1;
+      tl.to('#inertia-cam', { x: 540 * (1 - s5), y: 900 * (1 - s5), scale: s5, duration: 1.2, ease: 'power2.inOut' }, L5 + 0.05);
+      pulse(b('open'), 0.12);
+      KIT.rise(tl, '#inertia-cond', b('with'), { x: -50, y: 0, dur: 0.35 });
+      tl.fromTo('#inertia-val', { scale: 2.4, opacity: 0, transformOrigin: '0% 50%' }, { scale: 1, opacity: 1, duration: 0.2, ease: 'power4.in' }, b('ninety') - 0.05);
+      KIT.shake(tl, '#inertia-shk', b('ninety') + 0.15, { amp: 14, dur: 0.3 });
+      pulse(b('ninety') + 0.15, 0.3);
+      KIT.rise(tl, '#inertia-gem', b('percent'), { x: -50, y: 0, dur: 0.3 });
+      KIT.rise(tl, '#inertia-pm', b('replies'), { x: -50, y: 0, dur: 0.3 });
+      pulse(b('replies'), 0.12);
+
+      // ---- l06: the name, the receipt, then the stamp on the scene ----
+      tl.to(['#inertia-lever', '#inertia-levg', '#inertia-rare', '#inertia-half'], { opacity: 0, duration: 0.25 }, L6);
+      const sp = SplitText.create('#inertia-title', { type: 'chars' });
+      tl.fromTo(sp.chars, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.12, stagger: 0.035, ease: 'back.out(3)' }, e('thinking'));
+      pulse(e('thinking'), 0.14);
+      const tR = e('Visible') - 0.35, tEnd = e('no') + 0.45;
+      tl.fromTo('#inertia-dim', { opacity: 0 }, { opacity: 0.88, duration: 0.3 }, tR);
+      const RD = KIT.read(tl, { cam: '#inertia-rcam', parent: '#inertia-rstage', hud: '#inertia-hud', tagY: 640, id: 'inertia', t: tR, label: KIT.data('l06').receipt,
+        x: 40, y: 900, width: 1000, zoom: 2.6, fx: 90, fy: 820, follow: 0,
+        marks: [[e('Visible'), e('persists') - 0.04, [[e('explicit'), 0.31], [e('inference'), 0.65]]], [e('persists'), tEnd, [[e('under'), 0.26], [e('no'), 0.43]]]],
+        circles: [{ word: 'persists', t: e('persists') + 0.05 }] });
+      tl.set(RD.el, { rotationZ: 0, rotationX: 0 }, tR + 0.6);
+      const tB = tEnd + 0.05;
+      tl.set([RD.el, '#inertia-hud'], { opacity: 0 }, tB);
+      tl.set('#inertia-rcam', { x: 0, y: 0, scale: 1 }, tB);
+      tl.set('#inertia-dim', { opacity: 0 }, tB);
+      tl.fromTo('#inertia-stamp', { scale: 2.6, opacity: 0, rotation: -4, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, rotation: -4, duration: 0.2, ease: 'power4.in' }, Math.max(tB, e('controls') - 0.1));
+      KIT.shake(tl, '#inertia-shk', Math.max(tB, e('controls') - 0.1) + 0.2, { amp: 14, dur: 0.3 });
+      pulse(Math.max(tB, e('controls') - 0.1) + 0.2, 0.25);
+      window.__timelines["inertia"] = tl;
+    })();
+  </script>
+</template>

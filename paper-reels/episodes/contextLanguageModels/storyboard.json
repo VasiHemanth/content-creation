@@ -1,0 +1,156 @@
+{
+ "item": "2609.37725",
+ "name": "CLMs",
+ "authors": [
+  "Rulin Shao",
+  "Shannon Zejiang Shen",
+  "Junjie Oscar Yin",
+  "Yuetai Li",
+  "Minheng Wang",
+  "Hamish Ivison",
+  "Radha Poovendran",
+  "Nathan Lambert",
+  "Teng Xiao",
+  "Mike Lewis",
+  "Wen-tau Yih",
+  "Luke Zettlemoyer",
+  "Pang Wei Koh"
+ ],
+ "lines": [
+  {
+   "id": "r1",
+   "block": "scene",
+   "say": "Your A I agent forgets. A fixed rule decides when and how it gets cut.",
+   "text": "Your AI agent forgets. A fixed rule decides when and how it gets cut.",
+   "data": {
+    "scene": "snip",
+    "rule": "FIXED RULE: CUT HERE",
+    "hand": "harness",
+    "q": "?"
+   },
+   "transition": "punch",
+   "sfx": [
+    {
+     "at": 0.08,
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "q2",
+   "block": "scene",
+   "say": "The harness is the code wrapped around the model. This paper hands the eraser to the model instead.",
+   "text": "The harness is the code wrapped around the model. This paper hands the eraser to the model instead.",
+   "data": {
+    "scene": "eraser",
+    "hand": "harness",
+    "explain": "the code wrapped around the model"
+   },
+   "transition": "punch"
+  },
+  {
+   "id": "q3",
+   "block": "scene",
+   "say": "With no training, it beat the strongest fixed-rule setup the authors tested, on a research test.",
+   "text": "With no training, it beat the strongest fixed-rule setup the authors tested, on a research test.",
+   "data": {
+    "scene": "keep",
+    "rule": "FIXED RULE: CUT HERE",
+    "hand": "harness",
+    "claim": [
+     "No training.",
+     "Beat the strongest",
+     "fixed-rule setup tested."
+    ],
+    "sub": "one research test. authors' own results"
+   },
+   "transition": "whip",
+   "sfx": [
+    {
+     "at": 0.45,
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "r5",
+   "block": "scene",
+   "say": "Here the context is a file. The model rewrites it with simple commands, and the edit is live next turn.",
+   "text": "Here the context is a file. The model rewrites it with simple commands, and the edit is live next turn.",
+   "data": {
+    "scene": "file",
+    "page": "context file",
+    "cmd": "> rewrite file",
+    "loop": "next turn"
+   },
+   "transition": "cut"
+  },
+  {
+   "id": "n6",
+   "block": "scene",
+   "say": "It even picked up habits: a notes section, a tracker for helper agents, reusable cleanup code.",
+   "text": "It even picked up habits: a notes section, a tracker for helper agents, reusable cleanup code.",
+   "data": {
+    "scene": "habits",
+    "notes": [
+     "notes section",
+     "tracker for helper agents",
+     "reusable cleanup function"
+    ]
+   },
+   "transition": "whip"
+  },
+  {
+   "id": "q7",
+   "block": "scene",
+   "say": "On that research test, a set of hard search questions, it answered fifty nine point four percent correctly.",
+   "text": "On that research test, a set of hard search questions, it answered 59.4% correctly.",
+   "data": {
+    "scene": "stat",
+    "title": "research test",
+    "tag": "BrowseComp-Plus",
+    "value": "59.4%"
+   },
+   "transition": "whip",
+   "sfx": [
+    {
+     "at": 0.58,
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "n10",
+   "block": "scene",
+   "say": "One catch: a context the model can rewrite can carry a prompt injection forward.",
+   "text": "One catch: a context the model can rewrite can carry a prompt injection forward.",
+   "data": {
+    "scene": "inject",
+    "title": "one catch",
+    "turn": "turn",
+    "sticky": "prompt injection"
+   },
+   "transition": "whip",
+   "sfx": [
+    {
+     "at": 0.25,
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "n11",
+   "block": "scene",
+   "say": "So next time your agent forgets, ask who is holding the scissors.",
+   "text": "So next time your agent forgets, ask who is holding the scissors.",
+   "data": {
+    "scene": "loop",
+    "hand": "harness",
+    "handle": "hemanth_with_ai",
+    "credit": "Context Language Models, arXiv 2609.37725"
+   },
+   "transition": "cut",
+   "camera": false
+  }
+ ]
+}

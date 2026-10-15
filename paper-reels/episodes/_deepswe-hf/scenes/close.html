@@ -1,0 +1,69 @@
+<template id="close-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #close-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #close-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-end { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-line { left: 90px; top: 700px; width: 900px; text-align: center; white-space: normal; font-size: 136px; line-height: 1.04; color: var(--amber); text-shadow: 10px 10px 0 var(--shadow); }
+    #close-line .char, #close-line .word { display: inline-block; }
+    #close-handle { left: 0; top: 1060px; width: 1080px; text-align: center; }
+    #close-handle span { display: inline-block; padding: 14px 34px; font: 700 52px "Mono", monospace; color: var(--amber); background: var(--deep); border: 4px solid var(--amber); box-shadow: 10px 10px 0 var(--shadow); }
+    #close-credit { left: 0; top: 1206px; width: 1080px; text-align: center; font-size: 28px; }
+  </style>
+  <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+    <div id="close-cam"><div id="close-stage"></div></div>
+    <div id="close-hud"></div>
+    <div id="close-end">
+      <svg class="ink sketch" id="close-gauge" style="left:0;top:180px;width:1080px;height:520px" viewBox="0 0 1080 520">
+        <path id="close-track" d="M300 420 A240 240 0 0 1 780 420" fill="none" stroke="#123d66" stroke-width="56" />
+        <path id="close-arc" d="M300 420 A240 240 0 0 1 780 420" fill="none" stroke="#ffb454" stroke-width="56" />
+        <g id="close-needle"><path class="ln heavy" d="M540 420 L330 420" /><circle class="fl" cx="540" cy="420" r="24" /><circle class="fl amber" cx="540" cy="420" r="10" /></g>
+        <g id="close-lens"><circle cx="700" cy="250" r="78" fill="rgba(168,220,242,0.16)" stroke="#f2f8ff" stroke-width="10" /><path d="M756 306 L830 380" stroke="#f2f8ff" stroke-width="18" stroke-linecap="round" /></g>
+      </svg>
+      <div id="close-line" class="hd" data-bind="l11.line" data-layout-allow-overlap></div>
+      <div id="close-handle" class="abs"><span data-bind="l11.handle"></span></div>
+      <div id="close-credit" class="lbl" data-bind="l11.credit"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'close', c = (w, n) => KIT.cue('l11', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#close-end');
+      const d = KIT.data('l11'), tl = gsap.timeline({ paused: true });
+      const V = parseFloat(KIT.data('l01').value) / 100, ROT = 180 * V;   // the opening gauge, from the storyboard
+
+      // the paper's own sentence, read along with the voice
+      const L = 'A benchmark is only as good as its verifier.', at = (w) => L.indexOf(w) / L.length;
+      KIT.read(tl, { cam: '#close-cam', parent: '#close-stage', hud: '#close-hud', tagY: 300, id: 'verifier', t: 0.0, label: d.receipt,
+        x: 40, y: 880, width: 1000, zoom: 3.4, fx: 600, fy: 900,
+        marks: [[c('A') - 0.05, c('grader') + 0.32, [[c('score'), at('benchmark')], [c('only'), at('only')], [c('good'), at('good')], [c('its'), at('its')], [c('grader'), at('verifier')]]]],
+        circles: [{ word: 'verifier.', t: c('grader') + 0.12 }] });
+
+      // pull back, the receipt flies off, the line lands
+      const tB = c('Check') - 0.3;
+      tl.to('#close-cam', { x: 0, y: -900, scale: 1, duration: 0.32, ease: 'power3.in' }, tB);
+      tl.to('#close-hud', { opacity: 0, duration: 0.2 }, tB);
+      tl.to('#close-stage', { opacity: 0, duration: 0.25 }, tB + 0.08);
+      tl.fromTo('#close-end', { opacity: 0 }, { opacity: 1, duration: 0.15 }, tB + 0.12);
+      const sp = SplitText.create('#close-line', { type: 'words,chars' });
+      sp.chars.forEach((ch) => ch.setAttribute('data-layout-allow-overlap', ''));
+      tl.fromTo(sp.chars, { scale: 3, opacity: 0, y: -40 }, { scale: 1, opacity: 1, y: 0, duration: 0.2, stagger: 0.022, ease: 'power4.in' }, c('Check') - 0.12);
+      KIT.shake(tl, '#close-end', c('Check') + 0.1, { amp: 16, dur: 0.3 });
+      // the score that opened the video, and the question to ask of it
+      tl.fromTo('#close-track', { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.35 }, tB + 0.15);
+      tl.fromTo('#close-arc', { drawSVG: '0%' }, { drawSVG: `${V * 100}%`, duration: 0.35 }, tB + 0.2);
+      tl.fromTo('#close-needle', { rotation: ROT, svgOrigin: '540 420', opacity: 0 }, { rotation: ROT, opacity: 1, duration: 0.15, svgOrigin: '540 420' }, tB + 0.2);
+      tl.fromTo('#close-lens', { x: 200, y: -120, opacity: 0, scale: 0.6, svgOrigin: '700 250' }, { x: 0, y: 0, opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)', svgOrigin: '700 250' }, c('who'));
+      tl.to('#close-lens', { x: -150, y: 40, duration: 0.5, ease: 'power2.inOut' }, c('graded') + 0.1);
+      tl.to('#close-needle', { rotation: 0, svgOrigin: '540 420', duration: 0.9, ease: 'elastic.out(1, 0.45)' }, c('it') + 0.1);
+      tl.to('#close-arc', { drawSVG: '0%', duration: 0.6, ease: 'power2.inOut' }, c('it') + 0.1);
+      KIT.rise(tl, '#close-handle', c('it') - 0.05, { y: 40 });
+      KIT.fade(tl, '#close-credit', c('it') + 0.25, { dur: 0.4 });
+      // the very end fades back to the bare sheet, so the loop into the opening reads as one move
+      tl.to('#close-end', { opacity: 0, duration: 0.35, ease: 'power1.in' }, D - 0.38);
+
+      window.__timelines["close"] = tl;
+    })();
+  </script>
+</template>

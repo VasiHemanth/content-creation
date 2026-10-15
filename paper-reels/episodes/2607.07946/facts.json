@@ -1,0 +1,27 @@
+{
+ "note": "v2 rebuild (2026-10-06). Four headline numbers on screen: 74 (owner's live board v1.1), 113 (paper), 32.4 and 1.4 (authors' own audit). Board labels (version, dates) and the arXiv id are provenance, not headline numbers. Paper v1 (May 2026 runs) and board v1.1 grade differently, so the video never compares them. Board re-checked 2026-10-06: unchanged from the 2026-10-03 snapshot.",
+ "paper": "raw/sources/arxiv-2607-07946.md",
+ "board": "raw/sources/deepswe-leaderboard-v1-1.md (https://deepswe.datacurve.ai/, updated 2026-09-22, accessed 2026-10-03 and 2026-10-06)",
+ "numbers": {
+  "74": "v1.1 board pass@1 for gpt-6-astra [xhigh] 74 +/- 3, gemini-3.8-flash [high] 74 +/- 1, claude-opus-5 [max] 74 +/- 4 (published by Datacurve, the benchmark owner)",
+  "113": "tasks (paper abstract, sec 4.1)",
+  "32.4": "LLM-judge disagreement with SWE-Bench Pro verifier, 256 of 789 audited rollouts (paper sec 3.4, Figure 5); authors' own audit",
+  "1.4": "LLM-judge disagreement with DeepSWE verifier, 10 of 735 (paper sec 3.4); authors' own audit",
+  "22": "board 'updated September 22, 2026'",
+  "2026": "board update year",
+  "6": "accessed Oct 6 (2026-10-06 re-check)",
+  "2607.07946": "arXiv id in the closing credit",
+  "1.1": "board version label v1.1",
+  "1": "metric name pass@1 (the label, not a value)"
+ },
+ "claims": {
+  "s1": "Board v1.1 top pass@1 74%; 'tasks written from scratch' (paper sec 3.3).",
+  "s2": "Paper abstract and sec 1: SWE-bench-style fixes 'plausibly in pretraining corpora'; their tests 'can reject a valid alternative implementation or accept an incomplete one'.",
+  "s3": "Paper: 113 tasks, 91 repositories, five languages (TypeScript, Go, Python, JavaScript, Rust); never merged upstream (sec 3.3).",
+  "s4": "Paper sec 5.2: rollouts start in a container with a shallow clone pinned to the base commit; one fixed harness, mini-swe-agent with a single bash tool and shared prompt.",
+  "s5": "Paper sec 3.4, 4.2: hand-written verifiers check observable behavior and accept any implementation that provides it; regression checks run on every trial.",
+  "s6": "Paper sec 3.4 and sec 8: disagreement rate between an LLM judge (GPT-5.5 xhigh) and each verifier; not a ground-truth error rate; small audit (30 tasks per benchmark); judge is also the top configuration in the paper.",
+  "s7": "Board v1.1: three setups at 74%; avg cost per task $2.36 (gemini-3.8-flash), $4.43 (gpt-6-astra), $11.84 (claude-opus-5), drawn as low/mid/high coin stacks with no figures; intervals 3, 1, 4 overlap.",
+  "s8": "Paper sec 1 scope and sec 8 limitations: long-horizon, multi-file implementation from a specified prompt; binary reward, no partial credit; functional correctness only; under-specified requests unmeasured; single fixed harness, not vendor tools."
+ }
+}

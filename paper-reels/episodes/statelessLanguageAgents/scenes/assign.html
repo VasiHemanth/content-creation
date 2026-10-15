@@ -1,0 +1,150 @@
+<template id="assign-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #as-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #as-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #as-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #as-adv { left: 450px; top: 498px; font-size: 34px; }
+    #as-stl { left: 450px; top: 566px; font-size: 28px; }
+    #as-sheet { left: 470px; top: 792px; font-size: 28px; }
+    .as-w { position: absolute; top: 1232px; font-size: 26px; padding: 4px 12px; }
+    #as-same { left: 386px; top: 690px; font-size: 32px; }
+    #as-nog { left: 0; top: 1290px; width: 1080px; text-align: center; }
+    #as-nog span { position: relative; display: inline-block; font-size: 92px; padding: 4px 30px; outline-offset: -20px; }
+    #as-chips { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #as-chip1 { left: 60px; top: 170px; font-size: 30px; }
+    #as-chip2 { left: 60px; top: 236px; font-size: 28px; }
+    #as-src { left: 60px; top: 304px; font-size: 26px; color: var(--dim); }
+    #as-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="assign" data-width="1080" data-height="1920">
+    <div id="as-cam"><div id="as-beat">
+      <svg id="as-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="as-adv" class="tag" data-bind="l08.adv"></div>
+      <div id="as-stl" class="tag cyan" data-bind="l08.stl"></div>
+      <div id="as-sheet" class="tag cyan" data-bind="l08.sheet"></div>
+      <div id="as-w0" class="tag cyan as-w" style="left:152px" data-bind="l08.w"></div>
+      <div id="as-w1" class="tag cyan as-w" style="left:472px" data-bind="l08.w"></div>
+      <div id="as-w2" class="tag cyan as-w" style="left:752px" data-bind="l08.w"></div>
+      <div id="as-same" class="tag" data-bind="l09.same"></div>
+      <div id="as-nog" class="abs"><span class="stamp amber" data-bind="l09.nog"></span></div>
+    </div></div>
+    <div id="as-chips">
+      <div id="as-chip1" class="tag cyan" data-bind="l09.chip1"></div>
+      <div id="as-chip2" class="tag cyan" data-bind="l09.chip2"></div>
+      <div id="as-src" class="lbl" data-bind="l09.src"></div>
+    </div>
+    <div id="as-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l08', w, n), b = (w, n) => KIT.cue('l09', w, n), D = KIT.sceneDur('assign');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('as-svg'), E = (tag, at, p) => KIT.svgEl(tag, at, p || svg);
+      const pulse = (t, o = 0.18) => tl.fromTo('#as-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // ---- the plan board (top right) and the Advisor in a hard hat ----
+      const board = E('g', { id: 'as-board' });
+      E('rect', { x: 560, y: 220, width: 380, height: 220, fill: '#0d3358', stroke: '#f2f8ff', 'stroke-width': 6 }, board);
+      for (let i = 0; i < 3; i++) { E('rect', { x: 584 + i * 116, y: 250, width: 100, height: 160, fill: '#f2f8ff' }, board); E('rect', { x: 596 + i * 116, y: 276, width: 70, height: 10, rx: 5, fill: '#6aa9d0' }, board); E('rect', { x: 596 + i * 116, y: 298, width: 54, height: 10, rx: 5, fill: '#6aa9d0' }, board); }
+      const advG = E('g', { id: 'as-advg' });
+      const AR = KIT.robot(advG, { id: 'as-ra', x: 330, y: 500, s: 0.66, eye: '#ffb454' });
+      E('path', { d: 'M268 504 Q268 444 330 440 Q392 444 392 504 Z', fill: '#ffb454', stroke: '#ffe2b0', 'stroke-width': 4 }, advG);
+      E('rect', { x: 252, y: 496, width: 156, height: 16, rx: 6, fill: '#ffb454' }, advG);
+      // the evidence summary sheet: lifts off the board on "reads"
+      const sheet = E('g', { id: 'as-sh' });
+      E('rect', { x: 700, y: 250, width: 100, height: 160, fill: '#f2f8ff' }, sheet);
+      for (let k = 0; k < 5; k++) E('rect', { x: 712, y: 272 + k * 24, width: [70, 54, 76, 44, 62][k], height: 10, rx: 5, fill: '#3d78a6' }, sheet);
+      const scan = E('rect', { id: 'as-scan', x: 700, y: 250, width: 100, height: 14, fill: '#ffb454', opacity: 0 }, sheet);
+
+      tl.fromTo('#as-cam', { scale: 1.05 }, { scale: 1, duration: 1, ease: 'power3.out' }, 0);
+      tl.fromTo(board, { opacity: 0, y: -50 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }, 0.02);
+      tl.fromTo(sheet, { opacity: 0, y: -50 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }, 0.02);
+      pulse(0.05, 0.12);
+      // "stateless Advisor"
+      tl.fromTo(advG, { opacity: 0, x: -300 }, { opacity: 1, x: 0, duration: 0.45, ease: 'back.out(1.6)' }, a('stateless') - 0.15);
+      KIT.pop(tl, '#as-adv', a('Advisor') - 0.05, { from: 0.4 });
+      KIT.rise(tl, '#as-stl', a('stateless'), { x: -30, y: 0 });
+      pulse(a('Advisor'), 0.12);
+      // "reads the evidence": the sheet flies down beside the Advisor and a scan bar runs over it
+      tl.to(sheet, { x: -230, y: 360, duration: 0.4, ease: 'power3.inOut' }, a('reads') - 0.1);
+      tl.to(AR.eyes, { x: 12, y: 8, duration: 0.2 }, a('reads'));
+      tl.fromTo(scan, { opacity: 0, y: 0 }, { opacity: 0.9, y: 0, duration: 0.05, immediateRender: false }, a('reads') + 0.3);
+      tl.to(scan, { y: 146, duration: 0.6, ease: 'none' }, a('reads') + 0.35);
+      tl.to(scan, { opacity: 0, duration: 0.1 }, a('reads') + 0.95);
+      KIT.pop(tl, '#as-sheet', a('evidence'), { from: 0.5 });
+      tl.to('#as-beat', { scale: 1.06, x: 60, y: 40, duration: 0.35, ease: 'power3.out' }, a('reads'));
+
+      // ---- three Workers below; "gives each Worker a different experiment": work-order cards fly out ----
+      const WX = [220, 540, 820];
+      const workers = WX.map((x, i) => { const g = E('g', { id: `as-wk${i}` }); KIT.robot(g, { id: `as-rw${i}`, x, y: 1060, s: 0.55, eye: '#a8dcf2' }); return g; });
+      workers.forEach((g, i) => tl.fromTo(g, { opacity: 0, y: 120 }, { opacity: 1, y: 0, duration: 0.35, ease: 'back.out(1.6)' }, a('and') + i * 0.06));
+      KIT.rise(tl, ['#as-w0', '#as-w1', '#as-w2'], a('Worker') - 0.2, { y: 20, stagger: 0.06 });
+      tl.to('#as-beat', { scale: 1, x: 0, y: 0, duration: 0.35, ease: 'power3.inOut' }, a('gives') - 0.1);
+      const icons = [
+        (g, x) => E('path', { d: `M${x - 42} 960 L${x} 912 L${x + 42} 960 Z`, fill: '#071d35' }, g),
+        (g, x) => E('path', { d: `M${x - 44} 936 L${x - 22} 916 L${x} 956 L${x + 22} 916 L${x + 44} 936`, fill: 'none', stroke: '#071d35', 'stroke-width': 9, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g),
+        (g, x) => E('path', { d: `M${x - 44} 922 H${x + 10} V966`, fill: 'none', stroke: '#071d35', 'stroke-width': 16, 'stroke-linejoin': 'round' }, g),
+      ];
+      const cards = WX.map((x, i) => {
+        const g = E('g', { id: `as-card${i}` }), f = E('g', { id: `as-cardf${i}` }, g);
+        E('rect', { x: x - 64, y: 892, width: 128, height: 92, rx: 8, fill: '#ffb454', stroke: '#ffe2b0', 'stroke-width': 4 }, f);
+        const blank = E('g', { id: `as-cb${i}` }, f);
+        for (let k = 0; k < 3; k++) E('rect', { x: x - 44, y: 912 + k * 20, width: 88 - k * 14, height: 9, rx: 4, fill: '#071d35' }, blank);
+        const ic = E('g', { id: `as-ci${i}` }, f); icons[i](ic, x);
+        return { g, f, blank, ic, x };
+      });
+      cards.forEach((c, i) => {
+        tl.fromTo(c.g, { opacity: 0, x: 330 - c.x, y: -300 }, { opacity: 1, x: 0, y: 0, duration: 0.42, ease: 'power3.out' }, a('gives') + i * 0.08);
+        tl.fromTo(c.f, { scale: 0.4, svgOrigin: `${c.x} 938` }, { scale: 1, svgOrigin: `${c.x} 938`, duration: 0.42, ease: 'power3.out' }, a('gives') + i * 0.08);
+        gsap.set(c.ic, { opacity: 0 });
+        // "different": each card flips over to its own icon
+        tl.to(c.f, { scaleX: 0, duration: 0.1, ease: 'power2.in' }, a('different') + i * 0.07);
+        tl.set(c.blank, { opacity: 0 }, a('different') + i * 0.07 + 0.1);
+        tl.set(c.ic, { opacity: 1 }, a('different') + i * 0.07 + 0.1);
+        tl.to(c.f, { scaleX: 1, duration: 0.14, ease: 'back.out(2)' }, a('different') + i * 0.07 + 0.1);
+      });
+      pulse(a('gives'), 0.12); pulse(a('different'), 0.12);
+      // "experiment": each Worker hops once under its own card
+      workers.forEach((g, i) => tl.to(g, { y: -30, duration: 0.16, ease: 'power2.out', yoyo: true, repeat: 1 }, a('experiment') + i * 0.08));
+      tl.to('#as-beat', { scale: 1.05, y: -60, duration: 0.4, ease: 'power3.out' }, a('experiment'));
+
+      // ---- l09: one run without assignments; the cards glitch away, three Workers build the same feature ----
+      const tG = b('In') - 0.28;
+      tl.to(cards.map((c) => c.g), { opacity: 0, duration: 0.2, ease: 'power2.in' }, tG);
+      tl.to([advG, '#as-adv', '#as-stl'], { opacity: 0.15, duration: 0.25 }, tG);
+      tl.to([sheet, '#as-sheet'], { opacity: 0, duration: 0.25 }, tG);
+      tl.to('#as-beat', { scale: 1, x: 0, y: 0, duration: 0.3, ease: 'power2.inOut' }, tG);
+      KIT.glitch(tl, ['#as-w0', '#as-w1', '#as-w2'], tG, { amp: 10 });
+      pulse(tG, 0.22);
+      KIT.rise(tl, '#as-chip1', b('one') - 0.1, { x: -40, y: 0 });
+      KIT.rise(tl, '#as-chip2', b('without'), { x: -40, y: 0 });
+      KIT.fade(tl, '#as-src', b('assignments'), { to: 0.9 });
+      // the feature spot on the tower wall
+      const wall = E('g', { id: 'as-wall' });
+      for (let r = 0; r < 3; r++) for (let k = 0; k < 4; k++) E('rect', { x: 400 + k * 72 + (r % 2) * 36, y: 772 + r * 40, width: 66, height: 34, fill: '#123a62', stroke: '#3d78a6', 'stroke-width': 3 }, wall);
+      tl.fromTo(wall, { opacity: 0 }, { opacity: 1, duration: 0.3 }, b('assignments'));
+      // "three Workers": they all walk to the same spot
+      const toX = [400, 540, 680];
+      workers.forEach((g, i) => tl.to(g, { x: toX[i] - WX[i], duration: 0.55, ease: 'power2.inOut' }, b('three') - 0.1));
+      ['#as-w0', '#as-w1', '#as-w2'].forEach((s, i) => tl.to(s, { x: toX[i] - WX[i], opacity: 0, duration: 0.55, ease: 'power2.inOut' }, b('three') - 0.1));
+      tl.to('#as-beat', { scale: 1.12, y: 40, duration: 0.6, ease: 'power3.inOut' }, b('three'));
+      pulse(b('three'), 0.12);
+      // "same feature": three identical bricks slam into one place
+      const bricks = [0, 1, 2].map((i) => E('rect', { id: `as-br${i}`, x: 470, y: 812, width: 140, height: 40, fill: '#ffb454', stroke: '#ffe2b0', 'stroke-width': 4 }));
+      bricks.forEach((el, i) => {
+        tl.fromTo(el, { opacity: 0, y: -260, x: (i - 1) * 140 }, { opacity: 1, y: 0, x: 0, duration: 0.18, ease: 'power4.in' }, b('built') + i * 0.17);
+        KIT.shake(tl, '#as-cam', b('built') + i * 0.17 + 0.18, { amp: 9, dur: 0.18 });
+      });
+      KIT.pop(tl, '#as-same', b('same') - 0.05, { from: 0.4 });
+      pulse(b('same'));
+      // "None improved the score": stamp
+      tl.to('#as-beat', { scale: 1.02, y: -20, duration: 0.4, ease: 'power3.inOut' }, b('None') - 0.3);
+      KIT.slam(tl, '#as-nog span', b('None') - 0.1, { from: 2.4, shakeTarget: '#as-cam', amp: 12 });
+      pulse(b('None'));
+      tl.to('#as-beat', { scale: 1.06, duration: D - b('score'), ease: 'sine.out' }, b('score'));
+      window.__timelines["assign"] = tl;
+    })();
+  </script>
+</template>

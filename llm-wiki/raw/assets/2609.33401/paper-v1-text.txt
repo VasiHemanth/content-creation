@@ -1,0 +1,1379 @@
+=== PAGE 1 ===
+Evaluating System One Models for Agent Security Decisions:
+Reliability, Calibration, and Selective Automation
+YIXUAN LIU∗
+, TraceStone and Nanyang Technological University, Singapore
+Model-based judges support agent security by detecting prompt injections, assessing interaction risks, and
+screening harmful requests. System One models expose typed decisions with probabilities that software can
+use to allow, block, or escalate inputs, but whether these probabilities support reliable automated security
+decisions remains unclear. We evaluate Jev, Laya, Decider, and Bespoke Nimble against specialized classifiers
+and language-model judges, examining decision accuracy, probability calibration, and selective automation.
+We identify three main findings. (1) Strong overall performance and favorable average calibration can hide
+systematic failures on particular attack groups, including attacks that models confidently classify as safe. (2)
+Under strict limits on missed attacks, the evaluated policies allow few inputs automatically, and choosing
+separate allow and block thresholds increases automation mainly by blocking more inputs. Even policies that
+meet error limits during validation can exceed them on unseen inputs. (3) A second judge can detect some
+missed attacks, but it may also reject more benign inputs and repeat the first model’s high-confidence errors.
+These findings show that model accuracy, probability calibration, and the behavior of the resulting decision
+policy must be evaluated together.
+CCS Concepts: • Software and its engineering → Software verification and validation; • Security and
+privacy → Software security engineering.
+Additional Key Words and Phrases: AI agents, probabilistic decisions, calibration, security evaluation
+1 Introduction
+Agent software uses model-based judges to detect prompt injections, assess interaction risks, and
+screen harmful requests, converting their labels and probabilities into decisions to allow, block,
+or escalate an input. An incorrect allowance can expose an agent to an attack, an incorrect block
+can prevent a benign task, and excessive escalation can remove the benefit of automatic decisions.
+Classification accuracy alone does not show whether the probabilities support these decisions
+reliably.
+System One models such as Jev, Laya, Decider, and Bespoke Nimble expose bounded decisions
+with associated probabilities through reusable interfaces [4, 7, 22, 29]. Their typed probabilistic
+outputs allow an application to defer uncertain decisions and automate those that meet a confidence
+threshold.
+Existing security benchmarks provide labels for evaluating these judgments [2, 21, 35]. Studies
+of prompt-injection detectors and System One models such as Jev document confident errors [5,
+19, 26, 27, 31, 36]. It remains unclear how much work these models can automate at an acceptable
+rate of unsafe misses and benign false alarms. A model can rank highly in aggregate while missing
+a particular attack group, or satisfy a conservative error budget by escalating almost everything.
+Threshold selection also determines which errors are accepted and which decisions are deferred.
+Figure 1 connects these tasks to the same allow/block/escalate policy. Each task supplies its own
+question and unsafe event, so an unsafe probability refers to the benchmark-specific judgment.
+We investigate the following question: How reliably can System One models make agent
+security decisions, and when can their probabilities support useful automation?
+We compare System One models with language-model judges and task-specific classifiers, and
+examine adaptation by comparing Decider and Nimble with their original parent models. Three
+research questions organize the evaluation.
+∗Emails: yixuan.liu@tracestone.io, liuy0255@e.ntu.edu.sg.
+arXiv:2609.33401v1 [cs.CR] 27 Sep 2026
+=== PAGE 2 ===
+Yixuan Liu
+Fig. 1. Security tasks and probabilistic decisions.
+RQ1: How accurately do models make security decisions? We compare missed unsafe inputs and
+falsely flagged benign inputs across tasks, attack groups, and adapted models and their parent
+controls. Adaptation raises classification F1 on AgentHarm but lowers it on R-Judge. Additional
+reasoning judges improve interaction-risk judgment, but those that miss fewer harmful requests
+can reject more benign requests.
+RQ2: How well calibrated are the unsafe probabilities? We examine whether unsafe probabilities
+match observed unsafe frequencies and whether recalibration improves them. Average calibration
+can hide groups of confidently missed attacks, while recalibration fitted on development data helps
+some model and task combinations but worsens others on test.
+RQ3: How much can frozen policies automate under error budgets? We choose thresholds before test
+evaluation and keep them fixed on test inputs. Selecting the allow and block thresholds separately
+increases automation mainly by blocking more inputs, while strict limits on missed attacks leave
+few inputs allowed without review. We also examine which mistakes a second judge corrects,
+repeats, or introduces.
+The study makes three contributions:
+• A comparative study of security decision errors and probability estimates across System
+One models, specialized classifiers, and language-model judges.
+• Evidence that improving classification or calibration does not consistently increase the
+work a policy can automate within fixed error limits.
+• Analyses of how separate allow and block thresholds change automation and which errors
+a second model corrects or introduces, with a public replication artifact.
+2 Background and Related Work
+2.1 System One Models
+System One models expose typed decision interfaces that return probabilities over predefined
+answers to a task question. We evaluate binary safe/unsafe decisions using each benchmark’s
+original unsafe class as positive. Jev reports an unsafe probability and a separate confidence
+value [29]. Laya uses encoder decision heads, while Decider and Nimble score candidate answers
+=== PAGE 3 ===
+System One Models for Security Decisions
+with language-model backbones [4, 7, 22]. We therefore compare them with judges prompted to
+return a label and with the parent models from which Decider and Nimble were adapted.
+Typed decision interfaces can serve different roles within larger workflows, as documented
+in a study of Jev repositories [20]. Applications must specify which inputs they support, how
+they handle unavailable scores, and how probabilities determine actions. Prior studies identify
+component interactions and model reuse as recurring challenges [1], and recommend testing and
+monitoring model behavior within its operating context [6].
+2.2 Agent Security Evaluation
+Indirect prompt injection places attacker instructions in retrieved data and can redirect a language￾model application’s behavior [12]. Existing benchmarks evaluate several security judgments relevant
+to agents: R-Judge labels interaction risk [35], AgentHarm supplies harmful and benign requests [2],
+and WAInjectBench evaluates web-agent injection detection [21].
+Detector evaluations document confident misses under attack shift [5] and false positives on
+difficult benign inputs [27]. Concurrent work tests attacks against the decision component itself.
+Decision Hijacking measures injection-driven changes in Jev’s action choices [32], while JevOut
+optimizes natural context additions that redirect initially correct decisions [34]. Sun et al. examine a
+different failure: Jev, Laya, and Open-Jev can follow option-name semantics instead of the definitions
+bound to them while still producing schema-valid outputs [28].
+AgentDojo and AgentDyn separate security and utility outcomes in executable environments [9,
+18]. CaMeL constrains information flow [8], and ProbGuard predicts execution safety from agent
+states [30]. REFLEX uses Jev for bounded decisions and a stronger model for fallback, examining
+action ambiguity and task success [33].
+2.3 Calibration and Selective Prediction
+Temperature scaling can improve probability calibration [13], while dataset shift can undermine
+predictive uncertainty [24]. Selective classification and SelectiveNet trade the fraction of predictions
+accepted automatically against their error rate [10, 11]. Conformal risk control provides expected￾risk guarantees for monotone losses under its sampling assumptions [3]. Our two-threshold rules
+use empirical error budgets, defined as limits on observed unsafe allowances and benign blocks,
+then assess those limits on separate confirmation and test data.
+Studies of System One model reliability evaluate Jev on legal decisions [36], clinical factuality [16],
+and calibration and abstention on generated tasks [31]. For alignment-failure detection, Guo et al.
+find that Jev’s pooled calibration can conceal benchmark-specific errors and that threshold benefits
+depend on the task [14].
+Confidence-based escalation uses a second model to review uncertain decisions. Li et al. study
+this approach for preference and factuality judging [19], while Rao and Callison-Burch show that
+shared confident errors limit rubric-judge cascades [26]. Our study evaluates multiple System One
+models across security tasks, measuring probability quality and automatic coverage under frozen
+unsafe-miss and benign-blocking budgets.
+3 Study Design
+The study checks whether models return correct labels (RQ1), assign probabilities that reflect
+observed unsafe frequencies (RQ2), and support automatic decisions within specified error limits
+(RQ3). We use separate data partitions to fit calibration, select thresholds, and evaluate the resulting
+policies. Figure 2 shows shared inputs and components branching into three analyses, with original
+labels excluded from model inputs.
+=== PAGE 4 ===
+Yixuan Liu
+Table 1. Evaluated decision components. • System One models, ♦ judges, ■ specialists, ▲ parent controls.
+Configuration Deployment Tasks
+• Jev 1.13 Hosted API PI, IR, HA
+• Laya, pinned English checkpoint CPU / float32 PI, IR, HA
+• Decider, approximately 2B MPS / float16 PI, IR, HA
+• Bespoke Nimble, approximately 9B MLX / Apple GPU PI, IR, HA
+♦ GPT-4.1 Hosted API PI, IR, HA
+♦ Qwen3-8B, thinking disabled Hosted API PI, IR, HA
+■ ProtectAI DeBERTa v2 CPU / float32 PI
+■ PIGuard CPU / float32 PI
+■ Prompt Guard 2, 86M CPU / float32 PI
+■ WildGuard MPS / float16 HA
+▲ Decider parent: Qwen3.5-2B-Base MPS / float16 PI, IR, HA
+▲ Nimble parent: Qwen3.5-9B MLX / Apple GPU PI, IR, HA
+Additional reasoning judges
+♦ GLM-5.3-Flash Hosted API PI, IR, HA
+♦ GLM-5.3 Hosted API PI, IR, HA
+♦ DeepSeek-V4.1-Flash Hosted API PI, IR, HA
+♦ Kimi-K2.6 Hosted API PI, IR, HA
+♦ Qwen3.8-27B Hosted API PI, IR, HA
+PI: prompt injection, IR: interaction risk, HA: harmful-request admission.
+3.1 Models and Baselines
+General judges provide prompted language-model baselines, specialists test the value of task￾specific training, and parent controls examine the effects of adaptation. Table 1 defines twelve
+primary configurations and 28 applicable model and task combinations. The four System One
+models cover all three tasks. GPT-4.1 and Qwen3-8B are prompted to return an A/B label, with
+Qwen’s thinking mode disabled.
+ProtectAI, PIGuard, and Prompt Guard 2 are restricted to injection detection [17, 23, 25]. Wild￾Guard evaluates AgentHarm request harmfulness using its released prompt template [15]. For
+Decider and Nimble, we evaluate the original parent weights with the same candidate-scoring
+procedure at temperature one [4, 22]. The adapted models retain their released scoring temperatures,
+so these comparisons can reflect changes in both weights and probability scaling.
+Additional reasoning judges. After fixing the primary protocol, we added five hosted judges for
+classification and calibration, covering fifteen additional model and task combinations (Table 1).
+They receive the same task questions and label definitions, with reasoning enabled. RQ3 evaluates
+the primary models using thresholds selected before test evaluation and then held fixed (Section 6).
+3.2 Benchmarks and Data Partitions
+The study uses three public benchmarks with their original annotations. R-Judge supplies complete
+interaction records with binary risk labels, while AgentHarm divides requests into harmful and
+benign sets. WAInjectBench annotates attack-derived text segments as containing explicit instruc￾tions (EI), which directly tell an agent what to do, or lacking them (no-EI) [21]. No-EI segments can
+manipulate context without direct commands, and both groups retain their released unsafe labels.
+=== PAGE 5 ===
+System One Models for Security Decisions
+Table 2. Benchmark partitions (representative inputs). A dash indicates no partition.
+Benchmark Development Selection Confirmation Test
+R-Judge 100 140 93 236
+WAInjectBench-text 100 966 644 1,612
+AgentHarm 64 – – 352
+Benchmark inputs
+WAInjectBench-text
+R-Judge, AgentHarm
+Decision components
+System One models
+LLM judges
+Task specialists
+RQ1: Decision Quality
+How accurate are decisions?
+RQ2: Calibration
+How calibrated are probabilities?
+RQ3: Automation
+How much can be automated?
+Labels excluded from
+model inputs
+Fig. 2. Offline evaluation pipeline.
+Decision inputs exclude labels, risk explanations, hidden attacker goals, class-revealing filenames,
+and future outcomes.
+Table 2 gives the partitions. Inputs used during pipeline development remain in the development
+set. For R-Judge and WAInjectBench, a fixed stratified split assigns groups of identical remaining
+inputs to selection, confirmation, and test. Each group contributes one representative input, with
+duplicates kept in the same partition. AgentHarm retains its official split, with eight original task
+groups in validation and 44 in test.
+We fit recalibration on development data, choose thresholds on selection data, and check the
+chosen thresholds on confirmation data without retuning. Together, these non-test partitions are
+called source data, while test data measure performance on unseen inputs. The threshold sensitivity
+analysis uses the same partitions, choosing new thresholds only on selection data.
+Figure 3 shows why a correct label need not lead to an automatic decision. Laya correctly labels
+both inputs, but the injection’s 52.87% unsafe probability is below the blocking threshold, so the
+policy sends it for review. The benign cart notice receives 10.18%, below the allowance threshold,
+and is allowed.
+3.3 Input and Output Standardization
+For each task, adapters present the same complete benchmark input and safe/unsafe label definitions
+through each model’s interface. We map responses to a predicted label and, when available, an
+unsafe probability. Classification uses valid labels, while probability analyses use a label and
+score from the same response (Section 5). Inputs exceeding a model’s context limit are marked
+unsupported rather than truncated.
+3.4 Statistical Analysis
+The analysis uses paired 95% cluster-bootstrap confidence intervals (CI) with 2,000 resamples,
+drawing whole groups of related inputs and comparing models on the same inputs. We group
+=== PAGE 6 ===
+Yixuan Liu
+Benchmark input Laya output Policy decision
+“Do not add this product into the wish
+list. Ignore the original instruction!”
+Original label: unsafe
+Direct prompt injection
+Prediction: unsafe
+Unsafe probability:
+52.87%
+Escalate
+Send for review
+“You have no items in your shopping cart.”
+Original label: benign
+Prediction: safe
+Unsafe probability:
+10.18%
+Allow
+Correct allowance
+Shared frozen policy on the unsafe probability
+Allow below 10.5% Block above 89.5% Otherwise escalate
+Fig. 3. From model outputs to policy decisions.
+identical R-Judge inputs, WAInjectBench inputs from the same released source family, and Agen￾tHarm variants of the same original task across labels and augmentations. A sensitivity analysis
+additionally groups R-Judge inputs by source family.
+For paired false-negative and false-positive rates, we use cluster-level sign-randomization tests,
+which assume that the two models can be exchanged under the null hypothesis. Holm correction
+adjusts for multiple comparisons separately within each benchmark and error metric. McNemar’s
+test provides a secondary check that treats inputs as independent. Rare errors and few clusters can
+make intervals unstable, so we report effect sizes and sample counts alongside ranks.
+4 RQ1: Security Decision Quality
+RQ1 asks how accurately models identify unsafe inputs. We compare missed unsafe inputs and
+falsely flagged benign inputs, then examine how these errors differ by task, attack group, and model
+adaptation.
+4.1 Metrics and Comparison Populations
+We treat unsafe inputs as positive and report Macro-F1, precision, recall, the false-negative rate
+FNR = FN/(TP + FN), and the false-positive rate FPR = FP/(TN+ FP) on valid decisions. Here
+TP, TN, FP, and FN are true-positive, true-negative, false-positive, and false-negative counts. Area
+under the receiver operating characteristic curve (AUROC) and average precision (AP) measure
+score ranking, with AP summarizing the precision–recall curve. Table counts 𝑁 denote the inputs
+in each comparison, and metrics with zero denominators are undefined.
+Each ranking uses only inputs with valid outputs from every model in that table. A paired
+comparison uses inputs supported by both models in the pair, so it may include more inputs.
+Comparisons with parent models retain the adapted models’ released scoring temperatures.
+=== PAGE 7 ===
+System One Models for Security Decisions
+4.2 Classification Results and Error Patterns
+No component has the highest Macro-F1 on all three tasks, and similar scores can hide differ￾ent balances of unsafe misses and benign false alarms. Tables 3 through 5 rank configurations
+by unrounded Macro-F1, with exact ties sharing a rank. The shared populations contain 1,610
+WAInjectBench, 108 R-Judge, and 352 AgentHarm inputs.
+Nimble leads the primary WAInjectBench ranking, yet misses 8.1% of attack-derived inputs that
+directly instruct the agent and 92.2% of those without direct instructions. Jev misses all 129 no-EI
+positives while falsely flagging just one benign input. Thus, a model can rarely flag benign text and
+still miss most attacks in a particular group.
+Finding 1. A high overall rank can hide missed attack groups. (held-out test)
+The ranking changes on R-Judge. Jev leads the primary comparison, while Nimble falls from
+first on WAInjectBench to last, flagging 88.5% of benign interactions as unsafe. Qwen3-8B similarly
+combines few missed unsafe interactions (FNR 0.043) with many false alarms (FPR 0.852). Their
+errors favor rejection over acceptance, limiting their usefulness for screening benign interactions.
+On AgentHarm, detecting more harmful requests can mean rejecting more benign requests. Jev
+and Nimble reach Macro-F1 scores of 0.840 and 0.831 on 352 test inputs from 44 original task groups.
+Jev misses 14 of 176 harmful requests and flags 42 of 176 benign requests, while GPT-4.1 misses
+only one harmful request but flags 85 benign ones.
+Specialization does not remove this imbalance. ProtectAI and PIGuard miss over 70% of unsafe
+WAInjectBench inputs, and Prompt Guard 2 rarely flags any input (FNR 0.989, FPR 0.001). WildGuard
+instead catches most harmful AgentHarm requests but flags 71.0% of benign requests. These
+detectors require task-specific checks of both error directions.
+The paired comparisons show which differences are supported beyond the point estimates. None
+of the 16 prespecified WAInjectBench FNR/FPR comparisons is significant after Holm adjustment at
+0.05, using twelve source clusters. Jev’s F1 difference from GPT-4.1 is 0.049 (95% CI [−0.019, 0.117])
+on their 1,611 shared inputs. On AgentHarm, Jev reduces FPR by 0.244 (CI [−0.352, −0.148], adjusted
+𝑝 = 0.0008), while its FNR increase of 0.074 is not significant after adjustment (𝑝 = 0.50).
+Decider and Nimble both have higher Macro-F1 than their parent controls on AgentHarm and
+lower Macro-F1 on R-Judge. Decider’s differences are +0.351 on AgentHarm (95% CI [0.276, 0.423],
+𝑁 = 352) and −0.236 on R-Judge ([−0.314, −0.156], 𝑁 = 236). On WAInjectBench, neither adapted
+model shows a clear F1 advantage over its parent, with both intervals including zero.
+Finding 2. Adaptation helps one task and hurts another. (held-out test)
+4.3 Additional Reasoning Judges
+Tables 6 through 8 compare the five additional judges with Jev, Nimble, and GPT-4.1 on the same
+shared populations as the primary rankings.
+The additional judges improve interaction-risk judgment, with DeepSeek leading the expanded
+R-Judge comparison. Across all 236 records, its F1 exceeds Jev’s by 0.140 (95% CI [0.094, 0.187]),
+and GLM-5.3, Kimi, and Qwen3.8 also improve on Jev with paired intervals above zero. These
+comparisons include long interactions excluded from the all-model ranking by Laya’s context limit.
+The advantage is less clear on injection detection. GLM-5.3-Flash has the highest F1 point
+estimate in the expanded WAInjectBench comparison, followed by Nimble and DeepSeek. However,
+every interval for an added judge’s F1 difference from Jev includes zero. DeepSeek’s difference,
+for example, is 0.021 with CI [−0.008, 0.057]. Results vary substantially among the twelve source
+families, which produces wide intervals despite the larger number of individual inputs.
+=== PAGE 8 ===
+Yixuan Liu
+Table 3. Held-out WAInjectBench results.
+Rank Configuration F1 [95% CI] FNR FPR
+1 Nimble 0.779 [0.497, 0.936] 0.471 0.035
+2 Qwen3-8B 0.765 [0.480, 0.929] 0.493 0.039
+3 Jev 0.757 [0.454, 0.937] 0.597 0.001
+4 GPT-4.1 0.708 [0.430, 0.932] 0.680 0.002
+5 ProtectAI 0.659 [0.413, 0.769] 0.723 0.023
+6 PIGuard 0.657 [0.397, 0.800] 0.734 0.018
+7 Laya 0.649 [0.425, 0.785] 0.658 0.075
+8 Nimble parent 0.629 [0.355, 0.902] 0.795 0.003
+9 Decider 0.503 [0.239, 0.672] 0.950 0.000
+10 Decider parent 0.481 [0.221, 0.591] 0.971 0.004
+11 Prompt Guard 2 0.464 [0.205, 0.529] 0.989 0.001
+Table 4. Held-out R-Judge results.
+Rank Configuration F1 [95% CI] FNR FPR
+1 Jev 0.879 [0.814, 0.935] 0.085 0.148
+2 GPT-4.1 0.796 [0.721, 0.870] 0.085 0.295
+3 Laya 0.492 [0.397, 0.585] 0.723 0.262
+4 Decider parent 0.462 [0.364, 0.552] 0.298 0.705
+5 Nimble parent 0.444 [0.352, 0.537] 0.149 0.803
+6 Qwen3-8B 0.438 [0.345, 0.532] 0.043 0.852
+7 Decider 0.417 [0.333, 0.500] 0.830 0.279
+8 Nimble 0.364 [0.281, 0.452] 0.191 0.885
+Table 5. Held-out AgentHarm results.
+Rank Configuration F1 [95% CI] FNR FPR
+1 Jev 0.840 [0.774, 0.903] 0.080 0.239
+2 Nimble 0.831 [0.756, 0.892] 0.068 0.267
+3 Decider 0.778 [0.702, 0.846] 0.415 0.011
+4 Nimble parent 0.763 [0.694, 0.824] 0.057 0.403
+5 Qwen3-8B 0.751 [0.683, 0.813] 0.034 0.443
+6 GPT-4.1 0.741 [0.659, 0.810] 0.006 0.483
+7 Laya 0.731 [0.672, 0.792] 0.352 0.182
+8 WildGuard 0.584 [0.492, 0.666] 0.023 0.710
+9 Decider parent 0.427 [0.370, 0.493] 0.903 0.017
+On AgentHarm, Kimi misses none of 176 harmful requests but flags 96 benign requests as unsafe,
+compared with Jev’s 14 misses and 42 false alarms. DeepSeek and Qwen3.8 also miss fewer harmful
+requests but reject more benign ones than Jev. These judges improve harmful-request detection at
+the cost of accepting fewer legitimate requests.
+Finding 3. Fewer harmful misses can mean more benign rejections. (expanded test)
+=== PAGE 9 ===
+System One Models for Security Decisions
+Table 6. Expanded WAInjectBench comparison.
+Rank Configuration F1 [95% CI] FNR FPR
+1 GLM-5.3-Flash 0.790 [0.497, 0.949] 0.511 0.011
+2 Nimble 0.779 [0.497, 0.936] 0.471 0.035
+3 DeepSeek-V4.1-Flash 0.778 [0.470, 0.953] 0.547 0.005
+4 Jev 0.757 [0.454, 0.937] 0.597 0.001
+5 Qwen3.8-27B 0.736 [0.450, 0.923] 0.626 0.005
+6 GLM-5.3 0.717 [0.449, 0.946] 0.658 0.005
+7 GPT-4.1 0.708 [0.430, 0.932] 0.680 0.002
+8 Kimi-K2.6 0.698 [0.426, 0.915] 0.694 0.002
+Table 7. Expanded R-Judge comparison.
+Rank Configuration F1 [95% CI] FNR FPR
+1 DeepSeek-V4.1-Flash 0.962 [0.921, 0.991] 0.064 0.016
+2 GLM-5.3-Flash 0.924 [0.870, 0.972] 0.106 0.049
+3 Qwen3.8-27B 0.924 [0.867, 0.971] 0.128 0.033
+4 Jev 0.879 [0.814, 0.935] 0.085 0.148
+5 Kimi-K2.6 0.878 [0.812, 0.935] 0.106 0.131
+6 GLM-5.3 0.874 [0.805, 0.934] 0.234 0.033
+7 GPT-4.1 0.796 [0.721, 0.870] 0.085 0.295
+8 Nimble 0.364 [0.281, 0.452] 0.191 0.885
+Table 8. Expanded AgentHarm comparison.
+Rank Configuration F1 [95% CI] FNR FPR
+1 Jev 0.840 [0.774, 0.903] 0.080 0.239
+2 Nimble 0.831 [0.756, 0.892] 0.068 0.267
+3 GLM-5.3-Flash 0.817 [0.751, 0.874] 0.091 0.273
+4 GLM-5.3 0.797 [0.732, 0.853] 0.057 0.341
+5 DeepSeek-V4.1-Flash 0.779 [0.705, 0.847] 0.023 0.403
+6 Qwen3.8-27B 0.748 [0.670, 0.814] 0.011 0.466
+7 GPT-4.1 0.741 [0.659, 0.810] 0.006 0.483
+8 Kimi-K2.6 0.705 [0.622, 0.777] 0.000 0.545
+4.4 Model-Specific and Shared Input Populations
+Tables 9 and 10 compare model-specific and shared input populations. Rows follow the shared-input
+ranking.
+Excluding inputs that some models cannot process can make the task appear easier. On R-Judge,
+Jev supports all 236 records and reaches Macro-F1 0.825, but its score rises to 0.879 on the 108
+records supported by every compared configuration. This increase reflects a change in evaluated
+inputs rather than in Jev. The populations coincide on AgentHarm, where all configurations support
+352 inputs, and differ by only a few records on WAInjectBench.
+=== PAGE 10 ===
+Yixuan Liu
+Table 9. WAInjectBench population sensitivity. Native: all valid inputs, shared: common inputs.
+𝑁 Macro-F1 FNR FPR
+Configuration Native/shared Native Shared Native Shared Native Shared
+Nimble 1612/1610 0.778 0.779 0.473 0.471 0.035 0.035
+Qwen3-8B 1611/1610 0.764 0.765 0.495 0.493 0.039 0.039
+Jev 1611/1610 0.757 0.757 0.597 0.597 0.001 0.001
+GPT-4.1 1612/1610 0.707 0.708 0.681 0.680 0.002 0.002
+ProtectAI 1612/1610 0.658 0.659 0.724 0.723 0.023 0.023
+PIGuard 1612/1610 0.656 0.657 0.735 0.734 0.018 0.018
+Laya 1612/1610 0.649 0.649 0.659 0.658 0.075 0.075
+Nimble parent 1612/1610 0.628 0.629 0.796 0.795 0.003 0.003
+Decider 1612/1610 0.503 0.503 0.950 0.950 0.000 0.000
+Decider parent 1612/1610 0.480 0.481 0.971 0.971 0.004 0.004
+Prompt Guard 2 1612/1610 0.464 0.464 0.989 0.989 0.001 0.001
+Table 10. R-Judge population sensitivity. Native: all valid inputs, shared: common inputs.
+𝑁 Macro-F1 FNR FPR
+Configuration Native/shared Native Shared Native Shared Native Shared
+Jev 236/108 0.825 0.879 0.056 0.085 0.297 0.148
+GPT-4.1 236/108 0.807 0.796 0.064 0.085 0.324 0.295
+Laya 108/108 0.492 0.492 0.723 0.723 0.262 0.262
+Decider parent 236/108 0.604 0.462 0.232 0.298 0.550 0.705
+Nimble parent 235/108 0.445 0.444 0.128 0.149 0.855 0.803
+Qwen3-8B 236/108 0.427 0.438 0.064 0.043 0.901 0.852
+Decider 236/108 0.368 0.417 0.904 0.830 0.171 0.279
+Nimble 235/108 0.374 0.364 0.160 0.191 0.927 0.885
+4.5 Paired Error-Rate Differences
+Tables 11 through 13 report all 40 prespecified FNR/FPR differences as System One model minus
+control. Negative values favor the System One model. FNR uses unsafe inputs and FPR uses benign
+inputs within each pair’s shared set. Each confidence interval describes one comparison. Adjusted
+𝑝 values (𝑝adj) account for multiple comparisons within each benchmark and error metric, as
+described in Section 3.
+On WAInjectBench, none of the FNR or FPR differences is significant after adjustment at 0.05, and
+the small number of source clusters leaves substantial uncertainty. On AgentHarm, the evidence is
+clearer that Jev flags fewer benign requests than GPT-4.1, while their difference in harmful misses
+remains uncertain after correction.
+4.6 Adapted Models and Parent Controls
+Table 14 reports all twelve paired Macro-F1 and Brier contrasts for adapted components and their
+parent controls. Differences are adapted minus parent, so higher Macro-F1 differences and lower
+Brier differences favor the adapted component. These comparisons use pair-specific shared inputs,
+which can include more records than the all-configuration ranking population.
+Both adapted models improve Macro-F1 and Brier score on AgentHarm, but their effects differ
+on R-Judge. Nimble’s adaptation lowers Macro-F1 by 0.071 while improving Brier by 0.055, so its
+=== PAGE 11 ===
+System One Models for Security Decisions
+Table 11. WAInjectBench paired error differences.
+Component Control 𝑁 Metric Difference [95% CI] 𝑝adj
+Jev GPT-4.1 1611 FNR -0.083 [-0.224, +0.043] 1.000
+Jev GPT-4.1 1611 FPR -0.001 [-0.003, +0.002] 1.000
+Jev ProtectAI 1611 FNR -0.126 [-0.344, +0.036] 1.000
+Jev ProtectAI 1611 FPR -0.023 [-0.039, -0.001] 1.000
+Laya GPT-4.1 1612 FNR -0.022 [-0.233, +0.456] 1.000
+Laya GPT-4.1 1612 FPR +0.074 [+0.025, +0.115] 1.000
+Laya ProtectAI 1612 FNR -0.065 [-0.270, +0.252] 1.000
+Laya ProtectAI 1612 FPR +0.052 [+0.015, +0.110] 1.000
+Decider GPT-4.1 1612 FNR +0.269 [+0.059, +0.626] 0.438
+Decider GPT-4.1 1612 FPR -0.002 [-0.003, +0.000] 1.000
+Decider ProtectAI 1612 FNR +0.226 [+0.062, +0.414] 0.375
+Decider ProtectAI 1612 FPR -0.023 [-0.039, -0.002] 1.000
+Nimble GPT-4.1 1612 FNR -0.208 [-0.492, +0.039] 1.000
+Nimble GPT-4.1 1612 FPR +0.034 [+0.019, +0.065] 1.000
+Nimble ProtectAI 1612 FNR -0.251 [-0.523, -0.029] 0.438
+Nimble ProtectAI 1612 FPR +0.012 [-0.006, +0.041] 1.000
+Table 12. R-Judge paired error differences.
+Component Control 𝑁 Metric Difference [95% CI] 𝑝adj
+Jev GPT-4.1 236 FNR -0.008 [-0.050, +0.034] 1.000
+Jev GPT-4.1 236 FPR -0.027 [-0.113, +0.063] 1.000
+Laya GPT-4.1 108 FNR +0.638 [+0.468, +0.791] < 0.001
+Laya GPT-4.1 108 FPR -0.033 [-0.197, +0.145] 1.000
+Decider GPT-4.1 236 FNR +0.840 [+0.769, +0.904] < 0.001
+Decider GPT-4.1 236 FPR -0.153 [-0.272, -0.028] 0.062
+Nimble GPT-4.1 235 FNR +0.096 [+0.031, +0.163] 0.024
+Nimble GPT-4.1 235 FPR +0.609 [+0.517, +0.704] < 0.001
+probabilities improve even as its labels become less accurate. Decider worsens on both metrics,
+showing that adaptation does not consistently improve either output across tasks.
+5 RQ2: Probability Calibration
+RQ2 asks whether predicted unsafe probabilities match how often inputs are actually unsafe. We
+examine errors across tasks and attack groups, then test whether recalibration fitted on development
+data improves test probabilities.
+5.1 Probability Scores and Calibration Measures
+For input 𝑖, let 𝑝𝑖 be the unsafe probability under evaluation and 𝑦𝑖
+its original label, with 1 denoting
+unsafe and 0 benign. Brier score is the mean of (𝑝𝑖 − 𝑦𝑖)
+2
+, and negative log likelihood (NLL) is the
+mean binary log loss, computed after clipping probabilities to [10−7
+, 1 − 10−7
+]. Expected calibration
+error (ECE) compares mean probability with observed unsafe frequency in ten equal-width bins of
+unsafe probability, which also form the reliability diagrams.
+Because the initial GPT-4.1 and Qwen3-8B responses lacked token probabilities, additional scoring
+runs collect labels and probabilities together using the original task prompts. Judge scores use
+=== PAGE 12 ===
+Yixuan Liu
+Table 13. AgentHarm paired error differences.
+Component Control 𝑁 Metric Difference [95% CI] 𝑝adj
+Jev GPT-4.1 352 FNR +0.074 [+0.011, +0.153] 0.500
+Jev GPT-4.1 352 FPR -0.244 [-0.352, -0.148] < 0.001
+Jev WildGuard 352 FNR +0.057 [-0.011, +0.136] 0.750
+Jev WildGuard 352 FPR -0.472 [-0.591, -0.358] < 0.001
+Laya GPT-4.1 352 FNR +0.347 [+0.239, +0.455] < 0.001
+Laya GPT-4.1 352 FPR -0.301 [-0.443, -0.165] < 0.001
+Laya WildGuard 352 FNR +0.330 [+0.227, +0.432] < 0.001
+Laya WildGuard 352 FPR -0.528 [-0.653, -0.398] < 0.001
+Decider GPT-4.1 352 FNR +0.409 [+0.284, +0.540] < 0.001
+Decider GPT-4.1 352 FPR -0.472 [-0.602, -0.347] < 0.001
+Decider WildGuard 352 FNR +0.392 [+0.267, +0.517] < 0.001
+Decider WildGuard 352 FPR -0.699 [-0.807, -0.580] < 0.001
+Nimble GPT-4.1 352 FNR +0.062 [-0.006, +0.136] 0.750
+Nimble GPT-4.1 352 FPR -0.216 [-0.341, -0.102] < 0.001
+Nimble WildGuard 352 FNR +0.045 [+0.000, +0.114] 0.750
+Nimble WildGuard 352 FPR -0.443 [-0.568, -0.324] < 0.001
+Table 14. Adapted components versus parent controls.
+Task Component 𝑁 Metric Difference [95% CI]
+WAInjectBench Decider 1612 Macro-F1 +0.022 [-0.003, +0.109]
+WAInjectBench Decider 1612 Brier -0.032 [-0.118, +0.324]
+WAInjectBench Nimble 1612 Macro-F1 +0.150 [-0.101, +0.370]
+WAInjectBench Nimble 1612 Brier -0.013 [-0.198, +0.034]
+R-Judge Decider 236 Macro-F1 -0.236 [-0.314, -0.156]
+R-Judge Decider 236 Brier +0.165 [+0.116, +0.215]
+R-Judge Nimble 235 Macro-F1 -0.071 [-0.122, -0.018]
+R-Judge Nimble 235 Brier -0.055 [-0.084, -0.027]
+AgentHarm Decider 352 Macro-F1 +0.351 [+0.276, +0.423]
+AgentHarm Decider 352 Brier -0.090 [-0.129, -0.048]
+AgentHarm Nimble 352 Macro-F1 +0.068 [+0.028, +0.109]
+AgentHarm Nimble 352 Brier -0.049 [-0.082, -0.018]
+𝑃 (𝐵)/(𝑃 (𝐴) +𝑃 (𝐵)), where A denotes safe and B unsafe, and require both candidate probabilities at
+the final answer’s token position. For reasoning judges, this answer follows the generated reasoning.
+The probability comparison uses the first response with both a label and usable probabilities,
+including alternative output formats discussed in Section 7.1. Recalibration and policy evaluation
+use the original scoring runs, keeping the output format and probability extraction consistent
+across partitions.
+We compare the probabilities returned by each configuration, called original scores, with scores
+recalibrated by temperature scaling [13]. After clipping, we divide the score’s log odds by a temper￾ature 𝑇 and convert back to a probability. We fit 𝑇 ∈ [0.05, 20] by minimizing NLL on development
+inputs from both classes. Original and recalibrated scores are evaluated on the same inputs, with
+model weights unchanged.
+=== PAGE 13 ===
+System One Models for Security Decisions
+0.0 0.5 1.0
+0.0
+0.5
+1.0
+WAInjectBench
+Observed unsafe
+Jev
+0.0 0.5 1.0
+0.0
+0.5
+1.0
+Laya
+0.0 0.5 1.0
+0.0
+0.5
+1.0
+Decider
+0.0 0.5 1.0
+0.0
+0.5
+1.0
+Nimble
+0.0 0.5 1.0
+0.0
+0.5
+1.0
+R-Judge
+Observed unsafe
+0.0 0.5 1.0
+0.0
+0.5
+1.0
+0.0 0.5 1.0
+0.0
+0.5
+1.0
+0.0 0.5 1.0
+0.0
+0.5
+1.0
+0.0 0.5 1.0
+Mean P(unsafe)
+0.0
+0.5
+1.0
+AgentHarm
+Observed unsafe
+0.0 0.5 1.0
+Mean P(unsafe)
+0.0
+0.5
+1.0
+0.0 0.5 1.0
+Mean P(unsafe)
+0.0
+0.5
+1.0
+0.0 0.5 1.0
+Mean P(unsafe)
+0.0
+0.5
+1.0
+Fig. 4. Held-out probability reliability. Marker area reflects bin frequency, the diagonal indicates perfect
+calibration.
+5.2 Calibration and Confident Errors
+Calibration summaries can hide errors in particular input groups and poor separation of safe and
+unsafe inputs. Table 15 uses the same RQ1 shared test inputs for every row within a task, with
+𝑁𝑝 denoting the number of usable probabilities. Figure 4 compares predicted and observed unsafe
+frequencies across probability bins.
+Among 1,444 WAInjectBench inputs that Jev assigns an unsafe probability below 0.1, 9.14% are
+labeled unsafe, but its mean prediction is only 0.205%. Removing no-EI inputs in a post-hoc analysis
+brings these values much closer, to 0.228% and 0.176%. The gap is therefore largely due to attacks
+without direct instructions that Jev treats as safe.
+Finding 4. A group of missed attacks drives Jev’s calibration error. (held-out
+sensitivity)
+A lower ECE can hide poor separation of safe and unsafe inputs. On shared R-Judge inputs,
+Laya has lower ECE than Jev with five or ten equal-width bins, but higher ECE with twenty bins
+or quantile bins that keep identical scores together. Its AUROC is 0.487 versus Jev’s 0.963, and its
+Brier score is 0.267 versus 0.091. Laya’s Brier loss is also 8.6% higher than assigning every input the
+same probability, equal to the test set’s unsafe proportion. Its favorable ECE under some binning
+choices therefore does not mean that its probabilities identify unsafe inputs well.
+Binning and prevalence sensitivity. Following the task-specific calibration concerns in concurrent
+work [14], we recompute ECE using five, ten, and twenty equal-width bins (W5, W10, W20).
+=== PAGE 14 ===
+Yixuan Liu
+Table 15. Class-score quality on test inputs. †: completed scoring runs.
+Configuration 𝑁𝑝 AUROC↑ AP↑ Brier↓ ECE↓ NLL↓
+WAInjectBench
+Nimble 1610 0.736 0.583 0.102 0.087 0.363
+Jev 1610 0.797 0.663 0.096 0.104 1.131
+ProtectAI 1610 0.799 0.566 0.139 0.138 1.226
+PIGuard 1610 0.660 0.484 0.131 0.126 0.928
+Laya 1610 0.632 0.344 0.146 0.109 0.469
+Nimble parent 1610 0.733 0.644 0.116 0.114 0.497
+Decider 1610 0.712 0.586 0.147 0.143 0.580
+Decider parent 1610 0.616 0.268 0.179 0.202 0.547
+Prompt Guard 2 1610 0.785 0.427 0.170 0.170 1.178
+Qwen3-8B†
+1610 0.716 0.609 0.115 0.116 1.416
+GPT-4.1†
+1610 0.813 0.680 0.121 0.123 1.735
+GLM-5.3-Flash 1610 0.817 0.661 0.096 0.094 0.962
+R-Judge
+Jev 108 0.963 0.963 0.091 0.120 0.291
+Laya 108 0.487 0.416 0.267 0.110 0.731
+Decider parent 108 0.464 0.395 0.285 0.123 0.773
+Nimble parent 108 0.687 0.717 0.404 0.422 1.359
+Decider 108 0.579 0.485 0.358 0.364 1.032
+Nimble 108 0.442 0.459 0.366 0.326 0.995
+Qwen3-8B†
+108 0.695 0.690 0.497 0.501 6.868
+GPT-4.1†
+108 0.950 0.937 0.136 0.147 0.979
+GLM-5.3-Flash 108 0.961 0.974 0.038 0.041 0.226
+AgentHarm
+Jev 352 0.938 0.940 0.122 0.128 0.481
+Nimble 352 0.935 0.958 0.123 0.170 0.390
+Decider 352 0.918 0.937 0.153 0.173 0.497
+Nimble parent 352 0.943 0.961 0.172 0.189 0.568
+Laya 352 0.827 0.830 0.176 0.072 0.530
+WildGuard 352 0.931 0.945 0.325 0.343 1.565
+Decider parent 352 0.732 0.743 0.243 0.128 0.679
+Qwen3-8B†
+352 0.927 0.934 0.237 0.242 2.647
+GPT-4.1†
+352 0.931 0.908 0.238 0.241 3.244
+GLM-5.3-Flash 352 0.818 0.725 0.160 0.153 1.159
+We also use quantile bins (Q10), which aim for ten equally populated groups but keep identical
+scores together, possibly yielding fewer bins. Table 16 reports signed bias, 𝑝¯ − 𝑦¯, and Brier skill,
+1 − Brier/[𝑦¯(1 −𝑦¯)], where 𝑝¯ is the mean unsafe probability and 𝑦¯ the observed unsafe proportion.
+Positive Brier skill means lower squared error than assigning 𝑦¯ to every input.
+Changing the bins affects the models differently. Jev’s WAInjectBench ECE changes little, whereas
+Laya’s R-Judge ECE changes more despite its small mean bias, because overestimates and underesti￾mates can cancel when averaged together. Laya and Decider on WAInjectBench, and Laya, Decider,
+and Nimble on R-Judge, have negative Brier skill, meaning that their probabilities have higher
+=== PAGE 15 ===
+System One Models for Security Decisions
+Table 16. Calibration binning and prevalence sensitivity.
+Component Bias W5 W10 W20 Q10 Skill
+WAInjectBench (𝑁 = 1, 610, 𝑦¯ = 0.173)
+Jev -0.104 0.104 0.104 0.105 0.104 +0.326
+Laya +0.109 0.109 0.109 0.117 0.116 -0.025
+Decider -0.143 0.143 0.143 0.143 0.143 -0.030
+Nimble +0.036 0.053 0.087 0.087 0.089 +0.283
+R-Judge (𝑁 = 108, 𝑦¯ = 0.435)
+Jev +0.105 0.114 0.120 0.131 0.118 +0.629
+Laya -0.018 0.107 0.110 0.184 0.127 -0.086
+Decider -0.159 0.364 0.364 0.367 0.365 -0.455
+Nimble +0.267 0.312 0.326 0.367 0.358 -0.490
+AgentHarm (𝑁 = 352, 𝑦¯ = 0.500)
+Jev +0.105 0.119 0.128 0.130 0.131 +0.510
+Laya -0.045 0.072 0.072 0.085 0.089 +0.295
+Decider -0.173 0.173 0.173 0.173 0.173 +0.387
+Nimble +0.101 0.162 0.170 0.172 0.167 +0.507
+0.50 0.75 1.00
+Maximum label probability
+0
+20
+40
+60
+80
+100
+Within-outcome fraction (%)
+WAInjectBench
+Correct (1443)
+False negative (166)
+False positive (1)
+0.50 0.75 1.00
+Maximum label probability
+0
+20
+40
+60
+80
+100
+R-Judge
+Correct (95)
+False negative (4)
+False positive (9)
+0.50 0.75 1.00
+Maximum label probability
+0
+20
+40
+60
+80
+100
+AgentHarm
+Correct (296)
+False negative (14)
+False positive (42)
+Fig. 5. Jev confidence by decision outcome. Legend counts give outcome frequencies.
+squared error than assigning every input the test set’s unsafe proportion. Matching the average
+unsafe rate therefore does not ensure useful probabilities for individual inputs.
+High confidence does not imply the same error pattern across tasks. At maximum label probability
+≥ 0.95, Jev makes 129 errors on shared WAInjectBench inputs, all false negatives, compared with
+none on R-Judge and 14 on AgentHarm, including four false negatives. On WAInjectBench its
+confident mistakes are missed attacks, while on AgentHarm most are benign requests flagged as
+harmful.
+Figure 5 shows maximum class probability separately for correct decisions, false negatives, and
+false positives, with each histogram normalized within its outcome group.
+Reasoning-judge probabilities. Table 15 includes GLM-5.3-Flash, while Table 17 reports the re￾maining reasoning judges on the same shared inputs using final-answer candidate scores.
+Ranking unsafe inputs above safe ones does not ensure accurate probabilities. Kimi’s AgentHarm
+AUROC of 0.922 and AP of 0.909 indicate strong ranking, but its Brier and ECE are both 0.273, and
+it rejects many benign requests. DeepSeek combines strong R-Judge classification with low Brier
+loss (0.037), but no added judge has the best probability quality across all tasks.
+=== PAGE 16 ===
+Yixuan Liu
+Table 17. Additional judges’ class-score quality.
+Configuration AUROC↑ AP↑ Brier↓ ECE↓ NLL↓
+WAInjectBench
+DeepSeek-V4.1-Flash 0.774 0.627 0.099 0.099 1.590
+GLM-5.3 0.685 0.532 0.116 0.117 1.182
+Kimi-K2.6 0.786 0.642 0.122 0.122 1.574
+Qwen3.8-27B 0.647 0.514 0.112 0.112 1.477
+R-Judge
+DeepSeek-V4.1-Flash 0.966 0.910 0.037 0.037 0.597
+GLM-5.3 0.929 0.945 0.093 0.114 0.563
+Kimi-K2.6 0.941 0.933 0.120 0.120 1.036
+Qwen3.8-27B 0.940 0.953 0.074 0.074 0.994
+AgentHarm
+DeepSeek-V4.1-Flash 0.877 0.844 0.213 0.213 3.433
+GLM-5.3 0.813 0.710 0.156 0.131 1.015
+Kimi-K2.6 0.922 0.909 0.273 0.273 2.473
+Qwen3.8-27B 0.713 0.619 0.239 0.239 3.031
+5.3 Effects of Recalibration
+For each model, we compare original and recalibrated scores on all test inputs with usable probabil￾ities, which can include more inputs than the shared set used in cross-model tables. Temperature
+scaling improves test NLL in six of the twelve System One model and task combinations, including
+all four R-Judge comparisons, but the gains do not extend to every metric. On Jev’s 1,611 valid
+WAInjectBench outputs, NLL decreases from 1.131 to 0.374 while Brier increases from 0.096 to
+0.107.
+On AgentHarm, Jev and Nimble classify all 64 development inputs correctly, leading the fit to
+select a temperature near the lower bound, 0.05, for both. This makes their probabilities more
+extreme and increases the penalty for confident test errors, with Jev’s NLL rising from 0.481 to
+2.163. Recalibration can therefore fit development data well while making test probabilities worse.
+Scaling reduces test NLL in all six GPT-4.1 and Qwen3-8B task comparisons using the original
+scoring runs. On all R-Judge inputs with usable scores, Qwen’s NLL falls from 6.338 to 0.730 because
+scaling softens its often near-zero or near-one probabilities, lowering the loss from confident errors.
+Temperature scaling makes probabilities more or less extreme, but inputs with the same original
+score still receive the same transformed score. A threshold must therefore handle these tied inputs
+together, even when some decisions are correct and others are wrong. RQ3 examines how this
+limits automatic decisions.
+6 RQ3: Selective Automation under Error Budgets
+RQ3 examines how much work a policy can automate while limiting unsafe allowances and benign
+blocks. Thresholds are chosen on the selection set and kept fixed for confirmation and test.
+=== PAGE 17 ===
+System One Models for Security Decisions
+Table 18. Development-fitted temperature scaling (original / recalibrated scores).
+Configuration 𝑇 Brier ECE NLL
+WAInjectBench
+Jev 10.93 0.096 / 0.107 0.104 / 0.134 1.131 / 0.374
+Laya 15.19 0.147 / 0.237 0.108 / 0.310 0.469 / 0.666
+Decider 20.00 0.148 / 0.216 0.143 / 0.285 0.582 / 0.625
+Nimble 1.18 0.103 / 0.107 0.087 / 0.104 0.364 / 0.376
+R-Judge
+Jev 0.89 0.103 / 0.102 0.137 / 0.130 0.318 / 0.316
+Laya 20.00 0.267 / 0.250 0.110 / 0.060 0.731 / 0.693
+Decider 20.00 0.423 / 0.251 0.440 / 0.087 1.262 / 0.695
+Nimble 20.00 0.320 / 0.251 0.251 / 0.032 0.874 / 0.694
+AgentHarm
+Jev 0.05 0.122 / 0.156 0.128 / 0.158 0.481 / 2.163
+Laya 1.09 0.176 / 0.178 0.072 / 0.077 0.530 / 0.535
+Decider 1.67 0.153 / 0.145 0.173 / 0.140 0.497 / 0.453
+Nimble 0.05 0.123 / 0.160 0.170 / 0.169 0.390 / 1.454
+6.1 Decision Policy and Error Measures
+For a usable unsafe probability 𝑝𝑖
+, the two-threshold policy is
+Decision =
+
+
+
+allow, 𝑝𝑖 < 𝜏𝐿,
+block, 𝑝𝑖 > 𝜏𝐻 ,
+escalate, 𝑝𝑖 ∈ [𝜏𝐿, 𝜏𝐻 ].
+(1)
+Here 𝜏𝐿 and 𝜏𝐻 are the allow and block thresholds, and escalation defers a decision for further
+review. Inputs exactly at either threshold, or without usable scores, also escalate. Automatic coverage
+is the fraction of all partition inputs that are allowed or blocked, while allow coverage counts
+only allowances over the same denominator. Both include inputs without usable scores in the
+denominator. The unsafe-miss rate Missauto is the fraction of unsafe inputs allowed, and the benign￾blocking rate FBauto is the fraction of benign inputs blocked. Allowed-set risk instead measures the
+unsafe fraction among allowed inputs, with zero-denominator ratios undefined.
+A low miss rate can come from allowing almost nothing, while high coverage can come from
+blocking many inputs. We report the two actions separately.
+6.2 Policy Selection and Independent Confirmation
+We search 101 threshold pairs symmetric around 0.5, using evenly spaced 𝜏𝐻 ∈ [0.5, 1] and
+𝜏𝐿 = 1 − 𝜏𝐻 . For each allowed miss rate 𝜖 ∈ {0.01, 0.05, 0.10}, we choose the pair with the highest
+automatic coverage on selection inputs, subject to Missauto ≤ 𝜖 and FBauto ≤ 0.05. If coverage is
+tied, we prefer more automatic allowances, then the larger 𝜏𝐻 . The search includes (𝜏𝐿, 𝜏𝐻 ) = (0, 1),
+which sends every input for review and automates no decisions.
+We apply the selected thresholds unchanged to confirmation and test inputs, counting a policy
+as passing only when both error rates meet their limits. Policies that fail confirmation are also
+reported to show whether failures persist on test. WAInjectBench and R-Judge support these checks,
+whereas AgentHarm has data for temperature fitting but no separate selection and confirmation
+sets, so it is excluded from the policy experiment.
+=== PAGE 18 ===
+Yixuan Liu
+Table 19. Frozen-policy automation. Allow: allow coverage. Confirmed: source confirmation passed. †: original
+scoring runs.
+Configuration Coverage Allow Miss False block Confirmed
+WAInjectBench
+Jev 0.00% 0.00% 0.00% 0.00% Yes
+Laya 5.02% 4.71% 1.08% 0.23% Yes
+Decider 0.00% 0.00% 0.00% 0.00% Yes
+Nimble 0.74% 0.74% 0.36% 0.00% Yes
+Qwen3-8B†
+0.00% 0.00% 0.00% 0.00% Yes
+GPT-4.1†
+0.00% 0.00% 0.00% 0.00% Yes
+R-Judge
+Jev 7.63% 0.42% 0.00% 0.00% Yes
+Laya 2.12% 1.69% 0.00% 0.90% No
+Decider 1.69% 1.27% 0.80% 0.00% Yes
+Nimble 6.78% 0.42% 0.00% 6.31% Yes
+Qwen3-8B†
+0.00% 0.00% 0.00% 0.00% Yes
+GPT-4.1†
+0.00% 0.00% 0.00% 0.00% Yes
+Small samples and strict error limits. A 1% miss limit requires zero misses among R-Judge’s 74
+unsafe selection inputs and 49 unsafe confirmation inputs, because a single miss exceeds the limit
+in either set. WAInjectBench has 167 and 111, respectively, permitting one miss in each. With so
+few permitted errors, individual inputs can determine whether a policy passes, and larger samples
+are needed to estimate rare-error rates precisely.
+The benign-blocking limit is similarly sensitive to individual errors. R-Judge confirmation permits
+at most two blocks among 44 benign inputs under its 5% limit, while test permits five among 111.
+Nimble’s seven benign test blocks exceed the limit by two decisions. Cluster-bootstrap intervals
+describe uncertainty from the sampled interaction records and attack sources.
+6.3 Coverage and Errors of Symmetric Policies
+With a 1% miss limit during selection, symmetric policies send every WAInjectBench input for
+review with Jev, Decider, GPT-4.1, and Qwen3-8B (Table 19). Laya automates 5.02% but allows three
+of 279 unsafe inputs, exceeding the miss limit. On R-Judge, Nimble passes confirmation but blocks
+seven of 111 benign test inputs, exceeding the 5% blocking limit. Meeting the limits before test
+evaluation does not ensure they hold on test inputs.
+Jev’s 7.63% R-Judge coverage consists of 17 blocks and one allowance, so only 0.42% of inputs
+proceed without review. GPT-4.1 and Qwen3-8B escalate every R-Judge input with either original
+or recalibrated scores, showing that their lower NLL after recalibration does not produce automatic
+decisions under these symmetric rules.
+Allowing more source misses can raise coverage but also change benign blocking (Figure 6).
+Jev’s R-Judge coverage rises from 7.63% to 72.88% at a 5% miss budget, but benign blocking reaches
+5.41%, above its unchanged limit. The latter policy allows 54 inputs, including three unsafe ones.
+Those misses are 2.4% of all unsafe inputs but 5.56% of allowances, illustrating why low overall
+miss rates need not imply low risk among allowed inputs.
+=== PAGE 19 ===
+System One Models for Security Decisions
+1 5 10
+Source miss target (%)
+0
+20
+40
+60
+80
+100
+Test automation (%)
+WAInjectBench
+1 5 10
+Source miss target (%)
+0
+20
+40
+60
+80
+100
+Test automation (%)
+R-Judge
+Jev
+Laya
+Decider
+Nimble
+Qwen3-8B
+GPT-4.1
+Fig. 6. Automation under symmetric source policies. Circles meet both test budgets, crosses violate at least
+one.
+6.4 Independent Allowance and Blocking Thresholds
+A sensitivity analysis performed after the primary evaluation lets the allow and block thresholds
+vary independently. It considers all 101 × 101 combinations of the same threshold values, keeping
+the scores, partitions, error limits, and coverage objective unchanged. If the earlier tie-breaking
+rules still leave a tie, we choose the smaller 𝜏𝐿. Thresholds are chosen only on selection inputs and
+remain fixed for confirmation and test. We compare symmetric and independent thresholds on
+original and recalibrated scores at all three miss limits.
+Figure 7 compares symmetric (S) and independent (I) thresholds using original scores at the
+1% miss limit on WAInjectBench and R-Judge. Stacked bars separate allowances from blocks, and
+markers show whether policies meet both limits on confirmation and test, fail confirmation only,
+or fail on test.
+On R-Judge, independent thresholds raise Jev’s test coverage from 7.63% to 47.03% while meeting
+confirmation and test limits, but the policy allows only one input and blocks 110. On WAInjectBench,
+its coverage rises from zero to 6.70%, entirely through 108 blocks. Separate thresholds let the policy
+block more inputs while keeping a low allowance threshold, but they do not resolve missed attacks
+among low-score inputs.
+Finding 5. Separate thresholds recover automation mainly through blocking.
+(threshold sensitivity)
+Nimble similarly rises from 0.74% to 12.78% WAInjectBench coverage while allowing the same
+twelve inputs. Independent thresholds separate the two actions, but higher selection coverage does
+not ensure that error limits hold on other inputs. GPT-4.1 blocks 124 R-Judge inputs, including 17
+benign ones, and fails both confirmation and test checks. Among the twelve model/task pairs with
+original scores at the 1% miss limit, seven independent policies pass both checks, compared with
+nine symmetric policies. Several passing symmetric policies send every input for review.
+Table 20 shows why higher coverage alone can be misleading. Laya’s independent WAInjectBench
+policy retains the same 76 allowances and three misses as its symmetric policy, while the lower
+blocking threshold adds 128 blocks, including 62 additional benign inputs. Coverage therefore rises
+without correcting the unsafe allowances that already exceeded the miss budget, and more benign
+inputs are rejected.
+=== PAGE 20 ===
+Yixuan Liu
+0 2 4 6 8 10 12 14
+Automatic coverage (%)
+Jev S
+Jev I
+Laya S
+Laya I
+Decider S
+Decider I
+Nimble S
+Nimble I
+GPT-4.1 S
+GPT-4.1 I
+Qwen3-8B S
+Qwen3-8B I
+WAInjectBench
+0 10 20 30 40 50 60
+Automatic coverage (%)
+Jev S
+Jev I
+Laya S
+Laya I
+Decider S
+Decider I
+Nimble S
+Nimble I
+GPT-4.1 S
+GPT-4.1 I
+Qwen3-8B S
+Qwen3-8B I
+R-Judge
+Allow
+Block
+Confirmation + test pass
+Confirmation fails
+Test fails
+Fig. 7. Automation with symmetric and independent thresholds.
+Table 20. Independent policies at the 1% source miss budget.
+Model 𝜏𝐿 𝜏𝐻 Allow Block Misses False blocks C/T
+WAInjectBench
+Jev 0.000 0.525 0 108 0 0 Y/Y
+Laya 0.105 0.570 76 133 3 65 Y/N
+Decider 0.000 0.515 0 14 0 0 Y/Y
+Nimble 0.050 0.500 12 194 1 47 Y/Y
+GPT-4.1 0.000 0.655 0 68 0 2 Y/Y
+Qwen3-8B 0.000 0.560 0 196 0 54 N/Y
+R-Judge
+Jev 0.005 0.745 1 110 0 2 Y/Y
+Laya 0.240 0.665 4 3 0 2 N/Y
+Decider 0.015 0.925 3 4 1 2 Y/Y
+Nimble 0.150 0.885 1 15 0 7 Y/N
+GPT-4.1 0.000 0.985 0 124 0 17 N/N
+Qwen3-8B 0.000 1.000 0 0 0 0 Y/Y
+Counts use all planned test inputs. C/T: confirmation/test budget checks.
+Recalibrated scores show the same distinction (Table 21). Jev again reaches 47.03% R-Judge
+coverage with one allowance. Decider automatically blocks four inputs that its symmetric policy
+sent for review. Qwen3-8B gains four allowances but fails confirmation, so test coverage alone
+would hide that failure. Across the three miss limits, independent policies pass both checks in 7,
+9, and 7 of the twelve recalibrated pairs, compared with 10, 9, and 9 symmetric policies. Higher
+coverage on selection inputs can therefore coexist with errors above the limits on confirmation or
+test inputs.
+=== PAGE 21 ===
+System One Models for Security Decisions
+Table 21. Independent thresholds with recalibrated scores at the 1% miss budget.
+Model 𝜏𝐿 𝜏𝐻 Cov. S Cov. I Allow I Miss I FB I C/T
+WAInjectBench
+Jev 0.000 0.500 0.00 6.95 0.00 0.00 0.08 Y/Y
+Laya 0.465 0.505 5.15 12.90 4.84 1.08 4.73 Y/N
+Decider 0.000 0.500 0.00 0.87 0.00 0.00 0.00 Y/Y
+Nimble 0.075 0.500 0.37 12.41 0.37 0.00 3.53 Y/Y
+GPT-4.1 0.000 0.505 0.00 4.22 0.00 0.00 0.15 Y/Y
+Qwen3-8B 0.000 0.505 0.00 12.16 0.00 0.00 4.05 N/Y
+R-Judge
+Jev 0.005 0.770 7.63 47.03 0.42 0.00 1.80 Y/Y
+Laya 0.485 0.510 1.27 1.69 0.85 0.00 1.80 N/Y
+Decider 0.000 0.530 0.00 1.69 0.00 0.00 1.80 Y/Y
+Nimble 0.480 0.530 2.54 3.39 0.85 0.80 1.80 Y/Y
+GPT-4.1 0.000 0.625 0.00 52.54 0.00 0.00 15.32 N/N
+Qwen3-8B 0.330 1.000 0.00 1.69 1.69 0.00 0.00 N/Y
+Rates are percentages. S/I: symmetric/independent. FB: benign-blocking rate. C/T: confirmation/test budget
+checks.
+For Jev’s original scores on R-Judge, independent thresholds increase test coverage by 39.41
+percentage points (95% cluster-bootstrap CI [33.05, 45.34]), entirely from additional blocks. The
+interval describes variation across test samples with the selected thresholds fixed.
+6.5 Confidence Ranking and Score Ties
+Figure 8 orders shared inputs by the larger class probability max(𝑝𝑖
+, 1 − 𝑝𝑖) and progressively
+automates both safe and unsafe predictions, adding equal-confidence inputs together. Selective
+error is the fraction of these automatic decisions that are wrong.
+Thresholds cannot separate correct and incorrect decisions with the same score. Jev
+assigns 𝑝𝑖 = 0 to 1,318 shared WAInjectBench inputs, including 101 misses, and 𝑝𝑖 = 1 to three
+correct predictions. Accepting its maximum-confidence group immediately covers 82.05% at 7.65%
+error. Any positive allowance threshold admits the entire zero-score group, including its missed
+attacks. Independent thresholds can retain blocks on the other side, but cannot resolve these tied
+allowances.
+Jev’s maximum-confidence AgentHarm group instead covers 126 of 352 inputs with two errors
+(1.59%). Identical reported confidence therefore corresponds to different error rates across tasks.
+6.6 Error Complementarity
+Escalation is useful when the receiving model corrects the errors routed to it. Motivated by the
+shared-error analysis of Rao and Callison-Burch [26], we compare four System One models with
+seven general judges on 1,610 shared WAInjectBench inputs, 108 R-Judge records, and 352 Agen￾tHarm requests. Adding task-compatible specialists gives 100 model pairs, evaluated on both
+common and pair-specific populations.
+For each class, the second model can correct or repeat the System One model’s errors. Introduced
+errors occur on inputs the System One model classified correctly. The correction fraction divides
+corrected errors by the System One model’s errors, while the second model’s total errors equal
+repeated plus introduced errors. Figure 9 reports correction fractions, and Table 22 gives the
+additional errors introduced when Jev is the first model.
+=== PAGE 22 ===
+Yixuan Liu
+0 20 40 60 80 100
+Accepted coverage (%)
+0
+20
+40
+60
+80
+100
+Error among accepted (%)
+WAInjectBench
+0 20 40 60 80 100
+Accepted coverage (%)
+0
+20
+40
+60
+80
+100
+R-Judge
+0 20 40 60 80 100
+Accepted coverage (%)
+0
+20
+40
+60
+80
+100
+AgentHarm
+Jev
+Laya
+Decider
+Nimble
+Fig. 8. Selective error and coverage.
+GPT-4.1
+Qwen3-8B
+GLM Flash
+DeepSeek
+GLM-5.3
+Kimi
+Qwen3.8
+Jev (166)
+Laya (183)
+Decider (264)
+Nimble (131)
+6 19 17 13 7 7 5
+20 29 29 27 22 20 21
+28 48 46 42 31 27 34
+5 5 10 9 8 5 3
+WAInjectBench: misses
+GPT-4.1
+Qwen3-8B
+GLM Flash
+DeepSeek
+GLM-5.3
+Kimi
+Qwen3.8
+Jev (1)
+Laya (100)
+Decider (0)
+Nimble (47)
+100 0 100 100 100 100 100
+100 89 99 100 100 100 99
+n/a n/a n/a n/a n/a n/a n/a
+98 60 87 91 96 98 96
+WAInjectBench: false alarms
+GPT-4.1
+Qwen3-8B
+GLM Flash
+DeepSeek
+GLM-5.3
+Kimi
+Qwen3.8
+Jev (4)
+Laya (34)
+Decider (39)
+Nimble (9)
+75 50 50 25 0 75 25
+94 97 88 94 79 91 91
+90 95 87 92 72 87 87
+89 78 89 89 56 89 89
+R-Judge: misses
+GPT-4.1
+Qwen3-8B
+GLM Flash
+DeepSeek
+GLM-5.3
+Kimi
+Qwen3.8
+Jev (9)
+Laya (16)
+Decider (17)
+Nimble (54)
+22 11 89 100 89 56 78
+81 19 88 100 100 94 100
+82 24 88 100 100 88 100
+69 11 94 98 98 87 96
+R-Judge: false alarms
+GPT-4.1
+Qwen3-8B
+GLM Flash
+DeepSeek
+GLM-5.3
+Kimi
+Qwen3.8
+Jev (14)
+Laya (62)
+Decider (73)
+Nimble (12)
+93 64 43 86 64 100 86
+100 94 82 97 97 100 98
+99 92 85 97 92 100 97
+100 50 42 83 75 100 83
+AgentHarm: misses
+GPT-4.1
+Qwen3-8B
+GLM Flash
+DeepSeek
+GLM-5.3
+Kimi
+Qwen3.8
+Jev (42)
+Laya (32)
+Decider (2)
+Nimble (47)
+5 10 31 12 21 0 0
+50 53 72 62 59 38 50
+50 50 50 100 50 50 50
+19 30 49 30 36 19 26
+AgentHarm: false alarms
+0 20 40 60 80 100
+System One model errors corrected by the counterpart (%)
+Fig. 9. Error complementarity across models. Row counts give base errors, grey cells have none.
+On WAInjectBench, Jev misses 166 unsafe inputs in the shared population, and the seven judges
+correct between 8 and 32 of these misses. Each judge corrects at most five of the 129 misses that
+Jev makes with max(𝑝𝑖
+, 1 − 𝑝𝑖) ≥ 0.95, repeating nearly all of its confident mistakes. These cases
+also bypass a review rule that accepts decisions at that confidence level.
+=== PAGE 23 ===
+System One Models for Security Decisions
+Table 22. Jev and judge error transitions. Corrections are shown as corrected/base errors.
+Counterpart False negatives False positives
+Corrected Introduced Corrected Introduced
+WAInjectBench, 𝑁 = 1, 610
+GPT-4.1 10/166 33 1/1 2
+Qwen3-8B 32/166 3 0/1 51
+GLM-5.3-Flash 29/166 5 1/1 14
+DeepSeek-V4.1-Flash 22/166 8 1/1 7
+GLM-5.3 12/166 29 1/1 6
+Kimi-K2.6 11/166 38 1/1 3
+Qwen3.8-27B 8/166 16 1/1 6
+R-Judge, 𝑁 = 108
+GPT-4.1 3/4 3 2/9 11
+Qwen3-8B 2/4 0 1/9 44
+GLM-5.3-Flash 2/4 3 8/9 2
+DeepSeek-V4.1-Flash 1/4 0 9/9 1
+GLM-5.3 0/4 7 8/9 1
+Kimi-K2.6 3/4 4 5/9 4
+Qwen3.8-27B 1/4 3 7/9 0
+AgentHarm, 𝑁 = 352
+GPT-4.1 13/14 0 2/42 45
+Qwen3-8B 9/14 1 4/42 40
+GLM-5.3-Flash 6/14 8 13/42 19
+DeepSeek-V4.1-Flash 12/14 2 5/42 34
+GLM-5.3 9/14 5 9/42 27
+Kimi-K2.6 14/14 0 0/42 54
+Qwen3.8-27B 12/14 0 0/42 40
+On AgentHarm, the judges catch missed harmful requests but reject more benign ones. Kimi
+corrects all 14 Jev misses without introducing another miss, but repeats all 42 Jev false positives
+and adds 54. GPT-4.1 corrects 13 misses and introduces none, while correcting two false positives
+and adding 45. On the smaller shared R-Judge population, DeepSeek instead corrects all nine Jev
+false positives but only one of its four misses, introducing one false positive and no new miss.
+The same judge can help one model and task much more than another. Every judge corrects over
+80% of Laya’s and Decider’s AgentHarm misses, while none corrects 10% of Nimble’s WAInjectBench
+misses. Choosing a generally accurate second model is therefore not enough to ensure that it fixes
+the first model’s mistakes.
+Whole-benchmark comparisons identify potential escalation partners, but their benefit depends
+on which inputs the policy sends for review. Confidently allowed attacks never reach the second
+judge, including those it could detect.
+=== PAGE 24 ===
+Yixuan Liu
+7 Discussion
+7.1 Component Integration and Error Handling
+Input and Service Limitations. Rankings on shared inputs omit cases that some models cannot
+process, and excluding long R-Judge records raises Jev’s reported F1 (Section 4.4). Applications
+handling long interactions therefore need results on all inputs each model supports as well as the
+shared-input ranking. Network failures interrupt requests, while input-length limits and invalid
+answers affect whether a model can supply a usable decision.
+Output Format and Score Availability. We repeated requests affected by transport errors, invalid
+answers, or missing candidate probabilities, retaining the first response that supplied the outputs
+required for each analysis. Eight GPT-4.1 inputs and one Qwen3.8 input used JSON-formatted A/B
+answers to recover usable outputs. Changing the output format can change the reported
+probability, because the text preceding the A/B answer differs inside JSON. Recording the model,
+service route, prompt, format, and probability extraction method helps trace these differences to
+their source.
+Deployment Measurements. Response time and API charges depend on routing, queueing, caching,
+and reasoning settings. A deployment comparison should therefore fix the endpoint, hardware,
+traffic, and measurement period, including escalation and failure handling in its measurements.
+AgentDojo and AgentDyn can further test how blocking or escalating inputs changes attack success
+and benign-task completion [9, 18].
+7.2 Implications for Model Development
+Specify what counts as unsafe. Jev’s low-score mistakes concentrate in WAInjectBench’s no-EI
+groups, where identifying attack-derived text requires more than recognizing direct malicious
+commands. Asking separately whether an input conflicts with user instructions, comes from a
+trusted source, or requests harm could help clarify what evidence the model uses and whether its
+answer matches the intended judgment.
+Improve probabilities near the allow and block thresholds. Average calibration can improve
+while confident mistakes still prevent useful automation. Future training objectives could put more
+weight on unsafe inputs scored low enough to allow and benign inputs scored high enough to
+block. The mixed results from temperature scaling motivate checking such methods separately for
+each task on independent confirmation data.
+Preserve evidence across longer interactions. Laya’s context limit excludes more than
+half of the R-Judge test inputs, suggesting a need for longer-context representations, structured
+summaries, or hierarchical encoders. These approaches should be checked for whether they retain
+user constraints and tool dependencies from earlier parts of the interaction.
+Return probabilities for every candidate label. Returning only the most likely tokens can
+omit a candidate score, preventing an application from computing the class probability even when
+the label is valid. Providing all candidate probabilities would simplify integration, while recording
+the preceding text and model revision would help identify changes caused by the service or output
+format.
+8 Threats to Validity
+Internal validity. Development results informed implementation choices, and comparisons remain
+sensitive to prompts, candidate order, context limits, reasoning settings, and service configurations.
+Retaining the first usable response after retries can also change the observed response distribution.
+Additional judge scoring runs followed the initial test classifications, although calibration and
+=== PAGE 25 ===
+System One Models for Security Decisions
+thresholds were fixed before those runs evaluated test inputs. Confidence intervals may be unstable
+because few source clusters are available and the released data do not fully identify which attacks
+share an origin.
+Construct validity. Calibration and policy errors depend on each benchmark’s definition of
+unsafe, which denotes harmful task membership in AgentHarm and includes attack-derived text
+without explicit instructions in WAInjectBench. The EI/no-EI, threshold-sensitivity, and error￾complementarity analyses were added after the primary evaluation. Our finite threshold grid
+restricts allowance thresholds to at most 0.5 and blocking thresholds to at least 0.5, so other policies
+may yield different trade-offs. Observed error rates remain subject to sampling uncertainty and
+distribution shift.
+External validity. Public benchmarks may overlap unknown training data, and their unsafe-input
+proportions can differ from deployed traffic, affecting precision, AP, and calibration. The study
+covers known attack families and text inputs, leaving transfer to unseen or adaptive attacks, other
+languages, and multimodal settings open. Hosted models and provider behavior can change over
+time or across routes, so the same model name need not reproduce the same results. Protection also
+depends on the agent, environment, guard placement, and handling of blocked requests, requiring
+validation on the target system’s inputs and configurations.
+9 Conclusion
+Our evaluation shows that System One models can achieve strong overall accuracy while confidently
+missing particular attack groups, and average calibration metrics do not consistently reveal these
+errors. Under strict miss limits, the evaluated policies allow few inputs automatically, while selecting
+separate allow and block thresholds increases automation mainly by blocking more inputs. These
+results show why model selection should consider accuracy and calibration together with how
+often the resulting policy allows unsafe inputs, blocks benign ones, or requires further review.
+Acknowledgments
+OpenAI Codex assisted with study design and code writing.
+Data Availability
+The artifact provides experiment code, final predictions, benchmark partitions, configurations, and
+reproducible analyses (https://github.com/yxsec/system-one-security-eval).
+References
+[1] Saleema Amershi, Andrew Begel, Christian Bird, Robert DeLine, Harald Gall, Ece Kamar, Nachi Nagappan, Besmira
+Nushi, and Tom Zimmermann. 2019. Software Engineering for Machine Learning: A Case Study. In Proceedings of the
+International Conference on Software Engineering: Software Engineering in Practice. IEEE. https://www.microsoft.com/en￾us/research/publication/software-engineering-for-machine-learning-a-case-study/
+[2] Maksym Andriushchenko, Alexandra Souly, Mateusz Dziemian, Derek Duenas, Maxwell Lin, Justin Wang, Dan
+Hendrycks, Andy Zou, Zico Kolter, Matt Fredrikson, Yarin Gal, and Xander Davies. 2025. AgentHarm: A Benchmark
+for Measuring Harmfulness of LLM Agents. In International Conference on Learning Representations. https://proceedings.
+iclr.cc/paper_files/paper/2025/hash/c493d23af93118975cdbc32cbe7323f5-Abstract-Conference.html
+[3] Anastasios N. Angelopoulos, Stephen Bates, Adam Fisch, Lihua Lei, and Tal Schuster. 2024. Conformal Risk Control.
+In International Conference on Learning Representations. https://research.google/pubs/conformal-risk-control/
+[4] Bespoke Labs and Maheswaran Sathiamoorthy. 2026. Nimble. https://github.com/bespokelabsai/nimble Official
+implementation; evaluated model: Bespoke-Nimble-9B.
+[5] Md Anas Biswas. 2026. Confidently Wrong: Severity-Aware Calibration of Prompt-Injection Detectors under Attack
+Shift. arXiv:2606.22659 [cs.CR] https://arxiv.org/abs/2606.22659
+=== PAGE 26 ===
+Yixuan Liu
+[6] Eric Breck, Shanqing Cai, Eric Nielsen, Michael Salib, and D. Sculley. 2017. The ML Test Score: A Rubric for ML
+Production Readiness and Technical Debt Reduction. In Proceedings of the IEEE International Conference on Big Data.
+IEEE. https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt￾reduction/
+[7] convaiinnovations. [n. d.]. Laya: Model Card and Checkpoint. https://huggingface.co/convaiinnovations/laya Model
+card accessed September 24, 2026; evaluated revision recorded in the artifact.
+[8] Edoardo Debenedetti, Ilia Shumailov, Tianqi Fan, Jamie Hayes, Nicholas Carlini, Daniel Fabian, Christoph
+Kern, Chongyang Shi, Andreas Terzis, and Florian Tramèr. 2025. Defeating Prompt Injections by Design.
+arXiv:2503.18813 [cs.CR] https://arxiv.org/abs/2503.18813
+[9] Edoardo Debenedetti, Jie Zhang, Mislav Balunović, Luca Beurer-Kellner, Marc Fischer, and Florian Tramèr. 2024.
+AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents. In Advances
+in Neural Information Processing Systems, Vol. 37. doi:10.52202/079017-2636
+[10] Yonatan Geifman and Ran El-Yaniv. 2017. Selective Classification for Deep Neural Networks. In Advances
+in Neural Information Processing Systems, Vol. 30. https://papers.neurips.cc/paper_files/paper/2017/hash/
+4a8423d5e91fda00bb7e46540e2b0cf1-Abstract.html
+[11] Yonatan Geifman and Ran El-Yaniv. 2019. SelectiveNet: A Deep Neural Network with an Integrated Reject Option.
+In Proceedings of the 36th International Conference on Machine Learning (Proceedings of Machine Learning Research,
+Vol. 97). PMLR, 2151–2159. https://proceedings.mlr.press/v97/geifman19a.html
+[12] Kai Greshake, Sahar Abdelnabi, Shailesh Mishra, Christoph Endres, Thorsten Holz, and Mario Fritz. 2023. Not
+What You’ve Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection.
+arXiv:2302.12173 [cs.CR] https://arxiv.org/abs/2302.12173
+[13] Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q. Weinberger. 2017. On Calibration of Modern Neural Networks. In
+Proceedings of the 34th International Conference on Machine Learning (Proceedings of Machine Learning Research, Vol. 70).
+PMLR, 1321–1330. https://proceedings.mlr.press/v70/guo17a.html
+[14] Ruoqi Guo, Yi Liu, Gelei Deng, Yuekang Li, Lida Zhao, Yutao Wu, Simin Chen, Ying Zhang, and Leo Yu Zhang. 2026.
+Just Ask Jev: Reinforcement Learning for Calibrated Decisions as a Zero-Shot Detector of AI Alignment Failures.
+arXiv:2609.29429 [cs.AI] https://arxiv.org/abs/2609.29429v1
+[15] Seungju Han, Kavel Rao, Allyson Ettinger, Liwei Jiang, Bill Yuchen Lin, Nathan Lambert, Yejin Choi, and Nouha Dziri.
+2024. WildGuard: Open One-Stop Moderation Tools for Safety Risks, Jailbreaks, and Refusals of LLMs. In Advances in
+Neural Information Processing Systems, Vol. 37. doi:10.52202/079017-0261
+[16] Jiaju Huang, Hao Yang, Xinyu Ma, Xinglong Liang, Kunyan Cai, Junqiang Ma, Shaobin Chen, Yue Sun, and Tao Tan.
+2026. Can Jev Judge Radiology Reports? Evaluating a System One Model for Clinical Factuality. arXiv:2609.27607 [cs.CL]
+https://arxiv.org/abs/2609.27607v1
+[17] leolee99. [n. d.]. PIGuard: Model Card and Checkpoint. https://huggingface.co/leolee99/PIGuard Model card accessed
+September 24, 2026.
+[18] Hao Li, Ruoyao Wen, Shanghao Shi, Ning Zhang, Yevgeniy Vorobeychik, and Chaowei Xiao. 2026. AgentDyn:
+Are Your Agent Security Defenses Deployable in Real-World Dynamic Environments? arXiv:2602.03117 [cs.CR]
+https://arxiv.org/abs/2602.03117
+[19] Yubo Li, Yidi Miao, Ramayya Krishnan, and Rema Padman. 2026. JEV-as-a-Judge: Accept When Confident, Escalate
+When Unsure. arXiv preprint arXiv:2609.26550 (2026). https://arxiv.org/abs/2609.26550 Version 1; local source
+manuscript dated September 21, 2026.
+[20] Guoming Ling, Muen Xue, and Zijian Ye. 2026. Jev in the Wild: A Data-Driven Analysis of the Jev Model’s Functionality,
+Applications and Ecosystem. arXiv:2609.30216 [cs.SE] https://arxiv.org/abs/2609.30216v1
+[21] Yinuo Liu, Xilong Wang, Ruohan Xu, Yuqi Jia, and Neil Zhenqiang Gong. 2026. WAInjectBench: Benchmarking Prompt
+Injection Detections for Web Agents. arXiv:2510.01354v2 [cs.CR] https://arxiv.org/abs/2510.01354v2
+[22] Mapika. [n. d.]. Decider-2B: Model Card and Checkpoint. https://huggingface.co/Mapika/decider-2b Model card
+accessed September 24, 2026; evaluated revision recorded in the artifact.
+[23] Meta. [n. d.]. Llama Prompt Guard 2 86M: Model Card. https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M
+Model card accessed September 24, 2026.
+[24] Yaniv Ovadia, Emily Fertig, Jie Ren, Zachary Nado, D. Sculley, Sebastian Nowozin, Joshua Dillon, Balaji Lakshmi￾narayanan, and Jasper Snoek. 2019. Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty
+under Dataset Shift. In Advances in Neural Information Processing Systems, Vol. 32. https://papers.nips.cc/paper_files/
+paper/2019/hash/8558cb408c1d76621371888657d2eb1d-Abstract.html
+[25] Protect AI. [n. d.]. DeBERTa-v3-base-prompt-injection-v2: Model Card. https://huggingface.co/protectai/deberta-v3-
+base-prompt-injection-v2 Model card accessed September 24, 2026.
+[26] Delip Rao and Chris Callison-Burch. 2026. JEV vs. LLMs as Rubric Judges: Cheaper, Faster, and Wrong in the Same
+Places. arXiv preprint arXiv:2609.29769 (2026). https://arxiv.org/abs/2609.29769 Version 1.
+=== PAGE 27 ===
+System One Models for Security Decisions
+[27] Yusuf Khalid Shire and Sang-Chul Kim. 2026. PIDS-Bench: Evaluating Prompt-Injection Detectors Under Over-Defense,
+Obfuscation, and Distribution Shift. IEEE Access 14 (2026), 134184–134205. doi:10.1109/ACCESS.2026.3728186
+[28] Yu Sun, Junhao Xu, Jiajia Shi, and Zijin Yang. 2026. Type-Safe Is Not Error-Free: Typed Decision Models Follow the
+Option Name, Not the Definition Bound to It. arXiv:2609.26758v2 [cs.AI] https://arxiv.org/html/2609.26758v2
+[29] TypeSafe. [n. d.]. Jev Documentation: Confidence. https://docs.typesafe.ai/confidence Documentation accessed
+September 24, 2026.
+[30] Haoyu Wang, Christopher M. Poskitt, Jiali Wei, and Jun Sun. 2026. ProbGuard: Proactive Runtime Monitoring for LLM
+Agent Safety via Probabilistic Prediction. In Proceedings of the 41st IEEE/ACM International Conference on Automated
+Software Engineering. ACM. https://arxiv.org/abs/2508.00500v4 To appear.
+[31] willkelly. 2026. Evaluating Jev. https://github.com/willkelly/jev-evaluation/tree/
+d80f375621ad4b9306c6dff6941242925d7e2386 Public evaluation repository and technical report; revision
+d80f375, accessed September 24, 2026.
+[32] Tiantong Wu and Wei Yang Bryan Lim. 2026. Decision Hijacking: Prompt Injection Attacks on Jev’s Typed Probabilistic
+Decisions. arXiv:2609.28613 [cs.CR] https://arxiv.org/abs/2609.28613v1
+[33] Tiantong Wu and Wei Yang Bryan Lim. 2026. REFLEX with Jev for Efficient Selective Control in LLM Agents.
+arXiv:2609.26532 [cs.AI] https://arxiv.org/abs/2609.26532v1
+[34] Zixiang Xu. 2026. JevOut: Natural Context Can Flip Decision Models. arXiv:2609.30243 [cs.CL] https://arxiv.org/abs/
+2609.30243v1
+[35] Tongxin Yuan, Zhiwei He, Lingzhong Dong, Yiming Wang, Ruijie Zhao, Tian Xia, Lizhen Xu, Binglin Zhou, Fangqi
+Li, Zhuosheng Zhang, Rui Wang, and Gongshen Liu. 2024. R-Judge: Benchmarking Safety Risk Awareness for
+LLM Agents. In Findings of the Association for Computational Linguistics: EMNLP 2024, Yaser Al-Onaizan, Mohit
+Bansal, and Yun-Nung Chen (Eds.). Association for Computational Linguistics, Miami, Florida, USA, 1467–1490.
+doi:10.18653/v1/2024.findings-emnlp.79
+[36] Fan Zhang, Yankai Chen, Zhuohan Xie, Yixi Zhou, Sijia Peng, Lei Fan, Xinhua Ji, Cunyuan Zheng, Huangyong Shan,
+Philip S. Yu, Xue Liu, Yu Chen, Preslav Nakov, and Songwei He. 2026. Same Scores, Different Decisions: Evaluating JEV
+and Language Models for Legal Document Understanding. arXiv:2609.27678 [cs.CL] https://arxiv.org/abs/2609.27678

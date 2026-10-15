@@ -1,0 +1,24 @@
+{
+ "note": "Topic episode (not a paper). Every claim on screen or in voice comes from the Blast Radius README, the Claude Code mods docs (overview, create) or the announcement post. The only digits on screen are the pane keys 1 and 2. File names in the drawn pane are illustrative scenery, labelled 'example files' on screen; they are not real output. No version number and no count is shown.",
+ "sources": {
+  "readme": "https://github.com/anthropics/claude-code-playground/blob/main/claude-code/mods/blast-radius/README.md (accessed 2026-10-05)",
+  "overview": "https://code.claude.com/docs/en/plugins/mods/overview (accessed 2026-10-05)",
+  "create": "https://code.claude.com/docs/en/plugins/mods/create (accessed 2026-10-05)",
+  "blog": "https://claude.com/blog/claude-code-mods (announced 2026-10-01, accessed 2026-10-05)"
+ },
+ "numbers": {
+  "1": "Pane key for Proceed. README, 'Using the pane': 'Press 1 for Proceed or 2 for Cancel.'",
+  "2": "Pane key for Cancel. README, 'Using the pane': 'Press 1 for Proceed or 2 for Cancel.'"
+ },
+ "claims": {
+  "h1": "README Demo: 'rm -rf build held, with the files it would delete'. The robot and hammer are illustration.",
+  "m2": "overview: 'It's made of JavaScript or TypeScript event handlers: Claude Code calls one when an event happens, such as a tool call, a submitted prompt, or a part of the interface being drawn'; 'Observe / Rewrite / Answer'. blog: 'Small TypeScript functions that change how Claude Code works.' Code card is the docs example hook shape on('tool.call', async ($, e, next) => { ... return next(e) }).",
+  "b3": "README: 'When Claude calls Bash with one of the commands below, Blast Radius stops the call'; 'Shared as-is ... Not an official Anthropic product; no support'. overview: sample mods are shared 'as they are, without support'. Other commands on the belt are scenery; README: 'Every other command runs as normal.'",
+  "p4": "README: 'works out what the command would touch, and opens a pane'; for rm -r/-f/-rf 'The files it would delete, with the count and total size.'",
+  "k5": "README: 'two buttons: Proceed runs the command, Cancel refuses it'; 'Cancel has the focus when the pane opens, so pressing Enter refuses the command rather than running it.'",
+  "r6": "README: 'Claude sees the refusal and the reason.'; Demo: 'After Cancel, Claude reports that nothing was deleted'; 'Every other command runs as normal.'",
+  "l7": "README limitations: 'It reads the command text. It doesn't parse shell fully: $(...), aliases, eval, bash -c \"...\" ... aren't caught.'; 'This is a safety net, not a permission system. Use permission rules for a hard block.'",
+  "t8": "overview: 'Mods aren't sandboxed.'; 'A mod is code that runs with your permissions ... Install mods only from authors and marketplaces you trust.' blog: 'They aren't sandboxed, and you should only install mods from sources you trust'.",
+  "c9": "create: 'Describe the mod you want in an interactive Claude Code session, and Claude writes it.' README Run it: 'claude --plugin-dir ./blast-radius'."
+ }
+}

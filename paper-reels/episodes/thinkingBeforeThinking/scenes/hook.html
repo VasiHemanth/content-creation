@@ -1,0 +1,140 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 960px; }
+    #hook-bigs { position: absolute; left: 0; top: 0; width: 1080px; height: 640px; transform-origin: 540px 380px; }
+    .hook-big { position: absolute; left: 0; width: 1080px; text-align: center; font: 400 90px/1 "Marker", sans-serif; color: var(--white); white-space: nowrap; text-shadow: 7px 7px 0 var(--shadow); }
+    #hook-b1 { top: 150px; } #hook-b2 { top: 272px; }
+    #hook-amb { position: absolute; left: 0; top: 0; width: 1080px; height: 640px; transform-origin: 540px 480px; }
+    #hook-b3 { top: 400px; color: var(--amber); font-size: 94px; } #hook-b4 { top: 524px; color: var(--amber); font-size: 94px; }
+    #hook-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #hook-tiles { left: 108px; top: 1230px; font-size: 28px; padding: 6px 16px; }
+    #hook-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam">
+      <svg id="hook-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="hook-tiles" class="tag" data-bind="l01.tiles"></div>
+      <div id="hook-bigs">
+        <div id="hook-b1" class="hook-big" data-bind="l01.b1"></div>
+        <div id="hook-b2" class="hook-big" data-bind="l01.b2"></div>
+        <div id="hook-amb">
+          <div id="hook-b3" class="hook-big" data-bind="l01.b3"></div>
+          <div id="hook-b4" class="hook-big" data-bind="l01.b4"></div>
+        </div>
+      </div>
+    </div>
+    <div id="hook-flash"></div>
+  </div>
+  <script>
+    (function () {
+      // railway drawings shared by every scene of this episode (inlined per scene; the first scene to load defines it)
+      window.RAIL = window.RAIL || (function () {
+        const S = KIT.svgEl, INK = '#f2f8ff', DEEP = '#0a2340', CY = '#a8dcf2';
+        const wrap = (parent, id, x, y, s) => { const g = S('g', { id }, parent); const ig = S('g', { transform: `translate(${x} ${y}) scale(${s})` }, g); return { g, ig }; };
+        // side view, facing right; (x, y) = rail level under the cab; about 310 x 165 at s = 1
+        function loco(parent, { id, x, y, s = 1, col = INK, body = DEEP, acc = CY }) {
+          const { g, ig } = wrap(parent, id, x, y, s), w = [];
+          S('rect', { x: -6, y: -44, width: 300, height: 16, fill: col }, ig);
+          S('rect', { x: 0, y: -150, width: 92, height: 108, rx: 8, fill: body, stroke: col, 'stroke-width': 6 }, ig);
+          const win = S('rect', { x: 16, y: -134, width: 46, height: 40, rx: 4, fill: acc, opacity: 0.85, id: `${id}-win` }, ig);
+          S('path', { d: 'M-10 -152 H102', stroke: col, 'stroke-width': 9, 'stroke-linecap': 'round' }, ig);
+          S('rect', { x: 92, y: -112, width: 190, height: 70, rx: 30, fill: body, stroke: col, 'stroke-width': 6 }, ig);
+          S('rect', { x: 150, y: -134, width: 36, height: 26, rx: 10, fill: body, stroke: col, 'stroke-width': 5 }, ig);
+          S('rect', { x: 226, y: -152, width: 30, height: 44, fill: body, stroke: col, 'stroke-width': 6 }, ig);
+          S('path', { d: 'M282 -42 L314 -6 L282 -6 Z', fill: col }, ig);
+          [[44, 27], [148, 31], [228, 31]].forEach(([cx, r], k) => {
+            const wg = S('g', { id: `${id}-w${k}` }, ig);
+            S('circle', { cx, cy: -r, r, fill: body, stroke: col, 'stroke-width': 6 }, wg);
+            S('path', { d: `M${cx - r + 5} ${-r} H${cx + r - 5} M${cx} ${-2 * r + 5} V${-5}`, stroke: acc, 'stroke-width': 5 }, wg);
+            w.push(wg);
+          });
+          S('path', { d: 'M44 -27 H228', stroke: col, 'stroke-width': 6, 'stroke-linecap': 'round' }, ig);
+          return { g, ig, w, win };
+        }
+        // a wagon with a blank plate; (x, y) = rail level under its left end; 150 wide plus a coupler
+        function wagon(parent, { id, x, y, s = 1, col = INK, fill = CY }) {
+          const { g, ig } = wrap(parent, id, x, y, s);
+          S('rect', { x: -12, y: -48, width: 174, height: 10, fill: col }, ig);
+          S('rect', { x: 0, y: -108, width: 150, height: 64, rx: 6, fill, stroke: col, 'stroke-width': 5 }, ig);
+          S('rect', { x: 46, y: -92, width: 58, height: 30, rx: 3, fill: DEEP, opacity: 0.55 }, ig);
+          [36, 114].forEach((cx) => S('circle', { cx, cy: -20, r: 19, fill: DEEP, stroke: col, 'stroke-width': 5 }, ig));
+          return { g, ig };
+        }
+        // a straight rail with sleepers, side view
+        function track(parent, { id, x0, x1, y, col = '#6aa9d0' }) {
+          const g = S('g', { id }, parent);
+          for (let x = x0 + 8; x < x1 - 10; x += 36) S('rect', { x, y: y + 4, width: 14, height: 16, fill: '#3d78a6' }, g);
+          S('path', { d: `M${x0} ${y} H${x1}`, stroke: col, 'stroke-width': 7, 'stroke-linecap': 'round' }, g);
+          return g;
+        }
+        // signal box, side view; (x, y) = ground under its left wall; 280 x 300 at s = 1
+        function box(parent, { id, x, y, s = 1, col = INK }) {
+          const { g, ig } = wrap(parent, id, x, y, s);
+          S('rect', { x: 0, y: -120, width: 220, height: 120, fill: DEEP, stroke: col, 'stroke-width': 6 }, ig);
+          S('path', { d: 'M0 -80 H220 M0 -40 H220 M70 -120 V-80 M150 -80 V-40 M70 -40 V0', stroke: '#3d78a6', 'stroke-width': 4 }, ig);
+          S('rect', { x: -12, y: -232, width: 244, height: 112, fill: DEEP, stroke: col, 'stroke-width': 6 }, ig);
+          const win = S('rect', { x: 6, y: -216, width: 208, height: 72, fill: CY, opacity: 0.3, id: `${id}-win` }, ig);
+          S('path', { d: 'M75 -216 V-144 M145 -216 V-144', stroke: col, 'stroke-width': 4 }, ig);
+          S('path', { d: 'M-34 -232 L110 -304 L254 -232 Z', fill: DEEP, stroke: col, 'stroke-width': 6, 'stroke-linejoin': 'round' }, ig);
+          const lev = S('g', { id: `${id}-lev` }, ig);
+          S('path', { d: 'M110 -150 L110 -198', stroke: '#ffb454', 'stroke-width': 9, 'stroke-linecap': 'round' }, lev);
+          S('circle', { cx: 110, cy: -200, r: 9, fill: '#ffb454' }, lev);
+          return { g, ig, win, lev };
+        }
+        // steam puffs from a locomotive chimney, one burst per time
+        function puffs(tl, L, times, { n = 3 } = {}) {
+          times.forEach((t) => { for (let i = 0; i < n; i++) {
+            const c = S('circle', { cx: 241, cy: -170, r: 15 + i * 5, fill: INK, opacity: 0 }, L.ig);
+            tl.fromTo(c, { opacity: 0, scale: 0.4, x: 0, y: 0, transformOrigin: '50% 50%' }, { opacity: 0.9, scale: 0.8, duration: 0.01, immediateRender: false }, t + i * 0.13);
+            tl.to(c, { opacity: 0, scale: 2.3, y: -95 - i * 22, x: -40 - i * 30, duration: 0.9, ease: 'power2.out' }, t + i * 0.13 + 0.01);
+          } });
+        }
+        // wheels turn for a while (whole turns, so the last frame is clean)
+        function roll(tl, L, t, dur, turns = 2) { tl.fromTo(L.w, { rotation: 0, transformOrigin: '50% 50%' }, { rotation: 360 * turns, duration: dur, ease: 'none', immediateRender: false }, t); }
+        return { loco, wagon, track, box, puffs, roll };
+      })();
+      const c = (w, n) => KIT.cue('l01', w, n), D = KIT.sceneDur('hook'), S = KIT.svgEl, svg = document.getElementById('hook-svg');
+      KIT.bind('#hook-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.2) => tl.fromTo('#hook-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // two identical locomotives on parallel tracks, a gantry on the right; everything is on screen at 0.0 s
+      RAIL.track(svg, { id: 'hook-t1', x0: 30, x1: 1050, y: 940 });
+      RAIL.track(svg, { id: 'hook-t2', x0: 30, x1: 930, y: 1200 });
+      S('path', { d: 'M812 700 V1214 M912 700 V1214 M790 700 H934', class: 'ln dim thick', id: 'hook-gantry' }, svg);
+      const A = RAIL.loco(svg, { id: 'hook-la', x: 150, y: 940 }), B = RAIL.loco(svg, { id: 'hook-lb', x: 150, y: 1200 });
+      const BX = RAIL.box(svg, { id: 'hook-box', x: 800, y: 700, s: 0.48 });
+      // twelve result tiles: each rises by its own gain from Table 1 (drawing only)
+      const G = KIT.data('l13')._gains.flat(), tiles = [];
+      G.forEach((gv, k) => {
+        const x = 108 + k * 66;
+        S('rect', { x, y: 1290, width: 56, height: 96, rx: 6, fill: '#071d35', stroke: '#6aa9d0', 'stroke-width': 3 }, svg);
+        const f = S('rect', { x: x + 4, y: 1290, width: 48, height: 92, fill: '#a8dcf2', id: `hook-tf${k}` }, svg);
+        tiles.push([f, gv]);
+      });
+
+      // 0.0 s: the claim is already at full opacity; it settles in scale
+      tl.fromTo('#hook-bigs', { scale: 1.1 }, { scale: 1, duration: 0.25, ease: 'power2.out' }, 0);
+      tiles.forEach(([f]) => tl.fromTo(f, { scaleY: 0.22, transformOrigin: '50% 100%' }, { scaleY: 0.22, duration: 0.01 }, 0));
+      // 0.6 s: wheels turn, steam, both trains creep forward together
+      [A, B].forEach((L) => { RAIL.roll(tl, L, 0.6, D - 0.6, 3); tl.fromTo(L.g, { x: 0 }, { x: 90, duration: D - 0.6, ease: 'power1.in', immediateRender: false }, 0.6); });
+      RAIL.puffs(tl, A, [0.6, 1.5, 2.6]); RAIL.puffs(tl, B, [0.65, 1.55, 2.65]);
+      pulse(0.6, 0.12);
+      tl.to('#hook-cam', { scale: 1.03, duration: 0.6, ease: 'power2.out' }, c('same'));
+      // "control": the signal box drops onto the gantry, the amber line flashes and slams, the camera shakes
+      tl.fromTo(BX.g, { y: -520, opacity: 0 }, { y: 0, opacity: 1, duration: 0.32, ease: 'power4.in' }, c('control') - 0.32);
+      tl.fromTo('#hook-amb', { scale: 1.15, filter: 'brightness(2.2)' }, { scale: 1, filter: 'brightness(1)', duration: 0.35, ease: 'power3.out', immediateRender: false }, c('control'));
+      tl.fromTo(BX.win, { opacity: 0.3 }, { opacity: 1, duration: 0.2, immediateRender: false }, c('control') + 0.05);
+      KIT.shake(tl, '#hook-cam', c('control'), { amp: 14, dur: 0.32 });
+      pulse(c('control'), 0.3);
+      KIT.pop(tl, '#hook-tiles', c('main'), { from: 0.5 });
+      pulse(c('main'), 0.12);
+      // "score rose": the twelve tiles tick up, fast stagger
+      tiles.forEach(([f, gv], k) => tl.to(f, { scaleY: Math.min(1, 0.22 + gv * 0.085), duration: 0.3, ease: 'back.out(2)' }, c('score') + k * 0.04));
+      pulse(c('score'), 0.15);
+      tl.to('#hook-cam', { scale: 1.07, duration: D - c('score'), ease: 'sine.inOut' }, c('score'));
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

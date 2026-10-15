@@ -1,0 +1,116 @@
+{
+ "plasticity": {
+  "img": "evidence/plasticity.png",
+  "w": 3364,
+  "h": 166,
+  "page": 1,
+  "rects": [
+   {
+    "x": 0.38194734577035616,
+    "y": 0.060428765292301095,
+    "w": 0.5876175238397119,
+    "h": 0.3792490671105897
+   },
+   {
+    "x": 0.06359584696860605,
+    "y": 0.5605315331301807,
+    "w": 0.25751273227347876,
+    "h": 0.3742485500798525
+   }
+  ],
+  "text": "cost. We introduce agent plasticity, the efficiency with which an agent converts experience into gains in\r\nfuture held-out performance. Across multiple environments, frontier models exhibit sharply different",
+  "circles": {}
+ },
+ "interface": {
+  "img": "evidence/interface.png",
+  "w": 3493,
+  "h": 189,
+  "page": 6,
+  "rects": [
+   {
+    "x": 0.7015607524018652,
+    "y": 0.063596217592705,
+    "w": 0.2675905332417698,
+    "h": 0.3335717069803523
+   },
+   {
+    "x": 0.028771182573952295,
+    "y": 0.5035038118963843,
+    "w": 0.4721165597271048,
+    "h": 0.32917290613781497
+   }
+  ],
+  "text": "lineages likewise show modest or negative early-to-late changes (Section 3.3). The common learning interface\r\ntherefore permits improvement but does not ensure it.",
+  "circles": {}
+ },
+ "psat": {
+  "img": "evidence/psat.png",
+  "w": 3481,
+  "h": 186,
+  "page": 7,
+  "rects": [
+   {
+    "x": 0.5259117391881141,
+    "y": 0.17837692384021972,
+    "w": 0.15140614295981894,
+    "h": 0.33569851903515524
+   },
+   {
+    "x": 0.684426540543237,
+    "y": 0.1828579370124539,
+    "w": 0.014297610464259217,
+    "h": 0.255041425780038
+   },
+   {
+    "x": 0.7280369238033739,
+    "y": 0.18771241560925336,
+    "w": 0.24454067042487881,
+    "h": 0.32636302726612154
+   },
+   {
+    "x": 0.028860561156782184,
+    "y": 0.605557314217394,
+    "w": 0.33765520114615694,
+    "h": 0.35660972319806505
+   }
+  ],
+  "text": "On the combined three-game curve, GPT-5.6 Sol has the highest estimated P\r\nsat at 298 percentage points per\r\n$1,000 of mean per-game learning cost, followed by Claude Opus 5 at 233, Claude Fable 5 at 57, and Claude",
+  "circles": {
+   "298": {
+    "x": 0.751726011118711,
+    "y": 0.18845934645838391,
+    "w": 0.0281346210847844,
+    "h": 0.25690818098031526
+   }
+  }
+ },
+ "instruction": {
+  "img": "evidence/instruction.png",
+  "w": 3486,
+  "h": 110,
+  "page": 9,
+  "rects": [
+   {
+    "x": 0.027082301176050937,
+    "y": 0.34648669715161184,
+    "w": 0.2704301366653707,
+    "h": 0.56275068226803
+   },
+   {
+    "x": 0.3063114678041126,
+    "y": 0.33960097926374977,
+    "w": 0.24929249480386928,
+    "h": 0.5696364001558922
+   }
+  ],
+  "text": "Writing down an instruction is not the same as following it. In one GPT-5.5 run, the reflection step keeps",
+  "circles": {
+   "following": {
+    "x": 0.4540151676985062,
+    "y": 0.33960097926374977,
+    "w": 0.07669159536278747,
+    "h": 0.5696364001558922
+   }
+  }
+ }
+}

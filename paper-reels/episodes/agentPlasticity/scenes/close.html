@@ -1,0 +1,93 @@
+<template id="close-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #cl-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #cl-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #cl-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #cl-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    .cl-val { position: absolute; width: 200px; text-align: center; font: 400 84px/1 "Marker", sans-serif; text-shadow: 6px 6px 0 var(--shadow); white-space: nowrap; }
+    #cl-v1 { left: 110px; color: var(--mint); }
+    #cl-v2 { left: 320px; color: var(--amber); }
+    #cl-b1 { left: 170px; top: 872px; font-size: 30px; color: var(--mint); border-color: var(--mint); }
+    #cl-b2 { left: 350px; top: 872px; font-size: 30px; }
+    #cl-unit { left: 60px; top: 936px; font-size: 26px; color: var(--cyan); }
+    #cl-d1 { left: 722px; top: 604px; font-size: 32px; }
+    #cl-d2 { left: 722px; top: 826px; font-size: 32px; }
+    #cl-stamp { left: 56px; top: 512px; font-size: 58px; z-index: 20; }
+    #cl-sol { left: 60px; top: 986px; width: 960px; font-size: 32px; line-height: 1.3; white-space: normal; color: var(--white); }
+    #cl-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+    <div id="cl-cam"><div id="cl-stage"></div></div>
+    <div id="cl-hud">
+      <svg id="cl-svg" class="ink sketch" viewBox="0 0 1080 1920">
+        <path id="cl-base" class="ln dim thick" d="M110 840 L530 840" />
+        <rect id="cl-r1" class="fl mint" x="150" y="510" width="150" height="330" />
+        <rect id="cl-r2" class="fl amber" x="360" y="777" width="150" height="63" />
+        <g id="cl-k1">
+          <circle class="ln thick" cx="790" cy="520" r="70" />
+          <path class="ln amber heavy" d="M790 520 L790 464" />
+        </g>
+        <g id="cl-k2">
+          <circle class="ln thick" cx="790" cy="740" r="70" />
+          <path class="ln amber heavy" d="M790 740 L790 684" />
+        </g>
+      </svg>
+      <div id="cl-v1" class="cl-val" data-bind="l13.v1"></div>
+      <div id="cl-v2" class="cl-val" data-bind="l13.v2"></div>
+      <div id="cl-b1" class="tag" data-bind="l13.b1"></div>
+      <div id="cl-b2" class="tag" data-bind="l13.b2"></div>
+      <div id="cl-unit" class="lbl" data-bind="l13.unit"></div>
+      <div id="cl-d1" class="lbl" data-bind="l13.d1"></div>
+      <div id="cl-d2" class="lbl" data-bind="l13.d2"></div>
+      <div id="cl-stamp" class="stamp" data-bind="l13.stamp"></div>
+      <div id="cl-sol" class="lbl" data-bind="l13.sol"></div>
+    </div>
+    <div id="cl-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l13', w, n), D = KIT.sceneDur('close');
+      KIT.bind('#cl-hud');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t) => tl.fromTo('#cl-flash', { opacity: 0.2 }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      // bar heights follow the storyboard values (298 and 57), never literals
+      const v1 = parseFloat(KIT.data('l13').v1), v2 = parseFloat(KIT.data('l13').v2), HMAX = 330, BASE = 840;
+      const h1 = HMAX, h2 = HMAX * v2 / v1, r1 = document.querySelector('#cl-r1'), r2 = document.querySelector('#cl-r2');
+      r1.setAttribute('y', BASE - h1); r1.setAttribute('height', h1); r2.setAttribute('y', BASE - h2); r2.setAttribute('height', h2);
+      document.querySelector('#cl-v1').style.top = `${BASE - h1 - 100}px`; document.querySelector('#cl-v2').style.top = `${BASE - h2 - 100}px`;
+
+      // upper half: the two bars again, small, and two dials that move them (the bars never swap places)
+      KIT.draw(tl, '#cl-base', 0.1, 0.4);
+      tl.fromTo('#cl-r1', { scaleY: 0, svgOrigin: `225 ${BASE}` }, { scaleY: 1, svgOrigin: `225 ${BASE}`, duration: 0.6, ease: 'power3.out' }, c('plasticity'));
+      tl.fromTo('#cl-r2', { scaleY: 0, svgOrigin: `435 ${BASE}` }, { scaleY: 1, svgOrigin: `435 ${BASE}`, duration: 0.5, ease: 'power3.out' }, c('plasticity') + 0.1);
+      KIT.pop(tl, '#cl-b1', c('plasticity') + 0.3, { from: 0.4 }); KIT.pop(tl, '#cl-b2', c('plasticity') + 0.4, { from: 0.4 });
+      tl.fromTo('#cl-v1', { opacity: 0 }, { opacity: 1, duration: 0.2 }, c('numbers')); KIT.count(tl, '#cl-v1', c('numbers'), 0.7);
+      tl.fromTo('#cl-v2', { opacity: 0 }, { opacity: 1, duration: 0.2 }, c('numbers') + 0.1); KIT.count(tl, '#cl-v2', c('numbers') + 0.1, 0.5);
+      KIT.rise(tl, '#cl-unit', c('numbers') + 0.3, { y: 10 });
+      KIT.pop(tl, '#cl-k1', c('depend'), { from: 0.2 }); KIT.pop(tl, '#cl-k2', c('depend') + 0.1, { from: 0.2 });
+      KIT.rise(tl, '#cl-d1', c('depend') + 0.2, { y: 14 }); KIT.rise(tl, '#cl-d2', c('depend') + 0.3, { y: 14 });
+      tl.to('#cl-k1', { rotation: 110, svgOrigin: '790 520', duration: 0.5, ease: 'power2.inOut' }, c('games'));
+      tl.to('#cl-r1', { scaleY: 0.82, svgOrigin: `225 ${BASE}`, duration: 0.5, ease: 'power2.inOut' }, c('games'));
+      tl.to('#cl-r2', { scaleY: 1.6, svgOrigin: `435 ${BASE}`, duration: 0.5, ease: 'power2.inOut' }, c('games'));
+      tl.to('#cl-k2', { rotation: -120, svgOrigin: '790 740', duration: 0.5, ease: 'power2.inOut' }, c('prices'));
+      tl.to('#cl-r1', { scaleY: 1.1, svgOrigin: `225 ${BASE}`, duration: 0.5, ease: 'power2.inOut' }, c('prices'));
+      tl.to('#cl-r2', { scaleY: 0.7, svgOrigin: `435 ${BASE}`, duration: 0.5, ease: 'power2.inOut' }, c('prices'));
+      KIT.slam(tl, '#cl-stamp', c('rank') - 0.05, { from: 2.4, shake: false });
+      tl.to('#cl-stamp', { rotation: -7, duration: 0.2 }, c('rank') + 0.15);
+      KIT.shake(tl, '#cl-hud', c('rank') + 0.12, { amp: 12, dur: 0.3 });
+      KIT.rise(tl, '#cl-sol', c('models'), { y: 12 });
+
+      // lower half: the paper's own two lines, read on camera for the whole second half of the line
+      const tR = Math.max(0.1, c('numbers') - 0.15);
+      const R = KIT.read(tl, { cam: '#cl-cam', parent: '#cl-stage', hud: '#cl-hud', tagY: 1085, id: 'rank', t: tR, label: KIT.data('l13').receipt,
+        x: 40, y: 1100, width: 1000, zoom: 2.6, fx: 70, fy: 1250, follow: 0,
+        marks: [[c('depend'), c('prices') + 0.35], [c('not'), c('models') + 0.45]],
+        circles: [{ word: 'ranking', t: c('models') + 0.1 }] });
+      tl.set(R.el, { rotationZ: 0, rotationX: 0 }, tR + 0.6);
+      R.el.style.clipPath = 'inset(0 0 56% 0)';   // the crop has blank paper under its two lines
+      [c('plasticity'), c('numbers'), c('games'), c('prices'), c('rank')].forEach(pulse);
+      window.__timelines["close"] = tl;
+    })();
+  </script>
+</template>

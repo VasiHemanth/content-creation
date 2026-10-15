@@ -1,0 +1,135 @@
+<template id="scope-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #scope-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 720px 900px; }
+    #scope-panels { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .scope-p { position: absolute; top: 560px; height: 860px; background: rgba(7,29,53,.85); border: 5px solid; }
+    #scope-pl { left: 60px; width: 440px; border-color: var(--cyan); }
+    #scope-pr { left: 540px; width: 380px; border-color: var(--amber); }
+    .scope-name { position: absolute; left: 24px; top: 18px; font: 400 64px "Marker", sans-serif; color: var(--white); }
+    .scope-t { position: absolute; left: 20px; padding: 6px 14px; font: 700 40px "Mono", monospace; color: var(--cyan); background: var(--deep); border: 3px solid var(--cyan); white-space: nowrap; }
+    #scope-t1 { top: 560px; } #scope-t2 { top: 660px; }
+    .scope-band { position: absolute; left: 24px; width: 330px; height: 150px; border: 4px solid; }
+    #scope-s0 { top: 150px; background: rgba(255,180,84,.15); border-color: var(--amber); }
+    #scope-s1 { top: 330px; background: rgba(168,220,242,.15); border-color: var(--cyan); }
+    #scope-s2 { top: 510px; background: rgba(123,227,176,.15); border-color: var(--mint); }
+    .scope-tn { position: absolute; left: 14px; top: 12px; font: 700 40px "Mono", monospace; color: var(--white); white-space: nowrap; }
+    .scope-slots { position: absolute; left: 14px; top: 76px; display: flex; gap: 14px; }
+    .scope-slots i { display: block; width: 56px; height: 56px; border-radius: 8px; background: var(--mint); }
+    #scope-flood { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .scope-tile { position: absolute; left: 0; top: 0; width: 34px; height: 34px; border-radius: 7px; background: var(--amber); box-shadow: inset 0 0 0 4px rgba(7,29,53,.35); }
+    #scope-hook { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .scope-hd { position: absolute; left: 0; width: 1080px; text-align: center; color: var(--white); white-space: nowrap; text-shadow: 8px 8px 0 var(--shadow); }
+    #scope-about { top: 170px; font: 400 76px/1 "Marker", sans-serif; color: var(--cyan); }
+    #scope-value { top: 250px; font: 400 150px/1 "Marker", sans-serif; }
+    #scope-unit { top: 414px; font: 400 76px/1 "Marker", sans-serif; }
+    #scope-how { top: 515px; font: 400 200px/1 "Marker", sans-serif; color: var(--amber); }
+    #scope-neck { position: absolute; left: 80px; top: 880px; font: 700 48px "Mono", monospace; color: var(--coral); }
+    #scope-handle { position: absolute; left: 0; top: 560px; width: 1080px; text-align: center; }
+    #scope-handle span { display: inline-block; padding: 14px 36px; font: 700 72px "Mono", monospace; color: var(--amber); background: var(--deep); border: 5px solid var(--amber); box-shadow: 12px 12px 0 var(--shadow); }
+    #scope-rcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #scope-rstage, #scope-rhud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  </style>
+  <div id="root" data-composition-id="scope" data-width="1080" data-height="1920">
+    <div id="scope-flood"></div>
+    <div id="scope-beat" style="position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px"><div id="scope-cam">
+      <div id="scope-panels">
+        <div id="scope-pl" class="scope-p">
+          <div class="scope-name" data-bind="l13.git"></div>
+          <svg class="ink" style="left:0;top:0;width:440px;height:860px" viewBox="0 0 440 860">
+            <rect x="90" y="180" width="260" height="170" rx="12" fill="#0a2340" stroke="#a8dcf2" stroke-width="7" />
+            <path d="M50 380 L390 380 L360 350 L80 350 Z" fill="#a8dcf2" />
+            <path d="M150 230 L150 300 M150 250 L200 250 L200 300 M200 270 L250 270" stroke="#7be3b0" stroke-width="7" fill="none" stroke-linecap="round" />
+            <circle cx="150" cy="230" r="11" fill="#7be3b0" /><circle cx="200" cy="300" r="11" fill="#7be3b0" /><circle cx="250" cy="270" r="11" fill="#7be3b0" />
+          </svg>
+          <div id="scope-t1" class="scope-t" data-bind="l13.t1"></div>
+          <div id="scope-t2" class="scope-t" data-bind="l13.t2"></div>
+        </div>
+        <div id="scope-pr" class="scope-p">
+          <div class="scope-name" data-bind="l13.scion"></div>
+          <div id="scope-s0" class="scope-band"><div class="scope-tn" data-bind="l06.server"></div><div class="scope-slots"><i></i><i></i><i></i></div></div>
+          <div id="scope-s1" class="scope-band"><div class="scope-tn" data-bind="l06.cache"></div><div class="scope-slots"><i></i><i></i><i></i></div></div>
+          <div id="scope-s2" class="scope-band"><div class="scope-tn" data-bind="l06.daemon"></div><div class="scope-slots"><i></i><i></i><i></i></div></div>
+        </div>
+      </div>
+    </div></div>
+    <div id="scope-hook">
+      <svg class="ink" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path id="scope-wall" class="ln coral heavy" d="M90 1450 L470 960 L470 860 M900 1450 L610 960 L610 860" />
+      </svg>
+      <div id="scope-neck" data-bind="l01.neck"></div>
+      <div id="scope-about" class="scope-hd" data-layout-allow-overlap data-bind="l01.about"></div>
+      <div id="scope-value" class="scope-hd" data-layout-allow-overlap data-bind="l01.value"></div>
+      <div id="scope-unit" class="scope-hd" data-layout-allow-overlap data-bind="l01.unit"></div>
+      <div id="scope-how" class="scope-hd" data-layout-allow-overlap data-bind="l01.how"></div>
+    </div>
+    <div id="scope-handle"><span data-bind="l13.handle"></span></div>
+    <div id="scope-rcam"><div id="scope-rstage"></div></div>
+    <div id="scope-rhud"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'scope', c = (w, n) => KIT.cue('l13', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(['#scope-hook', '#scope-handle', '#scope-flood', '#scope-wall', '#scope-neck', '#scope-about', '#scope-value', '#scope-unit', '#scope-how'], { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+      tl.fromTo('#scope-panels', { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+
+      // ---- the article's own scope sentence, read on camera
+      const ev = KIT.EP.evidence.scope, Wp = 940, X = 70, Y = 300, ph = Wp * ev.h / ev.w, r0 = ev.rects[0];
+      const tB = Math.max(0.1, c('by') - 0.5);
+      const RD = KIT.read(tl, { cam: '#scope-rcam', parent: '#scope-rstage', hud: '#scope-rhud', id: 'scope', t: tB,
+        x: X, y: Y, width: Wp, zoom: 1.08, fx: 60, fy: 420, follow: 0,
+        marks: [[c('by'), KIT.cueEnd('l13', 'Git'), [[c('no'), 0.08], [c('means'), 0.15], [c('suitable'), 0.33], [c('replacement'), 0.55], [c('for'), 0.83], [c('Git'), 0.92]]]] });
+
+      // Git with its own partial tools on the left; Scion's three tiers on the right
+      const tR = c('by') + 0.15;
+      tl.to('#scope-panels', { opacity: 1, duration: 0.01 }, tR);
+      tl.fromTo('#scope-pl', { y: 500, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, tR);
+      tl.fromTo('#scope-pr', { y: 500, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, tR + 0.12);
+      const tG = c('general') - 0.15;
+      tl.to(RD.el, { y: -400, opacity: 0, duration: 0.35, ease: 'power3.in' }, tG);
+      tl.fromTo('#scope-panels', { y: 0 }, { y: -300, duration: 0.5, ease: 'power3.inOut' }, tG + 0.1);
+      tl.fromTo(['#scope-t1', '#scope-t2'], { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, stagger: 0.12, ease: 'back.out(1.8)' }, tG + 0.3);
+      const tU = c('use') - 0.1;
+      ['#scope-s2', '#scope-s1', '#scope-s0'].forEach((s, k) => tl.fromTo(s, { boxShadow: '0 0 0 rgba(255,255,255,0)', scale: 1 }, { boxShadow: '0 0 60px rgba(255,255,255,.75)', scale: 1.06, duration: 0.2, yoyo: true, repeat: 1, ease: 'sine.inOut' }, tU + k * 0.25));
+
+      // "It serves ...": the camera pushes into Scion, the opening flood returns, then the opening frame rebuilds
+      const tS = c('serves') - 0.2;
+      tl.fromTo('#scope-cam', { scale: 1 }, { scale: 1.3, duration: 1.0, ease: 'power2.in' }, tS);
+      tl.to('#scope-hook', { opacity: 1, duration: 0.01 }, tS);
+      tl.to('#scope-pl', { opacity: 0, x: -500, duration: 0.35, ease: 'power3.in' }, tS);
+      const host = document.getElementById('scope-flood'), r = KIT.rng(31), NS = 120, NP = 70, stream = [], pile = [];
+      for (let i = 0; i < NS; i++) { const e = document.createElement('div'); e.className = 'scope-tile'; e.id = `scope-s-${i}`; host.appendChild(e); stream.push({ e, ph: r(), x0: 110 + r() * 760, jx: (r() - 0.5) * 90, k: 0.8 + r() * 0.5 }); }
+      let row = 0, cnt = 0;
+      while (cnt < NP) { const w = 3 + row * 2; for (let j = 0; j < w && cnt < NP; j++, cnt++) { const e = document.createElement('div'); e.className = 'scope-tile'; e.id = `scope-p-${cnt}`; host.appendChild(e); pile.push({ e, x: 540 - (w * 40) / 2 + j * 40 + 3, y: 905 + row * 40 }); } row++; }
+      const dist = (t) => 0.42 * t + 0.5 * Math.max(0, t - 0.3) ** 1.2, pileN = (t) => Math.min(NP, Math.round(12 + 20 * t));
+      function place(t) {
+        const n = pileN(t), bottom = n ? pile[n - 1].y + 40 : 905;
+        stream.forEach((s) => { const u = (dist(t) * s.k + s.ph) % 1, y = 1460 - u * (1460 - bottom), x = s.x0 + (540 + s.jx - s.x0) * Math.min(1, u * 1.15), o = u < 0.06 ? u / 0.06 : u > 0.94 ? (1 - u) / 0.06 : 1; s.e.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; s.e.style.opacity = (o * 0.95).toFixed(3); });
+        pile.forEach((p, i) => { p.e.style.transform = `translate(${p.x}px, ${p.y}px)`; p.e.style.opacity = i < n ? '1' : '0'; });
+      }
+      const px = { t: 0 }; place(0);
+      tl.fromTo(px, { t: 0 }, { t: D - tS, duration: D - tS, ease: 'none', onUpdate: () => place(px.t) }, tS);
+      const tT = c('twenty') - 0.2;
+      tl.to('#scope-cam', { opacity: 0, duration: 0.3 }, tT - 0.1);
+      tl.to(['#scope-about', '#scope-value', '#scope-unit'], { opacity: 1, duration: 0.01 }, tT);
+      tl.to(['#scope-wall', '#scope-neck'], { opacity: 1, duration: 0.3 }, tT);
+      tl.to('#scope-flood', { opacity: 1, duration: 0.3 }, tT);
+      tl.fromTo('#scope-about', { scale: 2.4 }, { scale: 1, duration: 0.2, ease: 'power4.in' }, tT);
+      tl.fromTo('#scope-value', { scale: 2.4 }, { scale: 1, duration: 0.2, ease: 'power4.in' }, tT + 0.06);
+      tl.fromTo('#scope-unit', { scale: 2.4 }, { scale: 1, duration: 0.2, ease: 'power4.in' }, tT + 0.12);
+      KIT.shake(tl, '#scope-hook', tT + 0.3, { amp: 12, dur: 0.3 });
+      const tD = c('day') - 0.1;
+      tl.fromTo('#scope-how', { opacity: 0 }, { opacity: 1, duration: 0.3 }, tD);
+      // end card: only the handle over the moving flood
+      const tE = KIT.cueEnd('l13', 'day') + 0.45;
+      tl.to(['#scope-about', '#scope-value', '#scope-unit', '#scope-how'], { opacity: 0, duration: 0.3 }, tE);
+      tl.to('#scope-handle', { opacity: 1, duration: 0.01 }, tE + 0.1);
+      tl.fromTo('#scope-handle', { scale: 0.6 }, { scale: 1, duration: 0.35, ease: 'back.out(2)' }, tE + 0.1);
+
+      KIT.beats(tl, '#scope-beat', [c('no'), c('suitable'), c('replacement'), c('general')], { amp: 0.03, shift: 20, reset: c('serves') - 0.2 });
+      window.__timelines["scope"] = tl;
+    })();
+  </script>
+</template>

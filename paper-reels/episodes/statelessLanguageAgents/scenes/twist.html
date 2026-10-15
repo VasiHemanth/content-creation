@@ -1,0 +1,111 @@
+<template id="twist-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #tw-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 820px; }
+    #tw-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #tw-leg1 { left: 112px; top: 336px; font-size: 30px; }
+    #tw-leg2 { left: 262px; top: 336px; font-size: 30px; }
+    .tw-t { position: absolute; top: 1080px; font-size: 26px; padding: 4px 12px; }
+    #tw-q { left: 130px; top: 1252px; font-size: 26px; }
+    #tw-full { left: 704px; top: 1252px; font-size: 26px; }
+    #tw-dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #061a30; opacity: 0; }
+    #tw-rcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #tw-rstage, #tw-hud, #tw-chips { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #tw-chip { left: 60px; top: 170px; font-size: 30px; }
+    #tw-src { left: 60px; top: 1392px; font-size: 26px; color: var(--dim); }
+    #tw-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="twist" data-width="1080" data-height="1920">
+    <div id="tw-cam"><div id="tw-shk" class="fill">
+      <svg id="tw-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="tw-leg1" class="lbl amber" data-bind="l12.leg1"></div>
+      <div id="tw-leg2" class="lbl" data-bind="l12.leg2"></div>
+      <div id="tw-t0" class="tag cyan tw-t" data-bind="l12.t1"></div>
+      <div id="tw-t1" class="tag cyan tw-t" data-bind="l12.t2"></div>
+      <div id="tw-t2" class="tag cyan tw-t" data-bind="l12.t3"></div>
+      <div id="tw-t3" class="tag cyan tw-t" data-bind="l12.t4"></div>
+      <div id="tw-q" class="tag" data-bind="l12.q"></div>
+      <div id="tw-full" class="tag" data-bind="l12.full"></div>
+    </div></div>
+    <div id="tw-chips">
+      <div id="tw-chip" class="tag cyan" data-bind="l12.chip"></div>
+      <div id="tw-src" class="lbl" data-bind="l12.src"></div>
+    </div>
+    <div id="tw-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l12', w, n), cE = (w, n) => KIT.cueEnd('l12', w, n), D = KIT.sceneDur('twist');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const d = KIT.data('l12');
+      const svg = document.getElementById('tw-svg'), E = (tag, at, p) => KIT.svgEl(tag, at, p || svg);
+      const pulse = (t, o = 0.18) => tl.fromTo('#tw-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // legend swatches
+      E('rect', { x: 70, y: 340, width: 30, height: 30, fill: '#ffb454' });
+      E('rect', { x: 220, y: 340, width: 30, height: 30, fill: '#a8dcf2' });
+      // four tower pairs, zero-based, each task scaled to its own largest score (Table 2 values, never printed)
+      const BASE = 1060, HMAX = 580, CX = [190, 410, 630, 850];
+      E('path', { id: 'tw-ground', d: `M80 ${BASE} H930`, class: 'ln dim thick' });
+      const pairs = CX.map((cx, i) => {
+        const m = Math.max(d._s700[i], d._b700[i], d._s175[i], d._b175[i]);
+        const hs = HMAX * d._s700[i] / m, hb = HMAX * d._b700[i] / m;
+        const mk = (x, h, fill, id) => {
+          const g = E('g', { id });
+          E('rect', { x, y: BASE - h, width: 70, height: h, fill, stroke: '#071d35', 'stroke-width': 3 }, g);
+          for (let y = BASE - 40; y > BASE - h + 10; y -= 46) E('rect', { x: x + 14, y: y - 14, width: 42, height: 16, fill: '#071d35', opacity: 0.45 }, g);
+          return g;
+        };
+        const s = mk(cx - 76, hs, '#ffb454', `tw-s${i}`), b = mk(cx + 6, hb, '#a8dcf2', `tw-b${i}`);
+        return { s, b, cx, q: [d._s175[i] / d._s700[i], d._b175[i] / d._b700[i]] };
+      });
+      CX.forEach((cx, i) => { const el = document.getElementById(`tw-t${i}`); el.style.left = `${Math.round(cx - el.offsetWidth / 2)}px`; });
+      // the budget slider
+      const SX0 = 130, SX1 = 900, SY = 1210, qx = SX0 + (SX1 - SX0) * 0.25;
+      E('rect', { id: 'tw-track', x: SX0, y: SY - 8, width: SX1 - SX0, height: 16, rx: 8, fill: '#0a2340', stroke: '#3d78a6', 'stroke-width': 3 });
+      const sfill = E('rect', { id: 'tw-sfill', x: SX0, y: SY - 8, width: SX1 - SX0, height: 16, rx: 8, fill: '#ffb454' });
+      E('path', { id: 'tw-qmark', d: `M${qx} ${SY - 28} V${SY + 28}`, class: 'ln white thick' });
+      const knob = E('circle', { id: 'tw-knob', cx: SX0, cy: SY, r: 24, fill: '#f2f8ff', stroke: '#071d35', 'stroke-width': 5 });
+      tl.fromTo('#tw-cam', { scale: 1.06 }, { scale: 1, duration: 1, ease: 'power3.out' }, 0);
+      KIT.rise(tl, '#tw-chip', 0.05, { x: -40, y: 0 });
+      KIT.fade(tl, ['#tw-leg1', '#tw-leg2'], 0.1);
+      pulse(0.05, 0.12);
+
+      // "On four software tasks": the pairs rise to their quarter-budget heights while the knob slides to the quarter mark
+      pairs.forEach((p, i) => {
+        tl.fromTo(p.s, { scaleY: 0, svgOrigin: `${p.cx} ${BASE}` }, { scaleY: p.q[0], svgOrigin: `${p.cx} ${BASE}`, duration: 0.6, ease: 'power3.out' }, c('four') + i * 0.12);
+        tl.fromTo(p.b, { scaleY: 0, svgOrigin: `${p.cx} ${BASE}` }, { scaleY: p.q[1], svgOrigin: `${p.cx} ${BASE}`, duration: 0.6, ease: 'power3.out' }, c('four') + i * 0.12 + 0.05);
+      });
+      KIT.rise(tl, ['#tw-t0', '#tw-t1', '#tw-t2', '#tw-t3'], c('four') + 0.1, { y: 20, stagger: 0.1 });
+      tl.fromTo(sfill, { scaleX: 0, svgOrigin: `${SX0} ${SY}` }, { scaleX: 0.25, svgOrigin: `${SX0} ${SY}`, duration: 0.9, ease: 'power2.out' }, c('four'));
+      tl.fromTo(knob, { x: 0 }, { x: qx - SX0, duration: 0.9, ease: 'power2.out' }, c('four'));
+      KIT.pop(tl, '#tw-q', c('software'), { from: 0.5 });
+      pulse(c('four'), 0.12);
+      // "trailed the strongest baseline early": every amber tower is the shorter one
+      tl.to('#tw-cam', { scale: 1.04, y: -30, duration: 0.5, ease: 'power3.out' }, c('trailed'));
+      pairs.forEach((p, i) => tl.to(p.s, { opacity: 0.45, duration: 0.12, yoyo: true, repeat: 3 }, c('trailed') + i * 0.08));
+      pulse(c('trailed'), 0.12);
+      tl.to('#tw-cam', { scale: 1.03, x: -10, y: 0, duration: 0.4, ease: 'power3.inOut' }, c('early') - 0.1);
+      pulse(c('early'), 0.1);
+      // "Then it improved more and led at the end": the knob runs to the full budget and the towers grow to their final heights
+      const tG = c('improved') - 0.15;
+      tl.to(sfill, { scaleX: 1, svgOrigin: `${SX0} ${SY}`, duration: 0.8, ease: 'power2.inOut' }, tG);
+      tl.to(knob, { x: SX1 - SX0, duration: 0.8, ease: 'power2.inOut' }, tG);
+      pairs.forEach((p, i) => {
+        tl.to(p.s, { scaleY: 1, svgOrigin: `${p.cx} ${BASE}`, duration: 0.8, ease: 'power2.inOut' }, tG + i * 0.04);
+        tl.to(p.b, { scaleY: 1, svgOrigin: `${p.cx} ${BASE}`, duration: 0.8, ease: 'power2.inOut' }, tG + i * 0.04);
+      });
+      tl.to('#tw-cam', { scale: 1, x: 0, y: 0, duration: 0.5, ease: 'power3.inOut' }, tG);
+      KIT.pop(tl, '#tw-full', c('led') - 0.1, { from: 0.5 });
+      KIT.shake(tl, '#tw-shk', c('led') + 0.05, { amp: 10, dur: 0.25 });
+      KIT.fade(tl, '#tw-src', c('led'), { to: 0.9 });
+      pulse(c('improved'), 0.12); pulse(c('led'));
+      // "at the end": every amber tower pulses once at its final height
+      const tEnd = cE('the', 1);
+      pairs.forEach((p, i) => tl.to(p.s, { opacity: 0.6, duration: 0.1, yoyo: true, repeat: 1 }, tEnd + i * 0.06));
+      tl.to('#tw-cam', { scale: 1.04, duration: Math.max(0.2, D - tEnd), ease: 'sine.out' }, tEnd);
+      window.__timelines["twist"] = tl;
+    })();
+  </script>
+</template>

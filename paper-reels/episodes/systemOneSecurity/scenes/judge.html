@@ -1,0 +1,118 @@
+<template id="judge-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #judge-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 560px; }
+    #judge-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #judge-stage, #judge-tagl { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #judge-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #judge-insp { left: 680px; top: 250px; font-size: 30px; }
+    #judge-unsure { left: 440px; top: 470px; font-size: 28px; }
+    #judge-conf { left: 90px; top: 470px; font-size: 28px; }
+    #judge-allow { left: 120px; top: 800px; font-size: 28px; color: var(--cyan); border-color: var(--cyan); }
+    #judge-esc { left: 440px; top: 742px; font-size: 28px; }
+    .judge-card { position: absolute; width: 64px; height: 46px; border: 4px solid var(--white); border-radius: 6px; background: var(--panel); opacity: 0; }
+    .judge-card.amb { border-color: var(--amber); background: radial-gradient(circle, rgba(255,180,84,.95) 18%, var(--panel) 62%); }
+    #judge-tray2 { position: absolute; left: 70px; top: 920px; width: 880px; height: 140px; border: 4px solid var(--amber); border-radius: 10px; background: rgba(7,29,53,.6); opacity: 0; }
+    .judge-mini { position: absolute; width: 52px; height: 40px; border: 3px solid var(--amber); border-radius: 5px; background: radial-gradient(circle, rgba(255,180,84,.85) 16%, var(--panel) 60%); }
+    .judge-st { position: absolute; left: -4px; top: 6px; width: 60px; text-align: center; font: 400 21px/26px "Marker", sans-serif; color: var(--cyan); border: 2px solid var(--cyan); background: rgba(7,29,53,.85); transform: rotate(-10deg); opacity: 0; }
+    .judge-ring { position: absolute; left: -12px; top: -12px; width: 76px; height: 64px; border: 4px solid var(--amber); border-radius: 50%; opacity: 0; }
+    #judge-sep { left: 70px; top: 850px; font-size: 28px; }
+    #judge-glassg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #judge-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="judge" data-width="1080" data-height="1920">
+    <div id="judge-world">
+      <svg id="judge-svg" class="ink sketch" viewBox="0 0 1080 1920">
+        <rect id="judge-zU" class="fl amber" x="370" y="530" width="340" height="30" opacity="0" />
+        <path id="judge-line" class="ln thick" d="M90 560 L990 560" />
+        <path class="ln amber heavy" d="M370 510 L370 590 M710 510 L710 590" />
+        <path id="judge-track" class="ln cyan thick dash" d="M230 570 L230 780" />
+        <path id="judge-tray" class="ln amber thick" d="M440 590 L465 720 L615 720 L640 590" />
+      </svg>
+      <div id="judge-insp" class="tag" data-bind="l10.insp"></div>
+      <div id="judge-unsure" class="tag" data-bind="l10.unsure"></div>
+      <div id="judge-conf" class="tag cyan" data-bind="l10.conf"></div>
+      <div id="judge-allow" class="tag" data-bind="l10.allow"></div>
+      <div id="judge-esc" class="tag" data-bind="l10.esc"></div>
+      <div id="judge-cards"></div>
+      <div id="judge-tray2"></div>
+      <div id="judge-sep" class="tag cyan" data-bind="l10.sep"></div>
+      <div id="judge-glassg">
+        <svg class="ink" viewBox="0 0 1080 1920" style="left:0;top:0;width:1080px;height:1920px">
+          <g id="judge-glass"><circle cx="470" cy="470" r="42" fill="rgba(168,220,242,.18)" stroke="#f2f8ff" stroke-width="7" /><path d="M500 500 L548 548" stroke="#f2f8ff" stroke-width="12" stroke-linecap="round" /></g>
+        </svg>
+      </div>
+    </div>
+    <div id="judge-cam"><div id="judge-stage"></div></div>
+    <div id="judge-tagl"></div>
+    <div id="judge-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l10', w, n), D = KIT.sceneDur('judge');
+      KIT.bind('#judge-world');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.18) => tl.fromTo('#judge-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const R0 = KIT.robot('#judge-svg', { id: 'jbot', x: 560, y: 250, s: 0.62, eye: '#a8dcf2' });
+
+      // the review rule: the middle zone goes to the second judge, the confident ends do not
+      KIT.draw(tl, '#judge-line', 0.05, 0.35);
+      KIT.rise(tl, ['#jbot', '#judge-tray'], 0.1, { y: 40, stagger: 0.05 });
+      KIT.pop(tl, '#judge-insp', c('policy') + 0.1, { from: 0.5 });
+      KIT.pop(tl, '#judge-esc', c('reviews'), { from: 0.5 });
+      pulse(0.06, 0.14);
+      // the paper's sentence, read below while the picture runs above
+      const R = KIT.read(tl, { cam: '#judge-cam', parent: '#judge-stage', hud: '#judge-tagl', tagY: 846, id: 'review', t: 0.1, label: KIT.data('l10').receipt,
+        x: 40, y: 940, width: 1000, zoom: 2.6, fx: 60, fy: 960, follow: 0,
+        marks: [[c('reviews'), c('inputs') + 0.3], [c('leaves'), c('unreviewed') + 0.45]],
+        circles: [{ word: 'unreviewed', t: c('unreviewed') + 0.1 }] });
+      tl.set(R.el, { rotationZ: 0, rotationX: 0 }, 0.7);
+      // "uncertain": the middle zone lights, a card drops into the tray, the glass checks it
+      const cards = document.getElementById('judge-cards');
+      const mk = (id, x, y, amb) => { const e = document.createElement('div'); e.className = 'judge-card' + (amb ? ' amb' : ''); e.id = id; e.style.left = `${x}px`; e.style.top = `${y}px`; cards.appendChild(e); return e; };
+      const u = mk('judge-u', 508, 470, false);
+      tl.fromTo('#judge-zU', { opacity: 0 }, { opacity: 0.35, duration: 0.25, immediateRender: false }, c('uncertain'));
+      KIT.pop(tl, '#judge-unsure', c('uncertain'), { from: 0.5 });
+      tl.fromTo(u, { y: -120, opacity: 0 }, { y: 180, opacity: 1, duration: 0.45, ease: 'bounce.out' }, c('uncertain') + 0.05);
+      tl.fromTo('#judge-glass', { x: 0, y: 0, opacity: 0 }, { x: 40, y: 150, opacity: 1, duration: 0.35, ease: 'power2.out' }, c('uncertain') + 0.25);
+      pulse(c('uncertain'));
+      // "confident mistakes": amber-core cards zip down the allow track behind the judge's back, never reaching the glass
+      const zs = [0, 1, 2, 3].map((k) => mk(`judge-z${k}`, 196, 480, true));
+      KIT.pop(tl, '#judge-conf', c('confident'), { from: 0.5 });
+      KIT.fade(tl, '#judge-allow', c('confident'));
+      KIT.draw(tl, '#judge-track', c('confident') - 0.1, 0.3);
+      zs.forEach((e, k) => {
+        tl.fromTo(e, { x: -120, y: 0, opacity: 0 }, { x: 0, opacity: 1, duration: 0.18, ease: 'power2.out' }, c('confident') + k * 0.16);
+        tl.to(e, { y: 300, opacity: 0, duration: 0.35, ease: 'power2.in' }, c('confident') + 0.18 + k * 0.16);
+      });
+      tl.to('#jbot', { x: 30, duration: 0.25, yoyo: true, repeat: 1 }, c('mistakes'));
+      pulse(c('confident'), 0.22);
+      KIT.beats(tl, '#judge-world', [c('uncertain'), c('confident')], { amp: 0.025, shift: 16 });
+      // cut back: the page leaves; "separate test": a tray of the confident misses slides in front of the judges
+      const back = c('unreviewed') + 0.55;
+      tl.to([R.el, '#judge-tagl'], { opacity: 0, duration: 0.2 }, back);
+      tl.to('#judge-world', { scale: 1, x: 0, y: 0, duration: 0.3 }, back);
+      const d = KIT.data('l10'), NM = 26, nFix = Math.max(1, Math.floor(NM * d._fixed / d._confident));
+      const tray = document.getElementById('judge-tray2'), ST = [], FIX = [];
+      for (let k = 0; k < NM; k++) {
+        const e = document.createElement('div'); e.className = 'judge-mini'; e.id = `judge-m${k}`;
+        e.style.left = `${14 + (k % 13) * 66}px`; e.style.top = `${18 + Math.floor(k / 13) * 56}px`;
+        const fixed = k === 9;
+        if (fixed) { const r = document.createElement('div'); r.className = 'judge-ring'; r.id = `judge-r${k}`; e.appendChild(r); FIX.push(r); }
+        else { const s = document.createElement('div'); s.className = 'judge-st'; s.id = `judge-s${k}`; s.textContent = d.stamp; e.appendChild(s); ST.push(s); }
+        tray.appendChild(e);
+      }
+      tl.fromTo('#judge-tray2', { x: -900, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }, c('separate') - 0.1);
+      KIT.pop(tl, '#judge-sep', c('separate') + 0.15, { from: 0.5 });
+      pulse(c('separate'));
+      // "second judges": the glass sweeps the tray; "only a few": nearly every card gets SAFE again, one gets caught
+      tl.to('#judge-glass', { x: -330, y: 520, duration: 0.25, ease: 'power2.inOut' }, c('second') - 0.1);
+      tl.to('#judge-glass', { x: 380, duration: 0.9, ease: 'sine.inOut' }, c('second') + 0.15);
+      tl.fromTo(ST, { scale: 2, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.1, ease: 'power4.in', stagger: 0.025 }, c('caught') - 0.1);
+      tl.fromTo(FIX.slice(0, nFix), { scale: 1.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, c('few'));
+      pulse(c('few'), 0.22);
+      tl.to('#judge-world', { scale: 1.06, y: -60, duration: 0.6, ease: 'power2.inOut' }, c('caught'));
+      window.__timelines["judge"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,70 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2610.11765/paper-v1.pdf",
+ "note": "Receipts: one PDF line each, two highlights per line so the camera can hold the start of each (context [0,0]) from arXiv 2610.11765v1. inertia = p.9 sec 3.2 italic summary; cost = p.11 sec 3.3 bold run-in (the paragraph above, with 99.69%, 62.00% and the other rates, is outside the crop); space = p.12 sec 3.5 italic summary (the highlight stops before 'an LLM', so the marker and the voice agree); visible = p.15 sec 5.1. Every number readable in a crop must be in facts.json; qa checks it.",
+ "items": [
+  {
+   "id": "inertia",
+   "page": 9,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "persists"
+   ],
+   "find": [
+    "visible explicit inference",
+    "persists under no-thinking controls"
+   ]
+  },
+  {
+   "id": "cost",
+   "page": 11,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "cost"
+   ],
+   "find": [
+    "On open-ended tasks,",
+    "no-thinking comes at a cost."
+   ]
+  },
+  {
+   "id": "space",
+   "page": 12,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "answer space"
+   ],
+   "find": [
+    "Even for the same question,",
+    "the answer space shapes whether"
+   ]
+  },
+  {
+   "id": "visible",
+   "page": 15,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "visible"
+   ],
+   "find": [
+    "Our claims therefore",
+    "concern visible output"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,154 @@
+<template id="policy-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #policy-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 900px; }
+    #policy-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #policy-box { left: 300px; top: 260px; width: 480px; height: 170px; display: flex; align-items: center; justify-content: center; font-size: 44px; text-align: center; }
+    #policy-role { left: 396px; top: 452px; font-size: 30px; }
+    .policy-task { font-size: 28px; top: 560px; }
+    #policy-t1 { left: 60px; } #policy-t2 { left: 404px; } #policy-t3 { left: 724px; }
+    #policy-agent { left: 70px; top: 196px; font-size: 26px; }
+    #policy-in { position: absolute; left: 120px; top: 300px; width: 110px; height: 80px; border: 4px solid var(--white); border-radius: 8px; background: var(--panel); opacity: 0; }
+    .policy-chip { top: 660px; font-size: 34px; }
+    #policy-chipA { left: 330px; color: var(--cyan); border-color: var(--cyan); }
+    #policy-chipB { left: 560px; }
+    #policy-gauge { left: 340px; top: 770px; font-size: 30px; }
+    #policy-g0 { left: 250px; top: 1150px; font-size: 28px; }
+    #policy-g1 { left: 770px; top: 1150px; font-size: 28px; }
+    #policy-rail { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; opacity: 0; }
+    #policy-cA { left: 200px; top: 940px; } #policy-cB { left: 940px; top: 1180px; } #policy-cE { left: 482px; top: 940px; }
+    #policy-pol { left: 60px; top: 770px; font-size: 34px; }
+    #policy-r0 { left: 96px; top: 900px; font-size: 26px; }
+    #policy-r1 { left: 880px; top: 900px; font-size: 26px; }
+    .policy-exit { top: 1352px; font-size: 32px; }
+    #policy-allow { left: 150px; color: var(--cyan); border-color: var(--cyan); }
+    #policy-esc { left: 410px; }
+    #policy-block { left: 700px; color: var(--white); border-color: var(--white); }
+    #policy-review { left: 430px; top: 1420px; font-size: 26px; }
+    .policy-card { position: absolute; width: 74px; height: 54px; border: 4px solid var(--white); border-radius: 6px; background: var(--panel); opacity: 0; }
+    #policy-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="policy" data-width="1080" data-height="1920">
+    <div id="policy-cam">
+      <svg id="policy-svg" class="ink sketch" viewBox="0 0 1080 1920">
+        <path id="policy-wire" class="ln cyan thick" d="M230 340 L300 340" />
+        <path id="policy-fan" class="ln dim" d="M540 440 L170 556 M540 440 L540 556 M540 440 L880 556" />
+        <g id="policy-gaugeg">
+          <path id="policy-arc" class="ln thick" d="M300 1130 A240 240 0 0 1 780 1130" />
+          <path class="ln dim" d="M300 1130 L330 1130 M780 1130 L750 1130 M540 890 L540 920" />
+          <path id="policy-needle" class="ln amber heavy" d="M540 1130 L540 930" />
+          <circle class="fl amber" cx="540" cy="1130" r="16" />
+        </g>
+      </svg>
+      <div id="policy-agent" class="tag cyan" data-bind="l02.agent"></div>
+      <div id="policy-in"></div>
+      <div id="policy-box" class="plate" data-bind="l02.box"></div>
+      <div id="policy-role" class="tag" data-bind="l02.role"></div>
+      <div id="policy-t1" class="tag cyan policy-task" data-bind="l02.t1"></div>
+      <div id="policy-t2" class="tag cyan policy-task" data-bind="l02.t2"></div>
+      <div id="policy-t3" class="tag cyan policy-task" data-bind="l02.t3"></div>
+      <div id="policy-chipA" class="tag policy-chip" data-bind="l02.chipA"></div>
+      <div id="policy-chipB" class="tag policy-chip" data-bind="l02.chipB"></div>
+      <div id="policy-gauge" class="tag" data-bind="l02.gauge"></div>
+      <div id="policy-g0" class="lbl" data-bind="l02.g0"></div>
+      <div id="policy-g1" class="lbl" data-bind="l02.g1"></div>
+      <div id="policy-rail">
+        <svg id="policy-rsvg" class="ink sketch" viewBox="0 0 1080 1920" style="left:0;top:0;width:1080px;height:1920px">
+          <rect id="policy-zA" class="fl cyan" x="120" y="1000" width="250" height="40" opacity="0.0" />
+          <rect id="policy-zE" class="fl amber" x="370" y="1000" width="300" height="40" opacity="0.0" />
+          <rect id="policy-zB" class="fl" x="670" y="1000" width="290" height="40" opacity="0.0" />
+          <path id="policy-line" class="ln thick" d="M120 1040 L960 1040" />
+          <g id="policy-pinL"><path class="ln amber heavy" d="M370 960 L370 1060" /><circle class="fl amber" cx="370" cy="954" r="16" /></g>
+          <g id="policy-pinH"><path class="ln amber heavy" d="M670 960 L670 1060" /><circle class="fl amber" cx="670" cy="954" r="16" /></g>
+          <g id="policy-gate"><rect class="fl panel" x="160" y="1110" width="170" height="20" /><rect class="ln cyan thick" x="160" y="1110" width="170" height="20" /></g>
+          <path id="policy-tray" class="ln amber thick" d="M420 1150 L450 1300 L590 1300 L620 1150" />
+          <g id="policy-bell"><path class="ln amber thick" d="M500 1110 Q520 1066 540 1110 Z" /><circle class="fl amber" cx="520" cy="1062" r="7" /></g>
+          <rect id="policy-wall" class="ln thick" x="760" y="1090" width="110" height="230" />
+          <path class="ln dim thin" d="M760 1150 L870 1150 M760 1210 L870 1210 M760 1270 L870 1270 M815 1090 L815 1150 M790 1150 L790 1210 M840 1210 L840 1270" />
+        </svg>
+        <div id="policy-pol" class="tag" data-bind="l03.pol"></div>
+        <div id="policy-r0" class="lbl" data-bind="l03.r0"></div>
+        <div id="policy-r1" class="lbl" data-bind="l03.r1"></div>
+        <div id="policy-allow" class="tag policy-exit" data-bind="l03.allow"></div>
+        <div id="policy-esc" class="tag policy-exit" data-bind="l03.esc"></div>
+        <div id="policy-block" class="tag policy-exit" data-bind="l03.block"></div>
+        <div id="policy-review" class="tag cyan" data-bind="l03.review"></div>
+        <div id="policy-cA" class="policy-card"></div>
+        <div id="policy-cB" class="policy-card"></div>
+        <div id="policy-cE" class="policy-card"></div>
+      </div>
+    </div>
+    <div id="policy-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l02', w, n), d = (w, n) => KIT.cue('l03', w, n), D = KIT.sceneDur('policy');
+      KIT.bind('#policy-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.18) => tl.fromTo('#policy-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const R = KIT.robot('#policy-svg', { id: 'pobot', x: 175, y: 250, s: 0.42, eye: '#a8dcf2' });
+
+      // l02. the agent and its wire, then the System One box drops in
+      KIT.rise(tl, ['#pobot', '#policy-agent'], 0.12, { y: 40 });
+      pulse(0.15, 0.14);
+      KIT.slam(tl, '#policy-box', c('System') - 0.1, { from: 1.8, shakeTarget: '#policy-cam', amp: 8 });
+      KIT.draw(tl, '#policy-wire', c('System') + 0.15, 0.3);
+      pulse(c('System'));
+      // "security judges": the role and three task tags fan out
+      KIT.pop(tl, '#policy-role', c('security'), { from: 0.5 });
+      KIT.draw(tl, '#policy-fan', c('judges') - 0.1, 0.4);
+      ['#policy-t1', '#policy-t2', '#policy-t3'].forEach((s, k) => KIT.pop(tl, s, c('judges') + 0.08 * k, { from: 0.4 }));
+      // "Each returns": an input goes in; "decision": the two answers; "unsafe probability": the needle swings
+      tl.fromTo('#policy-in', { x: 0, opacity: 0 }, { x: 0, opacity: 1, duration: 0.15 }, c('Each'));
+      tl.to('#policy-in', { x: 230, scale: 0.5, opacity: 0, duration: 0.45, ease: 'power2.in' }, c('Each') + 0.15);
+      KIT.pop(tl, '#policy-chipA', c('decision'));
+      KIT.pop(tl, '#policy-chipB', c('decision') + 0.12);
+      pulse(c('decision'));
+      KIT.rise(tl, '#policy-gaugeg', c('and') - 0.2, { y: 50 });
+      KIT.pop(tl, '#policy-gauge', c('unsafe'), { from: 0.5 });
+      KIT.fade(tl, ['#policy-g0', '#policy-g1'], c('unsafe'));
+      tl.fromTo('#policy-needle', { rotation: -70, svgOrigin: '540 1130' }, { rotation: 52, svgOrigin: '540 1130', duration: 0.8, ease: 'back.out(1.6)' }, c('probability'));
+      tl.to('#policy-needle', { rotation: -30, svgOrigin: '540 1130', duration: 0.6, ease: 'power2.inOut' }, c('probability') + 0.85);
+      pulse(c('probability'));
+      KIT.beats(tl, '#policy-cam', [c('judges'), c('decision')], { amp: 0.02, shift: 14 });
+      tl.to('#policy-cam', { scale: 1, x: 0, y: 0, duration: 0.3 }, c('probability'));
+
+      // l03. the gauge unrolls into the rail with two pins (schematic, no threshold values)
+      const t3 = d('A');
+      tl.to(['#policy-gaugeg', '#policy-g0', '#policy-g1', '#policy-gauge', '#policy-chipA', '#policy-chipB'], { opacity: 0, duration: 0.25 }, t3 - 0.2);
+      tl.to(['#policy-box', '#policy-role', '#pobot', '#policy-agent', '#policy-wire', '#policy-fan', '.policy-task'], { opacity: 0.35, duration: 0.3 }, t3 - 0.2);
+      tl.fromTo('#policy-rail', { opacity: 0 }, { opacity: 1, duration: 0.2 }, t3 - 0.1);
+      KIT.draw(tl, '#policy-line', t3 - 0.1, 0.4);
+      tl.fromTo(['#policy-pinL', '#policy-pinH'], { y: -260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'bounce.out', stagger: 0.1 }, d('policy'));
+      KIT.pop(tl, '#policy-pol', d('policy'), { from: 0.5 });
+      KIT.fade(tl, ['#policy-r0', '#policy-r1'], d('maps'));
+      KIT.rise(tl, ['#policy-gate', '#policy-tray', '#policy-bell', '#policy-wall'], d('maps'), { y: 40, stagger: 0.06 });
+      pulse(d('policy'));
+      // "allow": left zone paints, the gate swings open, a card falls through
+      tl.fromTo('#policy-zA', { opacity: 0 }, { opacity: 0.32, duration: 0.25, immediateRender: false }, d('allow'));
+      tl.to('#policy-gate', { rotation: 70, svgOrigin: '160 1120', duration: 0.25, ease: 'power2.out' }, d('allow'));
+      tl.fromTo('#policy-cA', { opacity: 0 }, { opacity: 1, duration: 0.05 }, d('allow'));
+      tl.fromTo('#policy-cA', { y: 0 }, { y: 320, duration: 0.55, ease: 'power2.in' }, d('allow'));
+      tl.to('#policy-cA', { opacity: 0, duration: 0.15 }, d('allow') + 0.45);
+      KIT.pop(tl, '#policy-allow', d('allow'), { from: 0.5 });
+      // "block": right zone paints, a card bounces off the wall
+      tl.fromTo('#policy-zB', { opacity: 0 }, { opacity: 0.3, duration: 0.25, immediateRender: false }, d('block'));
+      tl.fromTo('#policy-cB', { x: 0, opacity: 0 }, { x: -260, opacity: 1, duration: 0.25, ease: 'power2.in' }, d('block'));
+      tl.to('#policy-cB', { x: -380, y: -180, rotation: -40, opacity: 0, duration: 0.4, ease: 'power2.out' }, d('block') + 0.25);
+      KIT.shake(tl, '#policy-wall', d('block') + 0.25, { amp: 6, dur: 0.2 });
+      KIT.pop(tl, '#policy-block', d('block'), { from: 0.5 });
+      // "escalate": the middle tray lights, a card drops in, the bell rings; "review"
+      tl.fromTo('#policy-zE', { opacity: 0 }, { opacity: 0.35, duration: 0.25, immediateRender: false }, d('escalate'));
+      tl.fromTo('#policy-cE', { opacity: 0 }, { opacity: 1, duration: 0.05 }, d('escalate'));
+      tl.fromTo('#policy-cE', { y: 0 }, { y: 280, duration: 0.45, ease: 'bounce.out' }, d('escalate'));
+      tl.to('#policy-bell', { rotation: 14, svgOrigin: '520 1110', duration: 0.07, yoyo: true, repeat: 5 }, d('escalate') + 0.3);
+      KIT.pop(tl, '#policy-esc', d('escalate'), { from: 0.5 });
+      KIT.pop(tl, '#policy-review', d('review'), { from: 0.4 });
+      pulse(d('allow')); pulse(d('block')); pulse(d('escalate'));
+      // the camera pans left to right along the rail while the three exits light up
+      tl.to('#policy-cam', { scale: 1.12, x: 70, y: -120, duration: 0.6, ease: 'power2.inOut' }, d('maps'));
+      tl.to('#policy-cam', { x: -80, duration: d('review') - d('allow') + 0.3, ease: 'sine.inOut' }, d('allow'));
+      window.__timelines["policy"] = tl;
+    })();
+  </script>
+</template>

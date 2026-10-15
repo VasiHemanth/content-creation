@@ -1,0 +1,75 @@
+<template id="close-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #close-all, #close-shk, #close-end { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #close-big { left: 60px; top: 150px; width: 960px; text-align: center; font: 400 92px/1.04 "Marker", sans-serif; color: var(--amber); text-shadow: 7px 7px 0 var(--shadow); }
+    #close-ask { position: absolute; left: 110px; top: 500px; width: 820px; height: 262px; background: var(--deep); border: 4px solid var(--cyan); border-radius: 26px; box-shadow: 10px 10px 0 var(--shadow); }
+    #close-q { position: absolute; left: 34px; top: 28px; width: 760px; font: 700 38px/1.2 "Mono", monospace; color: var(--white); }
+    #close-p { position: absolute; left: 34px; top: 106px; width: 740px; font: 600 33px/1.3 "Mono", monospace; color: var(--amber); }
+    #close-mode { left: 450px; top: 802px; font: 600 34px "Mono", monospace; color: var(--cyan); }
+    #close-pill { position: absolute; left: 760px; top: 790px; width: 170px; height: 66px; border-radius: 33px; border: 4px solid var(--coral); background: #071d35; box-sizing: border-box; }
+    #close-knob { position: absolute; left: 10px; top: 5px; width: 48px; height: 48px; border-radius: 24px; background: var(--amber); }
+    #close-off { position: absolute; left: 82px; top: 12px; font: 700 28px "Mono", monospace; color: var(--coral); }
+    #close-reply { position: absolute; left: 110px; top: 950px; width: 820px; height: 480px; background: var(--panel); border: 4px solid var(--white); border-radius: 26px; box-shadow: 10px 10px 0 var(--shadow); }
+    #close-rsvg { left: 0; top: 0; width: 820px; height: 480px; }
+    #close-fin { position: absolute; left: 40px; top: 382px; width: 340px; height: 74px; border: 5px solid var(--amber); border-radius: 10px; box-sizing: border-box; text-align: center; font: 700 30px/64px "Mono", monospace; color: var(--amber); }
+    #close-mag { position: absolute; left: 0; top: 0; width: 200px; height: 200px; }
+    #close-plate { position: absolute; left: 110px; top: 1250px; width: 810px; height: 200px; background: var(--deep); border: 4px solid var(--amber); box-shadow: 10px 10px 0 var(--shadow); }
+    #close-handle { left: 110px; top: 1282px; width: 810px; text-align: center; font: 400 84px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; }
+    #close-credit { left: 110px; top: 1392px; width: 810px; text-align: center; font: 600 28px "Mono", monospace; color: var(--cyan); white-space: nowrap; }
+    #close-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+    <div id="close-all">
+      <div id="close-shk"><div id="close-cam">
+        <div id="close-ask"><div id="close-q" data-bind="l15.q"></div><div id="close-p" data-bind="l15.prompt"></div></div>
+        <div id="close-mode" class="abs" data-bind="l15.mode"></div>
+        <div id="close-pill"><div id="close-knob"></div><div id="close-off" data-bind="l15.off"></div></div>
+        <div id="close-reply"><svg id="close-rsvg" class="ink" viewBox="0 0 820 480"></svg><div id="close-fin" data-bind="l15.fin"></div></div>
+        <div id="close-mag"><svg class="ink" style="left:0;top:0;width:200px;height:200px" viewBox="0 0 200 200"><circle cx="80" cy="80" r="58" fill="rgba(168,220,242,0.14)" stroke="#ffb454" stroke-width="10"/><path d="M122 122 L176 176" stroke="#ffb454" stroke-width="16" stroke-linecap="round"/></svg></div>
+        <div id="close-big" class="abs" data-bind="l15.big"></div>
+      </div></div>
+      <div id="close-end">
+        <div id="close-plate"></div>
+        <div id="close-handle" class="abs" data-bind="l15.handle"></div>
+        <div id="close-credit" class="abs" data-bind="l15.credit"></div>
+      </div>
+      <div id="close-flash"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l15', w, n), D = KIT.sceneDur('close'), S = KIT.svgEl;
+      KIT.bind('#close-all');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.2) => tl.fromTo('#close-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const R = document.getElementById('close-rsvg');
+
+      // the hook's chat, with the switch OFF and the reply already written (same bars as the hook)
+      const W = [700, 610, 740, 520, 680, 590];
+      const bars = W.map((w, k) => S('rect', { x: 40, y: 40 + k * 52, width: w, height: 20, rx: 10, fill: k % 3 === 1 ? '#ffb454' : '#a8dcf2', id: `close-ln${k}` }, R));
+      tl.fromTo('#close-cam', { x: 0, y: 0, scale: 1 }, { x: 540 * (1 - 1.04), y: 1150 * (1 - 1.04), scale: 1.04, duration: c('read'), ease: 'sine.inOut' }, 0);
+      pulse(0.1, 0.1);
+      // "answer only": a boxed final answer lands at the bottom of the reply
+      tl.fromTo('#close-fin', { scale: 0.4, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(2.5)' }, c('answer'));
+      pulse(c('answer'), 0.18);
+      // "read": the magnifier climbs from the answer through the lines above it; they glow on "before"
+      tl.fromTo('#close-mag', { x: 230, y: 1300, opacity: 0 }, { x: 230, y: 1300, opacity: 1, duration: 0.2 }, c('read') - 0.25);
+      tl.to('#close-mag', { x: 520, y: 960, duration: 0.8, ease: 'power2.inOut' }, c('read'));
+      tl.to('#close-cam', { x: 0, y: 0, scale: 1, duration: 0.6, ease: 'power2.inOut' }, c('read'));
+      bars.slice().reverse().forEach((b, k) => tl.fromTo(b, { fill: b.getAttribute('fill') }, { fill: '#ffe2b0', duration: 0.15, immediateRender: false }, c('before') + k * 0.06));
+      tl.fromTo('#close-big', { scale: 1.1, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.3, ease: 'power3.out' }, c('read'));
+      pulse(c('read'), 0.16);
+      pulse(c('before'), 0.2);
+      // end card in the last 1.6 s
+      const tE = D - 1.6;
+      tl.fromTo('#close-plate', { y: 260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }, tE);
+      tl.to(['#close-mag', '#close-reply'], { opacity: 0, duration: 0.25 }, tE);
+      KIT.slam(tl, '#close-handle', tE + 0.2, { from: 1.6, shake: false });
+      KIT.rise(tl, '#close-credit', tE + 0.4, { y: 14 });
+      pulse(tE + 0.2, 0.14);
+      window.__timelines["close"] = tl;
+    })();
+  </script>
+</template>

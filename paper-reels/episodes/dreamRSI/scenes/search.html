@@ -1,0 +1,123 @@
+<template id="search-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #search-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #search-treewrap { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #search-agent { left: 660px; top: 220px; font-size: 40px; }
+    #search-count { left: 0; top: 1175px; width: 1080px; text-align: center; font-size: 82px; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); }
+    #search-count .char { display: inline-block; }
+    #search-card { position: absolute; left: 560px; top: 500px; width: 440px; height: 360px; background: var(--white); box-shadow: 14px 14px 0 var(--shadow); }
+    #search-card .rule { position: absolute; left: 30px; font: 700 31px "Mono", monospace; color: var(--deep); white-space: nowrap; }
+    #search-card .bx { position: absolute; left: 30px; width: 34px; height: 34px; border: 4px solid var(--deep); }
+    #search-pol { left: 540px; top: 438px; font-size: 38px; }
+    #search-fixed { left: 820px; top: 880px; font-size: 34px; }
+    #search-card2 { position: absolute; left: 80px; top: 560px; width: 380px; height: 250px; background: #e9f6ff; border: 5px solid var(--cyan); box-shadow: 12px 12px 0 var(--shadow); }
+    #search-card2 i { position: absolute; left: 26px; height: 14px; background: var(--faint); }
+    #search-newp { left: 80px; top: 500px; font-size: 32px; }
+    #search-full { left: 0; top: 1150px; width: 1080px; text-align: center; font-size: 84px; color: var(--coral); }
+  </style>
+  <div id="root" data-composition-id="search" data-width="1080" data-height="1920">
+    <div id="search-beat" style="position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 760px"><div id="search-cam">
+      <div id="search-treewrap">
+        <svg class="ink sketch" id="search-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <g id="search-tree"></g>
+          <g id="search-tree2"></g>
+          <g id="search-bot"></g>
+        </svg>
+      </div>
+      <div id="search-agent" class="tag cyan" data-bind="l02.agent"></div>
+      <div id="search-count" class="hd" data-bind="l02.count"></div>
+      <div id="search-pol" class="tag" data-bind="l03.policy"></div>
+      <div id="search-card"></div>
+      <svg class="ink" id="search-arrow" style="left:0;top:0;width:1080px;height:1920px;overflow:visible" viewBox="0 0 1080 1920"><path id="search-point" class="ln amber thick" d="" /></svg>
+      <svg class="ink" id="search-lock" style="left:900px;top:430px;width:130px;height:150px" viewBox="0 0 130 150">
+        <path d="M30 70 L30 46 C30 10 100 10 100 46 L100 70" fill="none" stroke="#ff6b6b" stroke-width="12" />
+        <rect x="14" y="66" width="102" height="78" rx="10" fill="#ff6b6b" /><circle cx="65" cy="98" r="10" fill="#071d35" /><rect x="60" y="102" width="10" height="24" fill="#071d35" />
+      </svg>
+      <div id="search-fixed" class="tag coral" data-bind="l04.fixed"></div>
+      <div id="search-newp" class="tag cyan" data-bind="l04.newp"></div>
+      <div id="search-card2"><i style="top:40px;width:240px"></i><i style="top:80px;width:300px"></i><i style="top:120px;width:200px"></i><i style="top:160px;width:270px;background:var(--cyan)"></i></div>
+      <svg class="ink" id="search-glass" style="left:430px;top:820px;width:220px;height:283px" viewBox="0 0 140 180">
+        <path class="ln thick" d="M20 10 L120 10 M20 170 L120 170 M30 10 C30 70 110 110 110 170 M110 10 C110 70 30 110 30 170" />
+        <path id="search-sand" d="M44 150 L96 150 L70 120 Z" fill="#ffb454" />
+      </svg>
+      <div id="search-full" class="hd" data-bind="l04.full"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'search', a = (w, n) => KIT.cue('l02', w, n), b = (w, n) => KIT.cue('l03', w, n), c = (w, n) => KIT.cue('l04', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#search-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // l02: the agent and its huge search
+      KIT.robot('#search-bot', { id: 'search-r', x: 540, y: 205, s: 0.8 });
+      tl.fromTo('#search-bot', { y: -260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'back.out(1.6)' }, 0.05);
+      tl.fromTo('#search-agent', { x: 200, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }, a('Alpha') - 0.1);
+      const T = KIT.tree('#search-tree', { id: 'search-t', x: 540, y: 470, w: 1000, dy: 120, levels: [4, 8, 14, 24, 40], seed: 11, r: 9, edgeClass: 'ln cyan thin' });
+      T.byLevel.forEach((row, li) => {
+        const t0 = li < 3 ? a('search') - 0.1 + li * 0.32 : a('often') + (li - 3) * 0.35;
+        row.forEach((n, k) => {
+          const t = t0 + (k / row.length) * 0.3;
+          if (n.edge) KIT.draw(tl, n.edge, t, 0.16, { ease: 'none' });
+          tl.fromTo(n.el, { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.14, ease: 'back.out(3)' }, t + 0.1);
+          if (n.score > 0.88) tl.to(n.el, { fill: '#ffb454', duration: 0.1 }, t + 0.25);
+        });
+      });
+      const cs = SplitText.create('#search-count', { type: 'words,chars' });
+      tl.fromTo(cs.chars, { scale: 2.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.16, stagger: 0.02, ease: 'power4.in' }, a('thousands') - 0.12);
+      KIT.shake(tl, '#search-cam', a('thousands') + 0.2, { amp: 12, dur: 0.3 });
+
+      // l03: a set of rules picks the next idea: the exploration policy
+      tl.to('#search-treewrap', { x: -150, scale: 0.86, opacity: 0.45, duration: 0.5, ease: 'power3.inOut' }, b('A') - 0.3);
+      tl.to('#search-count', { y: 160, opacity: 0, duration: 0.35, ease: 'power2.in' }, b('A') - 0.3);
+      const card = document.querySelector('#search-card'), rules = KIT.data('l03').rules;
+      rules.forEach((r, k) => {
+        const bx = document.createElement('div'); bx.className = 'bx'; bx.id = `search-bx${k}`; bx.style.top = `${70 + k * 92}px`; card.appendChild(bx);
+        const el = document.createElement('div'); el.className = 'rule'; el.id = `search-rule${k}`; el.textContent = r; el.style.left = '84px'; el.style.top = `${70 + k * 92}px`; card.appendChild(el);
+        const ck = KIT.svgEl('svg', { class: 'ink', style: `left:26px;top:${60 + k * 92}px;width:50px;height:50px;overflow:visible`, viewBox: '0 0 50 50' }, card);
+        KIT.svgEl('path', { id: `search-ck${k}`, d: 'M8 26 L20 38 L44 8', fill: 'none', stroke: '#2f9e6b', 'stroke-width': 8, 'stroke-linecap': 'round' }, ck);
+      });
+      tl.fromTo('#search-card', { x: 520, rotation: 12, opacity: 0 }, { x: 0, rotation: 2, opacity: 1, duration: 0.45, ease: 'back.out(1.4)' }, b('rules') - 0.25);
+      const ckT = [b('picks'), b('next'), b('try')];
+      rules.forEach((_, k) => { KIT.fade(tl, `#search-rule${k}`, ckT[k] - 0.15, { dur: 0.2 }); KIT.draw(tl, `#search-ck${k}`, ckT[k], 0.2, { ease: 'power2.out' }); });
+      // the policy points at the next node to try
+      const target = T.byLevel[3][Math.floor(T.byLevel[3].length * 0.62)], tx = 540 + (target.x - 540) * 0.86 - 150, ty = 760 + (target.y - 760) * 0.86;
+      document.querySelector('#search-point').setAttribute('d', `M560 640 C 470 640, ${(tx + 60).toFixed(0)} ${(ty - 80).toFixed(0)}, ${tx.toFixed(0)} ${ty.toFixed(0)}`);
+      KIT.draw(tl, '#search-point', b('next') - 0.1, 0.35, { ease: 'power2.out' });
+      tl.to(target.el, { attr: { r: 18 }, fill: '#ffb454', duration: 0.18, ease: 'back.out(3)' }, b('idea'));
+      tl.fromTo('#search-pol', { scale: 2.4, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: -3, duration: 0.2, ease: 'power4.in' }, b('exploration') - 0.08);
+      KIT.shake(tl, '#search-card', b('exploration') + 0.12, { amp: 8, dur: 0.2 });
+
+      // l04: most keep it fixed; a new one needs a full new search
+      tl.fromTo('#search-lock', { y: -400, opacity: 0, rotation: -20 }, { y: 0, opacity: 1, rotation: 0, duration: 0.22, ease: 'power4.in' }, c('fixed') - 0.22);
+      KIT.shake(tl, '#search-cam', c('fixed'), { amp: 12, dur: 0.28 });
+      tl.fromTo('#search-fixed', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(2.5)' }, c('fixed') + 0.05);
+      tl.fromTo('#search-card2', { x: -500, rotation: -10, opacity: 0 }, { x: 0, rotation: -2, opacity: 1, duration: 0.4, ease: 'back.out(1.4)' }, c('new') - 0.2);
+      KIT.rise(tl, '#search-newp', c('new'), { y: 20 });
+      // the old search is thrown away and starts again from the root, slowly
+      const tFull = c('full') - 0.1;
+      tl.to('#search-treewrap', { x: 0, scale: 1, opacity: 1, duration: 0.4, ease: 'power3.inOut' }, tFull - 0.4);
+      tl.to(['#search-card', '#search-pol', '#search-lock', '#search-fixed'], { x: 380, y: -330, scale: 0.45, duration: 0.4, ease: 'power3.inOut' }, tFull - 0.4);
+      tl.to('#search-point', { opacity: 0, duration: 0.2 }, tFull - 0.4);
+      tl.to(['#search-card2', '#search-newp'], { x: -40, y: -380, scale: 0.6, duration: 0.4, ease: 'power3.inOut' }, tFull - 0.4);
+      tl.to(T.nodes.map((n) => n.el), { opacity: 0, duration: 0.25, stagger: { each: 0.004, from: 'end' } }, tFull - 0.35);
+      tl.to(T.edges, { opacity: 0, duration: 0.3 }, tFull - 0.2);
+      const T2 = KIT.tree('#search-tree2', { id: 'search-u', x: 540, y: 470, w: 1000, dy: 120, levels: [4, 8], seed: 12, r: 9, edgeClass: 'ln amber thin' });
+      T2.nodes.forEach((n, k) => { const t = tFull + 0.15 + k * 0.06; KIT.draw(tl, n.edge, t, 0.25, { ease: 'none' }); tl.fromTo(n.el, { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.2 }, t + 0.2); });
+      tl.fromTo('#search-glass', { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' }, tFull);
+      tl.to('#search-glass', { rotation: 180, duration: 0.5, ease: 'power2.inOut' }, tFull + 0.35);
+      tl.fromTo('#search-full', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'power3.out' }, c('full') + 0.05);
+
+      // camera beats
+      tl.fromTo('#search-cam', { scale: 1 }, { scale: 1.05, duration: 4, ease: 'sine.inOut' }, 0);
+      tl.to('#search-cam', { scale: 1.08, duration: 0.3, ease: 'power3.out' }, b('rules') - 0.1);
+      tl.to('#search-cam', { scale: 1.03, duration: 0.3, ease: 'power3.out' }, c('Most'));
+      tl.to('#search-cam', { scale: 1.07, duration: 0.3, ease: 'power3.out' }, c('full') - 0.1);
+
+      KIT.beats(tl, '#search-beat', [a('Alpha') - 0.05, a('search') - 0.05, a('better'), a('often'), b('picks'), b('try') - 0.05, b('policy'), b('policy') + 0.9, c('keep'), c('test'), c('must')]);
+
+      window.__timelines["search"] = tl;
+    })();
+  </script>
+</template>

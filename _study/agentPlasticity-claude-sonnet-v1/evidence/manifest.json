@@ -1,0 +1,82 @@
+{
+ "definition": {
+  "img": "evidence/definition.png",
+  "w": 3489,
+  "h": 105,
+  "page": 4,
+  "rects": [
+   {
+    "x": 0.36423731746349686,
+    "y": 0.3019321297280622,
+    "w": 0.23256503192725342,
+    "h": 0.5989768498285929
+   },
+   {
+    "x": 0.6064525683524663,
+    "y": 0.3091725125549871,
+    "w": 0.197480481734901,
+    "h": 0.5917364670016679
+   }
+  ],
+  "text": "We operationalize agent plasticity as held-out performance gain per unit learning cost. At checkpoint T,",
+  "circles": {}
+ },
+ "endpoint": {
+  "img": "evidence/endpoint.png",
+  "w": 3364,
+  "h": 166,
+  "page": 1,
+  "rects": [
+   {
+    "x": 0.7891424297843678,
+    "y": 0.0651666937442993,
+    "w": 0.1802569680118887,
+    "h": 0.2940042445788234
+   },
+   {
+    "x": 0.06328492060472202,
+    "y": 0.5617107776227033,
+    "w": 0.2659493025412258,
+    "h": 0.37961604343337557
+   }
+  ],
+  "text": "and acquisition efficiency also diverge: the agent that ultimately performs best need not be the one\r\nthat improves most efficiently. Tracing failures through the improvement loop further reveals different",
+  "circles": {
+   "efficiently": {
+    "x": 0.24130303465686814,
+    "y": 0.5617107776227033,
+    "w": 0.08527792478534581,
+    "h": 0.37961604343337557
+   }
+  }
+ },
+ "instruction": {
+  "img": "evidence/instruction.png",
+  "w": 3486,
+  "h": 110,
+  "page": 9,
+  "rects": [
+   {
+    "x": 0.027082301176050937,
+    "y": 0.34648669715161184,
+    "w": 0.2704301366653707,
+    "h": 0.56275068226803
+   },
+   {
+    "x": 0.3063114678041126,
+    "y": 0.33960097926374977,
+    "w": 0.24929249480386928,
+    "h": 0.5696364001558922
+   }
+  ],
+  "text": "Writing down an instruction is not the same as following it. In one GPT-5.5 run, the reflection step keeps",
+  "circles": {
+   "following": {
+    "x": 0.4540151676985062,
+    "y": 0.33960097926374977,
+    "w": 0.07669159536278747,
+    "h": 0.5696364001558922
+   }
+  }
+ }
+}

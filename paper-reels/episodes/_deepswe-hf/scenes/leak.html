@@ -1,0 +1,92 @@
+<template id="leak-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #leak-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    .leak-card { position: absolute; left: 70px; width: 340px; height: 150px; background: var(--white); box-shadow: 10px 10px 0 var(--shadow); }
+    .leak-card .nm { position: absolute; left: 92px; top: 20px; font: 700 30px "Mono", monospace; color: var(--deep); white-space: nowrap; }
+    .leak-card svg { position: absolute; left: 0; top: 0; }
+    #leak-pool-label { left: 520px; top: 820px; width: 440px; text-align: center; font-size: 36px; color: var(--white); }
+    #leak-scrim { position: absolute; left: -1200px; top: -1200px; width: 3600px; height: 4400px; background: #061a30; opacity: 0; }
+    #leak-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #leak-seesaw { position: absolute; left: 120px; top: 1110px; width: 840px; height: 330px; }
+    #leak-beam { position: absolute; left: 0; top: 0; width: 840px; height: 330px; transform-origin: 420px 226px; }
+    #leak-recall { left: 0; top: 96px; font-size: 96px; color: var(--amber); }
+    #leak-solve { right: 0; top: 58px; width: 330px; font-size: 64px; line-height: 1; color: var(--cyan); white-space: normal; text-align: right; }
+  </style>
+  <div id="root" data-composition-id="leak" data-width="1080" data-height="1920">
+    <div id="leak-cam">
+      <svg class="ink sketch" id="leak-pool" style="left:0;top:0;width:1080px;height:1000px" viewBox="0 0 1080 1000">
+        <defs><clipPath id="leak-clip"><path d="M530 330 L530 710 A210 56 0 0 0 950 710 L950 330 Z" /></clipPath></defs>
+        <rect id="leak-fill" x="520" y="330" width="440" height="440" fill="#ffb454" opacity="0.35" clip-path="url(#leak-clip)" />
+        <path id="leak-body" class="ln thick" d="M530 330 L530 710 A210 56 0 0 0 950 710 L950 330" />
+        <ellipse id="leak-top" class="ln thick" cx="740" cy="330" rx="210" ry="56" />
+        <path id="leak-ring1" class="ln cyan thin" d="M530 457 A210 56 0 0 0 950 457" />
+        <path id="leak-ring2" class="ln cyan thin" d="M530 584 A210 56 0 0 0 950 584" />
+      </svg>
+      <div id="leak-pool-label" class="lbl" data-bind="l03.pool"></div>
+      <div class="leak-card" id="leak-c0" style="top:300px"><svg width="340" height="150" viewBox="0 0 340 150"><circle cx="40" cy="38" r="10" fill="#7a5cff" /><circle cx="40" cy="104" r="10" fill="#7a5cff" /><circle cx="70" cy="70" r="10" fill="#7a5cff" /><path d="M40 48 L40 94 M40 60 C40 70 60 70 70 70" stroke="#7a5cff" stroke-width="6" fill="none" /><rect x="92" y="78" width="200" height="12" fill="#7be3b0" /><rect x="92" y="104" width="150" height="12" fill="#ff6b6b" /></svg><div class="nm" data-bind="l03.card"></div></div>
+      <div class="leak-card" id="leak-c1" style="top:480px"><svg width="340" height="150" viewBox="0 0 340 150"><circle cx="40" cy="38" r="10" fill="#7a5cff" /><circle cx="40" cy="104" r="10" fill="#7a5cff" /><circle cx="70" cy="70" r="10" fill="#7a5cff" /><path d="M40 48 L40 94 M40 60 C40 70 60 70 70 70" stroke="#7a5cff" stroke-width="6" fill="none" /><rect x="92" y="78" width="170" height="12" fill="#7be3b0" /><rect x="92" y="104" width="210" height="12" fill="#7be3b0" /></svg><div class="nm" data-bind="l03.card"></div></div>
+      <div class="leak-card" id="leak-c2" style="top:660px"><svg width="340" height="150" viewBox="0 0 340 150"><circle cx="40" cy="38" r="10" fill="#7a5cff" /><circle cx="40" cy="104" r="10" fill="#7a5cff" /><circle cx="70" cy="70" r="10" fill="#7a5cff" /><path d="M40 48 L40 94 M40 60 C40 70 60 70 70 70" stroke="#7a5cff" stroke-width="6" fill="none" /><rect x="92" y="78" width="120" height="12" fill="#ff6b6b" /><rect x="92" y="104" width="190" height="12" fill="#7be3b0" /></svg><div class="nm" data-bind="l03.card"></div></div>
+      <div class="leak-card" id="leak-c3" style="top:840px"><svg width="340" height="150" viewBox="0 0 340 150"><circle cx="40" cy="38" r="10" fill="#7a5cff" /><circle cx="40" cy="104" r="10" fill="#7a5cff" /><circle cx="70" cy="70" r="10" fill="#7a5cff" /><path d="M40 48 L40 94 M40 60 C40 70 60 70 70 70" stroke="#7a5cff" stroke-width="6" fill="none" /><rect x="92" y="78" width="230" height="12" fill="#7be3b0" /><rect x="92" y="104" width="90" height="12" fill="#ff6b6b" /></svg><div class="nm" data-bind="l03.card"></div></div>
+      <div id="leak-scrim"></div>
+      <div id="leak-stage"></div>
+    </div>
+    <div id="leak-hud" style="position:absolute;left:0;top:0;width:1080px;height:1920px">
+      <div id="leak-seesaw">
+        <svg class="ink sketch" style="left:0;top:0;width:840px;height:330px" viewBox="0 0 840 330"><path id="leak-pivot" class="ln cyan thick" d="M420 232 L372 318 L468 318 Z" /></svg>
+        <div id="leak-beam">
+          <svg class="ink sketch" style="left:0;top:0;width:840px;height:330px" viewBox="0 0 840 330"><path id="leak-bar" class="ln heavy" d="M20 222 L820 222" /></svg>
+          <div id="leak-recall" class="hd" data-bind="l03.recall"></div>
+          <div id="leak-solve" class="hd" data-bind="l03.solving"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'leak', c = (w, n) => KIT.cue('l03', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#leak-cam'); KIT.bind('#leak-hud');
+      const tl = gsap.timeline({ paused: true });
+
+      // the tank
+      KIT.draw(tl, '#leak-body', 0.05, 0.5); KIT.draw(tl, '#leak-top', 0.15, 0.45);
+      KIT.draw(tl, '#leak-ring1, #leak-ring2', 0.35, 0.4);
+      tl.fromTo('#leak-fill', { y: 380 }, { y: 300, duration: 0.6, ease: 'power2.out' }, 0.3);
+      KIT.rise(tl, '#leak-pool-label', c('coding'), { y: 30 });
+
+      // merged fixes arrive, then pour into the tank
+      ['#leak-c0', '#leak-c1', '#leak-c2', '#leak-c3'].forEach((sel, k) => {
+        tl.fromTo(sel, { x: -460, rotation: -14, opacity: 0 }, { x: 0, rotation: [-3, 2, -2, 3][k], opacity: 1, duration: 0.42, ease: 'back.out(1.6)' }, c('public') - 0.2 + k * 0.17);
+        const t = c('reuse') + k * 0.16, dy = -15 - 180 * k;
+        tl.to(sel, { motionPath: { path: [{ x: 180, y: dy - 230 }, { x: 420, y: dy - 170 }, { x: 500, y: dy }], curviness: 1.2 }, scale: 0.18, rotation: 160, duration: 0.55, ease: 'power2.in' }, t);
+        tl.to(sel, { opacity: 0, duration: 0.08 }, t + 0.5);
+        tl.to('#leak-fill', { y: 300 - (k + 1) * 75, duration: 0.3, ease: 'back.out(2)' }, t + 0.52);
+        tl.fromTo('#leak-top', { scaleY: 1, svgOrigin: '740 330' }, { scaleY: 1.18, duration: 0.07, yoyo: true, repeat: 1, ease: 'power2.out', svgOrigin: '740 330' }, t + 0.5);
+      });
+
+      // the paper says it: dive into the receipt and read along with the voice
+      const tR = c('GitHub') - 0.3;
+      tl.to('#leak-scrim', { opacity: 0.86, duration: 0.45, ease: 'power2.out' }, tR);
+      // line 2 of the crop reads "data, so a high score can reflect recall rather than problem-solving"; pin the
+      // marker to the words the voice says (character position / line length).
+      const L2 = 'data, so a high score can reflect recall rather than problem-solving', at = (w) => L2.indexOf(w) / L2.length;
+      KIT.read(tl, { cam: '#leak-cam', parent: '#leak-stage', hud: '#leak-hud', tagY: 300, id: 'recall', t: tR, label: KIT.data('l03').receipt,
+        x: 40, y: 860, width: 1000, zoom: 3.4, fx: 640, fy: 860,
+        marks: [[c('fixes') - 0.22, c('so') - 0.42],
+                [c('so') - 0.36, c('solving') + 0.42, [[c('so'), at('so')], [c('high'), at('high')], [c('reflect'), at('reflect')], [c('recall'), at('recall')], [c('not'), at('rather') + 0.02], [c('problem'), at('problem')]]]],
+        circles: [{ word: 'recall', t: c('recall') + 0.05 }] });
+
+      // the seesaw: balanced when the score shows up, tips toward recall when the voice says it
+      KIT.draw(tl, '#leak-pivot', c('high') - 0.1, 0.3);
+      KIT.draw(tl, '#leak-bar', c('high'), 0.35, { ease: 'power3.out' });
+      KIT.pop(tl, '#leak-solve', c('score'), { from: 0.4 });
+      tl.fromTo('#leak-recall', { scale: 2.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.18, ease: 'power4.in' }, c('recall') - 0.18);
+      tl.fromTo('#leak-beam', { rotation: 0 }, { rotation: -11, duration: 0.7, ease: 'elastic.out(1.1, 0.4)' }, c('recall'));
+      KIT.shake(tl, '#leak-seesaw', c('recall'), { amp: 10, dur: 0.25 });
+      tl.to('#leak-beam', { rotation: -13, duration: 0.6, ease: 'sine.inOut' }, c('problem'));
+      tl.fromTo('#leak-solve', { opacity: 1 }, { opacity: 0.55, duration: 0.4 }, c('problem'));
+
+      window.__timelines["leak"] = tl;
+    })();
+  </script>
+</template>

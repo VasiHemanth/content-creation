@@ -1,0 +1,54 @@
+{
+ "triggers": {
+  "img": "evidence/triggers.png",
+  "w": 3469,
+  "h": 83,
+  "page": 1,
+  "rects": [
+   {
+    "x": 0.2430237415535099,
+    "y": 0.1308310061213758,
+    "w": 0.04836585076448061,
+    "h": 0.7433412807408958
+   },
+   {
+    "x": 0.2971230410997492,
+    "y": 0.12500063817512547,
+    "w": 0.5414144707468377,
+    "h": 0.7500038290507528
+   }
+  ],
+  "text": "problem is resolved. Opera decides when to review through periodic and event-driven triggers, diagnoses",
+  "circles": {
+   "triggers": {
+    "x": 0.7770299416873018,
+    "y": 0.12500063817512547,
+    "w": 0.06150757015928519,
+    "h": 0.7500038290507528
+   }
+  }
+ },
+ "results": {
+  "img": "evidence/results.png",
+  "w": 3469,
+  "h": 83,
+  "page": 1,
+  "rects": [
+   {
+    "x": 0.0699941958283118,
+    "y": 0.12499696866428499,
+    "w": 0.8183319959430657,
+    "h": 0.75000733902331
+   }
+  ],
+  "text": "achieves the highest mean resolve rate among competitive critic baselines on all three benchmarks, and",
+  "circles": {
+   "highest": {
+    "x": 0.17681780682142745,
+    "y": 0.12499696866428499,
+    "w": 0.05904811799744551,
+    "h": 0.75000733902331
+   }
+  }
+ }
+}

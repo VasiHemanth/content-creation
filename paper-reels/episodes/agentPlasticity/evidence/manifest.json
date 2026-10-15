@@ -1,0 +1,60 @@
+{
+ "gap": {
+  "img": "evidence/gap.png",
+  "w": 3364,
+  "h": 167,
+  "page": 1,
+  "rects": [
+   {
+    "x": 0.7538411200409908,
+    "y": 0.06041229534559601,
+    "w": 0.21553706993262056,
+    "h": 0.3741544524936313
+   },
+   {
+    "x": 0.06347147324822869,
+    "y": 0.5604352687118068,
+    "w": 0.31770889860078055,
+    "h": 0.3787363627545577
+   }
+  ],
+  "text": "experience, yet existing evaluations largely measure what an agent can do at a fixed point in time\r\nrather than how effectively it learns. Evaluating self-improvement requires answering three questions:",
+  "circles": {
+   "learns": {
+    "x": 0.3295037021857852,
+    "y": 0.5650171789727332,
+    "w": 0.05167666966322406,
+    "h": 0.2933239397791494
+   }
+  }
+ },
+ "rank": {
+  "img": "evidence/rank.png",
+  "w": 3481,
+  "h": 401,
+  "page": 7,
+  "rects": [
+   {
+    "x": 0.028439985470464113,
+    "y": 0.02705526456167101,
+    "w": 0.2418173715485624,
+    "h": 0.15592040612117058
+   },
+   {
+    "x": 0.6152218587350584,
+    "y": 0.2351785180933742,
+    "w": 0.26150140551499457,
+    "h": 0.15592040612117058
+   }
+  ],
+  "text": "depend on provider pricing and saturation-fit assumptions, and extrapolated saturation adds uncertainty.\r\nWe therefore interpret plasticity as a protocol-dependent measure, not a universal model ranking.",
+  "circles": {
+   "ranking": {
+    "x": 0.8114029805913353,
+    "y": 0.2351785180933742,
+    "w": 0.06532028365871773,
+    "h": 0.15592040612117058
+   }
+  }
+ }
+}

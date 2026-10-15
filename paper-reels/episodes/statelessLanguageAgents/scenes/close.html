@@ -1,0 +1,122 @@
+<template id="close-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #cl-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 960px; }
+    #cl-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #cl-coins { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .cl-coin { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: var(--amber); border: 4px solid #ffe2b0; box-sizing: border-box; opacity: 0; }
+    #cl-mtag { left: 748px; top: 1030px; font-size: 30px; }
+    .cl-q { position: absolute; left: 0; width: 1080px; text-align: center; font: 400 80px/1 "Marker", sans-serif; color: var(--white); white-space: nowrap; text-shadow: 7px 7px 0 var(--shadow); }
+    #cl-q1 { top: 186px; } #cl-q2 { top: 292px; color: var(--amber); }
+    #cl-ans { left: 60px; top: 396px; font-size: 28px; }
+    #cl-scope { left: 60px; top: 466px; font-size: 28px; }
+    #cl-other { left: 60px; top: 528px; font-size: 28px; }
+    #cl-advice { left: 60px; top: 590px; font-size: 28px; }
+    #cl-end { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: rgba(6, 26, 48, .94); opacity: 0; }
+    #cl-t1 { left: 0; top: 640px; width: 1080px; text-align: center; font: 400 64px/1.1 "Marker", sans-serif; color: var(--white); }
+    #cl-t2 { left: 90px; top: 720px; width: 900px; text-align: center; font: 400 52px/1.15 "Marker", sans-serif; color: var(--amber); white-space: normal; }
+    #cl-handle { left: 0; top: 930px; width: 1080px; text-align: center; }
+    #cl-handle span { display: inline-block; padding: 12px 32px; font: 700 56px "Mono", monospace; color: var(--amber); background: var(--deep); border: 4px solid var(--amber); box-shadow: 10px 10px 0 var(--shadow); }
+    #cl-credit { left: 0; top: 1080px; width: 1080px; text-align: center; font-size: 30px; }
+    #cl-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+    <div id="cl-cam"><div id="cl-shk" class="fill">
+      <svg id="cl-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="cl-coins"></div>
+      <div id="cl-mtag" class="tag cyan" data-bind="l14.meter"></div>
+      <div id="cl-q1" class="cl-q" data-bind="l14.q1"></div>
+      <div id="cl-q2" class="cl-q" data-bind="l14.q2"></div>
+      <div id="cl-ans" class="tag" data-bind="l14.ans"></div>
+      <div id="cl-scope" class="tag cyan" data-bind="l14.scope"></div>
+      <div id="cl-other" class="tag cyan" data-bind="l14.other"></div>
+      <div id="cl-advice" class="tag cyan" data-bind="l14.advice"></div>
+    </div></div>
+    <div id="cl-end">
+      <div id="cl-t1" class="abs" data-bind="l14.title1"></div>
+      <div id="cl-t2" class="abs" data-bind="l14.title2"></div>
+      <div id="cl-handle" class="abs"><span data-bind="l14.handle"></span></div>
+      <div id="cl-credit" class="lbl" data-bind="l14.credit"></div>
+    </div>
+    <div id="cl-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l14', w, n), cE = (w, n) => KIT.cueEnd('l14', w, n), D = KIT.sceneDur('close');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('cl-svg'), E = (tag, at, p) => KIT.svgEl(tag, at, p || svg);
+      const pulse = (t, o = 0.18) => tl.fromTo('#cl-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // ---- the hook's tower and token meter ----
+      const TX = 290, TW = 320, BASE = 1400, FH = 92;
+      E('path', { d: `M200 ${BASE} H900`, class: 'ln dim thick' });
+      const floor = (k, id) => {
+        const y = BASE - (k + 1) * FH, g = E('g', { id });
+        E('rect', { x: TX, y, width: TW, height: FH - 6, fill: '#123a62', stroke: '#a8dcf2', 'stroke-width': 4 }, g);
+        for (let w = 0; w < 4; w++) E('rect', { x: TX + 26 + w * 74, y: y + 22, width: 44, height: 40, fill: k % 2 ? '#3d78a6' : '#2a5f8c' }, g);
+        return g;
+      };
+      for (let k = 0; k < 6; k++) floor(k, `cl-f${k}`);
+      const nf = floor(6, 'cl-f6');
+      const MX = 810, MY = 890, R = 104;
+      E('path', { d: `M${MX - 56} 700 L${MX + 56} 700 L${MX + 24} 770 L${MX - 24} 770 Z`, fill: '#0a2340', stroke: '#a8dcf2', 'stroke-width': 4 });
+      E('circle', { cx: MX, cy: MY, r: R, fill: '#071d35', stroke: '#f2f8ff', 'stroke-width': 7 });
+      for (let k = 0; k <= 10; k++) { const q = (-120 + k * 24) * Math.PI / 180; E('path', { d: `M${MX + Math.sin(q) * (R - 12)} ${MY - Math.cos(q) * (R - 12)} L${MX + Math.sin(q) * (R - 30)} ${MY - Math.cos(q) * (R - 30)}`, class: 'ln cyan' }); }
+      const needle = E('g', { id: 'cl-needle' });
+      E('path', { d: `M${MX} ${MY} L${MX} ${MY - R + 22}`, stroke: '#ffb454', 'stroke-width': 9, 'stroke-linecap': 'round' }, needle);
+      E('circle', { cx: MX, cy: MY, r: 14, fill: '#ffb454' });
+      tl.fromTo(needle, { rotation: -60, svgOrigin: `${MX} ${MY}` }, { rotation: 240, svgOrigin: `${MX} ${MY}`, duration: D, ease: 'none' }, 0);
+      tl.fromTo('#cl-cam', { scale: 1.06 }, { scale: 1, duration: 1.2, ease: 'power3.out' }, 0);
+      pulse(0.05, 0.12);
+
+      // "So, does the work still improve?": the hook question comes back
+      KIT.slam(tl, '#cl-q1', c('does') - 0.08, { from: 1.6, shake: false });
+      KIT.slam(tl, '#cl-q2', c('still') - 0.08, { from: 1.6, shake: false });
+      KIT.shake(tl, '#cl-shk', c('still') + 0.15, { amp: 9, dur: 0.22 });
+      pulse(c('does'), 0.12); pulse(c('improve'), 0.12);
+      // "Here": the budget slider, knob at a quarter of the budget
+      const SX0 = 130, SX1 = 680, SY = 690, qx = SX0 + (SX1 - SX0) * 0.25;
+      const track = E('rect', { id: 'cl-track', x: SX0, y: SY - 9, width: SX1 - SX0, height: 18, rx: 9, fill: '#0a2340', stroke: '#3d78a6', 'stroke-width': 3 });
+      const sfill = E('rect', { id: 'cl-sfill', x: SX0, y: SY - 9, width: SX1 - SX0, height: 18, rx: 9, fill: '#ffb454' });
+      const qmark = E('path', { id: 'cl-qmark', d: `M${qx} ${SY - 26} V${SY + 26}`, class: 'ln white thick' });
+      const knob = E('circle', { id: 'cl-knob', cx: SX0, cy: SY, r: 26, fill: '#f2f8ff', stroke: '#071d35', 'stroke-width': 5 });
+      tl.fromTo([track, qmark, knob], { opacity: 0 }, { opacity: 1, duration: 0.3 }, c('Here') - 0.1);
+      tl.fromTo(sfill, { scaleX: 0, svgOrigin: `${SX0} ${SY}` }, { scaleX: 0.25, svgOrigin: `${SX0} ${SY}`, duration: 0.4, ease: 'power2.out' }, c('Here'));
+      tl.fromTo(knob, { x: 0 }, { x: qx - SX0, duration: 0.4, ease: 'power2.out' }, c('Here'));
+      pulse(c('Here'), 0.12);
+      // "yes: the final results beat the results at a quarter of the budget": knob runs to the end, a floor lands
+      KIT.slam(tl, '#cl-ans', c('yes') - 0.08, { from: 1.5, shake: false });
+      tl.to(sfill, { scaleX: 1, svgOrigin: `${SX0} ${SY}`, duration: 0.8, ease: 'power2.inOut' }, c('yes'));
+      tl.to(knob, { x: SX1 - SX0, duration: 0.8, ease: 'power2.inOut' }, c('yes'));
+      tl.fromTo(nf, { opacity: 0, y: -260 }, { opacity: 1, y: 0, duration: 0.28, ease: 'power3.in' }, c('yes') + 0.45);
+      KIT.shake(tl, '#cl-shk', c('yes') + 0.73, { amp: 10, dur: 0.22 });
+      const coins = document.getElementById('cl-coins');
+      for (let i = 0; i < 8; i++) {
+        const el = document.createElement('div'); el.className = 'cl-coin'; el.style.left = `${MX - 15 + ((i % 3) - 1) * 14}px`; el.style.top = '560px'; coins.appendChild(el);
+        const t = c('yes') + i * 0.14;
+        tl.fromTo(el, { y: 0, opacity: 0 }, { y: 190, opacity: 1, duration: 0.3, ease: 'power2.in' }, t);
+        tl.to(el, { opacity: 0, duration: 0.06 }, t + 0.3);
+      }
+      pulse(c('yes'));
+      KIT.rise(tl, '#cl-scope', c('final') - 0.1, { x: -40, y: 0 });
+      KIT.rise(tl, '#cl-other', c('quarter') - 0.1, { x: -40, y: 0 });
+      pulse(c('quarter'), 0.1);
+      // "Judge agents over the whole run": the paper's advice
+      KIT.rise(tl, '#cl-advice', c('Judge') - 0.1, { x: -40, y: 0 });
+      tl.to('#cl-cam', { scale: 1.04, y: 30, duration: 0.5, ease: 'power3.out' }, c('Judge'));
+      tl.to(sfill, { opacity: 0.5, duration: 0.15, yoyo: true, repeat: 3 }, c('whole'));
+      pulse(c('whole'), 0.12);
+
+      // ---- end card (the last 1.6 s) ----
+      const tE = cE('run') + 0.15;
+      tl.fromTo('#cl-end', { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out' }, tE);
+      tl.to('#cl-shk', { opacity: 0, duration: 0.3 }, tE);
+      KIT.rise(tl, ['#cl-t1', '#cl-t2'], tE + 0.1, { y: 30, stagger: 0.08 });
+      KIT.pop(tl, '#cl-handle', tE + 0.3, { from: 0.5 });
+      KIT.fade(tl, '#cl-credit', tE + 0.5, { to: 0.95 });
+      tl.to('#cl-cam', { scale: 0.97, y: 0, duration: D - tE, ease: 'sine.out' }, tE);
+      window.__timelines["close"] = tl;
+    })();
+  </script>
+</template>

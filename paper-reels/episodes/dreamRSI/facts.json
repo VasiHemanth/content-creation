@@ -1,0 +1,27 @@
+{
+ "note": "Dream-RSI (arXiv 2609.14858v1, 2026-09-14). Headline numbers on screen: 317 and 550 (Lasso, Gemini-3.1 Pro, Dream-RSI vs Recursive Fixed Exploration) and 2.43 (KernelBench VGG16, fewer generations at comparable performance vs Recursive Fixed Exploration). All results are the authors' own, run with Gemini models; the cost unit is discovery-agent calls (one call = one generation-evaluation attempt = one node of the discovery tree).",
+ "paper": "llm-wiki/raw/sources/arxiv-2609-14858.md, PDF at llm-wiki/raw/assets/2609.14858/paper-v1.pdf",
+ "numbers": {
+  "317": "Lasso, Gemini-3.1 Pro: Dream-RSI used 317 discovery-agent calls (sec 4.1, Figure 3a)",
+  "550": "Lasso, Gemini-3.1 Pro: Recursive Fixed Exploration used 550 calls (sec 4.1, Figure 3a; 10 workspaces x 11 steps per round, sec 4)",
+  "2.43": "KernelBench VGG16: comparable final performance with 2.43x fewer generations than Recursive Fixed Exploration (sec 4.3, Figure 4); 'up to' because LayerNorm is 1.79x",
+  "3587.1": "Lasso, Gemini-3.1 Pro: Recursive Fixed Exploration average runtime over six held-out datasets, ms (sec 4.1); visible in the receipt crop",
+  "2931.0": "Lasso, Gemini-3.1 Pro: Dream-RSI average runtime over six held-out datasets, ms (sec 4.1); visible in the receipt crop. Basis for 'its code also ran faster'.",
+  "2609.14858": "arXiv id in the closing credit"
+ },
+ "evidence_incidental": {},
+ "claims": {
+  "l01": "Abstract and sec 4: competitive or improved discovery quality while reducing discovery cost in several settings; Lasso (sec 4.1): lower runtime with fewer calls. 'Practices in its dreams' is the paper's own metaphor (dreaming in a replay simulator).",
+  "l02": "Sec 1: discovery loops such as AlphaEvolve (Novikov et al. 2025); discovery often spans thousands of proposal-evaluation cycles.",
+  "l03": "Sec 2-3: the exploration policy decides which directions to pursue, which branches to explore in parallel, and when to stop.",
+  "l04": "Sec 1: existing approaches rely on manually designed exploration strategies that remain largely fixed; assessing a policy needs a long online rollout.",
+  "l05": "Sec 2-3: each node of the discovery tree records an attempt and its score; history serves as a replay simulator (the paper uses 'replay simulator' and 'worlds' for the same thing).",
+  "l06": "Sec 1 (p.2): 'Because all execution outcomes are already saved in the tree, evaluating a new strategy requires only reading past records without rerunning the underlying discovery agent or evaluator.' Receipt crop.",
+  "l07": "Sec 3: a fixed LLM-based policy-development agent revises the exploration-policy code over M versions, each scored on the replay worlds; the paper calls this dreaming.",
+  "l08": "Sec 3: the best evaluated version is redeployed online; its new tree is appended to the history (the simulator pool).",
+  "l09": "Sec 4.1: Gemini-3.1 Pro, 317 vs 550 calls, average runtime 2931.0 ms vs 3587.1 ms on six held-out datasets. Receipt crop.",
+  "l10": "Sec 4.3, Figure 4: VGG16 2.43x and LayerNorm 1.79x fewer generations at comparable performance.",
+  "l11": "Sec 3: replay returns only recorded children; no outcomes beyond the recorded tree are generated. Sec 4: discovery cost is the cumulative number of discovery-agent calls (the policy-development agent is a separate agent).",
+  "l12": "Summary line; adds no new claim."
+ }
+}

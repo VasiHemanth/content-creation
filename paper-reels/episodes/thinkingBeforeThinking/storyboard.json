@@ -1,0 +1,600 @@
+{
+ "item": "2609.38147",
+ "name": "Meta-Reasoning",
+ "renderer": "hyperframes",
+ "authors": [
+  "Paras Dahal",
+  "Anton Bakhtin",
+  "Taco Cohen",
+  "Zhengxing Chen",
+  "Carole-Jean Wu",
+  "Rob Fergus",
+  "Scott Yih",
+  "Gabriel Synnaeve",
+  "Ruslan Salakhutdinov",
+  "Sanjeev Arora",
+  "Jason Weston",
+  "Anirudh Goyal"
+ ],
+ "voice": {
+  "preset": "aiden",
+  "speed": 1.25
+ },
+ "ste": {
+  "names": [
+   "Meta-Reasoning",
+   "meta-reasoning",
+   "Meta-reasoning",
+   "ProgramBench"
+  ],
+  "terms": [
+   {
+    "term": "controller",
+    "avoid": [
+     "manager",
+     "boss",
+     "orchestrator",
+     "planner",
+     "supervisor",
+     "foreman"
+    ]
+   },
+   {
+    "term": "workers",
+    "avoid": [
+     "sub-agents",
+     "subagents",
+     "helpers",
+     "crew",
+     "crews"
+    ]
+   },
+   {
+    "term": "control",
+    "avoid": [
+     "orchestration",
+     "management",
+     "planning"
+    ]
+   },
+   {
+    "term": "compact state",
+    "avoid": [
+     "summary",
+     "short memory",
+     "notes",
+     "index card"
+    ]
+   },
+   {
+    "term": "persistent memory",
+    "avoid": [
+     "storage",
+     "archive",
+     "database",
+     "filing cabinet",
+     "shed"
+    ]
+   },
+   {
+    "term": "artifacts",
+    "avoid": [
+     "outputs files",
+     "results files",
+     "drafts",
+     "wagons"
+    ]
+   },
+   {
+    "term": "budget",
+    "avoid": [
+     "allowance",
+     "quota",
+     "compute"
+    ]
+   },
+   {
+    "term": "direct control",
+    "avoid": [
+     "baseline agent",
+     "single loop",
+     "plain agent"
+    ]
+   },
+   {
+    "term": "comparisons",
+    "avoid": [
+     "matched tests",
+     "matchups",
+     "head-to-heads"
+    ]
+   }
+  ],
+  "allow": [
+   {
+    "line": "l10",
+    "rule": "ing",
+    "why": "quotes the paper (p. 11) word for word, and the receipt shows the same words"
+   }
+  ]
+ },
+ "scenes": {
+  "hook": {
+   "transition": "whip"
+  },
+  "fork": {
+   "transition": "zoom"
+  },
+  "split": {
+   "transition": "cut"
+  },
+  "cycle": {
+   "transition": "whip"
+  },
+  "tank": {
+   "transition": "punch"
+  },
+  "result": {
+   "transition": "blur"
+  },
+  "limits": {
+   "transition": "cut"
+  },
+  "close": {}
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "Same model, same budget. Only the control changed. At the main budgets, every score rose.",
+   "text": "Same model, same budget. Only the control changed. At the main budgets, every score rose.",
+   "data": {
+    "b1": "SAME MODEL.",
+    "b2": "SAME BUDGET.",
+    "b3": "ONLY THE CONTROL",
+    "b4": "CHANGED.",
+    "tiles": "main budgets"
+   },
+   "sfx": [
+    {
+     "t": 0.02,
+     "kind": "whoosh"
+    },
+    {
+     "cue": "control",
+     "kind": "impact"
+    },
+    {
+     "cue": "score",
+     "kind": "tick"
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "scene": "fork",
+   "say": "Long runs force one decision again and again: keep, restart, or stop?",
+   "text": "Long runs force one decision again and again: keep, restart, or stop?",
+   "data": {
+    "k1": "keep",
+    "k2": "restart",
+    "k3": "stop"
+   },
+   "sfx": [
+    {
+     "cue": "decision",
+     "kind": "click"
+    },
+    {
+     "cue": "keep",
+     "kind": "pop"
+    },
+    {
+     "cue": "restart",
+     "kind": "pop"
+    },
+    {
+     "cue": "stop",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "fork",
+   "say": "As runs grow longer, that decision becomes work in its own right.",
+   "text": "As runs grow longer, that decision becomes work in its own right.",
+   "data": {
+    "receipt": "FROM THE PAPER · Conclusion, p. 16",
+    "box": "controller"
+   },
+   "sfx": [
+    {
+     "cue": "longer",
+     "kind": "click"
+    },
+    {
+     "cue": "work",
+     "kind": "tick"
+    },
+    {
+     "cue": "right",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "split",
+   "say": "Many agents decide in one step, over their whole history.",
+   "text": "Many agents decide in one step, over their whole history.",
+   "data": {
+    "step": "one step",
+    "hist": "whole history",
+    "who": "drives and decides"
+   },
+   "sfx": [
+    {
+     "cue": "step",
+     "kind": "click"
+    },
+    {
+     "cue": "history",
+     "kind": "whoosh"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "split",
+   "say": "Meta-reasoning splits the job. Workers do the task. A controller decides the next work.",
+   "text": "Meta-reasoning splits the job. Workers do the task. A controller decides the next work.",
+   "data": {
+    "ctl": "controller",
+    "wrk": "workers",
+    "name": "Meta-Reasoning"
+   },
+   "sfx": [
+    {
+     "cue": "splits",
+     "kind": "impact"
+    },
+    {
+     "cue": "Workers",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "decides",
+     "kind": "click"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "cycle",
+   "say": "Each control cycle has four stages: assess, propose, evaluate, dispatch.",
+   "text": "Each control cycle has four stages: assess, propose, evaluate, dispatch.",
+   "data": {
+    "title": "control cycle",
+    "s1": "assess",
+    "s2": "propose",
+    "s3": "evaluate",
+    "s4": "dispatch"
+   },
+   "sfx": [
+    {
+     "cue": "assess",
+     "kind": "click"
+    },
+    {
+     "cue": "propose",
+     "kind": "click"
+    },
+    {
+     "cue": "evaluate",
+     "kind": "click"
+    },
+    {
+     "cue": "dispatch",
+     "kind": "click"
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "cycle",
+   "say": "The controller keeps a compact state. All artifacts stay in persistent memory.",
+   "text": "The controller keeps a compact state. All artifacts stay in persistent memory.",
+   "data": {
+    "state": "compact state",
+    "mem": "persistent memory",
+    "art": "artifacts"
+   },
+   "sfx": [
+    {
+     "cue": "compact",
+     "kind": "type"
+    },
+    {
+     "cue": "artifacts",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "memory",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "scene": "tank",
+   "say": "The comparison is direct control: same workers, model and call budget.",
+   "text": "The comparison is direct control: same workers, model and call budget.",
+   "data": {
+    "a": "direct control",
+    "b": "Meta-Reasoning Agent",
+    "e1": "= workers",
+    "e2": "= model",
+    "e3": "= call budget"
+   },
+   "sfx": [
+    {
+     "cue": "workers",
+     "kind": "stamp"
+    },
+    {
+     "cue": "model",
+     "kind": "stamp"
+    },
+    {
+     "cue": "budget",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l09",
+   "scene": "tank",
+   "say": "With one model, direct control used only about eighteen percent of its budget. Meta-reasoning used almost all.",
+   "text": "With one model, direct control used only about 18% of its budget. Meta-reasoning used almost all.",
+   "data": {
+    "bench": "ProgramBench",
+    "model": "GPT-5.5",
+    "used": "budget used",
+    "dc": "18%",
+    "mr": "almost all",
+    "_dcUsed": 0.18,
+    "_mrUsed": 0.9
+   },
+   "sfx": [
+    {
+     "cue": "eighteen",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "eighteen",
+     "kind": "impact"
+    },
+    {
+     "cue": "almost",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "tank",
+   "say": "With another model, direct control doubled its calls. Its score rose only a little. Continuing to work is not enough.",
+   "text": "With another model, direct control doubled its calls. Its score rose only a little. Continuing to work is not enough.",
+   "data": {
+    "model": "Opus 4.8",
+    "calls": "calls used",
+    "budget": "budget",
+    "score": "score",
+    "receipt": "FROM THE PAPER · Sec. 6.2, p. 11",
+    "_dcCallsLow": 376,
+    "_dcCallsHigh": 768,
+    "_budgetLow": 400,
+    "_budgetHigh": 1200,
+    "_scoreLow": 62.7,
+    "_scoreHigh": 65.3
+   },
+   "sfx": [
+    {
+     "cue": "doubled",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "calls",
+     "kind": "tick"
+    },
+    {
+     "cue": "little",
+     "kind": "tick"
+    },
+    {
+     "cue": "enough",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "result",
+   "say": "On ProgramBench, direct control passed sixty three point seven percent of hidden tests on average. Meta-reasoning passed seventy one point five percent.",
+   "text": "On ProgramBench, direct control passed 63.7% of hidden tests on average. Meta-reasoning passed 71.5%.",
+   "data": {
+    "bench": "ProgramBench",
+    "model": "GPT-5.5",
+    "metric": "mean test-pass rate",
+    "a": "direct control",
+    "b": "Meta-Reasoning",
+    "va": "63.7%",
+    "vb": "71.5%",
+    "tests": "hidden tests"
+   },
+   "sfx": [
+    {
+     "cue": "sixty",
+     "kind": "impact"
+    },
+    {
+     "cue": "tests",
+     "kind": "pop"
+    },
+    {
+     "cue": "seventy",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "seventy",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "result",
+   "say": "With more budget, the meta-reasoning score still rose. Direct control stayed flat.",
+   "text": "With more budget, the meta-reasoning score still rose. Direct control stayed flat.",
+   "data": {
+    "axis": "budget",
+    "ylab": "score",
+    "sketch": "sketch, after Fig. 3",
+    "a": "direct control",
+    "b": "Meta-Reasoning",
+    "_mr400": 64.1,
+    "_mr1200": 71.5,
+    "_dcLeft": 64.4,
+    "_dcFlat": 64,
+    "_dcRight": 63.7
+   },
+   "sfx": [
+    {
+     "cue": "budget",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "rose",
+     "kind": "chime"
+    },
+    {
+     "cue": "flat",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "limits",
+   "say": "At the main budgets, meta-reasoning scored higher in all twelve matched comparisons. Some gains are small.",
+   "text": "At the main budgets, meta-reasoning scored higher in all 12 matched comparisons. Some gains are small.",
+   "data": {
+    "main": "main budgets",
+    "n": "12",
+    "small": "small gains",
+    "r1": "IMO ProofBench",
+    "r2": "ARC-AGI-2",
+    "r3": "LongCoT-mini",
+    "r4": "ProgramBench",
+    "c1": "Gemini 3.1",
+    "c2": "GPT-5.5",
+    "c3": "Opus 4.8",
+    "_gains": [
+     [
+      8.6,
+      6.7,
+      9.2,
+      1.8
+     ],
+     [
+      1.3,
+      3.4,
+      0.4,
+      7.8
+     ],
+     [
+      2.2,
+      2.5,
+      1.2,
+      1.9
+     ]
+    ]
+   },
+   "sfx": [
+    {
+     "cue": "twelve",
+     "kind": "impact"
+    },
+    {
+     "cue": "small",
+     "kind": "tick"
+    }
+   ]
+  },
+  {
+   "id": "l14",
+   "scene": "limits",
+   "say": "Its overhead can hurt at small budgets. The paper used only three frontier models.",
+   "text": "Its overhead can hurt at small budgets. The paper used only three frontier models.",
+   "data": {
+    "receipt": "FROM THE PAPER · Abstract, p. 1",
+    "tested": "tested with",
+    "m1": "Gemini 3.1 Pro",
+    "m2": "GPT-5.5",
+    "m3": "Opus 4.8",
+    "lo": "small budget",
+    "sketch": "sketch, after Fig. 3"
+   },
+   "sfx": [
+    {
+     "cue": "overhead",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "small",
+     "kind": "tick"
+    },
+    {
+     "cue": "three",
+     "kind": "pop"
+    }
+   ],
+   "voice": {
+    "preset": "aiden",
+    "seed": 23
+   }
+  },
+  {
+   "id": "l15",
+   "scene": "close",
+   "say": "The model does the work. The control decides which work is worth it.",
+   "text": "The model does the work. The control decides which work is worth it.",
+   "data": {
+    "g1": "SAME MODEL.",
+    "g2": "SAME BUDGET.",
+    "g3": "ONLY THE CONTROL",
+    "g4": "CHANGED.",
+    "ctl": "controller",
+    "handle": "hemanth_with_ai",
+    "credit": "arXiv 2609.38147 · unofficial explainer"
+   },
+   "sfx": [
+    {
+     "cue": "work",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "decides",
+     "kind": "click"
+    },
+    {
+     "cue": "worth",
+     "kind": "chime"
+    }
+   ]
+  }
+ ]
+}

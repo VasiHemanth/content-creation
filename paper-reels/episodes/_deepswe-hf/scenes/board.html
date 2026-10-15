@@ -1,0 +1,103 @@
+<template id="board-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #board-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #board-title { left: 70px; top: 200px; font-size: 92px; }
+    #board-title .char { display: inline-block; }
+    #board-owner { left: 74px; top: 320px; font-size: 30px; }
+    #board-date { left: 74px; top: 362px; font-size: 28px; color: var(--dim); }
+    .board-row { position: absolute; left: 70px; width: 700px; height: 150px; }
+    .board-row .nm { position: absolute; left: 0; top: 0; font: 700 38px "Mono", monospace; color: var(--white); white-space: nowrap; }
+    .board-row .ef { position: absolute; top: 2px; font-size: 24px; padding: 4px 12px; }
+    .board-row .bar { position: absolute; left: 0; top: 62px; height: 56px; background: var(--white); transform-origin: 0 50%; box-shadow: 8px 8px 0 var(--shadow); }
+    #board-val { left: 770px; top: 590px; font: 400 150px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); position: absolute; transform-origin: 50% 50%; }
+    #board-overlap { left: 700px; top: 770px; width: 330px; font-size: 28px; white-space: normal; text-align: center; color: var(--cyan); }
+    #board-cost { left: 0; top: 1004px; width: 1080px; text-align: center; font-size: 34px; color: var(--white); }
+    .board-cn { position: absolute; top: 1404px; width: 300px; text-align: center; font: 600 24px "Mono", monospace; color: var(--cyan); white-space: nowrap; }
+  </style>
+  <div id="root" data-composition-id="board" data-width="1080" data-height="1920">
+    <div id="board-cam">
+      <svg class="ink sketch" id="board-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path id="board-rule" class="ln cyan thin" d="M70 420 L1010 420" />
+        <path id="board-axis" class="ln dim thin" d="M70 470 L70 960 M70 960 L710 960" />
+        <path id="board-tick74" class="ln amber dash" d="M544 470 L544 960" />
+        <g id="board-whiskers"></g>
+        <path id="board-bracket" class="ln amber thick" d="M700 520 L740 520 L740 920 L700 920 M740 720 L766 720" />
+        <g id="board-coins"></g>
+        <path id="board-floor" class="ln dim" d="M110 1392 L970 1392" />
+      </svg>
+      <div id="board-title" class="hd" data-bind="l09.title"></div>
+      <div id="board-owner" class="lbl" data-bind="l09.owner"></div>
+      <div id="board-date" class="lbl" data-bind="l09.date"></div>
+      <div id="board-rows"></div>
+      <div id="board-val" data-bind="l09.value"></div>
+      <div id="board-overlap" class="lbl" data-bind="l09.overlap"></div>
+      <div id="board-cost" class="lbl" data-bind="l09.cost"></div>
+      <div id="board-cnames"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'board', c = (w, n) => KIT.cue('l09', w, n), D = KIT.sceneDur(S), NS = 'http://www.w3.org/2000/svg';
+      KIT.bind('#board-cam');
+      const d = KIT.data('l09'), tl = gsap.timeline({ paused: true });
+      const AX = 640, X0 = 70, val = parseFloat(d.value), barW = AX * val / 100;
+
+      // header
+      const tt = SplitText.create('#board-title', { type: 'chars' });
+      tl.fromTo(tt.chars, { y: -90, opacity: 0, rotationX: 80 }, { y: 0, opacity: 1, rotationX: 0, duration: 0.35, stagger: 0.025, ease: 'back.out(2)' }, 0.05);
+      KIT.draw(tl, '#board-rule', 0.3, 0.5, { ease: 'power3.out' });
+      KIT.typeOn(tl, '#board-owner', c('live') - 0.1, 60);
+      KIT.typeOn(tl, '#board-date', c('board') - 0.05, 70);
+
+      // three setups
+      const rows = document.querySelector('#board-rows'), wh = document.querySelector('#board-whiskers');
+      d.rows.forEach((r, k) => {
+        const y = 480 + k * 160, el = document.createElement('div'); el.className = 'board-row'; el.id = `board-r${k}`; el.style.top = `${y}px`;
+        el.innerHTML = `<div class="nm"></div><div class="tag ef"></div><div class="bar" id="board-b${k}" style="width:${barW}px"></div>`;
+        el.querySelector('.nm').textContent = r.name; el.querySelector('.ef').textContent = r.effort;
+        rows.appendChild(el);
+        el.querySelector('.ef').style.left = `${r.name.length * 23 + 18}px`;
+        tl.fromTo(el, { x: -760, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }, c('three') - 0.15 + k * 0.14);
+        KIT.grow(tl, `#board-b${k}`, c('tie') - 0.2, c('seventy') - c('tie') + 0.15, { ease: 'power2.inOut' });
+        const e = r._err * AX / 100, cx = X0 + barW, cy = y + 90, p = document.createElementNS(NS, 'path');
+        p.setAttribute('class', 'ln amber thick'); p.setAttribute('id', `board-w${k}`);
+        p.setAttribute('d', `M${cx - e} ${cy} L${cx + e} ${cy} M${cx - e} ${cy - 18} L${cx - e} ${cy + 18} M${cx + e} ${cy - 18} L${cx + e} ${cy + 18}`);
+        wh.appendChild(p);
+        KIT.draw(tl, p, c('seventy') - 0.05 + k * 0.06, 0.25);
+      });
+      KIT.draw(tl, '#board-axis', c('three') - 0.2, 0.5);
+      KIT.draw(tl, '#board-tick74', c('seventy') - 0.2, 0.3);
+
+      // the tie
+      KIT.draw(tl, '#board-bracket', c('seventy') - 0.15, 0.25, { ease: 'power3.out' });
+      KIT.slam(tl, '#board-val', c('seventy'), { from: 2.6, amp: 16, shakeTarget: '#board-cam' });
+      KIT.glitch(tl, '#board-val', c('seventy') + 0.05, { amp: 10, dur: 0.22 });
+      KIT.sparks(tl, '#board-cam', 890, 660, c('seventy') + 0.1, { n: 12, r: 260 });
+      KIT.rise(tl, '#board-overlap', c('percent') - 0.05, { y: 20 });
+
+      // very different costs per task: coin stacks, no figures (heights from the board's average cost per task)
+      const maxCost = Math.max(...d.rows.map((r) => r._cost)), coins = document.querySelector('#board-coins'), names = document.querySelector('#board-cnames');
+      const XS = [250, 540, 830];
+      d.rows.forEach((r, k) => {
+        const n = Math.max(2, Math.round((r._cost / maxCost) * 24)), x = XS[k];
+        for (let i = 0; i < n; i++) {
+          const g = document.createElementNS(NS, 'ellipse');
+          g.setAttribute('cx', x); g.setAttribute('cy', 1376 - i * 13); g.setAttribute('rx', 62); g.setAttribute('ry', 16);
+          g.setAttribute('fill', i % 2 ? '#ffb454' : '#f0a43c'); g.setAttribute('stroke', '#071d35'); g.setAttribute('stroke-width', 3);
+          g.setAttribute('id', `board-coin-${k}-${i}`); coins.appendChild(g);
+          tl.fromTo(g, { y: -520, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22, ease: 'bounce.out' }, c('very') - 0.1 + k * 0.12 + i * 0.03);
+        }
+        const nm = document.createElement('div'); nm.className = 'board-cn'; nm.id = `board-cn${k}`; nm.textContent = r.name; nm.style.left = `${x - 150}px`; names.appendChild(nm);
+        KIT.fade(tl, nm, c('costs') + k * 0.08);
+      });
+      KIT.draw(tl, '#board-floor', c('very') - 0.3, 0.4);
+      KIT.rise(tl, '#board-cost', c('costs') - 0.1, { y: 24 });
+
+      tl.fromTo('#board-cam', { scale: 1, y: 0 }, { scale: 1.04, y: 0, duration: c('at', 1), ease: 'sine.inOut' }, 0);
+      tl.to('#board-cam', { y: -120, scale: 1.02, duration: 0.6, ease: 'power2.inOut' }, c('at', 1) - 0.1);
+
+      window.__timelines["board"] = tl;
+    })();
+  </script>
+</template>

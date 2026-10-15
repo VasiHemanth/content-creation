@@ -1,0 +1,109 @@
+<template id="verify-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #verify-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    .verify-code { position: absolute; background: #020c18; border: 3px solid var(--cyan); box-shadow: 10px 10px 0 var(--shadow); overflow: hidden; }
+    .verify-code i { position: absolute; left: 22px; height: 12px; border-radius: 3px; }
+    #verify-diff { left: 380px; top: 330px; width: 320px; height: 230px; border-color: var(--white); }
+    #verify-A { left: 100px; top: 290px; width: 230px; height: 310px; }
+    #verify-B { left: 640px; top: 350px; width: 340px; height: 200px; }
+    #verify-C { left: 400px; top: 300px; width: 280px; height: 260px; }
+    #verify-tag { left: 120px; top: 612px; font-size: 34px; }
+    #verify-beh { left: 200px; top: 994px; font-size: 32px; color: var(--white); }
+    #verify-notdiff { left: 380px; top: 236px; font-size: 78px; color: var(--coral); transform-origin: 0 50%; }
+    #verify-feat { left: 186px; top: 1156px; font-size: 30px; color: var(--white); }
+    #verify-reg { left: 556px; top: 1156px; font-size: 30px; color: var(--white); }
+    .verify-st { font-size: 76px; padding: 0 22px; border-width: 7px; outline-width: 3px; outline-offset: -15px; }
+    #verify-pA { left: 92px; top: 400px; } #verify-pB { left: 700px; top: 404px; } #verify-fC { left: 420px; top: 376px; font-size: 96px; }
+  </style>
+  <div id="root" data-composition-id="verify" data-width="1080" data-height="1920">
+    <div id="verify-cam">
+      <svg class="ink sketch" id="verify-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <rect id="verify-body-fill" x="120" y="660" width="840" height="570" fill="#0a2340" />
+        <path id="verify-body" class="ln thick" d="M120 660 L960 660 L960 1230 L120 1230 Z" />
+        <path id="verify-hopper" class="ln cyan" d="M380 660 L430 620 L650 620 L700 660" />
+        <path id="verify-screen" class="ln cyan" d="M200 706 L880 706 L880 980 L200 980 Z" />
+        <path id="verify-target" class="ln dim dash" d="M220 930 L320 930 L320 790 L460 790 L460 890 L600 890 L600 760 L760 760 L760 850 L860 850" />
+        <path id="verify-trace1" class="ln amber thick" d="M220 930 L320 930 L320 790 L460 790 L460 890 L600 890 L600 760 L760 760 L760 850 L860 850" />
+        <path id="verify-trace2" class="ln mint thick" d="M220 930 L320 930 L320 790 L460 790 L460 890 L600 890 L600 760 L760 760 L760 850 L860 850" />
+        <path id="verify-trace3" class="ln amber thick" d="M220 930 L320 930 L320 790 L460 790 L460 890 L600 890 L600 760 L760 760 L760 850 L860 850" />
+        <circle id="verify-featlight" cx="240" cy="1100" r="34" fill="#123d66" stroke="#f2f8ff" stroke-width="4" />
+        <g id="verify-regs"></g>
+        <rect id="verify-scan" x="80" y="280" width="920" height="10" fill="#a8dcf2" opacity="0" />
+        <path id="verify-x" class="ln coral heavy" d="M400 350 L680 540 M680 350 L400 540" />
+        <path id="verify-crack" class="ln coral thick" d="M560 300 L530 380 L575 430 L520 500 L560 560" />
+      </svg>
+      <div class="verify-code" id="verify-diff"><i style="top:30px;width:150px;background:#ff6b6b"></i><i style="top:62px;width:210px;background:#ff6b6b"></i><i style="top:94px;width:240px;background:#7be3b0"></i><i style="top:126px;width:180px;background:#7be3b0"></i><i style="top:158px;width:230px;background:#7be3b0"></i><i style="top:190px;width:110px;background:#ff6b6b"></i></div>
+      <div class="verify-code" id="verify-A"><i style="top:26px;width:120px;background:#a8dcf2"></i><i style="top:56px;width:90px;background:#ffb454"></i><i style="top:86px;width:150px;background:#a8dcf2"></i><i style="top:116px;width:70px;background:#f2f8ff"></i><i style="top:146px;width:130px;background:#a8dcf2"></i><i style="top:176px;width:100px;background:#ffb454"></i><i style="top:206px;width:160px;background:#a8dcf2"></i><i style="top:236px;width:80px;background:#f2f8ff"></i><i style="top:266px;width:120px;background:#a8dcf2"></i></div>
+      <div class="verify-code" id="verify-B"><i style="top:34px;width:290px;background:#ffb454"></i><i style="top:72px;width:230px;background:#a8dcf2"></i><i style="top:110px;width:270px;background:#a8dcf2"></i><i style="top:148px;width:160px;background:#f2f8ff"></i></div>
+      <div class="verify-code" id="verify-C"><i style="top:30px;width:200px;background:#a8dcf2"></i><i style="top:66px;width:150px;background:#ffb454"></i><i style="top:102px;width:220px;background:#a8dcf2"></i><i style="top:138px;width:120px;background:#f2f8ff"></i><i style="top:174px;width:190px;background:#a8dcf2"></i><i style="top:210px;width:90px;background:#ffb454"></i></div>
+      <div id="verify-tag" class="tag" data-bind="l07.machine"></div>
+      <div id="verify-beh" class="lbl" data-bind="l07.behavior"></div>
+      <div id="verify-notdiff" class="hd" data-bind="l07.notdiff"></div>
+      <div id="verify-feat" class="lbl" data-bind="l07.feature"></div>
+      <div id="verify-reg" class="lbl" data-bind="l07.regress"></div>
+      <div id="verify-pA" class="stamp mint verify-st" data-bind="l07.pass"></div>
+      <div id="verify-pB" class="stamp mint verify-st" data-bind="l07.pass"></div>
+      <div id="verify-fC" class="stamp verify-st" data-bind="l07.fail"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'verify', c = (w, n) => KIT.cue('l07', w, n), D = KIT.sceneDur(S), NS = 'http://www.w3.org/2000/svg';
+      KIT.bind('#verify-cam');
+      const tl = gsap.timeline({ paused: true });
+      const regs = document.querySelector('#verify-regs');
+      for (let k = 0; k < 6; k++) { const e = document.createElementNS(NS, 'circle'); e.setAttribute('id', `verify-r${k}`); e.setAttribute('cx', 580 + k * 66); e.setAttribute('cy', 1100); e.setAttribute('r', 24); e.setAttribute('fill', '#123d66'); e.setAttribute('stroke', '#f2f8ff'); e.setAttribute('stroke-width', 3); regs.appendChild(e); }
+
+      // the machine, and the behavior it watches
+      KIT.fade(tl, '#verify-body-fill', 0.05, { dur: 0.3 });
+      KIT.draw(tl, '#verify-body', 0.05, 0.5); KIT.draw(tl, '#verify-hopper', 0.25, 0.35); KIT.draw(tl, '#verify-screen', 0.3, 0.4);
+      KIT.rise(tl, '#verify-tag', 0.3, { y: -20 });
+      KIT.draw(tl, '#verify-target', c('checks') - 0.1, 0.45, { ease: 'none' });
+      KIT.draw(tl, '#verify-trace1', c('behavior') - 0.1, 0.7, { ease: 'none' });
+      KIT.rise(tl, '#verify-beh', c('behavior'), { y: 20 });
+      tl.fromTo('#verify-featlight, #verify-regs circle', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.25, stagger: 0.04, ease: 'back.out(3)' }, 0.5);
+      KIT.fade(tl, '#verify-feat, #verify-reg', 0.7);
+
+      // not the diff
+      tl.fromTo('#verify-diff', { y: -900, rotation: -8, opacity: 0 }, { y: 0, rotation: -3, opacity: 1, duration: 0.35, ease: 'power3.out' }, c('not') - 0.3);
+      KIT.draw(tl, '#verify-x', c('diff') - 0.1, 0.22, { ease: 'power3.out' });
+      tl.fromTo('#verify-notdiff', { scale: 0, rotation: -20, opacity: 0 }, { scale: 1, rotation: -6, opacity: 1, duration: 0.3, ease: 'back.out(2.5)' }, c('diff') - 0.05);
+      tl.to(['#verify-diff', '#verify-x', '#verify-notdiff'], { x: -1100, rotation: -40, duration: 0.42, ease: 'power3.in' }, c('Any') - 0.32);
+
+      // two different working solutions: both behave right, both pass
+      tl.fromTo('#verify-A', { y: -900, rotation: 10, opacity: 0 }, { y: 0, rotation: -3, opacity: 1, duration: 0.4, ease: 'back.out(1.6)' }, c('Any') - 0.12);
+      tl.fromTo('#verify-B', { y: -900, rotation: -10, opacity: 0 }, { y: 0, rotation: 2, opacity: 1, duration: 0.4, ease: 'back.out(1.6)' }, c('working') - 0.05);
+      tl.fromTo('#verify-scan', { y: 0, opacity: 0.9 }, { y: 340, opacity: 0.9, duration: 0.45, ease: 'power1.inOut', immediateRender: false }, c('solution') - 0.15);
+      tl.to('#verify-scan', { opacity: 0, duration: 0.1 }, c('solution') + 0.3);
+      KIT.draw(tl, '#verify-trace2', c('solution'), 0.4, { ease: 'none' });
+      KIT.slam(tl, '#verify-pA', c('passes') - 0.04, { from: 2.4, amp: 6, shakeTarget: '#verify-A' });
+      KIT.slam(tl, '#verify-pB', c('passes') + 0.06, { from: 2.4, amp: 6, shakeTarget: '#verify-B' });
+      tl.fromTo('#verify-pA', { rotation: 4 }, { rotation: -8, duration: 0.2 }, c('passes') - 0.04);
+      tl.fromTo('#verify-pB', { rotation: -4 }, { rotation: 6, duration: 0.2 }, c('passes') + 0.06);
+
+      // a third: the feature works, a regression check catches the breakage
+      const t3 = c('and') - 0.25;
+      tl.to(['#verify-A', '#verify-pA'], { x: -90, y: -200, scale: 0.55, duration: 0.4, ease: 'power3.inOut' }, t3);
+      tl.to(['#verify-B', '#verify-pB'], { x: 100, y: -240, scale: 0.55, duration: 0.4, ease: 'power3.inOut' }, t3);
+      tl.to('#verify-trace2', { opacity: 0.15, duration: 0.3 }, t3);
+      tl.fromTo('#verify-C', { y: -900, rotation: 6, opacity: 0 }, { y: 0, rotation: -1, opacity: 1, duration: 0.42, ease: 'back.out(1.5)' }, t3 + 0.1);
+      KIT.draw(tl, '#verify-trace3', c('regression') - 0.05, 0.35, { ease: 'none' });
+      tl.to('#verify-featlight', { fill: '#7be3b0', duration: 0.1 }, c('regression') + 0.3);
+      tl.fromTo('#verify-featlight', { scale: 1 }, { scale: 1.3, duration: 0.1, yoyo: true, repeat: 1, transformOrigin: '50% 50%' }, c('regression') + 0.3);
+      const tCatch = c('catch');
+      for (let k = 0; k < 6; k++) {
+        const t = c('checks', 1) - 0.1 + k * 0.07;
+        if (k === 3) tl.to(`#verify-r${k}`, { fill: '#ff6b6b', duration: 0.06 }, tCatch);
+        else tl.to(`#verify-r${k}`, { fill: '#7be3b0', duration: 0.06 }, t);
+      }
+      tl.fromTo('#verify-r3', { scale: 1 }, { scale: 1.6, duration: 0.12, yoyo: true, repeat: 3, transformOrigin: '50% 50%' }, tCatch);
+      KIT.draw(tl, '#verify-crack', tCatch + 0.05, 0.2, { ease: 'power4.out' });
+      KIT.slam(tl, '#verify-fC', c('breakage') - 0.03, { from: 2.8, amp: 16, shakeTarget: '#verify-cam' });
+      tl.fromTo('#verify-fC', { rotation: 6 }, { rotation: -10, duration: 0.2 }, c('breakage') - 0.03);
+      tl.fromTo('#verify-cam', { scale: 1 }, { scale: 1.05, duration: D, ease: 'sine.inOut' }, 0);
+
+      window.__timelines["verify"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,297 @@
+{
+ "item": "2607.07946",
+ "name": "DeepSWE",
+ "authors": [
+  "Wenqi Huang",
+  "Charley Lee",
+  "Leonard Tng",
+  "Serena Ge"
+ ],
+ "lines": [
+  {
+   "id": "l1",
+   "block": "hook",
+   "say": "A coding agent posts a high score on a benchmark. Is that skill, or is it memory?",
+   "text": "A coding agent posts a high score. Is that skill, or memory?",
+   "data": {
+    "lines": [
+     "High score.",
+     "Skill or",
+     "memory?"
+    ],
+    "sub": "How coding agents get graded"
+   }
+  },
+  {
+   "id": "l2",
+   "block": "flow",
+   "say": "Many coding benchmarks grade agents with tests that shipped with an already merged fix. The model may have seen that fix, and the tests may fit only that fix.",
+   "text": "Many coding benchmarks grade with the tests of a merged fix. The model may have seen it, and the tests may fit only that fix.",
+   "data": {
+    "title": "The SWE-bench recipe",
+    "steps": [
+     {
+      "label": "Merged fix in a public repo",
+      "sub": "public commit and discussion",
+      "at": 0.05
+     },
+     {
+      "label": "Tests that shipped with the fix",
+      "sub": "written to confirm one fix",
+      "at": 0.2
+     },
+     {
+      "label": "Agent is graded on them",
+      "sub": "pass or fail",
+      "at": 0.4
+     }
+    ],
+    "flags": [
+     {
+      "at": 0.5,
+      "text": "Maybe seen in training",
+      "step": 0
+     },
+     {
+      "at": 0.75,
+      "text": "Can reject a valid alternative",
+      "step": 1
+     }
+    ]
+   }
+  },
+  {
+   "id": "l3",
+   "block": "bigstat",
+   "say": "Deep S W E uses a hundred and thirteen new tasks, from ninety one open source repos, in five languages. None were merged upstream.",
+   "text": "DeepSWE has 113 new tasks, from 91 repos, in 5 languages. None were merged upstream.",
+   "data": {
+    "items": [
+     {
+      "value": "113",
+      "label": "original tasks",
+      "at": 0.1
+     },
+     {
+      "value": "91",
+      "label": "open-source repos",
+      "at": 0.38
+     },
+     {
+      "value": "5",
+      "label": "languages",
+      "at": 0.62
+     }
+    ],
+    "foot": "TypeScript, Go, Python, JavaScript, Rust",
+    "footAt": 0.72
+   }
+  },
+  {
+   "id": "l4",
+   "block": "flow",
+   "say": "A hand written verifier checks what the software does, not how it is written. It is built to pass any working solution, and regression tests catch breakage.",
+   "text": "A hand-written verifier checks behavior. It is built to pass any working solution, and regression tests catch breakage.",
+   "data": {
+    "title": "How a task is graded",
+    "steps": [
+     {
+      "label": "Prompt",
+      "sub": "about 2,000 characters",
+      "at": 0.02
+     },
+     {
+      "label": "Agent edits the repo",
+      "sub": "shallow clone at the base commit",
+      "at": 0.12
+     },
+     {
+      "label": "Verifier runs",
+      "sub": "behavior tests + regression tests",
+      "at": 0.2
+     }
+    ],
+    "flags": [
+     {
+      "at": 0.62,
+      "text": "Built to pass any working solution",
+      "step": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "l5",
+   "block": "bars",
+   "say": "An L L M judge re-read graded runs on both benchmarks. It disagreed with S W E bench Pro's tests thirty two point four percent of the time, and Deep S W E's one point four.",
+   "text": "An LLM judge re-read graded runs. It disagreed with SWE-Bench Pro's tests 32.4% of the time, DeepSWE's 1.4%.",
+   "data": {
+    "title": "Judge vs verifier disagreement",
+    "subtitle": "Paper v1 audit by the authors, 30 tasks per benchmark",
+    "unit": "%",
+    "axisMax": 40,
+    "rows": [
+     {
+      "label": "SWE-Bench Pro",
+      "value": 32.4,
+      "right": "789 runs",
+      "hi": false,
+      "at": 0.45
+     },
+     {
+      "label": "DeepSWE",
+      "value": 1.4,
+      "right": "735 runs",
+      "hi": true,
+      "at": 0.8
+     }
+    ]
+   }
+  },
+  {
+   "id": "l6",
+   "block": "callout",
+   "say": "That is disagreement, not an error rate. The audit is small, and in the paper the judge is also the top ranked model.",
+   "text": "Disagreement, not an error rate. Small audit. The judge is the paper's top model.",
+   "data": {
+    "kind": "warn",
+    "title": "Read it carefully",
+    "lines": [
+     "Disagreement, not error rate",
+     "Small audit: 30 tasks per benchmark",
+     "Judge is GPT-5.5, top model in the paper's runs"
+    ]
+   }
+  },
+  {
+   "id": "l8",
+   "block": "versus",
+   "say": "Prompts are about half as long, yet the solutions touch five point five times more code.",
+   "text": "Prompts about half as long, reference solutions touch 5.5x more code.",
+   "data": {
+    "aTitle": "SWE-Bench Pro",
+    "bTitle": "DeepSWE",
+    "rows": [
+     {
+      "label": "Prompt length",
+      "a": "1x",
+      "b": "about 0.5x",
+      "aW": 1.0,
+      "bW": 0.5
+     },
+     {
+      "label": "Code in reference solution",
+      "a": "1x",
+      "b": "5.5x",
+      "aW": 0.18,
+      "bW": 1.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "l9",
+   "block": "bars",
+   "say": "On the live board, version one point one, the top three tie at seventy four percent. Their cost per task runs from two dollars thirty six, to eleven dollars eighty four.",
+   "text": "Live board v1.1: top three tie at 74%. Cost per task: $2.36 to $11.84.",
+   "data": {
+    "title": "DeepSWE leaderboard",
+    "subtitle": "v1.1, published by Datacurve, the benchmark's owner, updated Sep 22, 2026, accessed Oct 3. Top 7 of 21 listed. mini-swe-agent. pass@1 with run interval, avg cost per task",
+    "unit": "%",
+    "axisMax": 100,
+    "rows": [
+     {
+      "label": "gpt-6-astra",
+      "tag": "xhigh",
+      "value": 74,
+      "err": 3,
+      "right": "$4.43",
+      "hi": true
+     },
+     {
+      "label": "gemini-3.8-flash",
+      "tag": "high",
+      "value": 74,
+      "err": 1,
+      "right": "$2.36",
+      "hi": true
+     },
+     {
+      "label": "claude-opus-5",
+      "tag": "max",
+      "value": 74,
+      "err": 4,
+      "right": "$11.84",
+      "hi": true
+     },
+     {
+      "label": "gpt-5.6-sol",
+      "tag": "max",
+      "value": 73,
+      "err": 3,
+      "right": "$6.46"
+     },
+     {
+      "label": "claude-fable-5",
+      "tag": "xhigh",
+      "value": 70,
+      "err": 3,
+      "right": "$13.41"
+     },
+     {
+      "label": "glm-5.3",
+      "tag": "max",
+      "value": 69,
+      "err": 3,
+      "right": "$3.99"
+     },
+     {
+      "label": "kimi-k3",
+      "tag": "max",
+      "value": 69,
+      "err": 5,
+      "right": "$4.65"
+     }
+    ]
+   }
+  },
+  {
+   "id": "l10",
+   "block": "checklist",
+   "say": "Not measured: partial credit, code quality, or native tools. Every model shares one harness.",
+   "text": "Not measured: partial credit, code quality, native tools. Every model shares one harness.",
+   "data": {
+    "title": "Measured and not measured",
+    "items": [
+     {
+      "text": "Partial credit (pass or fail only)",
+      "mark": "x"
+     },
+     {
+      "text": "Code quality, style, performance",
+      "mark": "x"
+     },
+     {
+      "text": "Native tools (one shared harness)",
+      "mark": "x"
+     },
+     {
+      "text": "Functional correctness",
+      "mark": "check"
+     }
+    ]
+   }
+  },
+  {
+   "id": "l11",
+   "block": "endcard",
+   "say": "A score is only as good as its grader. Check who graded it before you trust the number.",
+   "text": "A score is only as good as its grader. Check who graded it.",
+   "data": {
+    "name": "DeepSWE",
+    "arxivId": "2607.07946",
+    "tagline": "Unofficial explainer"
+   }
+  }
+ ]
+}

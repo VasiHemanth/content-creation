@@ -1,0 +1,89 @@
+<template id="build-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #build-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    .build-tile { position: absolute; width: 64px; height: 44px; background: var(--white); border-radius: 4px; box-shadow: 4px 4px 0 var(--shadow); }
+    .build-tile::after { content: ""; position: absolute; left: 10px; top: 12px; width: 34px; height: 5px; background: var(--faint);
+      box-shadow: 0 10px 0 var(--faint), 6px 20px 0 var(--amber); }
+    #build-num { position: absolute; left: 0; top: 420px; width: 1080px; text-align: center; font: 400 300px/1 "Marker", sans-serif;
+      color: var(--amber); text-shadow: 12px 12px 0 rgba(2, 12, 24, .85); transform-origin: 540px 150px; }
+    #build-label { left: 0; top: 800px; width: 1080px; text-align: center; font-size: 46px; color: var(--white); }
+    #build-repos { left: 0; top: 1214px; width: 1080px; text-align: center; font-size: 36px; }
+    #build-langs { position: absolute; left: 60px; top: 1290px; width: 960px; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px 22px; }
+    .build-lang { position: relative; padding: 12px 26px 12px 60px; font: 700 36px "Mono", monospace; color: var(--white);
+      background: var(--deep); border: 3px solid var(--cyan); white-space: nowrap; box-shadow: 8px 8px 0 var(--shadow); }
+    .build-lang i { position: absolute; left: 20px; top: 50%; width: 24px; height: 24px; margin-top: -12px; border-radius: 50%; }
+    #build-scrim { position: absolute; left: 60px; top: 260px; width: 960px; height: 640px; background: #061a30; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="build" data-width="1080" data-height="1920">
+    <div id="build-cam">
+      <div id="build-grid"></div>
+      <div id="build-scrim"></div>
+      <div id="build-num" data-bind="l05.value" data-to="" data-layout-allow-overlap></div>
+      <div id="build-label" class="lbl" data-bind="l05.label"></div>
+      <svg class="ink sketch" id="build-folders" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"></svg>
+      <div id="build-repos" class="lbl" data-bind="l05.repos"></div>
+      <div id="build-langs"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'build', c = (w, n) => KIT.cue('l05', w, n), D = KIT.sceneDur(S), NS = 'http://www.w3.org/2000/svg';
+      KIT.bind('#build-cam');
+      const d = KIT.data('l05'), N = +d.value, tl = gsap.timeline({ paused: true }), r = KIT.rng(113);
+
+      // 113 tiles fly in from everywhere and lock into a 12-wide grid; the counter follows them
+      const grid = document.querySelector('#build-grid'), COLS = 12, tiles = [];
+      const t0 = 0.12, tHit = c('thirteen');
+      for (let i = 0; i < N; i++) {
+        const el = document.createElement('div'); el.className = 'build-tile'; el.id = `build-t${i}`;
+        const gx = 84 + (i % COLS) * 76, gy = 296 + Math.floor(i / COLS) * 56;
+        el.style.left = `${gx}px`; el.style.top = `${gy}px`; grid.appendChild(el); tiles.push({ el, gx, gy });
+        const a = r() * Math.PI * 2, R = 900 + r() * 500, tLand = t0 + (tHit - 0.18 - t0) * (i / (N - 1)) ** 0.8;
+        tl.fromTo(el, { x: Math.cos(a) * R, y: Math.sin(a) * R, rotation: (r() - 0.5) * 540, scale: 0.4, opacity: 0 },
+          { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1, duration: 0.42, ease: 'power3.out' }, tLand - 0.42 + 0.05);
+      }
+      KIT.fade(tl, '#build-num', t0 + 0.1, { dur: 0.15 });
+      KIT.count(tl, '#build-num', t0 + 0.1, tHit - t0 - 0.12, { ease: 'power1.in' });
+      tl.to('#build-scrim', { opacity: 0.55, duration: 0.3 }, tHit - 0.1);
+      tl.fromTo('#build-num', { scale: 1 }, { scale: 1.3, duration: 0.06 }, tHit - 0.02);
+      tl.to('#build-num', { scale: 1, duration: 0.5, ease: 'back.out(3)' }, tHit + 0.04);
+      KIT.shake(tl, '#build-cam', tHit, { amp: 16, dur: 0.32 });
+      KIT.sparks(tl, '#build-cam', 540, 560, tHit, { n: 16, r: 460 });
+      KIT.glitch(tl, '#build-num', tHit + 0.02, { amp: 12, dur: 0.22 });
+      tl.fromTo('#build-label', { y: 40, opacity: 0, scale: 0.8 }, { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(2)' }, c('new') - 0.05);
+
+      // real open-source repos: 18 repo folders, the tiles pour into them
+      const fol = document.querySelector('#build-folders'), F = 18, fx = (k) => 108 + (k % 9) * 108, fy = (k) => 1000 + Math.floor(k / 9) * 116;
+      for (let k = 0; k < F; k++) {
+        const g = document.createElementNS(NS, 'g'); g.setAttribute('id', `build-f${k}`);
+        const x = fx(k), y = fy(k);
+        g.innerHTML = `<path class="ln cyan" d="M${x - 40} ${y - 26} L${x - 14} ${y - 26} L${x - 6} ${y - 34} L${x + 40} ${y - 34} L${x + 40} ${y + 30} L${x - 40} ${y + 30} Z" />` +
+          `<path class="fl amber" d="M${x} ${y - 12} l5 11 12 1 -9 8 3 12 -11 -6 -11 6 3 -12 -9 -8 12 -1 Z" opacity="0.85" />`;
+        fol.appendChild(g);
+        tl.fromTo(g, { scale: 0, opacity: 0, svgOrigin: `${x} ${y}` }, { scale: 1, opacity: 1, duration: 0.35, ease: 'back.out(2.6)', svgOrigin: `${x} ${y}` }, c('in') - 0.15 + k * 0.025);
+      }
+      const tPour = c('real');
+      tiles.forEach((t, i) => {
+        const k = (i * 7) % F, tx = fx(k) - (t.gx + 32), ty = fy(k) - (t.gy + 22), st = tPour + (i / N) * 0.75;
+        tl.to(t.el, { motionPath: { path: [{ x: tx * 0.4, y: ty * 0.25 - 120 }, { x: tx, y: ty }], curviness: 1.4 }, scale: 0.25, rotation: 200, duration: 0.5, ease: 'power2.in' }, st);
+        tl.to(t.el, { opacity: 0, duration: 0.06 }, st + 0.46);
+      });
+      for (let k = 0; k < F; k++) tl.fromTo(`#build-f${k}`, { scale: 1 }, { scale: 1.18, duration: 0.08, yoyo: true, repeat: 1, svgOrigin: `${fx(k)} ${fy(k)}` }, tPour + 0.45 + (k / F) * 0.7);
+      tl.to('#build-scrim', { opacity: 0, duration: 0.4 }, tPour + 0.3);
+      KIT.typeOn(tl, '#build-repos', c('open') - 0.05, 30);
+
+      // five languages slam in
+      const langs = document.querySelector('#build-langs'), COL = { TypeScript: '#3178c6', Go: '#00add8', Python: '#ffd43b', JavaScript: '#f7df1e', Rust: '#dea584' };
+      d.langs.forEach((L, k) => {
+        const el = document.createElement('div'); el.className = 'build-lang'; el.id = `build-l${k}`;
+        el.innerHTML = `<i style="background:${COL[L] || '#a8dcf2'}"></i>`; el.appendChild(document.createTextNode(L));
+        langs.appendChild(el);
+        tl.fromTo(el, { scale: 2.2, opacity: 0, rotation: (k % 2 ? 6 : -6) }, { scale: 1, opacity: 1, rotation: (k % 2 ? 2 : -2), duration: 0.2, ease: 'power4.in' }, c('five') - 0.15 + k * 0.11);
+      });
+      tl.fromTo('#build-cam', { scale: 1 }, { scale: 1.04, duration: D, ease: 'sine.inOut' }, 0);
+
+      window.__timelines["build"] = tl;
+    })();
+  </script>
+</template>

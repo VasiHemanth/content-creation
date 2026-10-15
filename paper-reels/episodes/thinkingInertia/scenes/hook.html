@@ -1,0 +1,81 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-all, #hook-shk { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #hook-bigs { position: absolute; left: 0; top: 0; width: 1080px; height: 440px; transform-origin: 540px 270px; }
+    .hook-big { position: absolute; left: 0; width: 1080px; text-align: center; font: 400 84px/1 "Marker", sans-serif; color: var(--white); white-space: nowrap; text-shadow: 7px 7px 0 var(--shadow); }
+    #hook-b1 { top: 172px; } #hook-b2 { top: 288px; color: var(--amber); font-size: 100px; }
+    .hook-who { font-size: 26px; padding: 4px 14px; }
+    #hook-you { left: 110px; top: 452px; } #hook-mod { left: 110px; top: 902px; }
+    #hook-ask { position: absolute; left: 110px; top: 500px; width: 820px; height: 262px; background: var(--deep); border: 4px solid var(--cyan); border-radius: 26px; box-shadow: 10px 10px 0 var(--shadow); }
+    #hook-q { position: absolute; left: 34px; top: 28px; width: 760px; font: 700 38px/1.2 "Mono", monospace; color: var(--white); }
+    #hook-p { position: absolute; left: 34px; top: 106px; width: 740px; font: 600 33px/1.3 "Mono", monospace; color: var(--amber); }
+    #hook-ul { position: absolute; left: 34px; top: 204px; width: 740px; height: 7px; background: var(--amber); transform-origin: 0 50%; transform: scaleX(0); }
+    #hook-mode { left: 450px; top: 802px; font: 600 34px "Mono", monospace; color: var(--cyan); }
+    #hook-pill { position: absolute; left: 760px; top: 790px; width: 170px; height: 66px; border-radius: 33px; border: 4px solid var(--cyan); background: #10406b; box-sizing: border-box; }
+    #hook-knob { position: absolute; left: 106px; top: 5px; width: 48px; height: 48px; border-radius: 24px; background: var(--amber); }
+    .hook-st { position: absolute; top: 12px; font: 700 28px "Mono", monospace; }
+    #hook-on { left: 20px; color: var(--white); } #hook-off { left: 82px; color: var(--coral); opacity: 0; }
+    #hook-reply { position: absolute; left: 110px; top: 950px; width: 820px; height: 480px; background: var(--panel); border: 4px solid var(--white); border-radius: 26px; box-shadow: 10px 10px 0 var(--shadow); transform-origin: 50% 0; }
+    #hook-rsvg { left: 0; top: 0; width: 820px; height: 480px; }
+    #hook-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-all">
+      <div id="hook-shk"><div id="hook-cam">
+        <div id="hook-you" class="tag cyan hook-who" data-bind="l01.you"></div>
+        <div id="hook-ask">
+          <div id="hook-q" data-bind="l01.q"></div>
+          <div id="hook-p" data-bind="l01.prompt"></div>
+          <div id="hook-ul"></div>
+        </div>
+        <div id="hook-mode" class="abs" data-bind="l01.mode"></div>
+        <div id="hook-pill"><div id="hook-on" class="hook-st" data-bind="l01.on"></div><div id="hook-off" class="hook-st" data-bind="l01.off"></div><div id="hook-knob"></div></div>
+        <div id="hook-mod" class="tag hook-who" data-bind="l01.model"></div>
+        <div id="hook-reply"><svg id="hook-rsvg" class="ink" viewBox="0 0 820 480"></svg></div>
+        <div id="hook-bigs">
+          <div id="hook-b1" class="hook-big" data-bind="l01.b1"></div>
+          <div id="hook-b2" class="hook-big" data-bind="l01.b2"></div>
+        </div>
+      </div></div>
+      <div id="hook-flash"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l01', w, n), D = KIT.sceneDur('hook'), S = KIT.svgEl;
+      KIT.bind('#hook-all');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.2) => tl.fromTo('#hook-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const R = document.getElementById('hook-rsvg');
+
+      // reply lines, drawn as bars (no text): they type in one after another once the reply opens
+      const W = [700, 610, 740, 520, 680, 590, 720, 460];
+      const bars = W.map((w, k) => S('rect', { x: 40, y: 40 + k * 52, width: w, height: 20, rx: 10, fill: k % 3 === 1 ? '#ffb454' : '#a8dcf2', id: `hook-ln${k}` }, R));
+
+      // 0.0 s: the claim, the question, the prompt and the switch are already on screen; the type settles in scale
+      tl.fromTo('#hook-bigs', { scale: 1.04 }, { scale: 1, duration: 0.25, ease: 'power2.out' }, 0);
+      // slow push toward the reply for the whole scene
+      const s1 = 1.05;
+      tl.fromTo('#hook-cam', { x: 0, y: 0, scale: 1 }, { x: 540 * (1 - s1), y: 760 * (1 - s1), scale: s1, duration: D, ease: 'sine.inOut' }, 0);
+      // "tell": the prompt underlines
+      tl.fromTo('#hook-ul', { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: 'power2.out' }, c('tell'));
+      pulse(c('tell'), 0.12);
+      tl.fromTo('#hook-p', { scale: 1 }, { scale: 1.04, duration: 0.18, yoyo: true, repeat: 1, ease: 'sine.inOut', transformOrigin: '0% 50%', immediateRender: false }, c('models'));
+      // "think": the switch snaps to OFF
+      tl.to('#hook-knob', { x: -96, duration: 0.14, ease: 'power4.in' }, c('think') - 0.1);
+      tl.to('#hook-pill', { backgroundColor: '#071d35', borderColor: '#ff6b6b', duration: 0.12 }, c('think'));
+      tl.to('#hook-on', { opacity: 0, duration: 0.08 }, c('think'));
+      tl.fromTo('#hook-off', { opacity: 0 }, { opacity: 1, duration: 0.1 }, c('think'));
+      KIT.shake(tl, '#hook-shk', c('think') + 0.05, { amp: 10, dur: 0.25 });
+      pulse(c('think'), 0.28);
+      // "stop": the reply opens and lines type in, one per beat
+      tl.fromTo('#hook-reply', { scaleY: 0.08, opacity: 0 }, { scaleY: 1, opacity: 1, duration: 0.22, ease: 'power3.out' }, c('stop') - 0.15);
+      bars.forEach((b, k) => tl.fromTo(b, { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, duration: 0.12, ease: 'none' }, c('stop') + 0.08 + k * 0.1));
+      KIT.pop(tl, '#hook-mod', c('stop') - 0.15, { from: 0.5 });
+      pulse(c('stop'), 0.15);
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

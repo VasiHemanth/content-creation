@@ -1,0 +1,6 @@
+# Python packages for .venv-qwen (Apple Silicon only): Qwen3-TTS and Chatterbox Turbo through mlx-audio.
+# Create with: uv venv --python 3.12 .venv-qwen && uv pip install --python .venv-qwen/bin/python -r requirements-mlx.txt
+# Model weights download from Hugging Face on first use (mlx-community/Qwen3-TTS-12Hz-1.7B-CustomVoice-bf16,
+# mlx-community/chatterbox-turbo-fp16, mlx-community/S3TokenizerV2) into ~/.cache/huggingface/.
+mlx-audio==0.5.8
+soundfile==0.14.0

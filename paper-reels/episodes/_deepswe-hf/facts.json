@@ -1,0 +1,35 @@
+{
+ "note": "v3 (HyperFrames) remake. Same sources and numbers as episodes/2607.07946/facts.json (v2, posted 2026-10-06). Four headline numbers on screen: 74 (owner's live board v1.1), 113 (paper), 32.4 and 1.4 (authors' own audit). The paper's v1 runs (May 2026) and board v1.1 grade differently, so the video never compares them. Receipts are real crops of arXiv 2607.07946v1 (evidence.json).",
+ "paper": "llm-wiki/raw/sources/arxiv-2607-07946.md, PDF at llm-wiki/raw/assets/2607.07946/paper-v1.pdf",
+ "board": "llm-wiki/raw/sources/deepswe-leaderboard-v1-1.md (https://deepswe.datacurve.ai/, updated 2026-09-22, accessed 2026-10-03 and 2026-10-06)",
+ "numbers": {
+  "74": "v1.1 board pass@1 for gpt-6-astra [xhigh] 74 +/- 3, gemini-3.8-flash [high] 74 +/- 1, claude-opus-5 [max] 74 +/- 4 (published by Datacurve, the benchmark owner)",
+  "113": "tasks (paper abstract, sec 3.2 and 4.1)",
+  "32.4": "LLM-judge disagreement with the SWE-Bench Pro verifier, 256 of 789 audited rollouts (paper abstract, sec 3.4, Figure 5); authors' own audit",
+  "1.4": "LLM-judge disagreement with the DeepSWE verifier, 10 of 735 (paper abstract, sec 3.4); authors' own audit",
+  "22": "board 'updated September 22, 2026'",
+  "2026": "board update year",
+  "6": "accessed Oct 6 (2026-10-06 re-check)",
+  "2607.07946": "arXiv id in the closing credit",
+  "1.1": "board version label v1.1",
+  "1": "metric name pass@1 (the label, not a value)"
+ },
+ "evidence_incidental": {
+  "3.4": "section number of the heading '3.4 Functional verifiers' inside the closing receipt crop (paper p.7)"
+ },
+ "layout_only": "Fields whose key starts with '_' (board rows: _err = the board's +/- interval in points, _cost = average cost per task in USD) drive drawing only (whisker length, coin stack height) and are never printed. _err 3/1/4 and _cost 4.43/2.36/11.84 are from the board snapshot.",
+ "claims": {
+  "l01": "Board v1.1 top pass@1 74% (three setups).",
+  "l02": "Paper p.2 contributions and sec 3.3: every task is authored from scratch and never merged upstream.",
+  "l03": "Paper abstract and sec 1: most public agentic coding benchmarks follow SWE-bench in mining merged fixes; the fixes are public and 'plausibly in pretraining data, so a high score can reflect recall rather than problem-solving'. Receipt: p.1.",
+  "l04": "Paper sec 1: inherited tests 'were written to confirm one particular fix, not to grade an arbitrary new solution, so they can reject a valid alternative implementation or accept an incomplete one'. Receipt: p.2.",
+  "l05": "Paper abstract, sec 3.2: 113 tasks, 91 repositories, five languages (TypeScript, Go, Python, JavaScript, Rust). Receipt: abstract p.1.",
+  "l06": "Paper sec 5.2 and sec 3.3: one fixed harness (mini-swe-agent, single bash tool, shared prompt); the container ships only a shallow clone at the base commit. Prompts are about half the length of SWE-Bench Pro's.",
+  "l07": "Paper sec 3.4 and 4.2: hand-written verifiers check the requested functionality and accept any implementation that provides it; regression checks run on every trial and a patch that breaks unrelated functionality fails (p.9).",
+  "l08a": "Paper abstract and sec 3.4: an independent LLM judge re-reviews graded runs.",
+  "l08b": "Paper abstract, sec 3.4, sec 8: disagreement rate (not an error rate), small audit, judge GPT-5.5 is also the paper's top configuration. Receipt: abstract p.1 '(1.4% versus 32.4%)'.",
+  "l09": "Board v1.1: three setups at 74% with overlapping run intervals; average cost per task $2.36, $4.43, $11.84, drawn as coin stacks with no figures.",
+  "l10": "Paper sec 1 scope and sec 8 limitations: long-horizon multi-file work from a specified prompt; binary pass/fail, no partial credit; code quality not graded; under-specified requests not measured. Receipt: p.3 'not a global ranking of coding products or of overall model quality'.",
+  "l11": "Paper sec 3.4 opening sentence: 'A benchmark is only as good as its verifier.' Receipt: p.7."
+ }
+}

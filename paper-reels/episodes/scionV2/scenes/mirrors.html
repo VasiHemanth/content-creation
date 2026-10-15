@@ -1,0 +1,81 @@
+<template id="mirrors-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #mirrors-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 490px 900px; }
+    #mirrors-field { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #mirrors-head { position: absolute; left: 60px; top: 170px; width: 960px; text-align: center; white-space: normal; font: 400 76px/1.05 "Marker", sans-serif; color: var(--white); text-shadow: 8px 8px 0 var(--shadow); }
+    #mirrors-big { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .mirrors-tag { position: absolute; padding: 8px 20px; font: 700 48px "Mono", monospace; background: var(--deep); border: 4px solid var(--amber); color: var(--amber); white-space: nowrap; }
+    #mirrors-disk { left: 160px; top: 1110px; border-color: var(--coral); color: var(--coral); font-size: 44px; }
+    #mirrors-mem { left: 600px; top: 1110px; border-color: var(--coral); color: var(--coral); font-size: 44px; }
+  </style>
+  <div id="root" data-composition-id="mirrors" data-width="1080" data-height="1920">
+    <div id="mirrors-beat" style="position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:490px 900px"><div id="mirrors-cam">
+      <svg class="ink" id="mirrors-field" viewBox="0 0 1080 1920"></svg>
+      <svg class="ink" id="mirrors-big" viewBox="0 0 1080 1920">
+        <g id="mirrors-bg">
+          <rect id="mirrors-plate" x="250" y="520" width="580" height="680" rx="26" fill="#071d35" stroke="#a8dcf2" stroke-width="5" />
+          <rect id="mirrors-box" x="400" y="660" width="280" height="400" rx="20" fill="#0a2340" stroke="#f2f8ff" stroke-width="8" />
+          <rect x="460" y="830" width="56" height="200" rx="8" fill="none" stroke="#a8dcf2" stroke-width="5" />
+          <rect x="564" y="830" width="56" height="200" rx="8" fill="none" stroke="#a8dcf2" stroke-width="5" />
+          <rect id="mirrors-g1" x="466" y="836" width="44" height="188" rx="5" fill="#ff6b6b" />
+          <rect id="mirrors-g2" x="570" y="836" width="44" height="188" rx="5" fill="#ff6b6b" />
+        </g>
+      </svg>
+      <div id="mirrors-disk" class="mirrors-tag" data-bind="l03.disk"></div>
+      <div id="mirrors-mem" class="mirrors-tag" data-bind="l03.memory"></div>
+    </div></div>
+    <div id="mirrors-head" data-bind="l03.header"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'mirrors', c = (w, n) => KIT.cue('l03', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      // a field of about 250 identical Git mirrors (schematic count, no digit on screen), each with a disk and a memory gauge
+      const svg = document.getElementById('mirrors-field'), COLS = 14, ROWS = 18, x0 = 66, y0 = 372, cw = 61, ch = 59;
+      const icons = [], g1 = [], g2 = [];
+      for (let r = 0; r < ROWS; r++) for (let k = 0; k < COLS; k++) {
+        const x = x0 + k * cw, y = y0 + r * ch, g = KIT.svgEl('g', { id: `mirrors-i${r}-${k}` }, svg);
+        KIT.svgEl('rect', { x: x, y: y, width: 46, height: 50, rx: 6, fill: '#0a2340', stroke: '#a8dcf2', 'stroke-width': 3 }, g);
+        const a = KIT.svgEl('rect', { x: x + 9, y: y + 14, width: 10, height: 30, rx: 2, fill: '#6aa9d0', id: `mirrors-a${r}-${k}` }, g);
+        const b = KIT.svgEl('rect', { x: x + 27, y: y + 14, width: 10, height: 30, rx: 2, fill: '#6aa9d0', id: `mirrors-b${r}-${k}` }, g);
+        icons.push({ g, r }); g1.push({ el: a, r, x: x + 14, y: y + 44 }); g2.push({ el: b, r, x: x + 32, y: y + 44 });
+      }
+      // build: a wave from the bottom row up
+      icons.forEach(({ g, r }) => tl.fromTo(g, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: 'back.out(2)' }, 0.05 + ((ROWS - 1 - r) / (ROWS - 1)) * 0.75));
+      // gauges start low (a third full)
+      [...g1, ...g2].forEach((q) => tl.fromTo(q.el, { scaleY: 0.35, svgOrigin: `${q.x} ${q.y}` }, { scaleY: 0.35, svgOrigin: `${q.x} ${q.y}`, duration: 0.01 }, 0));
+
+      // "Several hundred Git mirrors helped": the header lands with the field, the camera pans the whole field
+      const tm = Math.max(0.3, c('Several') + 0.1);
+      tl.fromTo(['#mirrors-g1', '#mirrors-g2'], { scaleY: 0.35, svgOrigin: '540 1024' }, { scaleY: 0.35, svgOrigin: '540 1024', duration: 0.01 }, 0);
+      tl.fromTo('#mirrors-bg', { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+      KIT.slam(tl, '#mirrors-head', tm, { amp: 10, from: 1.8 });
+      tl.fromTo('#mirrors-cam', { scale: 1, x: 0 }, { scale: 1.08, x: 40, duration: 0.6, ease: 'power2.inOut' }, c('mirrors') - 0.2);
+      tl.to('#mirrors-cam', { x: -40, duration: 0.9, ease: 'sine.inOut' }, c('helped'));
+
+      // "until the repo outgrew their disks and memory": every gauge fills to the top in coral, in a wave from the bottom
+      const to = c('outgrew') - 0.1;
+      [...g1, ...g2].forEach((q) => {
+        const t = to + ((ROWS - 1 - q.r) / (ROWS - 1)) * 0.7;
+        tl.to(q.el, { scaleY: 1, fill: '#ff6b6b', duration: 0.3, ease: 'power2.out' }, t);
+      });
+      tl.to('#mirrors-cam', { scale: 1.0, x: 0, duration: 0.5, ease: 'power2.inOut' }, to);
+      // one mirror steps forward to name the two gauges
+      const td = c('disks') - 0.3;
+      tl.fromTo('#mirrors-field', { opacity: 1 }, { opacity: 0.45, duration: 0.3 }, td);
+      tl.to('#mirrors-bg', { opacity: 1, duration: 0.01 }, td);
+      tl.fromTo('#mirrors-bg', { scale: 0.2, svgOrigin: '540 860' }, { scale: 1, svgOrigin: '540 860', duration: 0.35, ease: 'back.out(1.6)', immediateRender: false }, td);
+      tl.to(['#mirrors-g1', '#mirrors-g2'], { scaleY: 1, duration: 0.5, ease: 'power2.out' }, td + 0.2);
+      KIT.pop(tl, '#mirrors-disk', c('disks') - 0.05);
+      KIT.pop(tl, '#mirrors-mem', c('memory') - 0.1);
+      // pull back as the line ends
+      tl.to('#mirrors-cam', { scale: 0.9, duration: 0.7, ease: 'power2.inOut' }, c('memory') + 0.25);
+      KIT.shake(tl, '#mirrors-big', c('memory') + 0.05, { amp: 10, dur: 0.3 });
+
+      KIT.beats(tl, '#mirrors-beat', [c('Git'), c('until'), c('repo')], { amp: 0.035, shift: 22, reset: c('outgrew') });
+      window.__timelines["mirrors"] = tl;
+    })();
+  </script>
+</template>

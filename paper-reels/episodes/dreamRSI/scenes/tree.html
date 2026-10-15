@@ -1,0 +1,113 @@
+<template id="tree-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #tree-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #tree-inner { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 600px; }
+    #tree-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #tree-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #tree-scrim { position: absolute; left: -1500px; top: -1500px; width: 4000px; height: 5000px; background: #061a30; opacity: 0; }
+    #tree-label { left: 70px; top: 1000px; font-size: 44px; }
+    #tree-sim { left: 300px; top: 1120px; font-size: 60px; padding: 14px 30px; }
+    #tree-att { left: 650px; top: 1004px; font-size: 30px; color: var(--white); }
+    #tree-sc { left: 650px; top: 1052px; font-size: 30px; color: var(--amber); }
+    #tree-newp { left: 70px; top: 1110px; font-size: 34px; }
+    #tree-norun { left: 0; top: 1280px; width: 1080px; text-align: center; }
+    #tree-norun span { display: inline-block; padding: 12px 32px; font: 400 66px/1.1 "Marker", sans-serif; color: var(--mint); background: var(--deep); border: 5px solid var(--mint); box-shadow: 10px 10px 0 var(--shadow); }
+  </style>
+  <div id="root" data-composition-id="tree" data-width="1080" data-height="1920">
+    <div id="tree-cam">
+      <div id="tree-beat" style="position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 600px"><div id="tree-inner">
+        <svg class="ink sketch" id="tree-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <path id="tree-frame" class="ln cyan thick" d="M60 250 L1020 250 L1020 960 L60 960 Z" />
+          <path id="tree-corners" class="ln amber heavy" d="M60 300 L60 250 L110 250 M970 250 L1020 250 L1020 300 M1020 910 L1020 960 L970 960 M110 960 L60 960 L60 910" />
+          <path id="tree-scrub" class="ln dim thick" d="M180 920 L960 920" />
+          <path id="tree-play" d="M96 894 L134 920 L96 946 Z" fill="#ffb454" />
+          <circle id="tree-head" cx="180" cy="920" r="14" fill="#f2f8ff" />
+          <g id="tree-t"></g>
+          <g id="tree-rings"></g>
+          <circle id="tree-cursor" cx="540" cy="330" r="34" fill="none" stroke="#a8dcf2" stroke-width="8" opacity="0" />
+          <path id="tree-lead1" class="ln thin" d="M640 1024 L600 1024" />
+        </svg>
+        <div id="tree-label" class="tag cyan" data-bind="l05.tree"></div>
+        <div id="tree-sim" class="tag" data-bind="l05.sim"></div>
+        <div id="tree-att" class="lbl" data-bind="l05.attempt"></div>
+        <div id="tree-sc" class="lbl" data-bind="l05.score"></div>
+        <div id="tree-newp" class="tag cyan" data-bind="l06.newp"></div>
+      </div></div>
+      <div id="tree-scrim"></div>
+      <div id="tree-stage"></div>
+    </div>
+    <div id="tree-hud"><div id="tree-norun" class="abs"><span data-bind="l06.norun"></span></div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'tree', a = (w, n) => KIT.cue('l05', w, n), b = (w, n) => KIT.cue('l06', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#tree-inner'); KIT.bind('#tree-hud');
+      const tl = gsap.timeline({ paused: true });
+
+      // the discovery tree: every attempt is a node, every node keeps its score (the amber ring)
+      const T = KIT.tree('#tree-t', { id: 'tree-n', x: 540, y: 330, w: 900, dy: 175, levels: [3, 6, 8], seed: 21, r: 22, edgeClass: 'ln thick' });
+      const rings = document.querySelector('#tree-rings');
+      const all = [T.root, ...T.nodes];
+      all.forEach((n, k) => {
+        n.ring = KIT.svgEl('circle', { cx: n.x.toFixed(1), cy: n.y.toFixed(1), r: 34, fill: 'none', stroke: '#ffb454', 'stroke-width': 8,
+          transform: `rotate(-90 ${n.x.toFixed(1)} ${n.y.toFixed(1)})`, id: `tree-ring${k}` }, rings);
+      });
+      const t0 = a('keeps') - 0.1, t1 = a('attempt') + 0.3;
+      all.forEach((n, k) => {
+        const t = t0 + (t1 - t0) * (k / all.length);
+        if (n.edge) KIT.draw(tl, n.edge, t - 0.08, 0.18, { ease: 'none' });
+        tl.fromTo(n.el, { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.2, ease: 'back.out(3)' }, t);
+      });
+      all.forEach((n, k) => {
+        const s = n === T.root ? 0.3 : 0.15 + 0.85 * n.score;
+        tl.fromTo(n.ring, { drawSVG: '0%' }, { drawSVG: `${(s * 100).toFixed(0)}%`, duration: 0.35, ease: 'power2.out' }, a('score') - 0.2 + k * 0.025);
+      });
+      const leaf = T.byLevel[3][3];
+      document.querySelector('#tree-lead1').setAttribute('d', `M640 1024 L${leaf.x.toFixed(0)} ${(leaf.y + 30).toFixed(0)}`);
+      KIT.draw(tl, '#tree-lead1', a('attempt') - 0.05, 0.25);
+      KIT.rise(tl, '#tree-att', a('attempt'), { x: 30, y: 0 });
+      KIT.rise(tl, '#tree-sc', a('score') - 0.05, { x: 30, y: 0 });
+      tl.fromTo('#tree-label', { x: -300, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: 'back.out(1.6)' }, a('discovery') - 0.1);
+
+      // ...becomes a replay simulator: the player frame closes around it
+      const tSim = a('becomes');
+      KIT.draw(tl, '#tree-frame', tSim - 0.1, 0.45, { ease: 'power2.inOut' });
+      tl.fromTo('#tree-corners', { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.3 }, tSim + 0.2);
+      KIT.draw(tl, '#tree-scrub', tSim + 0.15, 0.3);
+      tl.fromTo('#tree-play', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.3, ease: 'back.out(3)' }, a('replay') - 0.05);
+      tl.fromTo('#tree-head', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.2 }, a('replay'));
+      tl.fromTo('#tree-sim', { scale: 2.4, opacity: 0, rotation: -10 }, { scale: 1, opacity: 1, rotation: -3, duration: 0.2, ease: 'power4.in' }, a('simulator') - 0.1);
+      KIT.shake(tl, '#tree-inner', a('simulator') + 0.12, { amp: 9, dur: 0.22 });
+
+      // l06: a new policy replays the old tree in a new order; each node shows its stored score at once
+      tl.fromTo('#tree-newp', { x: -320, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: 'back.out(1.6)' }, b('new') - 0.15);
+      const order = [T.root, T.byLevel[1][2], T.byLevel[2][5], T.byLevel[3][7], T.byLevel[1][0], T.byLevel[2][0], T.byLevel[3][1], T.byLevel[2][2], T.byLevel[3][3]].filter(Boolean);
+      const tw0 = b('replay') - 0.2, step = (b('tree') - tw0) / order.length;
+      tl.set('#tree-cursor', { opacity: 1 }, tw0);
+      order.forEach((n, k) => {
+        const t = tw0 + k * step;
+        tl.to('#tree-cursor', { attr: { cx: n.x, cy: n.y }, duration: Math.min(0.16, step * 0.6), ease: 'power2.inOut' }, t);
+        tl.fromTo(n.el, { fill: '#f2f8ff' }, { fill: '#a8dcf2', duration: 0.08 }, t + 0.12);
+        tl.fromTo(n.ring, { attr: { 'stroke-width': 8 } }, { attr: { 'stroke-width': 16 }, duration: 0.1, yoyo: true, repeat: 1 }, t + 0.12);
+      });
+      tl.fromTo('#tree-head', { attr: { cx: 180 } }, { attr: { cx: 960 }, duration: b('tree') - tw0, ease: 'none', immediateRender: false }, tw0);
+      tl.fromTo('#tree-inner', { scale: 1 }, { scale: 1.06, duration: b('tree') - tw0, ease: 'sine.inOut' }, tw0);
+
+      // the paper says it: dive into the receipt, the marker follows the voice
+      const tR = b('old') + 0.15;
+      tl.to('#tree-scrim', { opacity: 0.86, duration: 0.4 }, tR);
+      tl.to('#tree-inner', { opacity: 0, duration: 0.3 }, tR + 0.35);
+      KIT.read(tl, { cam: '#tree-cam', parent: '#tree-stage', hud: '#tree-hud', tagY: 300, id: 'replay', t: tR, label: KIT.data('l06').receipt,
+        x: 40, y: 860, width: 1000, zoom: 3.4, fx: 600, fy: 860,
+        marks: [[b('The', 1) - 0.05, b('tree', 1) + 0.1], [b('tree', 1) + 0.12, b('result') + 0.1, [[b('already') + 0.1, 0.42]]],
+                [b('result') + 0.12, b('needs') - 0.05], [b('needs'), Math.min(D - 0.1, b('runs') + 0.55), [[b('new', 1) + 0.05, 0.3]]]],
+        circles: [{ word: 'rerunning', t: b('new', 1) + 0.1 }] });
+      tl.fromTo('#tree-norun', { y: 60, opacity: 0, scale: 0.8 }, { y: 0, opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' }, b('no') - 0.05);
+
+      KIT.beats(tl, '#tree-beat', [a('keeps'), a('past'), a('score'), a('discovery'), a('becomes'), b('new'), b('can')], { reset: b('old') - 0.1 });
+
+      window.__timelines["tree"] = tl;
+    })();
+  </script>
+</template>

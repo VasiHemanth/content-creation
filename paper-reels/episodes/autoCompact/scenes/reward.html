@@ -1,0 +1,189 @@
+<template id="reward-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #reward-cam, #reward-beat, #reward-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #reward-cam { transform-origin: 540px 900px; } #reward-beat { transform-origin: 540px 900px; }
+    #reward-removed { left: 520px; top: 250px; }
+    #reward-b1, #reward-b2 { left: 470px; top: 830px; font-size: 28px; }
+    #reward-light { position: absolute; left: 700px; top: 780px; width: 220px; height: 120px; background: var(--deep); border: 5px solid var(--white); border-radius: 14px; box-shadow: 8px 8px 0 var(--shadow); }
+    .reward-lamp { position: absolute; top: 14px; width: 86px; height: 86px; border-radius: 50%; border: 4px solid var(--dim); background: #0b2a4a;
+      font: 700 26px/78px "Mono", monospace; color: var(--dim); text-align: center; }
+    #reward-pass { left: 14px; } #reward-fail { left: 112px; }
+    .reward-run { position: absolute; width: 34px; height: 34px; border-radius: 50%; border: 5px dashed var(--white); }
+    #reward-pulse { position: absolute; left: 0; top: 0; width: 60px; height: 60px; border-radius: 50%; background: radial-gradient(circle, #ffb454 0 35%, rgba(255,180,84,0) 70%); }
+    #reward-coding { left: 200px; top: 1300px; font-size: 30px; color: var(--amber); }
+    .ac-chip { position: absolute; padding: 8px 16px 6px; font: 700 28px/1 "Mono", monospace; color: var(--white); background: #0f3a60; border: 4px solid var(--cyan);
+      border-radius: 12px; white-space: nowrap; box-shadow: 5px 5px 0 var(--shadow); transform-origin: 50% 50%; }
+    .ac-chip.old { color: var(--dim); border-color: var(--faint); background: #0b2a4a; }
+    .ac-press { position: absolute; height: 190px; }
+    .ac-rod { position: absolute; top: 0; width: 10px; height: 130px; background: var(--dim); }
+    .ac-plate { position: absolute; left: 0; top: 120px; height: 62px; background: var(--deep); border: 5px solid var(--amber); box-shadow: 8px 8px 0 var(--shadow);
+      font: 700 32px/52px "Mono", monospace; color: var(--amber); text-align: center; box-sizing: border-box; }
+    .ac-gauge { position: absolute; width: 46px; border: 5px solid var(--white); border-radius: 10px; box-sizing: border-box; background: var(--panel); overflow: visible; }
+    .ac-gfill { position: absolute; left: 4px; right: 4px; bottom: 4px; top: 4px; background: var(--cyan); transform-origin: 50% 100%; border-radius: 4px; }
+    .ac-gtick { position: absolute; left: -22px; width: 80px; height: 6px; background: var(--coral); }
+    .ac-card { position: absolute; background: var(--paper); color: var(--ink); border: 4px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); padding: 10px 0 8px; }
+    .ac-chead { font: 400 40px/1.1 "Marker", sans-serif; color: var(--ink); padding: 0 18px 6px; border-bottom: 3px solid #c9bfa8; }
+    .ac-crow { font: 700 28px/1 "Mono", monospace; color: var(--ink); padding: 12px 18px 4px; white-space: nowrap; transform-origin: 0 0; }
+    .ac-peg { position: absolute; width: 24px; height: 120px; }
+    .ac-stake { position: absolute; left: 8px; top: 0; width: 8px; height: 120px; background: var(--amber); border-radius: 3px; }
+    .ac-hand { position: absolute; width: 220px; height: 330px; }
+    .ac-cuff { position: absolute; left: 34px; top: 34px; width: 150px; text-align: center; font: 700 30px/1 "Mono", monospace; color: var(--cyan); }
+  </style>
+  <div id="root" data-composition-id="reward" data-width="1080" data-height="1920">
+    <div id="reward-cam"><div id="reward-beat"><div id="reward-world">
+      <svg class="ink sketch" id="reward-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"></svg>
+      <div id="reward-removed" class="tag cyan" data-bind="l08.removed"></div>
+      <div id="reward-b1" class="tag cyan" data-bind="l05.badge"></div>
+      <div id="reward-b2" class="tag" data-bind="l08.badge"></div>
+      <div id="reward-light"><div id="reward-pass" class="reward-lamp" data-bind="l08.pass"></div><div id="reward-fail" class="reward-lamp" data-bind="l08.fail"></div></div>
+      <div id="reward-coding" class="lbl" data-bind="l08.coding"></div>
+      <div id="reward-pulse"></div>
+    </div></div></div>
+  </div>
+  <script>
+    (function () {
+      // ---- shared drawing kit for this episode (same code in every scene, so the hook and the close match) ----
+      const AC = (() => {
+        const W = '#f2f8ff', PANEL = '#0a2340', AMB = '#ffb454', COR = '#ff6b6b', CY = '#a8dcf2', DIM = '#6aa9d0';
+        const $ = (s) => (typeof s === 'string' ? document.querySelector(s) : s);
+        const svg = (tag, attrs, parent) => KIT.svgEl(tag, attrs, parent);
+        const div = (cls, id, css, parent, txt) => { const e = document.createElement('div'); if (cls) e.className = cls; e.id = id; if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; $(parent).appendChild(e); return e; };
+        const ln = (d, parent, o = {}) => svg('path', { d, fill: 'none', stroke: o.c || W, 'stroke-width': o.w || 3.4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', id: o.id, 'stroke-dasharray': o.dash }, parent);
+
+        /** A hiker facing right. (x, y) = ground point between the feet; s = scale (1 = about 230 px tall).
+         *  Animate `${id}` (x in local units = px / s), `${id}-body` (turns), `${id}-legF/-legB`, `${id}-pack`, `${id}-arm`. */
+        function hiker(host, { id, x, y, s = 1, mag = false, pack = 1 }) {
+          const pos = svg('g', { transform: `translate(${x} ${y}) scale(${s})` }, host);
+          const g = svg('g', { id }, pos), body = svg('g', { id: `${id}-body` }, g);
+          const legB = svg('g', { id: `${id}-legB` }, body); ln('M2 -86 L-8 -42 L-14 0 L-1 0', legB, { c: DIM, w: 4.2 });
+          const pk = svg('g', { id: `${id}-pack` }, body);
+          svg('rect', { x: -66, y: -184, width: 56, height: 100, rx: 15, fill: PANEL, stroke: W, 'stroke-width': 3.6 }, pk);
+          ln('M-66 -160 L-10 -160', pk, { w: 2.6 }); ln('M-50 -132 L-26 -132', pk, { c: DIM, w: 2.6 });
+          ln('M-60 -84 L-62 -76 M-16 -84 L-14 -76', pk, { w: 2.6 });
+          ln('M-10 -172 L4 -148', body, { c: AMB, w: 3 });
+          ln('M2 -150 L-8 -116 L-4 -94', body, { c: DIM, w: 4 });
+          ln('M2 -170 L2 -86', body, { w: 5 });
+          const legF = svg('g', { id: `${id}-legF` }, body); ln('M2 -86 L14 -42 L12 0 L26 0', legF, { w: 4.4 });
+          svg('circle', { cx: 6, cy: -194, r: 19, fill: PANEL, stroke: W, 'stroke-width': 3.6 }, body);
+          ln('M-14 -200 Q6 -228 26 -201 L36 -199', body, { w: 3.4 });
+          svg('circle', { cx: 15, cy: -196, r: 2.6, fill: W }, body);
+          const arm = svg('g', { id: `${id}-arm` }, body);
+          if (mag) { ln('M2 -150 L30 -122 L52 -110', arm, { w: 4.2 }); svg('circle', { cx: 64, cy: -98, r: 14, fill: 'rgba(168,220,242,.18)', stroke: AMB, 'stroke-width': 3.6 }, arm); ln('M54 -108 L50 -112', arm, { c: AMB, w: 4 }); }
+          else ln('M2 -150 L18 -116 L26 -94', arm, { w: 4.2 });
+          gsap.set(`#${id}-pack`, { scale: pack, svgOrigin: '-38 -84' });
+          return { pos, g, body, x, y, s, packTop: [x - 38 * s, y - 184 * s * pack], packBox: [x - 66 * s, y - 184 * s * pack, 56 * s, 100 * s * pack] };
+        }
+        /** Walk cycle: legs swing on keyframes (tl.to only, so several walks can follow each other). */
+        function walk(tl, id, t0, dur, step = 0.26) {
+          const n = Math.max(2, Math.round(dur / step)), kf = (sgn) => { const k = []; for (let i = 0; i < n; i++) k.push({ rotation: (i % 2 ? -1 : 1) * 20 * sgn, duration: dur / n, ease: 'sine.inOut' }); k.push({ rotation: 0, duration: 0.12 }); return k; };
+          tl.to(`#${id}-legF`, { keyframes: kf(1), svgOrigin: '2 -86' }, t0);
+          tl.to(`#${id}-legB`, { keyframes: kf(-1), svgOrigin: '2 -86' }, t0);
+        }
+        /** A trail flag on the ground line; the label sits above the cloth (right-aligned when `right`). */
+        function flag(host, parent, { id, x, y, h = 210, label, right = false, color = AMB, below = false }) {
+          const g = svg('g', { id }, host);
+          ln(`M${x} ${y} L${x} ${y - h}`, g, { w: 5 });
+          const cloth = svg('path', { d: `M${x + 2} ${y - h} L${x + 74} ${y - h + 22} L${x + 2} ${y - h + 46} Z`, fill: color, stroke: color, 'stroke-width': 2, id: `${id}-cloth` }, g);
+          const lab = label != null ? div('lbl white', `${id}-lab`, `top:${below ? y + 30 : y - h - 48}px;${right ? `right:${1080 - x - 6}px` : `left:${x - 6}px`};font-size:28px`, parent, label) : null;
+          return { g, cloth, lab };
+        }
+        /** A chip of carried context (search, tool output, ...). */
+        const chip = (parent, id, txt, x, y) => div('ac-chip', id, `left:${x}px;top:${y}px`, parent, txt);
+        /** The press: rods and a plate labelled compact(). Slam it with tl.to(`#${id}`, { y }). */
+        function press(parent, { id, x, y, w = 200, label }) {
+          const p = div('ac-press', id, `left:${x}px;top:${y - 120}px;width:${w}px`, parent);
+          div('ac-rod', `${id}-r1`, `left:${w * 0.25 - 5}px`, p); div('ac-rod', `${id}-r2`, `left:${w * 0.75 - 5}px`, p);
+          div('ac-plate', `${id}-plate`, `width:${w}px`, p, label);
+          return p;
+        }
+        /** The context gauge strap: outline, fill (scaleY), red limit tick and labels. */
+        function gauge(parent, { id, x, y, h = 300, lim = 0.9, limitTxt, ctxTxt, fill = 0.5 }) {
+          const g = div('ac-gauge', id, `left:${x}px;top:${y}px;height:${h}px`, parent);
+          const f = div('ac-gfill', `${id}-fill`, '', g);
+          const tk = div('ac-gtick', `${id}-tick`, `top:${(1 - lim) * h - 3}px`, g);
+          div('lbl', `${id}-lim`, `left:${x - 96}px;top:${y + (1 - lim) * h - 20}px;font-size:28px;color:#ff9d9d`, parent, limitTxt);
+          div('lbl', `${id}-ctx`, `left:${x - 40}px;top:${y + h + 12}px;font-size:28px`, parent, ctxTxt);
+          gsap.set(f, { scaleY: fill });
+          return { g, f, tk };
+        }
+        /** The summary card: a header and three rows (rows hidden until shown). */
+        function card(parent, { id, x, y, w = 330, head, rows }) {
+          const c = div('ac-card', id, `left:${x}px;top:${y}px;width:${w}px`, parent);
+          div('ac-chead', `${id}-h`, '', c, head);
+          const rs = rows.map((r, i) => div('ac-crow', `${id}-r${i}`, '', c, r));
+          return { c, rs };
+        }
+        /** A compact() peg: stake plus tag. */
+        function peg(parent, { id, x, y, label }) {
+          const p = div('ac-peg', id, `left:${x - 12}px;top:${y - 120}px`, parent);
+          div('ac-stake', `${id}-s`, '', p); div('tag', `${id}-t`, 'left:-8px;top:-52px;font-size:26px;padding:4px 12px', p, label);
+          return p;
+        }
+        /** The judge's hand, pointing down, with a labelled cuff. */
+        function hand(parent, { id, x, y, label }) {
+          const h = div('ac-hand', id, `left:${x}px;top:${y}px`, parent);
+          const sv = KIT.svgEl('svg', { viewBox: '0 0 220 330', width: 220, height: 330, style: 'position:absolute;left:0;top:0;overflow:visible' }, h);
+          svg('rect', { x: 34, y: 0, width: 150, height: 120, rx: 10, fill: PANEL, stroke: CY, 'stroke-width': 6 }, sv);
+          svg('path', { d: 'M44 120 L44 210 C44 236 60 250 84 250 L150 250 C170 250 182 236 182 214 L182 120 Z', fill: PANEL, stroke: W, 'stroke-width': 6, 'stroke-linejoin': 'round' }, sv);
+          [[52, 300], [86, 322], [120, 318], [152, 296]].forEach(([fx, fy]) => svg('path', { d: `M${fx} 236 L${fx} ${fy}`, stroke: W, 'stroke-width': 24, 'stroke-linecap': 'round' }, sv));
+          [[52, 300], [86, 322], [120, 318], [152, 296]].forEach(([fx, fy]) => svg('path', { d: `M${fx} 238 L${fx} ${fy - 2}`, stroke: PANEL, 'stroke-width': 12, 'stroke-linecap': 'round' }, sv));
+          svg('path', { d: 'M182 170 C214 180 220 214 206 236', fill: 'none', stroke: W, 'stroke-width': 18, 'stroke-linecap': 'round' }, sv);
+          div('ac-cuff', `${id}-cuff`, '', h, label);
+          return h;
+        }
+        /** A pair of footprints on the ground. */
+        const prints = (host, id, x, y, c = DIM) => { const g = svg('g', { id }, host); svg('ellipse', { cx: x, cy: y - 7, rx: 15, ry: 5.5, fill: c }, g); svg('ellipse', { cx: x + 22, cy: y + 5, rx: 15, ry: 5.5, fill: c }, g); return g; };
+        return { $, svg, div, ln, hiker, walk, flag, chip, press, gauge, card, peg, hand, prints, C: { W, PANEL, AMB, COR, CY, DIM } };
+      })();
+      const S = 'reward', a = (w, n) => KIT.cue('l08', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#reward-cam');
+      const d2 = KIT.data('l02'), d6 = KIT.data('l06'), d8 = KIT.data('l08'), tl = gsap.timeline({ paused: true });
+      const SV = '#reward-svg', GY = 1260;
+      AC.ln(`M40 ${GY} L700 ${GY}`, SV, { w: 6 });
+      const fps = [100, 170, 240, 310, 420, 490, 560].map((x, i) => AC.prints(SV, `reward-fp${i}`, x, GY + 20));
+      const PG = AC.peg('#reward-world', { id: 'reward-peg', x: 380, y: GY, label: d8.peg });
+      const C = AC.card('#reward-world', { id: 'reward-card', x: 90, y: 470, w: 330, head: d2.card, rows: [d2.r1, d2.r2, d2.r3] });
+      const H = AC.hiker(SV, { id: 'reward-hk', x: 560, y: GY, s: 1.5, pack: 0.9 });
+      const HD = AC.hand('#reward-world', { id: 'reward-hand', x: 470, y: 440, label: d6.judge });
+      // the test gate at the trail's end: two posts and a top bar (drawn on "One reward")
+      const gate = AC.ln(`M740 ${GY} L740 920 L880 920 L880 ${GY}`, SV, { w: 7, id: 'reward-gate' });
+      gsap.set('#reward-b2', { opacity: 0 });
+
+      tl.fromTo('#reward-cam', { scale: 1.03 }, { scale: 1, duration: a('together') - 0.1, ease: 'sine.inOut' }, 0);
+      // "Then the judge left": the hand lifts out of the frame; the badge flips to AutoCompact
+      tl.to(HD, { y: -900, duration: 0.5, ease: 'power3.in' }, a('judge'));
+      KIT.pop(tl, '#reward-removed', a('left') - 0.05, { from: 0.4 });
+      tl.to('#reward-b1', { rotationX: 90, opacity: 0, duration: 0.14, ease: 'power2.in' }, a('left') + 0.15);
+      tl.fromTo('#reward-b2', { rotationX: -90, opacity: 0 }, { rotationX: 0, opacity: 1, duration: 0.16, ease: 'power2.out' }, a('left') + 0.29);
+      // "One reward": the gate builds
+      KIT.draw(tl, gate, a('One') - 0.05, 0.35);
+      KIT.pop(tl, '#reward-light', a('reward') - 0.05, { from: 0.4 });
+      // "pass or fail": two ghost runs reach the gate; the light shows pass, then fail
+      const run = (id, t) => { const r = AC.div('reward-run', id, `left:80px;top:${GY - 40}px`, '#reward-world'); tl.fromTo(r, { x: 0, opacity: 0 }, { x: 680, opacity: 1, duration: 0.45, ease: 'power2.in' }, t - 0.45); tl.to(r, { opacity: 0, duration: 0.1 }, t); };
+      run('reward-run1', a('pass')); run('reward-run2', a('fail'));
+      tl.to('#reward-pass', { backgroundColor: '#7be3b0', borderColor: '#7be3b0', color: '#071d35', duration: 0.08 }, a('pass'));
+      tl.to('#reward-pass', { backgroundColor: '#0b2a4a', borderColor: '#6aa9d0', color: '#6aa9d0', duration: 0.15 }, a('fail') - 0.05);
+      tl.to('#reward-fail', { backgroundColor: '#ff6b6b', borderColor: '#ff6b6b', color: '#071d35', duration: 0.08 }, a('fail'));
+      tl.to('#reward-fail', { backgroundColor: '#0b2a4a', borderColor: '#6aa9d0', color: '#6aa9d0', duration: 0.2 }, a('trained'));
+      // "trained coding": one pulse runs back from the gate along the whole trail and lights the footprints
+      const tP = a('trained') - 0.1, tEnd = a('compaction') + 0.35;
+      tl.fromTo('#reward-pulse', { x: 780, y: GY - 30, opacity: 0, scale: 0.6 }, { x: 780, y: GY - 30, opacity: 1, scale: 1.6, duration: 0.12 }, tP);
+      tl.to('#reward-pulse', { x: 60, duration: tEnd - tP - 0.12, ease: 'none' }, tP + 0.12);
+      const xAt = (x) => tP + 0.12 + (tEnd - tP - 0.12) * (780 - x) / 720;
+      fps.slice().reverse().forEach((f, k) => { const x = [560, 490, 420, 310, 240, 170, 100][k]; f.querySelectorAll('ellipse').forEach((e) => tl.to(e, { attr: { fill: '#ffb454' }, duration: 0.1 }, xAt(x + 10))); });
+      tl.fromTo('#reward-coding', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.2 }, a('coding'));
+      // "and compaction": the pulse lights the compact() peg and the summary card with the same glow
+      tl.to(`#reward-peg-t`, { boxShadow: '0 0 34px rgba(255,180,84,.9)', backgroundColor: '#3a2a10', duration: 0.15 }, a('compaction'));
+      tl.to(C.c, { boxShadow: '0 0 48px rgba(255,180,84,.85), 10px 10px 0 rgba(2,12,24,.62)', borderColor: '#ffb454', duration: 0.15 }, a('compaction') + 0.1);
+      tl.to('#reward-pulse', { opacity: 0, duration: 0.2 }, tEnd);
+      // "together": every lit element glows at once; the camera pulls back to the full trail
+      tl.to(['#reward-b2', '#reward-coding'], { scale: 1.12, duration: 0.15, yoyo: true, repeat: 1 }, a('together'));
+      tl.to('#reward-cam', { scale: 0.94, duration: 0.6, ease: 'power2.inOut' }, a('together'));
+      KIT.sparks(tl, '#reward-world', 390, 1100, a('together') + 0.05, { n: 10, r: 200 });
+
+      KIT.beats(tl, '#reward-beat', [a('left'), a('reward'), a('fail')], { amp: 0.02, shift: 12 });
+      window.__timelines["reward"] = tl;
+    })();
+  </script>
+</template>

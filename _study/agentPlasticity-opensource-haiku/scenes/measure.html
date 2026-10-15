@@ -1,0 +1,66 @@
+<template id="measure-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #meas-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #meas-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #meas-cloud { position: absolute; left: 0; top: 330px; width: 1080px; text-align: center; font-size: 40px; }
+    #meas-cloud .tag { position: relative; display: inline-block; }
+  </style>
+  <div id="root" data-composition-id="measure" data-width="1080" data-height="1920">
+    <div id="meas-cam">
+      <div id="meas-gauges">
+        <svg class="ink sketch" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <path class="ln thick" d="M90 900 A210 210 0 0 1 510 900" />
+          <path class="ln dim thin" d="M90 900 L510 900" />
+          <path class="ln thick" d="M570 900 A210 210 0 0 1 990 900" />
+          <path class="ln dim thin" d="M570 900 L990 900" />
+          <path class="ln amber thin" d="M120 900 L150 900 M300 690 L300 720 M480 900 L450 900 M780 690 L780 720 M960 900 L930 900" />
+          <g id="meas-nl" class="ln amber heavy" style="transform-origin:300px 900px"><path d="M300 900 L300 720" /></g>
+          <g id="meas-nr" class="ln amber heavy" style="transform-origin:780px 900px"><path d="M780 900 L780 720" /></g>
+          <circle class="fl" cx="300" cy="900" r="18" />
+          <circle class="fl" cx="780" cy="900" r="18" />
+        </svg>
+      </div>
+      <div id="meas-cloud"><span id="meas-cloud-tag" class="tag cyan" data-bind="l05.cloud"></span></div>
+      <svg id="meas-coins" class="ink" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"></svg>
+      <div id="meas-stage"></div>
+    </div>
+    <div id="meas-hud" style="position:absolute;left:0;top:0;width:1080px;height:1920px"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'measure', a = (w, n) => KIT.cue('l05', w, n), b = (w, n) => KIT.cue('l06', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#meas-cam');
+      const tl = gsap.timeline({ paused: true });
+      const rng = KIT.rng(11), coinsG = document.querySelector('#meas-coins');
+
+      // two identical gauges: the same rain of coins falls on both (equal experience, equal chances)
+      tl.fromTo('#meas-gauges', { opacity: 0 }, { opacity: 1, duration: 0.3 }, a('Plasticity'));
+      KIT.pop(tl, '#meas-cloud-tag', a('Plasticity'));
+      const xs = Array.from({ length: 12 }, () => (rng() * 2 - 1) * 110);
+      xs.forEach((dx, i) => {
+        const t = a('score') + i * 0.07;
+        [300, 780].forEach((cx) => {
+          const coin = KIT.svgEl('circle', { cx: cx + dx, cy: 430, r: 13, class: 'fl amber' }, coinsG);
+          tl.fromTo(coin, { opacity: 0, attr: { cy: 430 } }, { opacity: 1, attr: { cy: 790 }, duration: 0.55, ease: 'power2.in' }, t);
+        });
+      });
+      // the left needle climbs with every coin; the right one barely moves
+      tl.fromTo('#meas-nl', { rotation: -80 }, { rotation: 55, duration: a('cost') - a('score'), ease: 'power1.out' }, a('score'));
+      tl.fromTo('#meas-nr', { rotation: -80 }, { rotation: -72, duration: a('cost') - a('score'), ease: 'power1.out' }, a('score'));
+
+      // receipt 1 (page 1): the definition, read on camera; the gauges step back while it runs
+      const tR = b('Agent') - 0.5, endR = b('performance') + 0.2;
+      tl.to('#meas-gauges', { opacity: 0.12, duration: 0.3 }, tR);
+      tl.to('#meas-coins', { opacity: 0, duration: 0.3 }, tR);
+      const R = KIT.read(tl, { cam: '#meas-cam', parent: '#meas-stage', hud: '#meas-hud', tagY: 260, id: 'plasticity', t: tR, label: KIT.data('l06').receipt,
+        x: 40, y: 860, width: 1000, zoom: 3.4, fx: 600, fy: 860,
+        marks: [[b('efficiency'), b('gains') + 0.2], [b('future'), b('performance') + 0.1]] });
+      tl.to([R.el, '#meas-stage-plasticity-tag'], { opacity: 0, duration: 0.3 }, endR);
+      tl.to('#meas-cam', { scale: 1, x: 0, y: 0, duration: 0.4, ease: 'power2.inOut' }, endR);
+      tl.to('#meas-gauges', { opacity: 1, duration: 0.3 }, endR + 0.1);
+
+      window.__timelines["measure"] = tl;
+    })();
+  </script>
+</template>

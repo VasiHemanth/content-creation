@@ -1,0 +1,98 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 1000px; }
+    #hook-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #hook-coins { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .hook-coin { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: var(--amber); border: 4px solid #ffe2b0; box-sizing: border-box; opacity: 0; }
+    #hook-mtag { left: 748px; top: 1030px; font-size: 30px; }
+    #hook-q { position: absolute; left: 0; top: 0; width: 84px; height: 84px; border: 5px solid var(--amber); background: var(--deep); color: var(--amber); font: 400 64px/84px "Marker", sans-serif; text-align: center; box-sizing: border-box; opacity: 0; }
+    #hook-bigs { position: absolute; left: 0; top: 0; width: 1080px; height: 620px; transform-origin: 540px 360px; }
+    .hook-big { position: absolute; left: 0; width: 1080px; text-align: center; font: 400 88px/1 "Marker", sans-serif; color: var(--white); white-space: nowrap; text-shadow: 7px 7px 0 var(--shadow); }
+    #hook-b1 { top: 214px; }
+    #hook-b2 { top: 322px; color: var(--amber); }
+    #hook-b3 { top: 426px; color: var(--amber); }
+    #hook-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam">
+      <svg id="hook-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="hook-coins"></div>
+      <div id="hook-mtag" class="tag cyan" data-bind="l01.meter"></div>
+      <div id="hook-q" class="abs">?</div>
+    </div>
+    <div id="hook-bigs">
+      <div id="hook-b1" class="hook-big" data-bind="l01.b1"></div>
+      <div id="hook-b2" class="hook-big" data-bind="l01.b2"></div>
+      <div id="hook-b3" class="hook-big" data-bind="l01.b3"></div>
+    </div>
+    <div id="hook-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l01', w, n), D = KIT.sceneDur('hook');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('hook-svg'), E = (tag, at, p) => KIT.svgEl(tag, at, p || svg);
+      const pulse = (t, o = 0.18) => tl.fromTo('#hook-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // the tower under construction: six filled floors, a crane, a slab on the hook
+      const TX = 290, TW = 320, BASE = 1400, FH = 92;
+      E('path', { d: `M200 ${BASE} H900`, class: 'ln dim thick' });
+      for (let k = 0; k < 6; k++) {
+        const y = BASE - (k + 1) * FH, g = E('g', { id: `hook-f${k}` });
+        E('rect', { x: TX, y, width: TW, height: FH - 6, fill: '#123a62', stroke: '#a8dcf2', 'stroke-width': 4 }, g);
+        for (let w = 0; w < 4; w++) E('rect', { x: TX + 26 + w * 74, y: y + 22, width: 44, height: 40, fill: k % 2 ? '#3d78a6' : '#2a5f8c' }, g);
+      }
+      const top = BASE - 6 * FH;
+      E('path', { d: `M700 ${BASE} V610 M700 610 H300 M700 610 L560 520 L300 610 M700 610 L840 610`, class: 'ln cyan thick' });
+      for (let y = BASE - 60; y > 620; y -= 60) E('path', { d: `M686 ${y} L714 ${y - 60}`, class: 'ln faint' });
+      const cable = E('path', { id: 'hook-cable', d: 'M450 610 V720', class: 'ln white' });
+      const hookG = E('g', { id: 'hook-hookg' });
+      E('rect', { id: 'hook-slab', x: 290, y: 720, width: 320, height: 60, fill: '#ffb454', stroke: '#ffe2b0', 'stroke-width': 4 }, hookG);
+      E('rect', { id: 'hook-next', x: TX, y: top - 60 - 92, width: TW, height: 86, class: 'ln amber thick dash', opacity: 1 });
+      // the token meter: a round gauge with ticks and no numerals, fed through a hopper
+      const MX = 810, MY = 890, R = 104;
+      E('path', { d: `M${MX - 56} 700 L${MX + 56} 700 L${MX + 24} 770 L${MX - 24} 770 Z`, fill: '#0a2340', stroke: '#a8dcf2', 'stroke-width': 4 });
+      E('circle', { cx: MX, cy: MY, r: R, fill: '#071d35', stroke: '#f2f8ff', 'stroke-width': 7 });
+      for (let k = 0; k <= 10; k++) { const a = (-120 + k * 24) * Math.PI / 180; E('path', { d: `M${MX + Math.sin(a) * (R - 12)} ${MY - Math.cos(a) * (R - 12)} L${MX + Math.sin(a) * (R - 30)} ${MY - Math.cos(a) * (R - 30)}`, class: 'ln cyan' }); }
+      const jump = E('g', { id: 'hook-jump' }), needle = E('g', { id: 'hook-needle' }, jump);
+      E('path', { d: `M${MX} ${MY} L${MX} ${MY - R + 22}`, stroke: '#ffb454', 'stroke-width': 9, 'stroke-linecap': 'round' }, needle);
+      E('circle', { cx: MX, cy: MY, r: 14, fill: '#ffb454' });
+
+      // 0.0 s: the question is already up at full opacity and only settles in scale; the needle already turns
+      tl.fromTo('#hook-bigs', { scale: 1.08 }, { scale: 1, duration: 0.25, ease: 'power2.out' }, 0);
+      tl.fromTo(needle, { rotation: -100, svgOrigin: `${MX} ${MY}` }, { rotation: 40, svgOrigin: `${MX} ${MY}`, duration: D, ease: 'none' }, 0);
+      gsap.set('#hook-next', { opacity: 0 });
+      pulse(0.02, 0.12);
+
+      // "billion": a stream of coins pours into the hopper and the needle jumps
+      const coins = document.getElementById('hook-coins');
+      for (let i = 0; i < 14; i++) {
+        const d = document.createElement('div'); d.className = 'hook-coin'; d.style.left = `${MX - 15 + ((i % 3) - 1) * 14}px`; d.style.top = '560px'; coins.appendChild(d);
+        const t = c('billion') + i * 0.13;
+        tl.fromTo(d, { y: 0, opacity: 0 }, { y: 190, opacity: 1, duration: 0.32, ease: 'power2.in' }, t);
+        tl.to(d, { opacity: 0, duration: 0.06 }, t + 0.32);
+      }
+      tl.fromTo(jump, { rotation: 0, svgOrigin: `${MX} ${MY}` }, { rotation: 55, svgOrigin: `${MX} ${MY}`, duration: 0.5, ease: 'back.out(2)' }, c('billion') + 0.2);
+      pulse(c('billion'));
+      // "tokens": the meter's tag
+      KIT.pop(tl, '#hook-mtag', c('tokens'), { from: 0.4 });
+      // "work": the crane lowers the slab onto the tower
+      const drop = top - 60 - 720 + 4;
+      tl.fromTo(hookG, { y: 0 }, { y: drop, duration: 0.35, ease: 'power3.in' }, c('work') - 0.1);
+      tl.fromTo(cable, { attr: { d: 'M450 610 V720' } }, { attr: { d: `M450 610 V${720 + drop}` }, duration: 0.35, ease: 'power3.in' }, c('work') - 0.1);
+      KIT.shake(tl, '#hook-cam', c('work') + 0.27, { amp: 9, dur: 0.25 });
+      pulse(c('work'));
+      // "improve": the outline of the next floor and a question plate on the hook
+      tl.fromTo('#hook-next', { opacity: 0 }, { opacity: 1, duration: 0.01, immediateRender: false }, c('improve'));
+      KIT.draw(tl, '#hook-next', c('improve'), 0.4);
+      gsap.set('#hook-q', { x: 408, y: 640 });
+      tl.fromTo('#hook-q', { opacity: 0, rotation: -30, scale: 0.4 }, { opacity: 1, rotation: 8, scale: 1, duration: 0.4, ease: 'back.out(2)' }, c('improve') + 0.05);
+      tl.to('#hook-q', { rotation: -6, duration: 0.3, ease: 'sine.inOut', yoyo: true, repeat: 1 }, c('improve') + 0.45);
+      pulse(c('improve'));
+      tl.fromTo('#hook-cam', { scale: 1 }, { scale: 1.05, duration: D, ease: 'sine.inOut', immediateRender: false }, 0);
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

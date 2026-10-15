@@ -1,0 +1,28 @@
+{
+  "source": "https://www.anthropic.com/engineering/redesigning-source-control",
+  "note": "All results company-reported, no independent replication. Drawn counts schematic. Three headline numbers.",
+  "numbers": {
+    "2,500": "Opening, print p2, May daily merged changes company-reported average.",
+    "30,000": "Opening, print p2, September daily merged changes company-reported lower bound.",
+    "200": "Scaling Scion, print p8; CPU and memory infrastructure footprint vs prior Git mirrors; not speed, total CI, or dollars."
+  },
+  "evidence_incidental": {},
+  "claims": {
+    "l01": "Opening and Growing our monorepo: agents and online jobs made source control the development bottleneck.",
+    "l02": "Opening, print p2: May average around 2,500 merged changes/day; September over 30,000/day.",
+    "l03": "Growing our monorepo: used Git mirror fleet; operational load grew.",
+    "l04": "Growing our monorepo: Git shallow/sparse/promisor features already used; limits apply to Anthropic's workload.",
+    "l05": "Principles: always-online clients, designed around reachable server.",
+    "l06": "Principles and Scaling Scion: client requests only needed trees/blobs. Warehouse schematic is a namespace, no full repo on any server.",
+    "l07": "Scaling Scion: requests specific immutable trees and blobs.",
+    "l08": "Scaling Scion: any cache can answer an immutable request; node daemon shares stored objects.",
+    "l09": "Scaling Scion: daemon talks to regional scion-cache for missing objects.",
+    "l10": "Scaling Scion: cache misses ask authoritative servers, which read Spanner or cloud storage as needed.",
+    "l11": "Scaling Scion: objects stream through cache tiers and jobs on node reuse same objects.",
+    "l12": "Principles: server computes history, merges, commits; API jobs can avoid checkout.",
+    "l13": "Scaling Scion, print p8: Anthropic reports infrastructure CPU and memory requirements 200x smaller than prior Git mirroring infrastructure.",
+    "l14": "Same measurement: comparison only source-control infrastructure vs prior Git mirrors.",
+    "l15": "Conclusion: unusual enormous-monorepo workload; expressly unsuitable general Git replacement.",
+    "l16": "Teaching inference from case study, qualified by may; no measured future outcome."
+  }
+}

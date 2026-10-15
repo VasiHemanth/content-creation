@@ -1,0 +1,162 @@
+<template id="forms-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #forms-all, #forms-shk, #forms-hud0 { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #forms-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #forms-qc { position: absolute; left: 290px; top: 300px; width: 500px; height: 460px; background: var(--deep); border: 4px solid var(--cyan); border-radius: 22px; box-shadow: 10px 10px 0 var(--shadow); box-sizing: border-box; }
+    #forms-qsvg { left: 0; top: 0; width: 500px; height: 460px; }
+    #forms-qt { left: 0; top: 300px; width: 492px; text-align: center; font: 700 42px "Mono", monospace; color: var(--white); }
+    .forms-card { position: absolute; top: 470px; width: 280px; height: 460px; background: var(--deep); border: 4px solid var(--cyan); border-radius: 18px; box-shadow: 8px 8px 0 var(--shadow); box-sizing: border-box; }
+    #forms-f1 { left: 75px; } #forms-f2 { left: 380px; } #forms-f3 { left: 685px; background: #f4efe3; border-color: var(--white); }
+    .forms-isvg { left: 0; top: 0; width: 280px; height: 460px; }
+    .forms-h { position: absolute; top: 390px; width: 280px; text-align: center; }
+    .forms-h .tag { position: relative; display: inline-block; font-size: 26px; padding: 6px 12px; }
+    #forms-h1 { left: 75px; } #forms-h2 { left: 380px; } #forms-h3 { left: 685px; }
+    .forms-st { top: -26px; left: 146px; font-size: 26px; padding: 4px 12px; }
+    #forms-prop { left: 0; top: 112px; width: 272px; text-align: center; font: 600 28px "Mono", monospace; color: var(--cyan); }
+    .forms-btn { position: absolute; top: 190px; width: 110px; height: 72px; border: 4px solid var(--white); border-radius: 12px; box-sizing: border-box; text-align: center; font: 700 34px/64px "Mono", monospace; color: var(--white); }
+    #forms-yes { left: 26px; } #forms-no { left: 156px; }
+    .forms-tile { position: absolute; width: 110px; height: 80px; border: 4px solid var(--white); border-radius: 10px; box-sizing: border-box; text-align: center; font: 700 40px/72px "Mono", monospace; color: var(--white); }
+    #forms-ta { left: 26px; top: 120px; } #forms-tb { left: 156px; top: 120px; } #forms-tc { left: 26px; top: 222px; } #forms-td { left: 156px; top: 222px; }
+    .forms-stamp { left: 14px; top: 330px; font-size: 33px; padding: 2px 14px; border-width: 6px; outline-width: 2px; outline-offset: -12px; }
+    #forms-ex { left: 60px; top: 1180px; font-size: 28px; }
+    #forms-full { left: 60px; top: 1110px; font-size: 30px; }
+    #forms-same { left: 60px; top: 1030px; font-size: 30px; }
+    #forms-dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #061a30; opacity: 0; }
+    #forms-rcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #forms-rstage, #forms-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #forms-scope { left: 60px; top: 1290px; width: 820px; white-space: normal; line-height: 1.3; font-size: 28px; box-sizing: border-box; }
+    #forms-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="forms" data-width="1080" data-height="1920">
+    <div id="forms-all">
+      <div id="forms-shk"><div id="forms-cam">
+        <div id="forms-h1" class="forms-h"><div class="tag cyan" data-bind="l11.f1"></div></div>
+        <div id="forms-h2" class="forms-h"><div class="tag cyan" data-bind="l11.f2"></div></div>
+        <div id="forms-h3" class="forms-h"><div class="tag" data-bind="l11.f3"></div></div>
+        <div id="forms-f1" class="forms-card">
+          <svg class="ink forms-isvg" viewBox="0 0 280 460"><rect x="86" y="26" width="108" height="56" fill="none" stroke="#a8dcf2" stroke-width="5"/><path d="M86 82 L194 26" stroke="#ffb454" stroke-width="5"/></svg>
+          <div id="forms-prop" class="abs" data-bind="l11.prop"></div>
+          <div id="forms-yes" class="forms-btn" data-bind="l11.yes"></div>
+          <div id="forms-no" class="forms-btn" data-bind="l11.no"></div>
+          <div id="forms-st1" class="tag forms-st" data-bind="l11.strict"></div>
+          <div id="forms-s1" class="stamp amber forms-stamp" data-bind="l12.ao"></div>
+        </div>
+        <div id="forms-f2" class="forms-card">
+          <svg class="ink forms-isvg" viewBox="0 0 280 460"><rect x="86" y="26" width="108" height="56" fill="none" stroke="#a8dcf2" stroke-width="5"/><path d="M86 82 L194 26" stroke="#ffb454" stroke-width="5"/></svg>
+          <div id="forms-ta" class="forms-tile" data-bind="l11.a"></div>
+          <div id="forms-tb" class="forms-tile" data-bind="l11.b"></div>
+          <div id="forms-tc" class="forms-tile" data-bind="l11.c"></div>
+          <div id="forms-td" class="forms-tile" data-bind="l11.d"></div>
+          <div id="forms-st2" class="tag forms-st" data-bind="l11.strict"></div>
+          <div id="forms-s2" class="stamp amber forms-stamp" data-bind="l12.ao"></div>
+        </div>
+        <div id="forms-f3" class="forms-card">
+          <svg id="forms-psvg" class="ink forms-isvg" viewBox="0 0 280 460"><rect x="86" y="26" width="108" height="56" fill="none" stroke="#3d78a6" stroke-width="5"/><path d="M86 82 L194 26" stroke="#c77a1e" stroke-width="5"/></svg>
+          <div id="forms-st3" class="tag forms-st" data-bind="l11.strict"></div>
+        </div>
+        <div id="forms-qc">
+          <svg id="forms-qsvg" class="ink" viewBox="0 0 500 460"><rect x="90" y="70" width="320" height="160" fill="none" stroke="#a8dcf2" stroke-width="7"/><path d="M90 230 L410 70" stroke="#ffb454" stroke-width="7"/></svg>
+          <div id="forms-qt" class="abs" data-bind="l11.q"></div>
+        </div>
+        <svg id="forms-osvg" class="ink" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"></svg>
+      </div></div>
+      <div id="forms-hud0">
+        <div id="forms-same" class="tag" data-bind="l13.same"></div>
+        <div id="forms-full" class="tag" data-bind="l12.full"></div>
+        <div id="forms-ex" class="tag cyan" data-bind="l11.ex"></div>
+      </div>
+      <div id="forms-dim"></div>
+      <div id="forms-rcam"><div id="forms-rstage"></div></div>
+      <div id="forms-hud"><div id="forms-scope" class="tag cyan" data-bind="l13.scope"></div></div>
+      <div id="forms-flash"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l11', w, n), b = (w, n) => KIT.cue('l12', w, n), e = (w, n) => KIT.cue('l13', w, n), D = KIT.sceneDur('forms'), S = KIT.svgEl;
+      KIT.bind('#forms-all');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.2) => tl.fromTo('#forms-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const O = document.getElementById('forms-osvg'), P = document.getElementById('forms-psvg');
+      const L12 = KIT.cue('l12', 0), L13 = KIT.cue('l13', 0);
+      const cards = ['#forms-f1', '#forms-f2', '#forms-f3'], heads = ['#forms-h1', '#forms-h2', '#forms-h3'];
+
+      // ---- l11: one question card; it flips, then splits into three forms ----
+      tl.fromTo('#forms-qc', { scale: 0.7, opacity: 0, rotationY: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: 'back.out(2)' }, 0.1);
+      KIT.rise(tl, '#forms-ex', a('example'), { x: -50, y: 0, dur: 0.3 });
+      pulse(a('example'), 0.12);
+      tl.to('#forms-qc', { keyframes: [{ scaleX: 0.04, duration: 0.16, ease: 'power2.in' }, { scaleX: 1, duration: 0.2, ease: 'power2.out' }] }, a('same'));
+      pulse(a('same') + 0.16, 0.16);
+      tl.to('#forms-qc', { scale: 0.2, opacity: 0, duration: 0.25, ease: 'power3.in' }, a('three') - 0.1);
+      cards.forEach((s, k) => tl.fromTo(s, { x: [480, 150, -180][k], y: 60, scale: 0.3, opacity: 0, rotation: [-12, 0, 12][k] }, { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: 'back.out(1.6)' }, a('three') + k * 0.06));
+      heads.forEach((s, k) => KIT.rise(tl, s, a('three') + 0.25 + k * 0.06, { y: -20, dur: 0.3 }));
+      pulse(a('three') + 0.2, 0.18);
+      ['#forms-st1', '#forms-st2', '#forms-st3'].forEach((s, k) => tl.fromTo(s, { y: -50, opacity: 0, rotation: 0 }, { y: 0, opacity: 1, rotation: 6, duration: 0.22, ease: 'power3.in' }, a('strict') + k * 0.08));
+      pulse(a('strict') + 0.2, 0.12);
+      tl.fromTo('#forms-cam', { x: 0, y: 0, scale: 1 }, { x: 540 * (1 - 1.03), y: 700 * (1 - 1.03), scale: 1.03, duration: L12, ease: 'sine.inOut' }, 0);
+
+      // ---- l12: a hand taps yes, then C; two stamps; then the open-ended page fills ----
+      const hand = S('g', { id: 'forms-hand', opacity: 0 }, O);
+      S('path', { d: 'M-14 6 V-4 Q-14 -18 0 -18 Q14 -18 14 -4 V6 Z', fill: '#f2f8ff' }, hand);
+      S('rect', { x: -34, y: 4, width: 78, height: 92, rx: 26, fill: '#f2f8ff', stroke: '#0a2340', 'stroke-width': 5 }, hand);
+      S('path', { d: 'M-14 30 V60 M6 30 V60 M26 30 V60', stroke: '#0a2340', 'stroke-width': 4, 'stroke-linecap': 'round' }, hand);
+      const yes = [75 + 26 + 55, 470 + 190 + 40], tileC = [380 + 26 + 55, 470 + 222 + 44];
+      tl.fromTo(hand, { opacity: 0, x: 300, y: 1250, scale: 1 }, { opacity: 1, x: yes[0], y: yes[1], duration: 0.35, ease: 'power3.out' }, b('yes') - 0.3);
+      tl.to(hand, { keyframes: [{ scale: 0.86, duration: 0.07 }, { scale: 1, duration: 0.1 }] }, b('yes') + 0.05);
+      tl.to('#forms-yes', { backgroundColor: '#ffb454', color: '#071d35', borderColor: '#ffb454', duration: 0.1 }, b('yes') + 0.08);
+      tl.fromTo('#forms-s1', { scale: 2.2, opacity: 0, rotation: -10, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, rotation: -10, duration: 0.18, ease: 'power4.in' }, b('yes') + 0.2);
+      pulse(b('yes') + 0.38, 0.2);
+      tl.to(hand, { x: tileC[0], y: tileC[1], duration: 0.3, ease: 'power3.inOut' }, b('multiple'));
+      tl.to(hand, { keyframes: [{ scale: 0.86, duration: 0.07 }, { scale: 1, duration: 0.1 }] }, b('choice'));
+      tl.to('#forms-tc', { backgroundColor: '#ffb454', color: '#071d35', borderColor: '#ffb454', duration: 0.1 }, b('choice') + 0.04);
+      tl.fromTo('#forms-s2', { scale: 2.2, opacity: 0, rotation: -10, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, rotation: -10, duration: 0.18, ease: 'power4.in' }, b('choice') + 0.16);
+      KIT.shake(tl, '#forms-shk', b('choice') + 0.34, { amp: 8, dur: 0.22 });
+      pulse(b('choice') + 0.34, 0.2);
+      tl.to(hand, { x: 300, y: 1300, opacity: 0, duration: 0.35, ease: 'power3.in' }, b('answer'));
+      pulse(b('only'), 0.12);
+      // "open-ended": the camera slides to the blank page; the pencil writes the full solution
+      const s1 = 1.25, s2 = 1.32, PX = 825, PY = 700;
+      tl.to('#forms-cam', { x: 540 - s1 * PX, y: 760 - s1 * PY, scale: s1, duration: 0.45, ease: 'power3.inOut' }, b('open') - 0.15);
+      tl.to(['#forms-f1', '#forms-f2', '#forms-h1', '#forms-h2'], { opacity: 0, duration: 0.25 }, b('open') - 0.15);
+      pulse(b('open'), 0.14);
+      const LW = [230, 200, 240, 180, 220, 160, 210], pen = S('g', { id: 'forms-pen', opacity: 0 }, P), strokes = [];
+      S('path', { d: 'M0 0 L10 -26 L60 -76 L76 -60 L26 -10 Z', fill: '#ffb454', stroke: '#12263f', 'stroke-width': 4, 'stroke-linejoin': 'round' }, pen);
+      S('path', { d: 'M0 0 L10 -26 L26 -10 Z', fill: '#12263f' }, pen);
+      LW.forEach((w, k) => strokes.push(S('rect', { x: 34, y: 120 + k * 40, width: w, height: 14, rx: 7, fill: '#12263f', id: `forms-w${k}` }, P)));
+      const tW0 = b('form'), step = Math.max(0.12, (KIT.cueEnd('l12', 'solution') - tW0) / LW.length);
+      tl.fromTo(pen, { opacity: 0, x: 34, y: 134 }, { opacity: 1, duration: 0.1 }, tW0 - 0.1);
+      strokes.forEach((r, k) => {
+        tl.fromTo(r, { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, duration: step * 0.85, ease: 'none' }, tW0 + k * step);
+        tl.fromTo(pen, { x: 34, y: 134 + k * 40 }, { x: 34 + LW[k], y: 134 + k * 40, duration: step * 0.85, ease: 'none', immediateRender: false }, tW0 + k * step);
+      });
+      tl.to('#forms-cam', { x: 540 - s2 * PX, y: 760 - s2 * PY, scale: s2, duration: step * LW.length, ease: 'none' }, tW0);
+      KIT.pop(tl, '#forms-full', b('full'), { from: 0.5 });
+      pulse(b('full'), 0.16);
+      tl.to(pen, { opacity: 0, duration: 0.2 }, L13);
+
+      // ---- l13: the paper's general claim (Fig 6), then the camera pulls back to all three forms ----
+      const tR = L13 + 0.06, tEnd = KIT.cueEnd('l13', 'whether') + 0.05;
+      tl.fromTo('#forms-dim', { opacity: 0 }, { opacity: 0.88, duration: 0.25 }, tR);
+      const RD = KIT.read(tl, { cam: '#forms-rcam', parent: '#forms-rstage', hud: '#forms-hud', tagY: 640, id: 'space', t: tR, label: KIT.data('l13').receipt,
+        x: 40, y: 900, width: 1000, zoom: 2.6, fx: 90, fy: 820, follow: 0,
+        marks: [[e('Even'), e('the', 1) - 0.04, [[e('for'), 0.19], [e('the'), 0.33], [e('same'), 0.48], [e('question'), 0.67]]], [e('the', 1), tEnd, [[e('answer'), 0.13], [e('space'), 0.35], [e('shapes'), 0.55], [e('whether'), 0.77]]]],
+        circles: [{ word: 'answer space', t: e('space') + 0.1 }] });
+      tl.set(RD.el, { rotationZ: 0, rotationX: 0 }, tR + 0.6);
+      tl.fromTo('#forms-scope', { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'power3.out' }, tR + 0.3);
+      const tB = tEnd + 0.05;
+      tl.set([RD.el, '#forms-hud'], { opacity: 0 }, tB);
+      tl.set('#forms-rcam', { x: 0, y: 0, scale: 1 }, tB);
+      tl.set('#forms-dim', { opacity: 0 }, tB);
+      tl.set('#forms-cam', { x: 0, y: 0, scale: 1 }, tB);
+      tl.set(['#forms-f1', '#forms-f2', '#forms-h1', '#forms-h2'], { opacity: 1 }, tB);
+      tl.set('#forms-full', { opacity: 0 }, tB);
+      const br1 = S('path', { d: 'M75 944 V966 H660 V944', class: 'ln cyan thick', id: 'forms-br1' }, O), br2 = S('path', { d: 'M685 944 V966 H965 V944', class: 'ln amber thick', id: 'forms-br2' }, O);
+      KIT.draw(tl, [br1, br2], tB + 0.05, 0.35);
+      KIT.pop(tl, '#forms-same', tB + 0.15, { from: 0.5 });
+      pulse(tB, 0.22);
+      tl.to('#forms-cam', { x: 540 * (1 - 1.03), y: 700 * (1 - 1.03), scale: 1.03, duration: Math.max(0.3, D - tB - 0.1), ease: 'sine.out' }, tB + 0.1);
+      window.__timelines["forms"] = tl;
+    })();
+  </script>
+</template>

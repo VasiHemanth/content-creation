@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Template. Not installed. See scheduler/README.md before copying it to ~/Library/LaunchAgents. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.hemanth.reels</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>/Users/hemanthvasi/Documents/Developer/content-creation/scheduler/run.sh</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>/Users/hemanthvasi/Documents/Developer/content-creation</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/Users/hemanthvasi/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <!-- Daily at 09:00 local time. Change the hour with plutil (see README). -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>9</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>StandardOutPath</key>
+  <string>/Users/hemanthvasi/Documents/Developer/content-creation/data/logs/launchd.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/hemanthvasi/Documents/Developer/content-creation/data/logs/launchd.log</string>
+</dict>
+</plist>

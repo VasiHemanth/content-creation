@@ -1,0 +1,9 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2609.38147/paper-v1.pdf",
+ "note": "Receipts: one PDF line each (context [0,0]) from arXiv 2609.38147v1. conclusion = p.16 sec 8, last sentence; enough = p.11 sec 6.2, the line that ends the Opus 4.8 sweep paragraph (the next line, 'Meta-reasoning does not win at every budget', is outside the crop); overhead = p.1 abstract. Every number readable in a crop must be in facts.json; qa checks it.",
+ "items": [
+  { "id": "conclusion", "page": 16, "context": [0, 0], "scale": 7, "circle": ["becomes work"], "find": ["that decision becomes work in its own right."] },
+  { "id": "enough", "page": 11, "context": [0, 0], "scale": 7, "circle": ["enough;"], "find": ["Continuing to work is not enough;"] },
+  { "id": "overhead", "page": 1, "context": [0, 0], "scale": 7, "circle": ["small"], "find": ["its overhead can hurt at small budgets."] }
+ ]
+}

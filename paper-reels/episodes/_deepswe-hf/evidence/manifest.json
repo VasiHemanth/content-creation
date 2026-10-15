@@ -1,0 +1,77 @@
+{
+ "recall": {
+  "img": "evidence/recall.png",
+  "w": 3464,
+  "h": 341,
+  "page": 1,
+  "rects": [
+   {
+    "x": 0.7397773152457291,
+    "y": 0.31236818981612535,
+    "w": 0.231942539310194,
+    "h": 0.20101117789061562
+   },
+   {
+    "x": 0.028408353348319947,
+    "y": 0.5876105473714077,
+    "w": 0.6438646877226715,
+    "h": 0.20347076808948725
+   }
+  ],
+  "text": "built by mining merged fixes from public repositories. That recipe is scalable, but it carries two\r\nstructural costs. The fixes and their discussion are already public and plausibly in pretraining\r\ndata, so a high score can reflect recall rather than problem-solving, an effect documented directly",
+  "circles": {
+   "recall": {
+    "x": 0.34236311101511485,
+    "y": 0.5900701375702794,
+    "w": 0.05066146355356278,
+    "h": 0.15741033252278716
+   }
+  }
+ },
+ "audit": {
+  "img": "evidence/audit.png",
+  "w": 3464,
+  "h": 283,
+  "page": 1,
+  "rects": [
+   {
+    "x": 0.4778741653058993,
+    "y": 0.36580258675898336,
+    "w": 0.18731441428105672,
+    "h": 0.2681147832067132
+   }
+  ],
+  "text": "runs, it disagrees with DeepSWE’s verifier about an order of magnitude less often than\r\nwith SWE-Bench Pro’s inherited tests (1.4% versus 32.4%). Despite being about half\r\nthe length of SWE-Bench Pro’s prompts, DeepSWE’s prompts describe tasks whose",
+  "circles": {
+   "32.4%)": {
+    "x": 0.6033636119644991,
+    "y": 0.36580258675898336,
+    "w": 0.06182496762245693,
+    "h": 0.2681147832067132
+   }
+  }
+ },
+ "verifier": {
+  "img": "evidence/verifier.png",
+  "w": 3470,
+  "h": 384,
+  "page": 7,
+  "rects": [
+   {
+    "x": 0.02823720093279917,
+    "y": 0.5397536800700778,
+    "w": 0.41657076062439674,
+    "h": 0.1824711747819559
+   }
+  ],
+  "text": "3.4 Functional verifiers\r\nA benchmark is only as good as its verifier. In SWE benchmarks, the verifier should approximate\r\nthe task’s functional specification: it should determine whether the submitted code implements the",
+  "circles": {
+   "verifier.": {
+    "x": 0.3746910040424724,
+    "y": 0.5419329433161547,
+    "w": 0.07011695751472352,
+    "h": 0.14165820761140388
+   }
+  }
+ }
+}

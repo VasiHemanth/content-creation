@@ -1,0 +1,49 @@
+{
+ "source": "https://www.anthropic.com/engineering/redesigning-source-control",
+ "source_title": "Redesigning source control at Anthropic, Anthropic Engineering, published Oct 13, 2026",
+ "source_text": "llm-wiki/raw/assets/anthropic-scion/article-text.txt",
+ "source_pdf": "llm-wiki/raw/assets/anthropic-scion/article-print-clean.pdf",
+ "note": "Every number is reported by Anthropic about its own systems; none is an independent benchmark. The video says 'Anthropic reports' (l24) and shows the tag 'ANTHROPIC'S OWN NUMBERS' (l25). The file name payments/refund.py, the other file names, the folder names and the content address IDs (#bdfa, #ecad) are drawings, not claims; the IDs carry no digits on purpose. Drawn counts (machines in the grid, packets) are schematic and carry no digits.",
+ "numbers": {
+  "25": "Two uses, both from Growing our monorepo (print p3). (a) l09, l11: 'a compressed working copy is over 25 GB.' Shown as '25+ GB' and said 'over twenty five gigabytes'. It is the current files only, without past versions (the history of the main branch alone is almost 100 GB, not shown). (b) l10, l11: 'We perform on the order of 25 million code checkouts per day for CI, before counting developer environments, agent sandboxes, and research jobs.' Shown with the tag 'CI CHECKOUTS · ANTHROPIC'S ESTIMATE' (order of magnitude, CI only).",
+  "600": "Growing our monorepo (print p3): 'Fetched naively, that would be over 600 PB of git traffic per day.' Theoretical. l11 says 'If each took those twenty five gigabytes, the servers would send ...' and the screen tags it 'IF EVERY CHECKOUT TOOK THOSE 25 GB'. Said as 'over six hundred million gigabytes' (1 PB = a million GB, decimal), shown as '600+ PB / DAY' and 'OVER 600 MILLION GB'. 25 million times 25 GB is 625 PB, consistent with 'over 600'. Anthropic used partial clones, mirrors and snapshots, so the video does not claim any CI job pulled 25 GB.",
+  "99": "Scaling Scion (print p8): 'Each tier of this system maintains a cache hit rate of over 99%'. l22 claims it only for the machine cache and the shared cache (scion-daemon and the regional scion-cache), a true subset of 'each tier'. Shown as '99%+'. No badge on the server.",
+  "200": "Scaling Scion (print p8): 'Our Scion infrastructure footprint is now 200x smaller than our previous git mirroring infrastructure in terms of CPU and memory requirements.' l24 says 'two hundred times less of both' (computer power and memory, named in l23), the plain reading of 'in terms of CPU and memory requirements'. Serving infrastructure only; not speed, not cost, not all of CI."
+ },
+ "evidence_incidental": {},
+ "illustrative": {
+  "one film is a few gigabytes (l09)": "Our everyday anchor for the gigabyte, not from the article and not attributed to Anthropic: a full-length film in high definition is commonly a few gigabytes. Written in words ('A FEW GB').",
+  "over a hundred million films (l11)": "Arithmetic on the same anchor: over 600 million GB divided by a few (at most about 5) GB per film is over 120 million films. Written in words, no digits; not attributed to Anthropic.",
+  "short-term storage (l23)": "Plain description of memory (RAM), not a claim from the article.",
+  "less to send means less computer power and memory (l23)": "Our plain reading of Scaling Scion: cache servers 'stream objects directly from memory ... so they don't need to spend time computing the client's missing objects or performing delta compression', and the protocol 'requires significantly less CPU than git servers'.",
+  "same region (l20)": "Article wording: each daemon talks to 'the tree and blob cache servers in its region, called scion-cache'."
+ },
+ "claims": {
+  "l01": "Opening and Growing our monorepo: Anthropic built Scion, an in-house version control system, and 'fully migrated our monorepo from git in five months.' 'Replaced Git' refers to the monorepo; the conclusion says Scion is not a general Git replacement (l25).",
+  "l02": "Opening: 'we built Scion, an in-house version control system, and fully migrated our monorepo from git'.",
+  "l03": "Opening: Claude iterates on research loops and builds services; Growing our monorepo: 'Anthropic uses Claude to write software far more than almost any other company'.",
+  "l04": "General definition of a CI job (a machine that checks each change); 'their' refers to the agents of l03. The article counts checkouts 'for CI' (Growing our monorepo).",
+  "l05": "Drawing: payments/refund.py is an invented example file, not from the article.",
+  "l06": "Principles: 'we were using git as a centralized system with one authoritative copy'.",
+  "l07": "Growing our monorepo: 'code checkouts per day for CI'.",
+  "l08": "Growing our monorepo: 'every clone is a complete, self-contained repository that can compute diffs, read history and blame, and check out any revision while fully offline.' 'Every past version' is our plain wording for history.",
+  "l09": "Growing our monorepo: 'For the vast majority of repositories, this is the right design' and 'a compressed working copy is over 25 GB.' 'One film is a few gigabytes' is our anchor (see illustrative).",
+  "l10": "Growing our monorepo: 'on the order of 25 million code checkouts per day for CI'. 'For these changes' links the checkouts to the changes of l04; the article does not split CI checkouts by author, so the line does not say all of them come from agents. The opening ties the load to Claude-written code ('Claude's ability to write code was both what put us in this situation in the first place'). Screen tag: Anthropic's estimate. Receipt 'checkouts'. Said with 'about' (the article: 'on the order of').",
+  "l11": "Growing our monorepo: 'a compressed working copy is over 25 GB' and 'Fetched naively, that would be over 600 PB of git traffic per day.' Conditional ('If each took those twenty five gigabytes ... would send'): the multiplied size is the 25 GB of files from l09, not the files plus past versions of l08. The film comparison is ours (see illustrative).",
+  "l12": "Growing our monorepo: 'nearly all of our clients were agents and jobs that are online by definition'; Principles: 'Clients are always online ... a server that is always reachable'; Scaling Scion: jobs run on nodes 'in the fleet'. 'Anthropic's own computers' is our plain word for that fleet. Receipt 'online' shows the article's phrase; its highlighter pins to spoken words of l12 (jobs, offline, connected), since 'online by definition' is not spoken.",
+  "l13": "Principles: 'Git assumes that clients work offline and need a complete copy of the repository'; Scion clients 'fetch data when they need it'.",
+  "l14": "Principles: 'In Scion, the server answers questions about file history and blame ... The client ... requires much less data locally'; 'the client only pays for what it actually reads'; 'there is no fully materialized copy of the repo anywhere, even on the server' (the board scatters the store; it never draws one whole copy in the server).",
+  "l15": "Scaling Scion: 'Starting from a root tree, the client checks its local store for missing trees and requests them recursively, then repeats the process for blobs.' 'A list of what is in the main folder' is the plain description of the root tree.",
+  "l16": "Same passage: trees are requested recursively; the client 'simply doesn't ask for trees it doesn't want.'",
+  "l17": "Scaling Scion: 'All source control data is content-addressed'; Data structures: 'content-addressed pointers to the compressed file contents'.",
+  "l18": "Scaling Scion: 'All source control data is content-addressed, so a piece of data never changes once it's stored'.",
+  "l19": "Scaling Scion: 'any server can cache it without checking with the others'; 'Every request is for a specific object that never changes, so any cache can answer it'; 'the architecture closely resembles traditional tiered caches'.",
+  "l20": "Scaling Scion: scion-daemon 'stores objects for the whole node' and 'jobs on the same node reuse most of the same objects'; each daemon talks to the cache servers 'in its region' (scion-cache); on a miss the cache asks the scion-servers. Said 'machine cache' and 'shared cache'.",
+  "l21": "Scaling Scion: 'The scion-daemon, scion-cache, and scion-server all respond to identical RPCs ... we strictly enforce the tiering'.",
+  "l22": "Scaling Scion: 'Each tier of this system maintains a cache hit rate of over 99%'. Claimed for the two cache tiers only.",
+  "l23": "Scaling Scion: 99% hits in each tier (few requests reach the server); 'Every request is for a specific object' and 'there is no single multi-gigabyte packfile response' (none for a whole copy). Reasoning to less CPU and memory: see illustrative.",
+  "l24": "Scaling Scion: 'Our Scion infrastructure footprint is now 200x smaller than our previous git mirroring infrastructure in terms of CPU and memory requirements.' Receipt 'footprint'. No speed claim (the article's figure shows about 8x for CI checkouts, not 'two orders of magnitude').",
+  "l25": "Contributing to the wider ecosystem: 'Scion is by no means a suitable replacement for git for general use. The concepts we've outlined here really only make sense for truly enormous monorepos'. Growing our monorepo: 'For the vast majority of repositories, this is the right design'; Git's full copy is the problem only 'as our monorepo grows'. 'Normal projects have small copies' is our plain wording of that contrast. Receipt 'enormous'. Caveat line; the tag 'ANTHROPIC'S OWN NUMBERS' goes on screen here.",
+  "l26": "Growing our monorepo: 'if we designed source control with the fact that agents are always online in mind from the start'; the CI jobs are 'online by definition'. Scoped to CI machines to match l12."
+ }
+}

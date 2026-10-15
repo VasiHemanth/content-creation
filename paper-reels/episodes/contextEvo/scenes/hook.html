@@ -1,0 +1,177 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam, #hook-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 640px; }
+    #hook-titles { position: absolute; left: 0; top: 0; width: 1080px; height: 560px; transform-origin: 540px 330px; }
+    .hook-t { left: 0; width: 1080px; text-align: center; font-size: 120px; line-height: 1.05; }
+    #hook-t1, #hook-t1b { top: 166px; }
+    #hook-t2, #hook-t2b { top: 298px; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); }
+    #hook-t2b { color: var(--cyan); }
+    #hook-kicker { left: 0; top: 452px; width: 1080px; text-align: center; font-size: 36px; }
+    #hook-screen { position: absolute; left: 300px; top: 572px; width: 470px; height: 610px; border: 6px solid var(--white); border-radius: 26px;
+      background: var(--panel); overflow: hidden; box-shadow: 12px 12px 0 var(--shadow); }
+    #hook-feed { position: absolute; left: 0; top: 0; width: 458px; height: 1200px; }
+    .hook-bub { position: absolute; height: 62px; border: 4px solid var(--dim); border-radius: 18px; background: #0f3a60; padding: 13px 18px 0;
+      font: 600 28px/1 "Mono", monospace; color: var(--white); white-space: nowrap; overflow: hidden; }
+    .hook-bub.ev { border-color: var(--amber); color: var(--amber); background: #2e2614; }
+    .hook-bub i { position: absolute; left: 18px; height: 10px; border-radius: 5px; background: #2b5f8a; }
+    .hook-link { position: absolute; right: 14px; top: 13px; width: 40px; height: 26px; }
+    #hook-pinbar { position: absolute; left: 0; top: 0; width: 458px; height: 94px; background: var(--panel); border-bottom: 4px solid var(--amber); }
+    #hook-pev { left: 16px; top: 16px; width: 232px; }
+    #hook-pin { position: absolute; left: 234px; top: 4px; width: 34px; height: 46px; }
+    #hook-mfill { position: absolute; left: 834px; top: 608px; width: 48px; height: 544px; background: var(--amber); transform-origin: 50% 100%; }
+    #hook-score { left: 818px; top: 548px; font-size: 28px; }
+    #hook-start { left: 906px; top: 678px; font-size: 28px; }
+    .hook-book { position: absolute; border: 5px solid var(--cyan); border-radius: 5px; background: #0d3358; box-shadow: 5px 5px 0 var(--shadow); }
+    .hook-book::after { content: ""; position: absolute; left: 4px; right: 4px; top: 22%; height: 7px; background: var(--amber); }
+    #hook-skills { left: 470px; top: 1240px; font-size: 30px; }
+    .hook-chip { position: absolute; width: 46px; height: 26px; border-radius: 7px; background: var(--cyan); box-shadow: 4px 4px 0 var(--shadow); }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam"><div id="hook-beat">
+      <div id="hook-titles">
+        <div id="hook-t1" class="hd hook-t" data-bind="l01.t1" data-layout-allow-overlap></div>
+        <div id="hook-t1b" class="hd hook-t" data-bind="l02.t1" data-layout-allow-overlap></div>
+        <div id="hook-t2" class="hd hook-t" data-bind="l01.t2" data-layout-allow-overlap></div>
+        <div id="hook-t2b" class="hd hook-t" data-bind="l02.t2" data-layout-allow-overlap></div>
+        <div id="hook-kicker" class="lbl" data-bind="l01.kicker"></div>
+      </div>
+      <div id="hook-mfill"></div>
+      <svg class="ink sketch" id="hook-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path id="hook-shelf" class="ln thick" d="M58 882 L292 882 M74 882 L74 904 M276 882 L276 904" />
+        <path id="hook-desk" class="ln thick" d="M70 1394 L600 1394" />
+        <rect id="hook-meter" x="826" y="600" width="64" height="560" rx="10" fill="none" stroke="#f2f8ff" stroke-width="6" />
+        <path id="hook-tick" class="ln cyan thick dash" d="" />
+        <g id="hook-bot"></g>
+      </svg>
+      <div id="hook-score" class="lbl" data-bind="l01.score"></div>
+      <div id="hook-start" class="lbl" data-bind="l01.start"></div>
+      <div id="hook-books"></div>
+      <div id="hook-chips"></div>
+      <div id="hook-screen"><div id="hook-feed"></div>
+        <div id="hook-pinbar"><div id="hook-pev" class="hook-bub ev" data-bind="l01.ev"></div>
+          <svg id="hook-pin" viewBox="0 0 34 46"><circle cx="17" cy="14" r="11" fill="#ffb454" stroke="#071d35" stroke-width="3" /><path d="M17 24 L17 44" stroke="#ffb454" stroke-width="5" stroke-linecap="round" /></svg></div>
+      </div>
+      <div id="hook-skills" class="tag" data-bind="l01.skills"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'hook', a = (w, n) => KIT.cue('l01', w, n), b = (w, n) => KIT.cue('l02', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#hook-cam');
+      const d1 = KIT.data('l01'), tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+
+      // ---- the meter: levels come from the printed results (0 at the bottom, 0.5 at the top, no axis break) ----
+      const r10 = KIT.data('l10'), r11 = KIT.data('l11');
+      const vStart = parseFloat(r10.v1), vSkill = parseFloat(r10.v2), vEvo = parseFloat(r11.v3), TOP = 0.5, IN_H = 544, BOT = 1152;
+      const lv = (v) => v / TOP, yOf = (v) => BOT - IN_H * lv(v);
+      q('#hook-tick').setAttribute('d', `M808 ${yOf(vStart).toFixed(1)} L902 ${yOf(vStart).toFixed(1)}`);
+      q('#hook-start').style.top = `${(yOf(vStart) - 20).toFixed(0)}px`;
+      gsap.set('#hook-mfill', { scaleY: lv(vStart) });
+
+      // ---- the screen: a feed of message bubbles (labels from the storyboard) ----
+      const G = 16, LONG = 116, SHORT = 62, IW = 458;
+      const spec = [['ev', 'L', 232], ['log', 'R', 330, 1], ['file', 'L', 150], ['tool', 'R', 262], ['log', 'L', 330, 1], ['file', 'R', 150],
+        ['tool', 'L', 262], ['log', 'R', 330, 1], ['tool', 'L', 262], ['file', 'R', 150], ['log', 'L', 200]];
+      const feed = q('#hook-feed'), bubs = [];
+      let y = G;
+      spec.forEach(([k, side, w, long], i) => {
+        const el = document.createElement('div'); el.className = `hook-bub${k === 'ev' ? ' ev' : ''}`; el.id = `hook-b${i}`;
+        el.textContent = d1[k];
+        const h = long ? LONG : SHORT;
+        el.style.cssText = `left:${side === 'L' ? 16 : IW - 16 - w}px;top:${y}px;width:${w}px;height:${h}px`;
+        if (long) for (let s = 0; s < 2; s++) { const st = document.createElement('i'); st.style.top = `${56 + s * 24}px`; st.style.width = `${(s ? 52 : 70)}%`; el.appendChild(st); }
+        feed.appendChild(el); bubs.push({ el, y, h, side, w }); y += h + G;
+      });
+
+      // ---- the robot at its desk, the skill shelf ----
+      const R = KIT.robot('#hook-bot', { id: 'hook-r', x: 190, y: 1190, s: 0.72 });
+      const eyes = ['#hook-r-eyeL', '#hook-r-eyeR'];
+      const books = q('#hook-books'), BK = [[76, 742, 44, 138], [126, 760, 52, 120], [184, 732, 44, 148], [236, 772, 40, 108]];
+      BK.forEach(([x, yy, w, h], i) => { const el = document.createElement('div'); el.className = 'hook-book'; el.id = `hook-bk${i}`; el.style.cssText = `left:${x}px;top:${yy}px;width:${w}px;height:${h}px`; books.appendChild(el); });
+      gsap.set('#hook-bk3', { rotation: 12, transformOrigin: '50% 100%' });
+      const layer = document.createElement('div'); layer.className = 'hook-book'; layer.id = 'hook-bk4'; layer.style.cssText = 'left:312px;top:1214px;width:136px;height:36px'; books.appendChild(layer);
+      gsap.set(layer, { scaleY: 0, opacity: 0, transformOrigin: '50% 100%' });
+
+      // frame 0 is already the whole picture; the big type only settles
+      tl.fromTo('#hook-titles', { scale: 1.04 }, { scale: 1, duration: 0.4, ease: 'power2.out' }, 0);
+      tl.fromTo('#hook-cam', { scale: 1 }, { scale: 1.03, duration: KIT.line('l02').t0, ease: 'sine.inOut' }, 0);
+
+      // "This agent": the robot blinks and looks at its screen
+      const blink = (t) => tl.to(eyes, { scaleY: 0.12, transformOrigin: '50% 50%', duration: 0.06, yoyo: true, repeat: 1, ease: 'none' }, t);
+      blink(a('This')); tl.to(eyes, { x: 10, duration: 0.22, ease: 'power2.out' }, a('This') + 0.05);
+      [1.95, 3.15, 4.55, 6.05, 7.75, 9.0].forEach((t) => { if (t < D - 0.2) blink(t); });
+
+      // "learned skills": three books hop off the shelf onto the desk, then the tag lands on the stack
+      const land = [[380, 1370], [380, 1322], [380, 1274]];
+      [0, 1, 2].forEach((i) => {
+        const [x, yy, w, h] = BK[i], cx = x + w / 2, cy = yy + h / 2, [tx, ty] = land[i], t = a('learned') - 0.05 + i * 0.15;
+        tl.to(`#hook-bk${i}`, { keyframes: [
+          { x: (tx - cx) * 0.45, y: Math.min(0, ty - cy) - 120, rotation: 50, duration: 0.2, ease: 'power2.out' },
+          { x: tx - cx, y: ty - cy, rotation: 90, duration: 0.22, ease: 'power2.in' }] }, t);
+      });
+      KIT.slam(tl, '#hook-skills', a('skills') - 0.2, { from: 2.4, amp: 10, shakeTarget: '#hook-beat' });
+
+      // "from its own runs": run chips fly out of the screen into the stack, which grows a new layer
+      const chips = q('#hook-chips');
+      for (let i = 0; i < 5; i++) {
+        const el = document.createElement('div'); el.className = 'hook-chip'; el.id = `hook-chip${i}`; el.style.cssText = `left:${330 + i * 60}px;top:${1080 - (i % 2) * 40}px`; chips.appendChild(el);
+        const t = a('own') - 0.15 + i * 0.07;
+        tl.fromTo(el, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'back.out(2)' }, t);
+        tl.to(el, { x: 357 - (330 + i * 60), y: 1222 - (1080 - (i % 2) * 40), scale: 0.6, duration: 0.32, ease: 'power2.in' }, t + 0.12);
+        tl.to(el, { opacity: 0, duration: 0.08 }, t + 0.42);
+      }
+      tl.to(layer, { scaleY: 1, opacity: 1, duration: 0.25, ease: 'back.out(2.4)' }, a('runs') + 0.15);
+      // the feed keeps arriving: two new messages push the evidence bubble out of view
+      tl.to(feed, { y: -(LONG + G), duration: 0.3, ease: 'power2.out' }, a('from'));
+      tl.to(feed, { y: -(LONG + SHORT + 2 * G), duration: 0.3, ease: 'power2.out' }, a('runs'));
+
+      // "Its score dropped": the level falls from the start tick to the skills level
+      tl.to('#hook-mfill', { scaleY: lv(vSkill), duration: 0.3, ease: 'power2.in' }, a('dropped') - 0.3);
+      KIT.shake(tl, '#hook-meter', a('dropped'), { amp: 8, dur: 0.3 });
+      KIT.shake(tl, '#hook-mfill', a('dropped'), { amp: 8, dur: 0.3 });
+      tl.to('#hook-t2', { scale: 1.12, duration: 0.1, ease: 'power2.out' }, a('dropped'));
+      tl.to('#hook-t2', { scale: 1, duration: 0.3, ease: 'power2.inOut' }, a('dropped') + 0.1);
+
+      // "The same agent": the skills leave the desk, the level returns to the start, the title changes
+      const xLand = [0, 1, 2].map((i) => land[i][0] - (BK[i][0] + BK[i][2] / 2));
+      ['#hook-bk0', '#hook-bk1', '#hook-bk2', '#hook-bk4', '#hook-skills'].forEach((s, k) => tl.to(s, { x: (k < 3 ? xLand[k] : 0) - 640, opacity: 0, duration: 0.4, ease: 'power3.in' }, b('The') - 0.1 + k * 0.04));
+      tl.to('#hook-t1', { clipPath: 'inset(0% 0% 0% 100%)', duration: 0.28, ease: 'power2.in' }, b('The') - 0.1);
+      tl.to('#hook-t2', { clipPath: 'inset(0% 0% 0% 100%)', duration: 0.28, ease: 'power2.in' }, b('The'));
+      tl.fromTo('#hook-t1b', { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.35, ease: 'power2.out' }, b('same'));
+      tl.to('#hook-mfill', { scaleY: lv(vStart), duration: 0.4, ease: 'power2.inOut' }, b('agent'));
+
+      // "learned what its model should see": the screen lights up, long logs fold into one-line chips
+      tl.to('#hook-screen', { borderColor: '#a8dcf2', boxShadow: '0 0 46px rgba(168,220,242,.55), 12px 12px 0 rgba(2,12,24,.62)', duration: 0.3 }, b('learned') - 0.1);
+      const off = bubs.map(() => 0);
+      const fold = (i, t) => {
+        const B = bubs[i];
+        tl.to(B.el, { height: 52, duration: 0.25, ease: 'power3.inOut' }, t);
+        tl.to(B.el.querySelectorAll('i'), { opacity: 0, duration: 0.12 }, t);
+        const lk = KIT.svgEl('svg', { class: 'hook-link', viewBox: '0 0 40 26', id: `hook-lk${i}` }, B.el);
+        KIT.svgEl('path', { d: 'M4 13 L20 13 M15 6 C27 6 36 8 36 13 C36 18 27 20 15 20', fill: 'none', stroke: '#a8dcf2', 'stroke-width': 4, 'stroke-linecap': 'round' }, lk);
+        tl.fromTo(lk, { scale: 0, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.2, ease: 'back.out(3)' }, t + 0.2);
+        for (let j = i + 1; j < bubs.length; j++) { off[j] -= LONG - 52; tl.to(bubs[j].el, { y: off[j], duration: 0.25, ease: 'power3.inOut' }, t); }
+      };
+      fold(4, b('learned')); fold(7, b('what'));
+      // "model": the evidence comes back into view, pinned to the top of the screen
+      tl.fromTo('#hook-pinbar', { y: -100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }, b('model') - 0.2);
+      tl.to([bubs[1].el, bubs[2].el], { opacity: 0, duration: 0.3 }, b('model') - 0.2);   // covered by the pinned strip as it slides in
+      tl.fromTo('#hook-pin', { scale: 0, opacity: 0, transformOrigin: '50% 100%' }, { scale: 1, opacity: 1, duration: 0.25, ease: 'back.out(3)' }, b('model') + 0.1);
+      // "should see instead": the robot looks up at it; the camera leans toward the screen
+      tl.to(eyes, { x: 14, y: -9, duration: 0.25, ease: 'power2.out' }, b('see') - 0.1);
+      tl.to('#hook-cam', { scale: 1.06, duration: 0.6, ease: 'power2.out' }, b('see') - 0.1);
+
+      // "Its score rose": a cyan level rises from the start tick past it, and the title lands
+      tl.to('#hook-mfill', { backgroundColor: '#a8dcf2', duration: 0.15 }, b('Its', 1) - 0.1);
+      tl.to('#hook-mfill', { scaleY: lv(vEvo), duration: 0.35, ease: 'power2.in' }, b('rose') - 0.35);
+      KIT.sparks(tl, '#hook-beat', 858, yOf(vEvo), b('rose'), { n: 12, r: 170, color: '#a8dcf2' });
+      KIT.slam(tl, '#hook-t2b', b('rose') - 0.2, { from: 2.4, amp: 14, shakeTarget: '#hook-beat' });
+
+      KIT.beats(tl, '#hook-beat', [a('This'), a('learned'), a('runs'), a('dropped'), b('same'), b('model'), b('rose') + 0.25], { amp: 0.02, shift: 18 });
+
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

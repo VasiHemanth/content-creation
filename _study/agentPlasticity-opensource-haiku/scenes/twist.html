@@ -1,0 +1,71 @@
+<template id="twist-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #tw-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #tw-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #tw-v1 { left: 240px; top: 500px; width: 300px; text-align: center; font: 400 130px/1 "Marker", sans-serif; color: var(--amber); }
+    #tw-v2 { left: 600px; top: 1140px; width: 240px; text-align: center; font: 400 110px/1 "Marker", sans-serif; color: var(--amber); }
+    #tw-m1 { left: 200px; top: 1436px; font-size: 30px; }
+    #tw-m2 { left: 600px; top: 1436px; font-size: 30px; }
+    #tw-top { left: 600px; top: 1060px; font-size: 32px; }
+    #tw-diff { left: 0; top: 330px; width: 1080px; text-align: center; font-size: 40px; }
+    #tw-knight { position: absolute; left: 0; top: 0; }
+  </style>
+  <div id="root" data-composition-id="twist" data-width="1080" data-height="1920">
+    <div id="tw-cam">
+      <div id="tw-stage"></div>
+      <svg class="ink sketch" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <rect id="tw-bar1" class="fl amber" x="260" y="600" width="240" height="820" />
+        <rect id="tw-bar2" class="fl cyan" x="620" y="1263" width="240" height="157" />
+        <path class="ln dim thin" d="M220 1420 L900 1420" />
+        <g id="tw-knight">
+          <circle class="fl mint" cx="380" cy="585" r="16" />
+        </g>
+      </svg>
+      <div id="tw-v1" class="abs" data-bind="l10.value"></div>
+      <div id="tw-v2" class="abs" data-bind="l11.value"></div>
+      <div id="tw-m1" class="tag" data-bind="l10.model"></div>
+      <div id="tw-m2" class="tag cyan" data-bind="l11.model"></div>
+      <div id="tw-top" class="tag cyan" data-bind="l11.top"></div>
+    </div>
+    <div id="tw-hud" style="position:absolute;left:0;top:0;width:1080px;height:1920px"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'twist', b = (w, n) => KIT.cue('l10', w, n), c = (w, n) => KIT.cue('l11', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#tw-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // receipt 3 (page 7): the 298 is circled; four highlights follow the phrase, the crop's last rectangle is the cost unit
+      const tR = Math.max(0.1, b('highest') - 0.9), endR = b('cost') + 0.25;
+      const R = KIT.read(tl, { cam: '#tw-cam', parent: '#tw-stage', hud: '#tw-hud', tagY: 260, id: 'psat', t: tR, label: KIT.data('l10').receipt,
+        x: 40, y: 860, width: 1000, zoom: 3.4, fx: 90, fy: 860, follow: 0,
+        marks: [[b('highest'), b('estimated') + 0.2], [b('estimated') + 0.25, b('estimated') + 0.4],
+                [b('two'), b('eight') + 0.4], [b('dollars'), b('cost') + 0.1]],
+        circles: [{ word: '298', t: b('eight') + 0.1 }] });
+      tl.set(R.el, { rotationZ: 0, rotationX: 0 }, tR + 0.6);
+      tl.to([R.el, '#tw-stage-psat-tag'], { opacity: 0, duration: 0.3 }, endR);
+      tl.to('#tw-cam', { scale: 1, x: 0, y: 0, duration: 0.4, ease: 'power2.inOut' }, endR);
+
+      // the gauges become two bars: the left one grows to the storyboard value (298)
+      tl.fromTo('#tw-bar1', { scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.9, ease: 'power3.out' }, endR + 0.1);
+      tl.fromTo('#tw-v1', { opacity: 0 }, { opacity: 1, duration: 0.2 }, endR + 0.1);
+      KIT.count(tl, '#tw-v1', endR + 0.1, 0.9);
+      KIT.pop(tl, '#tw-m1', endR + 0.2);
+
+      // l11: the right bar grows to 57 on "fifty seven"; the knight hops across to the top scorer
+      tl.fromTo('#tw-bar2', { scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.6, ease: 'power3.out' }, c('fifty'));
+      tl.fromTo('#tw-v2', { opacity: 0 }, { opacity: 1, duration: 0.2 }, c('fifty'));
+      KIT.count(tl, '#tw-v2', c('seven') - 0.1, 0.5);
+      KIT.pop(tl, '#tw-m2', c('Endpoint') + 0.1);
+      KIT.pop(tl, '#tw-top', c('top') + 0.1);
+      tl.to('#tw-knight', { x: 360, duration: 0.8, ease: 'none' }, c('top'));
+      tl.to('#tw-knight', { y: -140, duration: 0.35, ease: 'power2.out' }, c('top'));
+      tl.to('#tw-knight', { y: 662, duration: 0.45, ease: 'power2.in' }, c('top') + 0.35);
+      // the camera pulls back so both bars sit in frame at "differ"
+      tl.to('#tw-cam', { scale: 0.94, duration: 0.5, ease: 'power2.inOut' }, c('Endpoint'));
+
+      window.__timelines["twist"] = tl;
+    })();
+  </script>
+</template>

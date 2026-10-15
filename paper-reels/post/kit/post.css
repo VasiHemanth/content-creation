@@ -1,0 +1,152 @@
+/* Slide kit for posts (1080 x 1350), on top of hf/kit/blueprint.css: same palette (--bg, --deep, --panel, --white,
+   --cyan, --amber, --coral, --mint, --shadow), same fonts (Marker for headings, Mono for text), same hard offset shadows.
+
+   Rules the audit enforces on every slide (see README.md):
+     - body text 38 px or more, headings (.pk-h1, .pk-h2, h1, h2) 72 px or more
+     - text stays inside the 70 px margin; on slide 1 inside the central 3:4 area (x 34..1046)
+     - every letter and digit comes from post.json (data-bind), except CSS counters
+     - static: no animation, no transition
+   Colour modifiers (is-amber, is-cyan, is-mint, is-coral, is-white, is-dim) work on every component. */
+
+/* ---- page: the 940 x 1210 content box inside the 70 px margin ---- */
+.pk-page { position: absolute; left: 70px; top: 70px; width: 940px; height: 1210px; display: flex; flex-direction: column; gap: 30px; }
+.pk-stack { display: flex; flex-direction: column; gap: 30px; }
+.pk-stack.is-tight { gap: 18px; } .pk-stack.is-wide { gap: 46px; }
+.pk-row { display: flex; align-items: center; gap: 24px; }
+.pk-grow { flex: 1 1 auto; }
+.pk-end { margin-top: auto; }
+.pk-center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+
+/* ---- colour modifiers ---- */
+.is-white { color: var(--white); } .is-cyan { color: var(--cyan); } .is-amber { color: var(--amber); }
+.is-mint { color: var(--mint); } .is-coral { color: var(--coral); } .is-dim { color: var(--dim); }
+
+/* ---- type ---- */
+.pk-h1, .pk-h2 { font-family: "Marker", sans-serif; font-weight: 400; color: var(--white); text-shadow: 7px 7px 0 rgba(2, 12, 24, .8); overflow-wrap: break-word; }
+.pk-h1 { font-size: 112px; line-height: 1.06; }
+.pk-h1.is-xl { font-size: 132px; } .pk-h1.is-m { font-size: 92px; }
+.pk-h2 { font-size: 84px; line-height: 1.08; }
+.pk-h2.is-s { font-size: 74px; }
+.pk-kicker { font: 700 38px/1.2 "Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--cyan); }
+.pk-body { font: 600 44px/1.32 "Mono", monospace; color: var(--white); overflow-wrap: break-word; }
+.pk-body.is-sub { color: var(--cyan); }
+.pk-body.is-s { font-size: 38px; }
+.pk-body.is-l { font-size: 50px; line-height: 1.28; }
+.pk-big { font: 400 168px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 8px 8px 0 rgba(2, 12, 24, .8); }
+.pk-hl { color: var(--amber); }
+.pk-strong { font-weight: 800; }
+
+/* ---- chips and labels ---- */
+.pk-chip { display: inline-block; align-self: flex-start; padding: 8px 22px 9px; font: 700 38px/1.15 "Mono", monospace; letter-spacing: .06em; color: var(--amber);
+  background: var(--deep); border: 3px solid var(--amber); white-space: nowrap; }
+.pk-chip.is-cyan { border-color: var(--cyan); } .pk-chip.is-coral { border-color: var(--coral); }
+.pk-chip.is-mint { border-color: var(--mint); } .pk-chip.is-caps { text-transform: uppercase; }
+.pk-handle { display: inline-block; align-self: flex-start; padding: 12px 32px 14px; font: 700 50px/1.1 "Mono", monospace; color: var(--amber); background: var(--deep);
+  border: 4px solid var(--amber); box-shadow: 10px 10px 0 var(--shadow); white-space: nowrap; }
+
+/* ---- rules and arrows (drawn, no text) ---- */
+.pk-rule { height: 0; border-top: 3px solid var(--cyan); opacity: .8; }
+.pk-rule.is-dash { border-top-style: dashed; } .pk-rule.is-amber { border-top-color: var(--amber); opacity: 1; }
+.pk-arrow { position: relative; height: 62px; flex: none; }
+.pk-arrow::before { content: ""; position: absolute; left: 50%; top: 0; width: 6px; height: 38px; margin-left: -3px; background: var(--cyan); }
+.pk-arrow::after { content: ""; position: absolute; left: 50%; top: 32px; width: 0; height: 0; margin-left: -22px; border: 22px solid transparent; border-top: 26px solid var(--cyan); border-bottom: 0; }
+.pk-arrow.is-amber::before { background: var(--amber); } .pk-arrow.is-amber::after { border-top-color: var(--amber); }
+.pk-swipe { display: flex; align-items: center; justify-content: flex-end; gap: 22px; }
+.pk-swipe-line { position: relative; width: 150px; height: 6px; background: var(--amber); }
+.pk-swipe-line::after { content: ""; position: absolute; right: 0; top: -15px; width: 0; height: 0; border: 18px solid transparent; border-left: 28px solid var(--amber); border-right: 0; }
+
+/* ---- panel with a letter tag ---- */
+.pk-panel { position: relative; padding: 28px 32px 30px; background: var(--panel); border: 3px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); }
+.pk-panel.is-cyan { border-color: var(--cyan); } .pk-panel.is-amber { border-color: var(--amber); }
+.pk-panel.is-mint { border-color: var(--mint); } .pk-panel.is-coral { border-color: var(--coral); }
+.pk-panel.is-tagged { display: grid; grid-template-columns: 84px 1fr; gap: 28px; align-items: start; }
+.pk-tag { display: flex; align-items: center; justify-content: center; width: 84px; height: 84px; font: 400 60px/1 "Marker", sans-serif; color: var(--deep); background: var(--amber); box-shadow: 5px 5px 0 var(--shadow); }
+.pk-tag.is-cyan { background: var(--cyan); } .pk-tag.is-mint { background: var(--mint); } .pk-tag.is-coral { background: var(--coral); } .pk-tag.is-white { background: var(--white); color: var(--deep); }
+.pk-panel-title { font: 700 50px/1.2 "Mono", monospace; color: var(--white); overflow-wrap: break-word; }
+.pk-panel-text { margin-top: 10px; font: 600 42px/1.32 "Mono", monospace; color: var(--cyan); overflow-wrap: break-word; }
+
+/* ---- counter-example: a coral box whose label says what it is. The audit needs .pk-x-label inside every .pk-x ---- */
+.pk-x { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding: 24px 30px 28px; background: rgba(255, 107, 107, .08); border: 3px solid var(--coral); box-shadow: 10px 10px 0 var(--shadow); }
+.pk-x-label { display: inline-block; padding: 4px 20px 6px; font: 400 48px/1.1 "Marker", sans-serif; color: var(--coral); background: var(--deep); border: 3px solid var(--coral); outline: 2px solid var(--coral); outline-offset: -9px; white-space: nowrap; }
+.pk-x-text { font: 600 44px/1.32 "Mono", monospace; color: var(--white); overflow-wrap: break-word; }
+
+/* denser variants: is-s sets 40 px (the smallest size the kit allows for running text is 38 px) */
+.pk-x-text.is-s, .pk-cmp-text.is-s, .pk-callout-text.is-s, .pk-what.is-s { font-size: 40px; }
+.pk-panel-text.is-s, .pk-step-text.is-s { font-size: 38px; }
+
+/* ---- comparison: before and after, stacked, with an arrow between ---- */
+.pk-compare { display: flex; flex-direction: column; gap: 8px; }
+.pk-cmp { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding: 24px 30px 28px; background: var(--panel); border: 3px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); }
+.pk-cmp.is-good { border-color: var(--mint); background: rgba(123, 227, 176, .08); }
+.pk-cmp-label { display: inline-block; padding: 4px 20px 6px; font: 400 48px/1.1 "Marker", sans-serif; color: var(--mint); background: var(--deep); border: 3px solid var(--mint); outline: 2px solid var(--mint); outline-offset: -9px; white-space: nowrap; }
+.pk-cmp-text { font: 600 44px/1.32 "Mono", monospace; color: var(--white); overflow-wrap: break-word; }
+
+/* ---- labelled bar and meter: --pct (0..1) comes from data-var ---- */
+.pk-bars { display: flex; flex-direction: column; gap: 26px; }
+.pk-bar, .pk-meter { --p: min(max(var(--pct, calc(var(--n, 0) / var(--max, 1))), 0), 1); }
+.pk-bar { display: flex; flex-direction: column; gap: 10px; }
+.pk-bar-head { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; }
+.pk-bar-label { font: 700 44px/1.2 "Mono", monospace; color: var(--white); }
+.pk-bar-val { font: 400 68px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 5px 5px 0 rgba(2, 12, 24, .8); white-space: nowrap; }
+.pk-bar-track { position: relative; height: 46px; background: var(--deep); border: 3px solid var(--white); box-shadow: 8px 8px 0 var(--shadow); overflow: hidden; }
+.pk-bar-fill { position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--p) * 100%); background: var(--white); }
+.pk-bar.is-amber .pk-bar-fill { background: var(--amber); } .pk-bar.is-mint .pk-bar-fill { background: var(--mint); }
+.pk-bar.is-coral .pk-bar-fill { background: var(--coral); } .pk-bar.is-cyan .pk-bar-fill { background: var(--cyan); }
+.pk-bar.is-coral .pk-bar-val { color: var(--coral); } .pk-bar.is-mint .pk-bar-val { color: var(--mint); }
+.pk-meter { position: relative; height: 54px; border: 3px solid var(--white); background: var(--deep); box-shadow: 8px 8px 0 var(--shadow); overflow: hidden; }
+.pk-meter::before { content: ""; position: absolute; inset: 6px; background: repeating-linear-gradient(90deg, var(--amber) 0 calc(10% - 8px), transparent calc(10% - 8px) 10%);
+  clip-path: inset(0 calc((1 - var(--p)) * 100%) 0 0); }
+.pk-meter.is-mint::before { background: repeating-linear-gradient(90deg, var(--mint) 0 calc(10% - 8px), transparent calc(10% - 8px) 10%); }
+.pk-meter.is-coral::before { background: repeating-linear-gradient(90deg, var(--coral) 0 calc(10% - 8px), transparent calc(10% - 8px) 10%); }
+
+/* ---- numbered steps: the numbers are a CSS counter, so they are not copy ---- */
+.pk-steps { list-style: none; counter-reset: pk-step; display: flex; flex-direction: column; gap: 34px; }
+.pk-steps > li { position: relative; counter-increment: pk-step; display: grid; grid-template-columns: 84px 1fr; gap: 28px; align-items: start; }
+.pk-steps > li::before { content: counter(pk-step); display: flex; align-items: center; justify-content: center; width: 84px; height: 84px; font: 400 60px/1 "Marker", sans-serif; color: var(--deep); background: var(--amber); box-shadow: 5px 5px 0 var(--shadow); }
+.pk-steps > li:not(:last-child)::after { content: ""; position: absolute; left: 40px; top: 90px; bottom: -32px; width: 4px; background: var(--cyan); opacity: .7; }
+.pk-step-title { font: 700 50px/1.2 "Mono", monospace; color: var(--white); overflow-wrap: break-word; }
+.pk-step-text { margin-top: 8px; font: 600 42px/1.32 "Mono", monospace; color: var(--cyan); overflow-wrap: break-word; }
+
+/* ---- callout ---- */
+.pk-callout { display: grid; grid-template-columns: 72px 1fr; gap: 28px; align-items: start; padding: 26px 32px 30px 28px; background: rgba(255, 180, 84, .1); border: 3px solid var(--amber); border-left-width: 14px; }
+.pk-callout::before { content: ""; width: 68px; height: 68px; border-radius: 50%; background: radial-gradient(circle at 50% 74%, var(--deep) 0 5px, transparent 6px), linear-gradient(var(--deep), var(--deep)) 50% 24% / 9px 30px no-repeat, var(--amber); }
+.pk-callout.is-coral { background: rgba(255, 107, 107, .1); border-color: var(--coral); } .pk-callout.is-coral::before { background-color: var(--coral); }
+.pk-callout.is-mint { background: rgba(123, 227, 176, .1); border-color: var(--mint); } .pk-callout.is-mint::before { background-color: var(--mint); }
+.pk-callout.is-cyan { background: rgba(168, 220, 242, .1); border-color: var(--cyan); } .pk-callout.is-cyan::before { background-color: var(--cyan); }
+.pk-callout-title { font: 700 48px/1.2 "Mono", monospace; color: var(--white); }
+.pk-callout-text { font: 600 44px/1.32 "Mono", monospace; color: var(--white); overflow-wrap: break-word; }
+.pk-callout-title + .pk-callout-text { margin-top: 8px; }
+
+/* ---- timeline: a vertical line, one dot per entry ---- */
+.pk-timeline { list-style: none; position: relative; display: flex; flex-direction: column; gap: 34px; padding-left: 64px; }
+.pk-timeline::before { content: ""; position: absolute; left: 14px; top: 20px; bottom: 20px; width: 4px; background: var(--cyan); opacity: .7; }
+.pk-timeline > li { position: relative; }
+.pk-timeline > li::before { content: ""; position: absolute; left: -62px; top: 12px; width: 32px; height: 32px; border-radius: 50%; background: var(--deep); border: 5px solid var(--amber); }
+.pk-timeline > li.is-now::before { background: var(--amber); }
+.pk-when { font: 400 64px/1.1 "Marker", sans-serif; color: var(--amber); text-shadow: 5px 5px 0 rgba(2, 12, 24, .8); }
+.pk-what { margin-top: 6px; font: 600 44px/1.32 "Mono", monospace; color: var(--white); overflow-wrap: break-word; }
+
+/* ---- code or prompt box ---- */
+.pk-code { background: #04121f; border: 3px solid var(--cyan); box-shadow: 10px 10px 0 var(--shadow); }
+.pk-code-bar { display: flex; align-items: center; gap: 22px; padding: 12px 24px; border-bottom: 3px solid var(--cyan); background: var(--deep); }
+.pk-code-bar::before { content: ""; width: 18px; height: 18px; border-radius: 50%; background: var(--coral); box-shadow: 30px 0 0 var(--amber), 60px 0 0 var(--mint); margin-right: 60px; }
+.pk-code-label { font: 700 38px/1.2 "Mono", monospace; letter-spacing: .06em; color: var(--cyan); }
+.pk-code-body { margin: 0; padding: 26px 30px 30px; font: 600 42px/1.36 "Mono", monospace; color: var(--mint); white-space: pre-wrap; overflow-wrap: anywhere; }
+.pk-code.is-bad { border-color: var(--coral); } .pk-code.is-bad .pk-code-bar { border-bottom-color: var(--coral); } .pk-code.is-bad .pk-code-label { color: var(--coral); } .pk-code.is-bad .pk-code-body { color: var(--white); }
+.pk-code.is-good { border-color: var(--mint); } .pk-code.is-good .pk-code-bar { border-bottom-color: var(--mint); } .pk-code.is-good .pk-code-label { color: var(--mint); }
+
+/* ---- title block (cover) ---- */
+.pk-cover { display: flex; flex-direction: column; gap: 26px; height: 100%; }
+.pk-cover .pk-h1 { margin-top: 14px; }
+.pk-hero { position: relative; flex: 1 1 auto; min-height: 0; }
+.pk-hero svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; }
+
+/* ---- source line at the foot of a slide ---- */
+.pk-foot { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-top: 18px; border-top: 3px solid rgba(168, 220, 242, .5); font: 600 38px/1.2 "Mono", monospace; color: var(--dim); }
+
+/* ---- built-in video slide: the reel covers x 160..919, the sheet shows in the gutters ---- */
+.pk-vframe { position: absolute; left: 156px; top: 0; width: 767px; height: 1350px; border-left: 3px solid var(--cyan); border-right: 3px solid var(--cyan); opacity: .8; }
+.pk-vlabel { position: absolute; top: 70px; height: 1210px; width: 46px; font: 700 40px/46px "Mono", monospace; letter-spacing: .05em; white-space: nowrap; text-align: center; color: var(--cyan); }
+.pk-vleft { left: 88px; writing-mode: sideways-lr; }
+.pk-vright { left: 946px; writing-mode: vertical-rl; color: var(--amber); }
+.pk-vhandle { font-size: 44px; }

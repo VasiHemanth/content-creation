@@ -1,0 +1,137 @@
+<template id="limits-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #lm-shk { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #lm-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #lm-grid, #lm-sk { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #lm-gsvg, #lm-ssvg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #lm-main { left: 60px; top: 196px; font-size: 36px; }
+    #lm-n { left: 380px; top: 150px; font: 400 130px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 7px 7px 0 var(--shadow); }
+    .lm-row { left: 60px; font-size: 28px; padding: 8px 14px; }
+    .lm-col { top: 336px; font-size: 26px; padding: 8px 10px; }
+    #lm-small { left: 520px; top: 1150px; font-size: 34px; }
+    #lm-lo { left: 110px; top: 1010px; font-size: 30px; }
+    #lm-skt { left: 520px; top: 1016px; font-size: 28px; }
+    #lm-tested { left: 60px; top: 1090px; font-size: 32px; }
+    .lm-m { top: 1190px; font-size: 32px; }
+    #lm-m1 { left: 60px; } #lm-m2 { left: 392px; } #lm-m3 { left: 590px; }
+    #lm-dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #061a30; opacity: 0; }
+    #lm-rcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #lm-rstage, #lm-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #lm-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="limits" data-width="1080" data-height="1920">
+    <div id="lm-shk"><div id="lm-cam">
+      <div id="lm-grid">
+        <svg id="lm-gsvg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="lm-main" class="tag" data-bind="l13.main"></div>
+        <div id="lm-n" class="abs" data-bind="l13.n"></div>
+        <div id="lm-r1" class="tag cyan lm-row" data-bind="l13.r1"></div>
+        <div id="lm-r2" class="tag cyan lm-row" data-bind="l13.r2"></div>
+        <div id="lm-r3" class="tag cyan lm-row" data-bind="l13.r3"></div>
+        <div id="lm-r4" class="tag cyan lm-row" data-bind="l13.r4"></div>
+        <div id="lm-c1" class="tag cyan lm-col" data-bind="l13.c1"></div>
+        <div id="lm-c2" class="tag cyan lm-col" data-bind="l13.c2"></div>
+        <div id="lm-c3" class="tag cyan lm-col" data-bind="l13.c3"></div>
+        <div id="lm-small" class="tag" data-bind="l13.small"></div>
+      </div>
+      <div id="lm-sk">
+        <svg id="lm-ssvg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="lm-lo" class="tag" data-bind="l14.lo"></div>
+        <div id="lm-skt" class="lbl" data-bind="l14.sketch"></div>
+        <div id="lm-tested" class="tag cyan" data-bind="l14.tested"></div>
+        <div id="lm-m1" class="tag cyan lm-m" data-bind="l14.m1"></div>
+        <div id="lm-m2" class="tag cyan lm-m" data-bind="l14.m2"></div>
+        <div id="lm-m3" class="tag cyan lm-m" data-bind="l14.m3"></div>
+      </div>
+    </div></div>
+    <div id="lm-dim"></div>
+    <div id="lm-rcam"><div id="lm-rstage"></div></div>
+    <div id="lm-hud"></div>
+    <div id="lm-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l13', w, n), e = (w, n) => KIT.cue('l14', w, n), D = KIT.sceneDur('limits'), S = KIT.svgEl;
+      KIT.bind('#lm-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.2) => tl.fromTo('#lm-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const G = document.getElementById('lm-gsvg'), K = document.getElementById('lm-ssvg'), d12 = KIT.data('l12');
+
+      // l13: 4 benchmarks (rows) x 3 models (columns); each tile's arrow length is its gain from Table 1
+      const RY = [420, 600, 780, 960], CX = [450, 640, 830], gains = KIT.data('l13')._gains, tiles = [];
+      RY.forEach((y, r) => { document.getElementById(`lm-r${r + 1}`).style.top = `${y + 46}px`; });
+      CX.forEach((x, k) => { const el = document.getElementById(`lm-c${k + 1}`); el.style.left = `${x - 92}px`; el.style.width = '184px'; el.style.textAlign = 'center'; el.style.boxSizing = 'border-box'; });
+      RY.forEach((y, r) => CX.forEach((x, m) => {
+        S('rect', { x: x - 80, y, width: 160, height: 146, rx: 10, fill: 'rgba(168,220,242,0.18)', stroke: '#a8dcf2', 'stroke-width': 5, id: `lm-s${r}${m}`, class: 'lm-slot' }, G);
+        const gv = gains[m][r], g = S('g', { id: `lm-t${r}${m}` }, G), L = 16 + gv * 12;
+        S('rect', { x: x - 80, y, width: 160, height: 146, rx: 10, fill: '#0a2340', stroke: '#6aa9d0', 'stroke-width': 4 }, g);
+        const ar = S('g', { id: `lm-a${r}${m}` }, g);
+        S('rect', { x: x - 9, y: y + 132 - L, width: 18, height: L, fill: '#a8dcf2' }, ar);
+        S('path', { d: `M${x - 26} ${y + 136 - L} L${x} ${y + 108 - L} L${x + 26} ${y + 136 - L} Z`, fill: '#a8dcf2' }, ar);
+        tiles.push({ g, ar, gv, x, y, r, m });
+      }));
+      KIT.pop(tl, '#lm-main', c('main'), { from: 0.5 });
+      tl.fromTo('.lm-slot', { scale: 0, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.25, ease: 'back.out(2.5)', stagger: 0.06 }, c('main') - 0.1);
+      pulse(c('main'), 0.15);
+      ['#lm-r1', '#lm-r2', '#lm-r3', '#lm-r4'].forEach((s, k) => KIT.rise(tl, s, c('budgets') + k * 0.06, { x: -40, y: 0 }));
+      ['#lm-c1', '#lm-c2', '#lm-c3'].forEach((s, k) => KIT.rise(tl, s, c('meta-reasoning') + k * 0.08, { y: -30 }));
+      tl.fromTo('#lm-cam', { x: 0, y: 0, scale: 1 }, { x: -30, y: -20, scale: 1.04, duration: c('twelve'), ease: 'sine.inOut' }, 0);
+      tiles.forEach((t, k) => { tl.fromTo(t.g, { scaleY: 0, opacity: 0, transformOrigin: '50% 100%' }, { scaleY: 1, opacity: 1, duration: 0.22, ease: 'back.out(2)' }, c('scored') + k * 0.07);
+        tl.fromTo(t.ar, { scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.3, ease: 'power3.out' }, c('twelve') + k * 0.05); });
+      KIT.slam(tl, '#lm-n', c('twelve') - 0.05, { from: 2.4, shake: false });
+      KIT.shake(tl, '#lm-shk', c('twelve') + 0.18, { amp: 12, dur: 0.3 });
+      pulse(c('twelve'), 0.25);
+      // "Some gains are small": the three shortest arrows, a push in and a magnifier
+      const small = tiles.slice().sort((p, q) => p.gv - q.gv).slice(0, 3);
+      tl.to(tiles.filter((t) => !small.includes(t)).flatMap((t) => [t.g, `#lm-s${t.r}${t.m}`]), { opacity: 0.28, duration: 0.3 }, c('Some'));
+      const cx = small.reduce((a, t) => a + t.x, 0) / 3, cy = small.reduce((a, t) => a + t.y + 73, 0) / 3, s = 1.3;
+      tl.to('#lm-cam', { x: 540 - s * cx, y: 800 - s * cy, scale: s, duration: 0.5, ease: 'power3.inOut' }, c('Some'));
+      const mag = S('g', { id: 'lm-mag', opacity: 0 }, G);
+      S('circle', { cx: 0, cy: 0, r: 62, fill: 'rgba(168,220,242,0.12)', stroke: '#ffb454', 'stroke-width': 9 }, mag);
+      S('path', { d: 'M44 44 L96 96', stroke: '#ffb454', 'stroke-width': 16, 'stroke-linecap': 'round' }, mag);
+      const sp = small.slice().sort((p, q) => p.y - q.y || p.x - q.x).map((t) => [t.x, t.y + 100]);
+      tl.fromTo(mag, { opacity: 0, x: sp[0][0], y: sp[0][1] - 80 }, { opacity: 1, x: sp[0][0], y: sp[0][1], duration: 0.2 }, c('small') - 0.2);
+      tl.to(mag, { keyframes: [{ x: sp[1][0], y: sp[1][1], duration: 0.3, ease: 'power2.inOut' }, { x: sp[2][0], y: sp[2][1], duration: 0.3, ease: 'power2.inOut' }] }, c('small') + 0.1);
+      KIT.pop(tl, '#lm-small', c('small'));
+      pulse(c('small'), 0.18);
+
+      // l14: "overhead": the abstract's clause, read on camera for about 2 s
+      const tR = e('Its') - 0.35;
+      tl.fromTo('#lm-dim', { opacity: 0 }, { opacity: 0.88, duration: 0.3 }, tR);
+      const R = KIT.read(tl, { cam: '#lm-rcam', parent: '#lm-rstage', hud: '#lm-hud', tagY: 640, id: 'overhead', t: tR, label: KIT.data('l14').receipt,
+        x: 40, y: 900, width: 1000, zoom: 2.5, fx: 90, fy: 800, follow: 0,
+        marks: [[e('Its'), e('budgets') + 0.3]], circles: [{ word: 'small', t: e('small') + 0.05 }] });
+      tl.set(R.el, { rotationZ: 0, rotationX: 0 }, tR + 0.6);
+      // then the budget sketch, zoomed on its small-budget end, where the two lines cross (GPT-5.5, ProgramBench)
+      const tB = e('budgets') + 0.4;
+      tl.set([R.el, '#lm-hud'], { opacity: 0 }, tB);
+      tl.set('#lm-rcam', { x: 0, y: 0, scale: 1 }, tB);
+      tl.set('#lm-dim', { opacity: 0 }, tB);
+      tl.set('#lm-grid', { opacity: 0 }, tB);
+      tl.set('#lm-cam', { x: 0, y: 0, scale: 1 }, tB);
+      const F = 0.3, X0 = 160, X1 = 900, yv = (v) => 1000 - (v - 63) * 120;
+      const mr = (f) => d12._mr400 + (d12._mr1200 - d12._mr400) * f, dc = (f) => f < 0.5 ? d12._dcLeft + (d12._dcFlat - d12._dcLeft) * f * 2 : d12._dcFlat;
+      const pts = (fn) => Array.from({ length: 7 }, (_, i) => { const f = (F * i) / 6; return `${(X0 + ((X1 - X0) * i) / 6).toFixed(1)} ${yv(fn(f)).toFixed(1)}`; }).join(' L');
+      const ax = S('path', { d: `M${X0 - 30} 980 H${X1 + 20} M${X0} 980 V300`, class: 'ln dim thick', id: 'lm-skax' }, K);
+      const la = S('path', { d: `M${pts(dc)}`, stroke: '#ffb454', 'stroke-width': 12, fill: 'none', 'stroke-linecap': 'round', id: 'lm-skA' }, K);
+      const lb = S('path', { d: `M${pts(mr)}`, stroke: '#a8dcf2', 'stroke-width': 12, fill: 'none', 'stroke-linecap': 'round', id: 'lm-skB' }, K);
+      const arr = S('path', { d: 'M200 1004 V940', class: 'ln amber thick', id: 'lm-skarr' }, K);
+      tl.fromTo('#lm-sk', { opacity: 0 }, { opacity: 1, duration: 0.01 }, tB);
+      tl.fromTo('#lm-sk', { scale: 1.5, transformOrigin: '160px 700px' }, { scale: 1, duration: 0.5, ease: 'power3.out' }, tB);
+      KIT.draw(tl, ax, tB, 0.25);
+      KIT.draw(tl, [la, lb], tB + 0.1, 0.55);
+      KIT.pop(tl, '#lm-lo', tB + 0.2); KIT.draw(tl, arr, tB + 0.2, 0.2);
+      KIT.rise(tl, '#lm-skt', tB + 0.3, { y: 10 });
+      pulse(tB, 0.2);
+      // "three frontier models": three tags slide in and a bracket wraps them
+      ['#lm-m1', '#lm-m2', '#lm-m3'].forEach((s, k) => KIT.rise(tl, s, e('three') - 0.1 + k * 0.12, { x: -60, y: 0 }));
+      const br = S('path', { d: 'M60 1180 V1160 H790 V1180', class: 'ln cyan thick', id: 'lm-br' }, K);
+      KIT.draw(tl, br, e('frontier'), 0.3);
+      KIT.pop(tl, '#lm-tested', e('frontier') + 0.1, { from: 0.5 });
+      pulse(e('three'), 0.18);
+      tl.fromTo('#lm-sk', { y: 0 }, { y: -30, duration: D - e('three'), ease: 'sine.inOut', immediateRender: false }, e('three'));
+      window.__timelines["limits"] = tl;
+    })();
+  </script>
+</template>

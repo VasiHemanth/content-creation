@@ -1,0 +1,87 @@
+<template id="limit-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #limit-all, #limit-shk, #limit-hud0 { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #limit-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #limit-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #limit-box { position: absolute; left: 340px; top: 330px; width: 400px; height: 400px; background: #0a2340; border: 10px solid var(--white); border-radius: 44px; box-shadow: 14px 14px 0 var(--shadow); box-sizing: border-box; }
+    #limit-q { left: 0; top: 70px; width: 380px; text-align: center; font: 400 170px/1 "Marker", sans-serif; color: var(--amber); }
+    #limit-slot { position: absolute; left: 90px; top: 300px; width: 200px; height: 26px; border-radius: 13px; background: #020c18; }
+    #limit-tray { position: absolute; left: 390px; top: 643px; width: 300px; height: 480px; overflow: hidden; }
+    #limit-sheet { position: absolute; left: 0; top: 0; width: 300px; height: 440px; background: #f4efe3; border-radius: 6px; box-shadow: 8px 8px 0 var(--shadow); }
+    #limit-shsvg { left: 0; top: 0; width: 300px; height: 440px; }
+    #limit-stamp { left: 90px; top: 196px; font-size: 104px; }
+    #limit-vis { position: absolute; left: 240px; top: 1150px; width: 600px; text-align: center; }
+    #limit-vis .tag { position: relative; display: inline-block; font-size: 32px; }
+    #limit-mag { position: absolute; left: 0; top: 0; width: 220px; height: 220px; }
+    #limit-dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #061a30; opacity: 0; }
+    #limit-rcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #limit-rstage, #limit-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #limit-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="limit" data-width="1080" data-height="1920">
+    <div id="limit-all">
+      <div id="limit-shk"><div id="limit-cam">
+        <svg id="limit-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="limit-tray"><div id="limit-sheet"><svg id="limit-shsvg" class="ink" viewBox="0 0 300 440"></svg></div></div>
+        <div id="limit-box"><div id="limit-q" class="abs" data-bind="l14.q"></div><div id="limit-slot"></div></div>
+        <div id="limit-mag"><svg class="ink" style="left:0;top:0;width:220px;height:220px" viewBox="0 0 220 220"><circle cx="90" cy="90" r="64" fill="rgba(168,220,242,0.14)" stroke="#ffb454" stroke-width="10"/><path d="M136 136 L196 196" stroke="#ffb454" stroke-width="18" stroke-linecap="round"/></svg></div>
+      </div></div>
+      <div id="limit-hud0">
+        <div id="limit-stamp" class="stamp" data-bind="l14.stamp"></div>
+        <div id="limit-vis"><div class="tag" data-bind="l14.vis"></div></div>
+      </div>
+      <div id="limit-dim"></div>
+      <div id="limit-rcam"><div id="limit-rstage"></div></div>
+      <div id="limit-hud"></div>
+      <div id="limit-flash"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l14', w, n), D = KIT.sceneDur('limit'), S = KIT.svgEl;
+      KIT.bind('#limit-all');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.2) => tl.fromTo('#limit-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const G = document.getElementById('limit-svg'), SH = document.getElementById('limit-shsvg');
+
+      // a robot head drawn as a closed box: antenna and eyes on top of an opaque face; the box never opens
+      S('path', { d: 'M540 330 V262', stroke: '#f2f8ff', 'stroke-width': 10, 'stroke-linecap': 'round' }, G);
+      const ant = S('circle', { cx: 540, cy: 250, r: 18, fill: '#ffb454', id: 'limit-ant' }, G);
+      const eyes = [470, 610].map((x, k) => S('rect', { x: x - 30, y: 364, width: 60, height: 18, rx: 9, fill: '#ffb454', id: `limit-eye${k}` }, G));
+      [110, 170, 230, 290, 350].forEach((y, k) => S('rect', { x: 34, y: 60 + k * 64, width: [220, 190, 230, 160, 200][k], height: 16, rx: 8, fill: '#12263f' }, SH));
+      tl.fromTo('#limit-box', { scale: 0.6, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(2)' }, 0.1);
+      tl.fromTo('#limit-cam', { x: 0, y: 0, scale: 1 }, { x: 540 * (1 - 1.05), y: 700 * (1 - 1.05), scale: 1.05, duration: D, ease: 'sine.inOut' }, 0);
+      tl.fromTo(eyes, { opacity: 0.2 }, { opacity: 1, duration: 0.2 }, 0.3);
+      // "limit": the stamp
+      tl.fromTo('#limit-stamp', { scale: 2.4, opacity: 0, rotation: -8, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, rotation: -8, duration: 0.2, ease: 'power4.in' }, c('limit') - 0.1);
+      KIT.shake(tl, '#limit-shk', c('limit') + 0.1, { amp: 12, dur: 0.28 });
+      pulse(c('limit') + 0.1, 0.25);
+      // "claims": the paper's limit, read on camera
+      const tR = c('claims') - 0.4, tEnd = KIT.cueEnd('l14', 'output') + 0.05;
+      tl.fromTo('#limit-dim', { opacity: 0 }, { opacity: 0.88, duration: 0.25 }, tR);
+      const RD = KIT.read(tl, { cam: '#limit-rcam', parent: '#limit-rstage', hud: '#limit-hud', tagY: 640, id: 'visible', t: tR, label: KIT.data('l14').receipt,
+        x: 40, y: 900, width: 1000, zoom: 2.6, fx: 90, fy: 820, follow: 0,
+        marks: [[c('claims') - 0.15, c('concern') - 0.04, [[c('claims'), 0.2]]], [c('concern'), tEnd, [[c('visible'), 0.36], [c('output'), 0.73]]]],
+        circles: [{ word: 'visible', t: c('visible') + 0.05 }] });
+      tl.set(RD.el, { rotationZ: 0, rotationX: 0 }, tR + 0.6);
+      const tB = tEnd + 0.05;
+      tl.set([RD.el, '#limit-hud'], { opacity: 0 }, tB);
+      tl.set('#limit-rcam', { x: 0, y: 0, scale: 1 }, tB);
+      tl.set('#limit-dim', { opacity: 0 }, tB);
+      tl.set('#limit-stamp', { opacity: 0 }, tB);
+      // the reply sheet slides out of the mouth slot; the magnifier settles on it
+      tl.fromTo('#limit-sheet', { y: -440 }, { y: 20, duration: 0.45, ease: 'power3.out' }, tB);
+      pulse(tB, 0.2);
+      tl.fromTo('#limit-mag', { x: 760, y: 1080, opacity: 0 }, { x: 470, y: 820, opacity: 1, duration: 0.4, ease: 'power3.out' }, tB + 0.2);
+      KIT.pop(tl, '#limit-vis', tB + 0.3, { from: 0.5 });
+      // "inside": a question mark pulses inside the closed box
+      tl.fromTo('#limit-q', { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(3)' }, c('inside') - 0.05);
+      tl.to('#limit-q', { scale: 1.15, duration: 0.2, yoyo: true, repeat: 3, ease: 'sine.inOut' }, c('inside') + 0.25);
+      tl.fromTo(eyes, { opacity: 1 }, { opacity: 0.2, duration: 0.15, immediateRender: false }, c('inside') - 0.05);
+      tl.fromTo(ant, { scale: 1, transformOrigin: '50% 50%' }, { scale: 1.6, duration: 0.2, yoyo: true, repeat: 1, immediateRender: false }, c('inside'));
+      pulse(c('inside'), 0.18);
+      window.__timelines["limit"] = tl;
+    })();
+  </script>
+</template>

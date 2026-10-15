@@ -1,0 +1,11 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2610.02163/paper-v1.pdf",
+ "note": "Receipts: real crops of arXiv 2610.02163v1. Every number readable in a crop must be in facts.json (numbers or evidence_incidental); qa checks it. R1 p.1 (abstract), R2 p.3 (sec 2.2), R3 and R4 p.8 (sec 3.3). R4 is split in two entries so each line highlights its own phrase. Fragments stay on one printed line (pdfium joins soft-hyphen breaks).",
+ "items": [
+  { "id": "stale", "page": 1, "context": [1, 1], "scale": 7, "circle": ["stale,"], "find": ["earlier exploration becomes stale"] },
+  { "id": "rarely", "page": 3, "context": [1, 0], "scale": 7, "circle": ["rarely"], "find": ["rarely invoked"] },
+  { "id": "progress", "page": 8, "context": [1, 1], "scale": 7, "circle": ["progress"], "find": ["compaction based on task progress is more effective"] },
+  { "id": "adv1", "page": 8, "context": [1, 1], "scale": 7, "circle": ["19.9%"], "find": ["The advantage is 19.9% at $0.10"] },
+  { "id": "adv2", "page": 8, "context": [1, 1], "scale": 7, "circle": ["1.9%"], "find": ["remains 1.9% at $4.00"] }
+ ]
+}

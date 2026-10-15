@@ -1,0 +1,240 @@
+<template id="judge-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #judge-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #judge-beat, #judge-world, #judge-top, #judge-stage, #judge-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #judge-beat { transform-origin: 540px 1000px; }
+    #judge-scrim { position: absolute; left: -1500px; top: -1500px; width: 4000px; height: 5000px; background: #061a30; opacity: 0; }
+    #judge-badge { left: 120px; top: 850px; font-size: 28px; }
+    #judge-rules { left: 150px; top: 640px; padding: 14px 26px; font-size: 32px; border-radius: 10px; }
+    #judge-ghostlab { left: 300px; top: 780px; font-size: 30px; }
+    #judge-ignores { left: 70px; top: 990px; }
+    #judge-follow { left: 330px; top: 760px; }
+    #judge-dig { left: 92px; top: 1290px; font-size: 28px; }
+    .ac-chip { position: absolute; padding: 8px 16px 6px; font: 700 28px/1 "Mono", monospace; color: var(--white); background: #0f3a60; border: 4px solid var(--cyan);
+      border-radius: 12px; white-space: nowrap; box-shadow: 5px 5px 0 var(--shadow); transform-origin: 50% 50%; }
+    .ac-chip.old { color: var(--dim); border-color: var(--faint); background: #0b2a4a; }
+    .ac-press { position: absolute; height: 190px; }
+    .ac-rod { position: absolute; top: 0; width: 10px; height: 130px; background: var(--dim); }
+    .ac-plate { position: absolute; left: 0; top: 120px; height: 62px; background: var(--deep); border: 5px solid var(--amber); box-shadow: 8px 8px 0 var(--shadow);
+      font: 700 32px/52px "Mono", monospace; color: var(--amber); text-align: center; box-sizing: border-box; }
+    .ac-gauge { position: absolute; width: 46px; border: 5px solid var(--white); border-radius: 10px; box-sizing: border-box; background: var(--panel); overflow: visible; }
+    .ac-gfill { position: absolute; left: 4px; right: 4px; bottom: 4px; top: 4px; background: var(--cyan); transform-origin: 50% 100%; border-radius: 4px; }
+    .ac-gtick { position: absolute; left: -22px; width: 80px; height: 6px; background: var(--coral); }
+    .ac-card { position: absolute; background: var(--paper); color: var(--ink); border: 4px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); padding: 10px 0 8px; }
+    .ac-chead { font: 400 40px/1.1 "Marker", sans-serif; color: var(--ink); padding: 0 18px 6px; border-bottom: 3px solid #c9bfa8; }
+    .ac-crow { font: 700 28px/1 "Mono", monospace; color: var(--ink); padding: 12px 18px 4px; white-space: nowrap; transform-origin: 0 0; }
+    .ac-peg { position: absolute; width: 24px; height: 120px; }
+    .ac-stake { position: absolute; left: 8px; top: 0; width: 8px; height: 120px; background: var(--amber); border-radius: 3px; }
+    .ac-hand { position: absolute; width: 220px; height: 330px; }
+    .ac-cuff { position: absolute; left: 34px; top: 34px; width: 150px; text-align: center; font: 700 30px/1 "Mono", monospace; color: var(--cyan); }
+  </style>
+  <div id="root" data-composition-id="judge" data-width="1080" data-height="1920">
+    <div id="judge-cam">
+      <div id="judge-beat">
+        <div id="judge-world">
+          <svg class="ink sketch" id="judge-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"></svg>
+          <div id="judge-badge" class="tag cyan" data-bind="l05.badge"></div>
+          <div id="judge-rules" class="plate deep" data-bind="l05.rules"></div>
+          <div id="judge-ignores" class="tag coral" data-bind="l07.ignores"></div>
+          <div id="judge-follow" class="tag" data-bind="l07.follow"></div>
+        </div>
+        <div id="judge-top">
+          <svg class="ink" id="judge-tsvg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"></svg>
+          <div id="judge-ghostlab" class="lbl white" data-bind="l06.ghost"></div>
+        </div>
+      </div>
+      <div id="judge-scrim"></div>
+      <div id="judge-stage"></div>
+    </div>
+    <div id="judge-hud"></div>
+  </div>
+  <script>
+    (function () {
+      // ---- shared drawing kit for this episode (same code in every scene, so the hook and the close match) ----
+      const AC = (() => {
+        const W = '#f2f8ff', PANEL = '#0a2340', AMB = '#ffb454', COR = '#ff6b6b', CY = '#a8dcf2', DIM = '#6aa9d0';
+        const $ = (s) => (typeof s === 'string' ? document.querySelector(s) : s);
+        const svg = (tag, attrs, parent) => KIT.svgEl(tag, attrs, parent);
+        const div = (cls, id, css, parent, txt) => { const e = document.createElement('div'); if (cls) e.className = cls; e.id = id; if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; $(parent).appendChild(e); return e; };
+        const ln = (d, parent, o = {}) => svg('path', { d, fill: 'none', stroke: o.c || W, 'stroke-width': o.w || 3.4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', id: o.id, 'stroke-dasharray': o.dash }, parent);
+
+        /** A hiker facing right. (x, y) = ground point between the feet; s = scale (1 = about 230 px tall).
+         *  Animate `${id}` (x in local units = px / s), `${id}-body` (turns), `${id}-legF/-legB`, `${id}-pack`, `${id}-arm`. */
+        function hiker(host, { id, x, y, s = 1, mag = false, pack = 1 }) {
+          const pos = svg('g', { transform: `translate(${x} ${y}) scale(${s})` }, host);
+          const g = svg('g', { id }, pos), body = svg('g', { id: `${id}-body` }, g);
+          const legB = svg('g', { id: `${id}-legB` }, body); ln('M2 -86 L-8 -42 L-14 0 L-1 0', legB, { c: DIM, w: 4.2 });
+          const pk = svg('g', { id: `${id}-pack` }, body);
+          svg('rect', { x: -66, y: -184, width: 56, height: 100, rx: 15, fill: PANEL, stroke: W, 'stroke-width': 3.6 }, pk);
+          ln('M-66 -160 L-10 -160', pk, { w: 2.6 }); ln('M-50 -132 L-26 -132', pk, { c: DIM, w: 2.6 });
+          ln('M-60 -84 L-62 -76 M-16 -84 L-14 -76', pk, { w: 2.6 });
+          ln('M-10 -172 L4 -148', body, { c: AMB, w: 3 });
+          ln('M2 -150 L-8 -116 L-4 -94', body, { c: DIM, w: 4 });
+          ln('M2 -170 L2 -86', body, { w: 5 });
+          const legF = svg('g', { id: `${id}-legF` }, body); ln('M2 -86 L14 -42 L12 0 L26 0', legF, { w: 4.4 });
+          svg('circle', { cx: 6, cy: -194, r: 19, fill: PANEL, stroke: W, 'stroke-width': 3.6 }, body);
+          ln('M-14 -200 Q6 -228 26 -201 L36 -199', body, { w: 3.4 });
+          svg('circle', { cx: 15, cy: -196, r: 2.6, fill: W }, body);
+          const arm = svg('g', { id: `${id}-arm` }, body);
+          if (mag) { ln('M2 -150 L30 -122 L52 -110', arm, { w: 4.2 }); svg('circle', { cx: 64, cy: -98, r: 14, fill: 'rgba(168,220,242,.18)', stroke: AMB, 'stroke-width': 3.6 }, arm); ln('M54 -108 L50 -112', arm, { c: AMB, w: 4 }); }
+          else ln('M2 -150 L18 -116 L26 -94', arm, { w: 4.2 });
+          gsap.set(`#${id}-pack`, { scale: pack, svgOrigin: '-38 -84' });
+          return { pos, g, body, x, y, s, packTop: [x - 38 * s, y - 184 * s * pack], packBox: [x - 66 * s, y - 184 * s * pack, 56 * s, 100 * s * pack] };
+        }
+        /** Walk cycle: legs swing on keyframes (tl.to only, so several walks can follow each other). */
+        function walk(tl, id, t0, dur, step = 0.26) {
+          const n = Math.max(2, Math.round(dur / step)), kf = (sgn) => { const k = []; for (let i = 0; i < n; i++) k.push({ rotation: (i % 2 ? -1 : 1) * 20 * sgn, duration: dur / n, ease: 'sine.inOut' }); k.push({ rotation: 0, duration: 0.12 }); return k; };
+          tl.to(`#${id}-legF`, { keyframes: kf(1), svgOrigin: '2 -86' }, t0);
+          tl.to(`#${id}-legB`, { keyframes: kf(-1), svgOrigin: '2 -86' }, t0);
+        }
+        /** A trail flag on the ground line; the label sits above the cloth (right-aligned when `right`). */
+        function flag(host, parent, { id, x, y, h = 210, label, right = false, color = AMB, below = false }) {
+          const g = svg('g', { id }, host);
+          ln(`M${x} ${y} L${x} ${y - h}`, g, { w: 5 });
+          const cloth = svg('path', { d: `M${x + 2} ${y - h} L${x + 74} ${y - h + 22} L${x + 2} ${y - h + 46} Z`, fill: color, stroke: color, 'stroke-width': 2, id: `${id}-cloth` }, g);
+          const lab = label != null ? div('lbl white', `${id}-lab`, `top:${below ? y + 30 : y - h - 48}px;${right ? `right:${1080 - x - 6}px` : `left:${x - 6}px`};font-size:28px`, parent, label) : null;
+          return { g, cloth, lab };
+        }
+        /** A chip of carried context (search, tool output, ...). */
+        const chip = (parent, id, txt, x, y) => div('ac-chip', id, `left:${x}px;top:${y}px`, parent, txt);
+        /** The press: rods and a plate labelled compact(). Slam it with tl.to(`#${id}`, { y }). */
+        function press(parent, { id, x, y, w = 200, label }) {
+          const p = div('ac-press', id, `left:${x}px;top:${y - 120}px;width:${w}px`, parent);
+          div('ac-rod', `${id}-r1`, `left:${w * 0.25 - 5}px`, p); div('ac-rod', `${id}-r2`, `left:${w * 0.75 - 5}px`, p);
+          div('ac-plate', `${id}-plate`, `width:${w}px`, p, label);
+          return p;
+        }
+        /** The context gauge strap: outline, fill (scaleY), red limit tick and labels. */
+        function gauge(parent, { id, x, y, h = 300, lim = 0.9, limitTxt, ctxTxt, fill = 0.5 }) {
+          const g = div('ac-gauge', id, `left:${x}px;top:${y}px;height:${h}px`, parent);
+          const f = div('ac-gfill', `${id}-fill`, '', g);
+          const tk = div('ac-gtick', `${id}-tick`, `top:${(1 - lim) * h - 3}px`, g);
+          div('lbl', `${id}-lim`, `left:${x - 96}px;top:${y + (1 - lim) * h - 20}px;font-size:28px;color:#ff9d9d`, parent, limitTxt);
+          div('lbl', `${id}-ctx`, `left:${x - 40}px;top:${y + h + 12}px;font-size:28px`, parent, ctxTxt);
+          gsap.set(f, { scaleY: fill });
+          return { g, f, tk };
+        }
+        /** The summary card: a header and three rows (rows hidden until shown). */
+        function card(parent, { id, x, y, w = 330, head, rows }) {
+          const c = div('ac-card', id, `left:${x}px;top:${y}px;width:${w}px`, parent);
+          div('ac-chead', `${id}-h`, '', c, head);
+          const rs = rows.map((r, i) => div('ac-crow', `${id}-r${i}`, '', c, r));
+          return { c, rs };
+        }
+        /** A compact() peg: stake plus tag. */
+        function peg(parent, { id, x, y, label }) {
+          const p = div('ac-peg', id, `left:${x - 12}px;top:${y - 120}px`, parent);
+          div('ac-stake', `${id}-s`, '', p); div('tag', `${id}-t`, 'left:-8px;top:-52px;font-size:26px;padding:4px 12px', p, label);
+          return p;
+        }
+        /** The judge's hand, pointing down, with a labelled cuff. */
+        function hand(parent, { id, x, y, label }) {
+          const h = div('ac-hand', id, `left:${x}px;top:${y}px`, parent);
+          const sv = KIT.svgEl('svg', { viewBox: '0 0 220 330', width: 220, height: 330, style: 'position:absolute;left:0;top:0;overflow:visible' }, h);
+          svg('rect', { x: 34, y: 0, width: 150, height: 120, rx: 10, fill: PANEL, stroke: CY, 'stroke-width': 6 }, sv);
+          svg('path', { d: 'M44 120 L44 210 C44 236 60 250 84 250 L150 250 C170 250 182 236 182 214 L182 120 Z', fill: PANEL, stroke: W, 'stroke-width': 6, 'stroke-linejoin': 'round' }, sv);
+          [[52, 300], [86, 322], [120, 318], [152, 296]].forEach(([fx, fy]) => svg('path', { d: `M${fx} 236 L${fx} ${fy}`, stroke: W, 'stroke-width': 24, 'stroke-linecap': 'round' }, sv));
+          [[52, 300], [86, 322], [120, 318], [152, 296]].forEach(([fx, fy]) => svg('path', { d: `M${fx} 238 L${fx} ${fy - 2}`, stroke: PANEL, 'stroke-width': 12, 'stroke-linecap': 'round' }, sv));
+          svg('path', { d: 'M182 170 C214 180 220 214 206 236', fill: 'none', stroke: W, 'stroke-width': 18, 'stroke-linecap': 'round' }, sv);
+          div('ac-cuff', `${id}-cuff`, '', h, label);
+          return h;
+        }
+        /** A pair of footprints on the ground. */
+        const prints = (host, id, x, y, c = DIM) => { const g = svg('g', { id }, host); svg('ellipse', { cx: x, cy: y - 7, rx: 15, ry: 5.5, fill: c }, g); svg('ellipse', { cx: x + 22, cy: y + 5, rx: 15, ry: 5.5, fill: c }, g); return g; };
+        return { $, svg, div, ln, hiker, walk, flag, chip, press, gauge, card, peg, hand, prints, C: { W, PANEL, AMB, COR, CY, DIM } };
+      })();
+      const S = 'judge', a = (w, n) => KIT.cue('l05', w, n), b = (w, n) => KIT.cue('l06', w, n), c = (w, n) => KIT.cue('l07', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#judge-cam');
+      const d2 = KIT.data('l02'), d3 = KIT.data('l03'), d5 = KIT.data('l05'), d6 = KIT.data('l06'), d7 = KIT.data('l07'), tl = gsap.timeline({ paused: true });
+      const SV = '#judge-svg', TV = '#judge-tsvg', GY = 1260, HS = 1.5;
+      AC.ln(`M40 ${GY} L1040 ${GY}`, SV, { w: 6 });
+      AC.flag(SV, '#judge-world', { id: 'judge-f1', x: 430, y: GY, h: 190, label: d3.f1, below: true });
+      AC.flag(SV, '#judge-world', { id: 'judge-f2', x: 800, y: GY, h: 270, label: d3.f2, right: true });
+      // the old dig site, behind on the trail
+      AC.ln('M70 1262 Q130 1200 190 1262 M112 1226 L146 1248 M146 1226 L112 1248', SV, { c: AC.C.DIM, w: 4, id: 'judge-digsite' });
+      const PG = AC.peg('#judge-world', { id: 'judge-peg', x: 452, y: GY, label: KIT.data('l04').peg });
+      const H = AC.hiker(SV, { id: 'judge-hk', x: 180, y: GY, s: HS, mag: false, pack: 1.15 });
+      const X0 = 180, toX = (px) => (px - X0) / HS;
+      const moveTo = (px, t, d, e = 'power1.inOut') => { tl.to('#judge-hk', { x: toX(px), duration: d, ease: e }, t); tl.to('#judge-badge', { x: px - X0, duration: d, ease: e }, t); AC.walk(tl, 'judge-hk', t, d); };
+
+      // l05 "The base model": the badge pops; the hiker walks toward the first flag, pack bulging
+      KIT.pop(tl, '#judge-badge', a('base') - 0.15, { from: 0.4 });
+      moveTo(300, 0.05, a('rarely') - 0.7);
+      // the paper says it: "rarely invoked compact()" (camera holds the start of the phrase in frame)
+      const tR = a('rarely') - 0.55;
+      tl.to('#judge-scrim', { opacity: 0.9, duration: 0.3 }, tR);
+      tl.to(['#judge-world', '#judge-top'], { opacity: 0, duration: 0.25 }, tR + 0.3);
+      const P = KIT.read(tl, { cam: '#judge-cam', parent: '#judge-stage', hud: '#judge-hud', tagY: 560, id: 'rarely', t: tR, label: d5.receipt,
+        x: 40, y: 820, width: 1000, zoom: 3.2, fx: 90, fy: 860, follow: 0,
+        marks: [[a('rarely'), a('compact') - 0.05, [[a('invoked'), 0.48]]]],
+        circles: [{ word: 'rarely', t: a('rarely') + 0.15 }] });
+      const tB = a('before') + 0.12;
+      tl.set('#judge-cam', { x: 0, y: 0, scale: 1 }, tB);
+      tl.set(P.el, { opacity: 0 }, tB);
+      tl.set('#judge-hud', { opacity: 0 }, tB);
+      tl.set('#judge-scrim', { opacity: 0 }, tB);
+      tl.set(['#judge-world', '#judge-top'], { opacity: 1 }, tB);
+      // "before the limit": the hiker nears the peg; "even with rules": a scroll of compaction rules unrolls over its head
+      moveTo(390, tB, a('even') - tB);
+      KIT.wipe(tl, '#judge-rules', a('rules') - 0.25, 0.35, { dir: 'left' });
+      // "in its prompt": it walks straight past the planted peg, which wobbles; the pack bulges once more
+      moveTo(560, a('in') - 0.05, 0.9);
+      tl.to(PG, { keyframes: [{ rotation: 10, duration: 0.08 }, { rotation: -8, duration: 0.1 }, { rotation: 4, duration: 0.1 }, { rotation: 0, duration: 0.1 }], transformOrigin: '50% 100%' }, a('in') + 0.35);
+      tl.to('#judge-hk-pack', { keyframes: [{ scale: 1.24, duration: 0.1 }, { scale: 1.15, duration: 0.2 }], svgOrigin: '-38 -84' }, a('prompt'));
+      tl.to('#judge-rules', { opacity: 0, y: -30, duration: 0.3 }, a('prompt') + 0.3);
+
+      // l06 "So a judge": a large hand with a labelled cuff enters from the top
+      const HD = AC.hand('#judge-top', { id: 'judge-hand', x: 300, y: 380, label: d6.judge });
+      tl.fromTo(HD, { y: -700, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, b('judge') - 0.3);
+      // "each action": the next footprint appears in mid-air as a ghost, aimed back down the trail
+      const ghost = AC.svg('g', { id: 'judge-ghost' }, TV);
+      AC.svg('ellipse', { cx: 410, cy: 860, rx: 36, ry: 13, fill: 'none', stroke: '#f2f8ff', 'stroke-width': 4, 'stroke-dasharray': '8 6' }, ghost);
+      AC.svg('ellipse', { cx: 360, cy: 888, rx: 36, ry: 13, fill: 'none', stroke: '#f2f8ff', 'stroke-width': 4, 'stroke-dasharray': '8 6' }, ghost);
+      tl.fromTo([ghost, '#judge-ghostlab'], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: 'back.out(2)' }, b('each') - 0.05);
+      // "before it ran": time freezes; everything but the hand and the ghost print desaturates
+      tl.to('#judge-world', { filter: 'grayscale(1) brightness(0.5)', duration: 0.2 }, b('before') - 0.05);
+      tl.to(HD, { x: 20, y: 330, duration: 0.5, ease: 'power2.inOut' }, b('before') + 0.1);
+      // "The run continued": the hand lifts the ghost away and sets down a corrected print, compact(), at the flag
+      tl.to([ghost, '#judge-ghostlab'], { y: -260, opacity: 0, duration: 0.35, ease: 'power2.in' }, b('ran') + 0.05);
+      tl.to(HD, { x: 330, y: 410, duration: 0.4, ease: 'power2.inOut' }, b('ran') + 0.05);
+      const fix = AC.prints(SV, 'judge-fixp', 680, GY + 20, AC.C.AMB);
+      const fixTag = AC.div('tag', 'judge-fixtag', 'left:672px;top:1300px;font-size:26px;padding:4px 12px', '#judge-world', d6.fix);
+      tl.fromTo([fix, fixTag], { opacity: 0, scale: 1.8, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, duration: 0.18, ease: 'power4.in' }, b('continued') - 0.12);
+      tl.to('#judge-world', { filter: 'grayscale(0) brightness(1)', duration: 0.3 }, b('continued'));
+      // "from the judge's fix": new footprints grow forward from the corrected print
+      const fwd = [740, 790, 840, 890].map((x, i) => AC.prints(SV, `judge-fw${i}`, x, GY + 20, AC.C.AMB));
+      fwd.forEach((f, i) => tl.fromTo(f, { opacity: 0, scale: 0.3, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, duration: 0.18, ease: 'back.out(3)' }, b('from') + i * 0.25));
+      tl.to(HD, { y: -700, opacity: 0, duration: 0.5, ease: 'power2.in' }, b('fix') + 0.2);
+
+      // l07 "Sometimes the agent": after a compaction the base-model hiker holds a summary card
+      const C = AC.card('#judge-world', { id: 'judge-card', x: 640, y: 470, w: 330, head: d2.card, rows: [d2.r1, d2.r2, d2.r3] });
+      tl.fromTo(C.c, { opacity: 0, x: -200, y: 380, scale: 0.3 }, { opacity: 1, x: 0, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, c('Sometimes') - 0.1);
+      tl.to(fwd, { opacity: 0.25, duration: 0.3 }, c('Sometimes'));
+      // "ignored its summary": the hiker turns back toward the old dig site; the card flashes
+      tl.to('#judge-hk-body', { scaleX: -1, svgOrigin: '0 0', duration: 0.18 }, c('ignored') - 0.05);
+      tl.to(C.c, { keyframes: [{ borderColor: '#ff6b6b', duration: 0.08 }, { borderColor: '#f2f8ff', duration: 0.1 }, { borderColor: '#ff6b6b', duration: 0.08 }, { borderColor: '#f2f8ff', duration: 0.1 }] }, c('summary') - 0.05);
+      // "searched again": a ghost path draws back to the dig site; tag "ignores the summary"
+      const back = AC.ln('M520 1230 C 420 1150, 260 1150, 150 1215', SV, { c: AC.C.COR, w: 5, dash: '12 10', id: 'judge-back' });
+      back.classList.add('dash');
+      KIT.draw(tl, back, c('searched') - 0.05, 0.5);
+      KIT.slam(tl, '#judge-ignores', c('again') - 0.3, { from: 2.4, amp: 10, shakeTarget: '#judge-beat' });
+      // "The judge": the hand returns and turns the hiker around by the shoulder
+      tl.to(HD, { x: 220, y: 500, opacity: 1, duration: 0.35, ease: 'power3.out' }, c('the', 1) - 0.3);
+      tl.to('#judge-hk-body', { scaleX: 1, svgOrigin: '0 0', duration: 0.2 }, c('judge') + 0.12);
+      tl.to(back, { opacity: 0, duration: 0.3 }, c('judge') + 0.1);
+      tl.to('#judge-ignores', { opacity: 0, duration: 0.25 }, c('sent'));
+      // "to the edit": the card's next-step row lights, a dotted arrow draws to the edit-file flag, the flag waves
+      tl.to(C.rs[2], { backgroundColor: '#ffb454', duration: 0.15 }, c('sent'));
+      const AR = AC.ln('M820 690 C 860 800, 840 900, 812 1000', SV, { c: AC.C.AMB, w: 6, dash: '14 12', id: 'judge-arrow' });
+      AR.classList.add('dash');
+      KIT.draw(tl, AR, c('sent') + 0.05, 0.3);
+      tl.to('#judge-f2-cloth', { keyframes: [{ skewY: 10, duration: 0.12 }, { skewY: -8, duration: 0.12 }, { skewY: 0, duration: 0.12 }], svgOrigin: '802 990' }, c('edit') - 0.1);
+      KIT.pop(tl, '#judge-follow', c('edit'), { from: 0.4 });
+      tl.to(HD, { y: -700, duration: 0.5, ease: 'power2.in' }, c('edit') + 0.3);
+
+      KIT.beats(tl, '#judge-beat', [a('base'), a('in'), b('judge'), b('each'), b('continued'), c('Sometimes'), c('ignored'), c('again'), c('edit') + 0.2], { amp: 0.02, shift: 14 });
+      window.__timelines["judge"] = tl;
+    })();
+  </script>
+</template>

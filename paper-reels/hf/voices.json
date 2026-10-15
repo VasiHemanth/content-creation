@@ -1,0 +1,118 @@
+{
+ "default": "heart",
+ "note": "A storyboard picks a preset with \"voice\": \"<preset>\" or overrides fields with \"voice\": { \"preset\": \"<preset>\", \"speed\": 1.15 }. Per-line overrides: line.voice. Providers: kokoro (local, .venv), qwen3 and chatterbox (local, Apple MLX, .venv-qwen). All run offline after the first model download. See hf/README.md for how to add another provider. Grades are the Kokoro project's own (hexgrad/Kokoro-82M VOICES.md, checked 2026-10-06; A is best). They are a guide, not a substitute for listening.",
+ "presets": {
+  "heart": {
+   "provider": "kokoro",
+   "voice": "af_heart",
+   "speed": 1.1,
+   "label": "Heart. US female, warm. Voice of the posted episodes. Grade A."
+  },
+  "bella": {
+   "provider": "kokoro",
+   "voice": "af_bella",
+   "speed": 1.1,
+   "label": "Bella. US female, bright and expressive. Grade A-."
+  },
+  "nicole": {
+   "provider": "kokoro",
+   "voice": "af_nicole",
+   "speed": 1.1,
+   "label": "Nicole. US female, soft and close-mic. Grade B-."
+  },
+  "nova": {
+   "provider": "kokoro",
+   "voice": "af_nova",
+   "speed": 1.1,
+   "label": "Nova. US female, clear. Grade C."
+  },
+  "sky": {
+   "provider": "kokoro",
+   "voice": "af_sky",
+   "speed": 1.1,
+   "label": "Sky. US female, light. Grade C-."
+  },
+  "sarah": {
+   "provider": "kokoro",
+   "voice": "af_sarah",
+   "speed": 1.1,
+   "label": "Sarah. US female, even. Grade C+."
+  },
+  "michael": {
+   "provider": "kokoro",
+   "voice": "am_michael",
+   "speed": 1.1,
+   "label": "Michael. US male, steady narrator. Grade C+."
+  },
+  "fenrir": {
+   "provider": "kokoro",
+   "voice": "am_fenrir",
+   "speed": 1.1,
+   "label": "Fenrir. US male, deeper. Grade C+."
+  },
+  "puck": {
+   "provider": "kokoro",
+   "voice": "am_puck",
+   "speed": 1.1,
+   "label": "Puck. US male, lively. Grade C+."
+  },
+  "adam": {
+   "provider": "kokoro",
+   "voice": "am_adam",
+   "speed": 1.1,
+   "label": "Adam. US male, deep. Grade F+."
+  },
+  "emma": {
+   "provider": "kokoro",
+   "voice": "bf_emma",
+   "speed": 1.1,
+   "label": "Emma. British female, documentary tone. Grade B-."
+  },
+  "george": {
+   "provider": "kokoro",
+   "voice": "bm_george",
+   "speed": 1.1,
+   "label": "George. British male, documentary tone. Grade C."
+  },
+  "lewis": {
+   "provider": "kokoro",
+   "voice": "bm_lewis",
+   "speed": 1.1,
+   "label": "Lewis. British male, calm. Grade D+."
+  },
+  "fable": {
+   "provider": "kokoro",
+   "voice": "bm_fable",
+   "speed": 1.1,
+   "label": "Fable. British male, storyteller. Grade C."
+  },
+  "ryan": {
+   "provider": "qwen3",
+   "model": "mlx-community/Qwen3-TTS-12Hz-1.7B-CustomVoice-bf16",
+   "speaker": "Ryan",
+   "instruct": "A calm, clear documentary narrator. Even pace, warm and confident, plain English.",
+   "language": "English",
+   "speed": 1.0,
+   "seed": 7,
+   "label": "Ryan (Qwen3-TTS 1.7B CustomVoice). US male, styled as a documentary narrator by instruction. Apache 2.0."
+  },
+  "aiden": {
+   "provider": "qwen3",
+   "model": "mlx-community/Qwen3-TTS-12Hz-1.7B-CustomVoice-bf16",
+   "speaker": "Aiden",
+   "instruct": "A calm, clear documentary narrator. Even pace, warm and confident, plain English.",
+   "language": "English",
+   "speed": 1.0,
+   "seed": 7,
+   "label": "Aiden (Qwen3-TTS 1.7B CustomVoice). US male, styled as a documentary narrator by instruction. Apache 2.0."
+  },
+  "turbo": {
+   "provider": "chatterbox",
+   "model": "mlx-community/chatterbox-turbo-fp16",
+   "temperature": 0.7,
+   "speed": 1.0,
+   "seed": 7,
+   "label": "Chatterbox Turbo (Resemble AI, 350M), built-in voice. Can clone a voice from a 5 s or longer sample (ref_audio). MIT. Output carries an inaudible watermark."
+  }
+ }
+}

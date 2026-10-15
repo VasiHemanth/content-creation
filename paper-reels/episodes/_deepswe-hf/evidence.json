@@ -1,0 +1,52 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2607.07946/paper-v1.pdf",
+ "note": "Receipts: real crops of the paper (arXiv 2607.07946v1). Every number readable in a crop must be in facts.json (numbers or evidence_incidental) - qa checks it.",
+ "items": [
+  {
+   "id": "recall",
+   "page": 1,
+   "context": [
+    1,
+    0
+   ],
+   "find": [
+    "plausibly in pretraining",
+    "data, so a high score can reflect recall rather than problem-solving"
+   ],
+   "scale": 7,
+   "circle": [
+    "recall"
+   ]
+  },
+  {
+   "id": "audit",
+   "page": 1,
+   "context": [
+    1,
+    1
+   ],
+   "find": [
+    "(1.4% versus 32.4%)"
+   ],
+   "scale": 7,
+   "circle": [
+    "32.4%)"
+   ]
+  },
+  {
+   "id": "verifier",
+   "page": 7,
+   "context": [
+    1,
+    1
+   ],
+   "find": [
+    "A benchmark is only as good as its verifier."
+   ],
+   "scale": 7,
+   "circle": [
+    "verifier."
+   ]
+  }
+ ]
+}

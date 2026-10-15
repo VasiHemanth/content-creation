@@ -1,0 +1,116 @@
+<template id="result-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #rs-shk { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #rs-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #rs-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #rs-bench { left: 60px; top: 176px; font-size: 32px; }
+    #rs-model { left: 340px; top: 176px; font-size: 32px; }
+    #rs-metric { left: 60px; top: 260px; font-size: 34px; }
+    .rs-val { position: absolute; width: 260px; text-align: center; font: 400 92px/1 "Marker", sans-serif; text-shadow: 6px 6px 0 var(--shadow); white-space: nowrap; }
+    #rs-va { left: 200px; color: var(--amber); } #rs-vb { left: 520px; color: var(--cyan); }
+    #rs-a { left: 196px; top: 1272px; font-size: 30px; } #rs-b { left: 540px; top: 1272px; font-size: 30px; }
+    #rs-tests { left: 60px; top: 1372px; font-size: 30px; }
+    #rs-ylab { left: 180px; top: 430px; font-size: 32px; }
+    #rs-axl { left: 740px; top: 1272px; font-size: 32px; }
+    #rs-sk { left: 60px; top: 1372px; font-size: 28px; }
+    #rs-lb { left: 560px; top: 520px; font-size: 32px; }
+    #rs-la { left: 470px; top: 1100px; font-size: 32px; }
+    #rs-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="result" data-width="1080" data-height="1920">
+    <div id="rs-shk"><div id="rs-cam">
+      <svg id="rs-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="rs-bench" class="tag cyan" data-bind="l11.bench"></div>
+      <div id="rs-model" class="tag cyan" data-bind="l11.model"></div>
+      <div id="rs-metric" class="tag cyan" data-bind="l11.metric"></div>
+      <div id="rs-va" class="rs-val" data-bind="l11.va"></div>
+      <div id="rs-vb" class="rs-val" data-bind="l11.vb"></div>
+      <div id="rs-a" class="tag" data-bind="l11.a"></div>
+      <div id="rs-b" class="tag cyan" data-bind="l11.b"></div>
+      <div id="rs-tests" class="tag cyan" data-bind="l11.tests"></div>
+      <div id="rs-ylab" class="lbl white" data-bind="l12.ylab"></div>
+      <div id="rs-axl" class="tag cyan" data-bind="l12.axis"></div>
+      <div id="rs-sk" class="lbl" data-bind="l12.sketch"></div>
+      <div id="rs-lb" class="tag cyan" data-bind="l12.b"></div>
+      <div id="rs-la" class="tag" data-bind="l12.a"></div>
+    </div></div>
+    <div id="rs-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l11', w, n), d = (w, n) => KIT.cue('l12', w, n), D = KIT.sceneDur('result'), S = KIT.svgEl;
+      KIT.bind('#rs-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t, o = 0.2) => tl.fromTo('#rs-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const V = document.getElementById('rs-svg'), d11 = KIT.data('l11'), d12 = KIT.data('l12');
+      const cam = (t, px, py, s, dur = 0.5) => tl.to('#rs-cam', { x: 540 - s * px, y: 860 - s * py, scale: s, duration: dur, ease: 'power3.inOut' }, t);
+
+      // l11: bars from zero, heights from the storyboard values (mean test-pass rate)
+      const BASE = 1250, PX = 8, va = parseFloat(d11.va), vb = parseFloat(d11.vb);
+      const yax = S('path', { d: `M160 ${BASE} V430`, class: 'ln dim thick', id: 'rs-yax' }, V);
+      const xax = S('path', { d: `M160 ${BASE} H790`, class: 'ln thick', id: 'rs-xax' }, V);
+      const ba = S('rect', { x: 240, y: BASE - va * PX, width: 180, height: va * PX, fill: '#ffb454', id: 'rs-ba' }, V);
+      const bb = S('rect', { x: 560, y: BASE - vb * PX, width: 180, height: vb * PX, fill: '#a8dcf2', id: 'rs-bb' }, V);
+      document.getElementById('rs-va').style.top = `${BASE - va * PX - 110}px`;
+      document.getElementById('rs-vb').style.top = `${BASE - vb * PX - 110}px`;
+      const cards = [0, 1, 2, 3, 4, 5].map((k) => {
+        const g = S('g', { id: `rs-cd${k}` }, V), x = 330 + k * 98;
+        S('rect', { x, y: 1340, width: 80, height: 96, rx: 8, fill: '#f2f8ff' }, g);
+        S('path', { d: `M${x + 14} ${1366} h52 M${x + 14} ${1384} h40`, stroke: '#6aa9d0', 'stroke-width': 5 }, g);
+        S('circle', { cx: x + 40, cy: 1414, r: 13, fill: '#ffb454' }, g);
+        return g;
+      });
+
+      tl.fromTo('#rs-cam', { x: 540 - 1.12 * 540, y: 860 - 1.12 * 820, scale: 1.12 }, { x: 540 - 1.12 * 540, y: 860 - 1.12 * 820, scale: 1.12, duration: 0.01 }, 0);
+      KIT.draw(tl, [yax, xax], 0.05, 0.4);
+      KIT.slam(tl, '#rs-bench', c('ProgramBench') - 0.1, { from: 2.0, shake: false }); KIT.pop(tl, '#rs-model', c('ProgramBench') + 0.25, { from: 0.5 });
+      KIT.shake(tl, '#rs-shk', c('ProgramBench') + 0.1, { amp: 8, dur: 0.2 });
+      pulse(c('ProgramBench'), 0.15);
+      KIT.rise(tl, '#rs-metric', c('average') - 0.15, { y: 14 });
+      tl.fromTo('#rs-metric', { backgroundColor: '#071d35' }, { backgroundColor: '#1d4a6e', duration: 0.18, yoyo: true, repeat: 3, immediateRender: false }, c('average') + 0.25);
+      KIT.rise(tl, '#rs-a', c('direct'), { y: 16 });
+      cam(c('direct'), 540, 880, 1.08, 0.6);
+      tl.fromTo(ba, { scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.8, ease: 'power3.out' }, c('sixty') - 0.1);
+      tl.fromTo('#rs-va', { opacity: 0 }, { opacity: 1, duration: 0.15 }, c('sixty')); KIT.count(tl, '#rs-va', c('sixty'), 0.9);
+      pulse(c('sixty'), 0.22);
+      cards.forEach((g, k) => tl.fromTo(g, { x: 420, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'power3.out' }, c('hidden') + k * 0.05));
+      KIT.pop(tl, '#rs-tests', c('tests'));
+      cam(c('Meta-reasoning') - 0.2, 540, 840, 1.1, 0.5);
+      KIT.rise(tl, '#rs-b', c('Meta-reasoning'), { y: 16 });
+      tl.fromTo(bb, { scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.8, ease: 'power3.out' }, c('seventy') - 0.1);
+      tl.fromTo('#rs-vb', { opacity: 0 }, { opacity: 1, duration: 0.15 }, c('seventy')); KIT.count(tl, '#rs-vb', c('seventy'), 0.9);
+      pulse(c('seventy'), 0.25);
+      cam(c('five'), 540, 860, 1.0, 0.6);
+
+      // l12: the bars fold into a budget sketch (after Fig. 3, no tick labels); meta-reasoning climbs, direct control stays flat
+      const yv = (v) => BASE - (v - 60) * 55;
+      const t0 = d('With');
+      tl.to([ba, bb], { scaleY: 0, duration: 0.35, ease: 'power3.in' }, t0);
+      tl.to(['#rs-va', '#rs-vb', '#rs-a', '#rs-b', '#rs-tests', ...cards], { opacity: 0, duration: 0.25 }, t0);
+      const ext = S('path', { d: `M790 ${BASE} H920 M896 ${BASE - 16} L920 ${BASE} L896 ${BASE + 16}`, class: 'ln thick', id: 'rs-ext' }, V);
+      KIT.draw(tl, ext, d('budget') - 0.1, 0.3);
+      const ticks = [250, 560, 870].map((x, k) => S('path', { d: `M${x} ${BASE - 14} V${BASE + 14}`, class: 'ln thick', id: `rs-tk${k}` }, V));
+      ticks.forEach((p, k) => tl.fromTo(p, { opacity: 0, scaleY: 3, transformOrigin: '50% 50%' }, { opacity: 1, scaleY: 1, duration: 0.2 }, d('budget') + k * 0.08));
+      KIT.pop(tl, '#rs-axl', d('budget') + 0.1, { from: 0.5 });
+      KIT.rise(tl, '#rs-ylab', d('budget') + 0.2, { y: 10 });
+      KIT.rise(tl, '#rs-sk', d('more'), { y: 10 });
+      pulse(d('budget'), 0.15);
+      const lb = S('path', { d: `M250 ${yv(d12._mr400)} L870 ${yv(d12._mr1200)}`, stroke: '#a8dcf2', 'stroke-width': 12, 'stroke-linecap': 'round', fill: 'none', id: 'rs-lnb' }, V);
+      const la = S('path', { d: `M250 ${yv(d12._dcLeft)} L560 ${yv(d12._dcFlat)} L870 ${yv(d12._dcRight)}`, stroke: '#ffb454', 'stroke-width': 12, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none', id: 'rs-lna' }, V);
+      const dots = [[250, d12._mr400, '#a8dcf2'], [870, d12._mr1200, '#a8dcf2']].map(([x, v, col], k) => S('circle', { cx: x, cy: yv(v), r: 16, fill: col, id: `rs-dt${k}` }, V));
+      KIT.draw(tl, lb, d('score') - 0.1, 0.9, { ease: 'power2.inOut' });
+      tl.fromTo(dots[0], { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.2 }, d('score') - 0.1);
+      tl.fromTo(dots[1], { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.25, ease: 'back.out(3)' }, d('rose') - 0.1);
+      KIT.pop(tl, '#rs-lb', d('rose'), { from: 0.5 });
+      pulse(d('rose'), 0.2);
+      KIT.draw(tl, la, d('Direct') - 0.05, 0.7, { ease: 'power2.inOut' });
+      KIT.rise(tl, '#rs-la', d('control', 0) + 0.1, { y: 10 });
+      const ruler = S('path', { d: `M230 ${yv(d12._dcFlat) + 34} H890`, class: 'ln heavy dash', id: 'rs-ruler' }, V);
+      KIT.draw(tl, ruler, d('flat') - 0.05, 0.18, { ease: 'power4.out' });
+      KIT.shake(tl, '#rs-shk', d('flat') + 0.15, { amp: 9, dur: 0.22 });
+      pulse(d('flat'), 0.2);
+      window.__timelines["result"] = tl;
+    })();
+  </script>
+</template>

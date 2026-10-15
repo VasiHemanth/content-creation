@@ -1,0 +1,26 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2609.33987/2609.33987.pdf",
+ "note": "",
+ "items": [
+  {
+   "id": "triggers",
+   "page": 1,
+   "context": [0, 0],
+   "scale": 7,
+   "circle": ["triggers"],
+   "find": [
+    "Opera decides when to review through periodic and event-driven triggers"
+   ]
+  },
+  {
+   "id": "results",
+   "page": 1,
+   "context": [0, 0],
+   "scale": 7,
+   "circle": ["highest"],
+   "find": [
+    "achieves the highest mean resolve rate among competitive critic baselines on all three benchmarks"
+   ]
+  }
+ ]
+}

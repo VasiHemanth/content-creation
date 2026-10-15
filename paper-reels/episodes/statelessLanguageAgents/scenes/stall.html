@@ -1,0 +1,161 @@
+<template id="stall-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #st-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #st-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #st-chart { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #st-ylab { left: 150px; top: 352px; font-size: 30px; }
+    #st-xlab { left: 600px; top: 1000px; font-size: 30px; }
+    #st-xend { left: 760px; top: 940px; font-size: 28px; }
+    #st-last { left: 240px; top: 470px; font-size: 28px; }
+    #st-sketch { left: 140px; top: 1080px; font-size: 26px; color: var(--dim); }
+    #st-coins { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .st-coin { position: absolute; width: 26px; height: 26px; border-radius: 50%; background: var(--amber); border: 4px solid #ffe2b0; box-sizing: border-box; opacity: 0; }
+    #st-mtag { left: 770px; top: 410px; font-size: 26px; padding: 4px 12px; }
+    #st-big { left: 0; top: 350px; width: 960px; text-align: center; font: 400 210px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); }
+    #st-lab { left: 0; top: 590px; width: 1080px; text-align: center; font-size: 36px; color: var(--white); }
+    #st-dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #061a30; opacity: 0; }
+    #st-rcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #st-rstage, #st-hud, #st-chips { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #st-chip { left: 60px; top: 170px; font-size: 30px; }
+    #st-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="stall" data-width="1080" data-height="1920">
+    <div id="st-cam">
+      <svg id="st-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="st-chart">
+        <div id="st-ylab" class="lbl" data-bind="l02.ylab"></div>
+        <div id="st-xlab" class="lbl" data-bind="l02.xlab"></div>
+        <div id="st-xend" class="tag cyan" data-bind="l02.xend"></div>
+        <div id="st-last" class="tag" data-bind="l02.last"></div>
+        <div id="st-sketch" class="lbl" data-bind="l02.sketch"></div>
+      </div>
+      <div id="st-coins"></div>
+      <div id="st-mtag" class="tag cyan" data-bind="l02.meter"></div>
+      <div id="st-big" class="abs" data-bind="l03.big"></div>
+      <div id="st-lab" class="lbl" data-bind="l03.lab"></div>
+    </div>
+    <div id="st-dim"></div>
+    <div id="st-rcam"><div id="st-rstage"></div></div>
+    <div id="st-hud"></div>
+    <div id="st-chips"><div id="st-chip" class="tag cyan" data-bind="l02.chip"></div></div>
+    <div id="st-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l02', w, n), b = (w, n) => KIT.cue('l03', w, n), bE = (w, n) => KIT.cueEnd('l03', w, n), D = KIT.sceneDur('stall');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('st-svg'), E = (tag, at, p) => KIT.svgEl(tag, at, p || svg);
+      const pulse = (t, o = 0.18) => tl.fromTo('#st-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const d2 = KIT.data('l02');
+
+      // ---- the token meter (top right): no numerals, the needle never stops ----
+      const MX = 840, MY = 300, R = 74;
+      E('path', { d: `M${MX - 40} 170 L${MX + 40} 170 L${MX + 18} 214 L${MX - 18} 214 Z`, fill: '#0a2340', stroke: '#a8dcf2', 'stroke-width': 4 });
+      E('circle', { cx: MX, cy: MY, r: R, fill: '#071d35', stroke: '#f2f8ff', 'stroke-width': 6 });
+      for (let k = 0; k <= 8; k++) { const q = (-120 + k * 30) * Math.PI / 180; E('path', { d: `M${MX + Math.sin(q) * (R - 10)} ${MY - Math.cos(q) * (R - 10)} L${MX + Math.sin(q) * (R - 24)} ${MY - Math.cos(q) * (R - 24)}`, class: 'ln cyan' }); }
+      const needle = E('g', { id: 'st-needle' });
+      E('path', { d: `M${MX} ${MY} L${MX} ${MY - R + 16}`, stroke: '#ffb454', 'stroke-width': 8, 'stroke-linecap': 'round' }, needle);
+      E('circle', { cx: MX, cy: MY, r: 11, fill: '#ffb454' });
+      tl.fromTo(needle, { rotation: -60, svgOrigin: `${MX} ${MY}` }, { rotation: 300, svgOrigin: `${MX} ${MY}`, duration: D, ease: 'none' }, 0);
+      const coins = document.getElementById('st-coins');
+      for (let i = 0; i < 24; i++) {
+        const el = document.createElement('div'); el.className = 'st-coin'; el.style.left = `${MX - 13}px`; el.style.top = '60px'; coins.appendChild(el);
+        const t = 0.15 + i * 0.42;
+        tl.fromTo(el, { y: 0, opacity: 0 }, { y: 120, opacity: 1, duration: 0.3, ease: 'power2.in' }, t);
+        tl.to(el, { opacity: 0, duration: 0.05 }, t + 0.3);
+      }
+
+      // ---- l02: a sketch of Fig. 2(b): best score against tokens, one step curve that goes flat ----
+      const X0 = 140, X1 = 900, Y0 = 900, YT = 470, kx = X0 + (X1 - X0) * d2._knee / d2._axis;
+      const ch = E('g', { id: 'st-chartg' });
+      E('path', { id: 'st-ax', d: `M${X0} ${Y0} H${X1 + 20} M${X0} ${Y0} V400`, class: 'ln dim thick' }, ch);
+      const steps = [[0, 860], [0.18, 860], [0.18, 760], [0.42, 760], [0.42, 640], [0.66, 640], [0.66, 540], [0.86, 540], [0.86, YT], [1, YT]];
+      const sp = steps.map(([f, y], i) => `${i ? 'L' : 'M'}${(X0 + (kx - X0) * f).toFixed(1)} ${y}`).join(' ');
+      E('path', { id: 'st-area', d: `${sp} L${X1} ${YT} L${X1} ${Y0} L${X0} ${Y0} Z`, fill: '#ffb454', opacity: 0.28 }, ch);
+      E('path', { id: 'st-rise', d: sp, class: 'ln amber heavy' }, ch);
+      E('path', { id: 'st-flat', d: `M${kx} ${YT} H${X1}`, class: 'ln amber heavy' }, ch);
+      E('circle', { id: 'st-pin', cx: kx, cy: YT, r: 18, fill: '#f2f8ff' }, ch);
+      E('rect', { id: 'st-brk', x: kx, y: YT - 64, width: X1 - kx, height: 16, rx: 8, fill: '#a8dcf2' }, ch);
+      E('path', { id: 'st-brkL', d: `M${kx} ${YT - 80} V${YT - 30}`, class: 'ln cyan thick' }, ch);
+      E('path', { id: 'st-brkR', d: `M${X1} ${YT - 80} V${YT - 30}`, class: 'ln cyan thick' }, ch);
+
+      tl.fromTo('#st-cam', { scale: 1.12 }, { scale: 1, duration: 0.8, ease: 'power3.out' }, 0);
+      KIT.draw(tl, '#st-ax', 0.05, 0.4);
+      KIT.draw(tl, '#st-rise', a('Not'), 0.5, { ease: 'power1.in' });
+      tl.fromTo('#st-area', { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: `inset(0% ${((1 - (kx - X0 + 40) / 1000) * 100).toFixed(1)}% 0% 0%)`, duration: 0.5, ease: 'power1.in' }, a('Not'));
+      KIT.draw(tl, '#st-flat', a('always'), 2.6, { ease: 'none' });
+      tl.to('#st-area', { clipPath: 'inset(0% 0% 0% 0%)', duration: 2.6, ease: 'none' }, a('always'));
+      KIT.fade(tl, ['#st-ylab', '#st-xlab'], 0.3);
+      KIT.rise(tl, '#st-sketch', a('always'), { y: 12 });
+      pulse(a('Not'));
+      KIT.rise(tl, '#st-chip', a('baseline') - 0.1, { x: -40, y: 0 });
+      pulse(a('baseline'), 0.12);
+      tl.fromTo('#st-pin', { scale: 0, svgOrigin: `${kx} ${YT}` }, { scale: 1, svgOrigin: `${kx} ${YT}`, duration: 0.35, ease: 'back.out(3)' }, a('last'));
+      KIT.pop(tl, '#st-last', a('improvement'), { from: 0.4 });
+      tl.to('#st-cam', { scale: 1.08, x: 60, y: 30, duration: 0.5, ease: 'power3.out' }, a('last'));
+      pulse(a('last'));
+      tl.fromTo('#st-brk', { scaleX: 0, svgOrigin: `${kx} ${YT - 56}` }, { scaleX: 1, svgOrigin: `${kx} ${YT - 56}`, duration: 0.7, ease: 'power2.out' }, a('long'));
+      KIT.draw(tl, ['#st-brkL', '#st-brkR'], a('long'), 0.3);
+      tl.to('#st-cam', { scale: 1.02, x: -30, y: 0, duration: 0.6, ease: 'power3.inOut' }, a('long'));
+      // the spoken word "end" (KIT.cue treats 'end' as the end of the line, so time it from the word before it)
+      KIT.pop(tl, '#st-xend', KIT.cueEnd('l02', 'the', 1) - 0.15, { from: 0.5 });
+      pulse(KIT.cueEnd('l02', 'the', 1));
+
+      // ---- l03: 98% slams; three robots sit idle on a beam with their tools hung up ----
+      tl.to(['#st-chartg', '#st-chart'], { opacity: 0, duration: 0.3 }, b('Ninety') - 0.25);
+      tl.to('#st-cam', { scale: 1, x: 0, y: 0, duration: 0.3, ease: 'power2.out' }, b('Ninety') - 0.25);
+      KIT.slam(tl, '#st-big', b('Ninety') - 0.05, { from: 1.3, origin: '50% 100%', shake: false });   // grows up and left, away from the token meter
+      KIT.shake(tl, '#st-cam', b('Ninety') + 0.15, { amp: 12, dur: 0.3 });
+      KIT.rise(tl, '#st-lab', b('final'), { y: 14 });
+      const beam = E('g', { id: 'st-beam' });
+      E('rect', { x: 120, y: 1060, width: 740, height: 34, fill: '#3d78a6', stroke: '#a8dcf2', 'stroke-width': 4 }, beam);
+      for (let k = 0; k < 9; k++) E('path', { d: `M${150 + k * 80} 1064 L${190 + k * 80} 1090`, class: 'ln faint' }, beam);
+      const bots = [250, 490, 730].map((x, i) => {
+        const g = E('g', { id: `st-bot${i}` });
+        const r = KIT.robot(g, { id: `st-r${i}`, x, y: 880, s: 0.62, eye: '#ffb454' });
+        E('path', { d: `M${x - 26} 1046 L${x - 30} 1150 M${x + 26} 1046 L${x + 30} 1150`, stroke: '#f2f8ff', 'stroke-width': 9, 'stroke-linecap': 'round' }, g);
+        return { g, r, x };
+      });
+      const tools = [180, 420, 660, 860].map((x, i) => { const g = E('g', { id: `st-tool${i}` }); E('path', { d: `M${x} 1094 V1140`, class: 'ln white' }, g); E('rect', { x: x - 9, y: 1140, width: 18, height: 64, rx: 6, fill: '#a8dcf2' }, g); E('circle', { cx: x, cy: 1214, r: 16, fill: 'none', stroke: '#a8dcf2', 'stroke-width': 7 }, g); return g; });
+      tl.fromTo('#st-beam', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, b('Ninety') - 0.2);
+      bots.forEach((o, i) => tl.fromTo(o.g, { opacity: 0, y: -90 }, { opacity: 1, y: 0, duration: 0.4, ease: 'bounce.out' }, b('eight') + i * 0.1));
+      tools.forEach((g, i) => tl.fromTo(g, { opacity: 0, rotation: -40, svgOrigin: `${[180, 420, 660, 860][i]} 1094` }, { opacity: 1, rotation: 0, svgOrigin: `${[180, 420, 660, 860][i]} 1094`, duration: 0.6, ease: 'elastic.out(1, 0.4)' }, b('of') + i * 0.08));
+      bots.forEach((o) => tl.to(o.r.eyes, { scaleY: 0.25, transformOrigin: '50% 50%', duration: 0.2 }, b('sessions')));
+      pulse(b('Ninety')); pulse(b('sessions'), 0.12);
+
+      // "make no tool calls while token consumption continues": the paper's sentence, read on camera (about 2.5 s)
+      // A paper receipt cropped to the quoted words and fit inside the frame: real pixels of the PDF crop, a highlighter
+      // pinned to the voice, no overlay on the words. o: { pre, stage, id, t, out, x, y, w, label, marks, circles }
+      function quote(o) {
+        const ev = KIT.EP.evidence[o.id], u0 = Math.min(...ev.rects.map((r) => r.x)), u1 = Math.max(...ev.rects.map((r) => r.x + r.w)), pad = 0.006;
+        const Wp = o.w / (u1 - u0 + 2 * pad), host = document.querySelector(o.stage);
+        const p = KIT.paper(o.stage, o.id, { width: Wp, x: o.x - (u0 - pad) * Wp, y: o.y });
+        p.el.style.clipPath = `inset(-26px ${((1 - u1 - pad) * 100).toFixed(3)}% -26px ${((u0 - pad) * 100).toFixed(3)}%)`;
+        p.el.style.boxShadow = 'none';
+        p.el.setAttribute('data-layout-allow-overflow', '');
+        const band = document.createElement('div'); band.id = `${o.pre}-qband`;
+        band.style.cssText = `position:absolute;left:${o.x - 24}px;top:${o.y - 24}px;width:${o.w + 48}px;height:${Math.round(p.height + 48)}px;background:#fbfaf6;border:5px solid #ffb454;box-shadow:12px 12px 0 rgba(2,12,24,.62);box-sizing:border-box`;
+        host.insertBefore(band, p.el);
+        const tag = document.createElement('div'); tag.className = 'receipt-tag'; tag.id = `${o.pre}-qtag`; tag.textContent = o.label;
+        tag.style.left = `${o.x - 24}px`; tag.style.top = `${o.y - 96}px`; host.appendChild(tag);
+        tl.fromTo([band, p.el], { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power3.out' }, o.t);
+        tl.fromTo(tag, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, ease: 'back.out(2)' }, o.t + 0.1);
+        o.marks.forEach(([a, b], k) => tl.fromTo(p.hls[k], { scaleX: 0 }, { scaleX: 1, duration: Math.max(0.05, b - a), ease: 'none' }, a));
+        for (const c of o.circles || []) KIT.circle(tl, p, c.word, c.t);
+        tl.to([band, p.el, tag], { opacity: 0, y: -30, duration: 0.2, ease: 'power2.in' }, o.out);
+        return p;
+      }
+      const tR = b('make') - 0.3, tB = bE('continues') + 0.1;
+      tl.fromTo('#st-dim', { opacity: 0 }, { opacity: 0.4, duration: 0.25 }, tR);
+      quote({ pre: 'st', stage: '#st-rstage', id: 'stall', t: tR, out: tB, x: 60, y: 744, w: 960, label: KIT.data('l03').receipt,
+        marks: [[b('make'), bE('calls') + 0.05], [b('while'), bE('consumption') + 0.1]],
+        circles: [{ word: 'continues', t: b('consumption') + 0.25 }] });
+      tl.to('#st-dim', { opacity: 0, duration: 0.2 }, tB);
+      tl.fromTo('#st-cam', { scale: 1 }, { scale: 1.1, duration: D - tB, ease: 'power2.out', immediateRender: false }, tB);
+      pulse(tB, 0.12);
+      window.__timelines["stall"] = tl;
+    })();
+  </script>
+</template>

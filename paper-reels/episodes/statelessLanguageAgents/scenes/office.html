@@ -1,0 +1,161 @@
+<template id="office-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #of-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 900px; }
+    #of-svg, #of-svg2 { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #of-sla { left: 140px; top: 196px; font-size: 34px; }
+    #of-tray { left: 60px; top: 1262px; font-size: 28px; padding: 4px 12px; }
+    #of-board { left: 380px; top: 322px; font-size: 34px; }
+    #of-plate { left: 360px; top: 738px; font-size: 30px; }
+    .of-cand { position: absolute; top: 452px; width: 200px; text-align: center; font: 600 28px/1 "Mono", monospace; color: var(--white); }
+    .of-score { position: absolute; top: 596px; font-size: 26px; padding: 4px 12px; }
+    .of-card { position: absolute; top: 872px; width: 250px; box-sizing: border-box; background: #0a2340; border: 5px solid var(--cyan); box-shadow: 10px 10px 0 var(--shadow); }
+    #of-acard { left: 400px; border-color: var(--amber); }
+    #of-wcard { left: 665px; }
+    .of-head { padding: 10px 14px 8px; font: 400 44px/1 "Marker", sans-serif; color: var(--deep); background: var(--cyan); }
+    #of-acard .of-head { background: var(--amber); }
+    .of-row { margin: 14px 12px 0; padding-bottom: 10px; font: 600 28px/1.15 "Mono", monospace; color: var(--white); border-bottom: 3px dashed #3d78a6; white-space: normal; }
+    .of-row:last-child { margin-bottom: 14px; }
+    #of-fresh { left: 60px; top: 1352px; font-size: 28px; }
+    #of-kept { left: 140px; top: 196px; font-size: 30px; }
+    #of-dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #061a30; opacity: 0; }
+    #of-rstage, #of-sparks { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #of-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="office" data-width="1080" data-height="1920">
+    <div id="of-cam"><div id="of-shk" class="fill">
+      <svg id="of-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="of-boardg">
+        <div id="of-board" class="tag" data-bind="l06.board"></div>
+        <div id="of-c0" class="of-cand" style="left:190px" data-bind="l06.cand"></div>
+        <div id="of-c1" class="of-cand" style="left:440px" data-bind="l06.cand"></div>
+        <div id="of-c2" class="of-cand" style="left:690px" data-bind="l06.cand"></div>
+        <div id="of-s0" class="tag of-score" style="left:236px" data-bind="l06.score"></div>
+        <div id="of-s1" class="tag of-score" style="left:486px" data-bind="l06.score"></div>
+        <div id="of-s2" class="tag of-score" style="left:736px" data-bind="l06.score"></div>
+        <div id="of-plate" class="tag cyan" data-bind="l06.plate"></div>
+      </div>
+      <svg id="of-svg2" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="of-tray" class="tag cyan" data-bind="l06.wb"></div>
+      <div id="of-acard" class="of-card"><div class="of-head" data-bind="l07.acard"></div><div id="of-a1" class="of-row" data-bind="l07.a1"></div><div id="of-a2" class="of-row" data-bind="l07.a2"></div></div>
+      <div id="of-wcard" class="of-card"><div class="of-head" data-bind="l07.wcard"></div><div id="of-w1" class="of-row" data-bind="l07.w1"></div><div id="of-w2" class="of-row" data-bind="l07.w2"></div><div id="of-w3" class="of-row" data-bind="l07.w3"></div></div>
+      <div id="of-fresh" class="tag" data-bind="l07.fresh"></div>
+      <div id="of-sla" class="tag" data-bind="l06.sla"></div>
+      <div id="of-kept" class="tag" data-bind="l07.kept"></div>
+      <div id="of-sparks"></div>
+    </div></div>
+    <div id="of-dim"></div>
+    <div id="of-rstage"></div>
+    <div id="of-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l06', w, n), aE = (w, n) => KIT.cueEnd('l06', w, n), b = (w, n) => KIT.cue('l07', w, n), D = KIT.sceneDur('office');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('of-svg'), svg2 = document.getElementById('of-svg2'), E = (tag, at, p) => KIT.svgEl(tag, at, p || svg);
+      const pulse = (t, o = 0.18) => tl.fromTo('#of-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      // A paper receipt cropped to the quoted words and fit inside the frame: real pixels of the PDF crop, a highlighter
+      // pinned to the voice, no overlay on the words. o: { pre, stage, id, t, out, x, y, w, label, marks, circles }
+      function quote(o) {
+        const ev = KIT.EP.evidence[o.id], u0 = Math.min(...ev.rects.map((r) => r.x)), u1 = Math.max(...ev.rects.map((r) => r.x + r.w)), pad = 0.006;
+        const Wp = o.w / (u1 - u0 + 2 * pad), host = document.querySelector(o.stage);
+        const p = KIT.paper(o.stage, o.id, { width: Wp, x: o.x - (u0 - pad) * Wp, y: o.y });
+        p.el.style.clipPath = `inset(-26px ${((1 - u1 - pad) * 100).toFixed(3)}% -26px ${((u0 - pad) * 100).toFixed(3)}%)`;
+        p.el.style.boxShadow = 'none';
+        p.el.setAttribute('data-layout-allow-overflow', '');
+        const band = document.createElement('div'); band.id = `${o.pre}-qband`;
+        band.style.cssText = `position:absolute;left:${o.x - 24}px;top:${o.y - 24}px;width:${o.w + 48}px;height:${Math.round(p.height + 48)}px;background:#fbfaf6;border:5px solid #ffb454;box-shadow:12px 12px 0 rgba(2,12,24,.62);box-sizing:border-box`;
+        host.insertBefore(band, p.el);
+        const tag = document.createElement('div'); tag.className = 'receipt-tag'; tag.id = `${o.pre}-qtag`; tag.textContent = o.label;
+        tag.style.left = `${o.x - 24}px`; tag.style.top = `${o.y - 96}px`; host.appendChild(tag);
+        tl.fromTo([band, p.el], { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power3.out' }, o.t);
+        tl.fromTo(tag, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, ease: 'back.out(2)' }, o.t + 0.1);
+        o.marks.forEach(([a, b], k) => tl.fromTo(p.hls[k], { scaleX: 0 }, { scaleX: 1, duration: Math.max(0.05, b - a), ease: 'none' }, a));
+        for (const c of o.circles || []) KIT.circle(tl, p, c.word, c.t);
+        tl.to([band, p.el, tag], { opacity: 0, y: -30, duration: 0.2, ease: 'power2.in' }, o.out);
+        return p;
+      }
+
+      // ---- the site office: floor and the wall slot that prints context cards ----
+      E('path', { d: 'M60 1404 H920', class: 'ln dim thick' });
+      const slot = E('rect', { id: 'of-slot', x: 400, y: 828, width: 515, height: 30, rx: 8, fill: '#071d35', stroke: '#a8dcf2', 'stroke-width': 4 });
+
+      // ---- the plan board (bolted in on "code") ----
+      const bg = E('g', { id: 'of-boardsv' });
+      E('rect', { x: 140, y: 300, width: 760, height: 460, fill: '#0d3358', stroke: '#f2f8ff', 'stroke-width': 7 }, bg);
+      const bolts = [[160, 320], [880, 320], [160, 740], [880, 740]].map(([x, y], i) => E('circle', { id: `of-bolt${i}`, cx: x, cy: y, r: 11, fill: '#ffb454' }, bg));
+      const sheets = [190, 440, 690].map((x, i) => {
+        const g = E('g', { id: `of-sheet${i}` }, bg);
+        E('rect', { x, y: 430, width: 200, height: 230, fill: '#f2f8ff' }, g);
+        E('rect', { x: x + 4, y: 434, width: 192, height: 50, fill: '#123a62' }, g);
+        for (let k = 0; k < 4; k++) E('rect', { x: x + 18, y: 500 + k * 22, width: [150, 110, 132, 90][(k + i) % 4], height: 10, rx: 5, fill: '#6aa9d0' }, g);
+        E('circle', { cx: x + 100, cy: 424, r: 12, fill: '#ff6b6b' }, g);
+        return g;
+      });
+
+      // ---- l06: a robot walks in carrying its conversation on a tray of chat bubbles ----
+      const rob = E('g', { id: 'of-rob' }, svg2);
+      const R = KIT.robot(rob, { id: 'of-r', x: 200, y: 990, s: 0.72, eye: '#a8dcf2' });
+      const tray = E('g', { id: 'of-trayg' }, svg2);
+      [[70, 1190, 150, '#f2f8ff'], [120, 1158, 170, '#a8dcf2'], [80, 1126, 130, '#f2f8ff']].forEach(([x, y, w, f]) => E('rect', { x, y, width: w, height: 30, rx: 14, fill: f }, tray));
+      E('rect', { x: 60, y: 1222, width: 250, height: 18, rx: 6, fill: '#3d78a6', stroke: '#f2f8ff', 'stroke-width': 4 }, tray);
+      tl.fromTo('#of-cam', { scale: 1.06 }, { scale: 1, duration: 1.2, ease: 'power3.out' }, 0);
+      tl.fromTo([rob, tray, '#of-tray'], { x: -420, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 0.05);
+      pulse(0.1, 0.12);
+      KIT.pop(tl, '#of-sla', a('new') - 0.05, { from: 0.4 });
+      pulse(a('new'), 0.12);
+
+      // "agents keep no conversation between calls": the abstract, read in a strip that fits the frame
+      const tR = a('agents') - 0.3, tQ = aE('calls') + 0.08;
+      tl.fromTo('#of-dim', { opacity: 0 }, { opacity: 0.4, duration: 0.25 }, tR);
+      quote({ pre: 'of', stage: '#of-rstage', id: 'office', t: tR, out: tQ, x: 60, y: 600, w: 960, label: KIT.data('l06').receipt,
+        marks: [[a('no'), aE('conversation')], [a('between'), aE('calls')]],
+        circles: [{ word: 'conversation', t: a('conversation') + 0.25 }] });
+      tl.to('#of-dim', { opacity: 0, duration: 0.2 }, tQ);
+      tl.to('#of-sla', { opacity: 0, duration: 0.25 }, tQ);
+
+      // "The code and the scores carry over": the plan board bolts on, candidates and scores pin in
+      gsap.set(['#of-board', '#of-plate', '.of-cand', '.of-score'], { opacity: 0 });
+      tl.fromTo(bg, { opacity: 0, y: -90 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power3.in' }, a('code') - 0.15);
+      KIT.shake(tl, '#of-shk', a('code') + 0.15, { amp: 10, dur: 0.25 });
+      bolts.forEach((el, i) => tl.fromTo(el, { scale: 0, svgOrigin: `${el.getAttribute('cx')} ${el.getAttribute('cy')}` }, { scale: 1, svgOrigin: `${el.getAttribute('cx')} ${el.getAttribute('cy')}`, duration: 0.2, ease: 'back.out(3)' }, a('code') + 0.15 + i * 0.06));
+      tl.to('#of-cam', { scale: 1.05, x: 20, y: 60, duration: 0.5, ease: 'power3.out' }, a('code'));
+      KIT.pop(tl, '#of-board', a('code') + 0.1, { from: 0.4 });
+      pulse(a('code'));
+      sheets.forEach((g, i) => {
+        tl.fromTo(g, { opacity: 0, y: -40, rotation: -8, svgOrigin: `${290 + i * 250} 424` }, { opacity: 1, y: 0, rotation: 0, svgOrigin: `${290 + i * 250} 424`, duration: 0.3, ease: 'back.out(2)' }, a('scores') - 0.2 + i * 0.12);
+        tl.fromTo(`#of-c${i}`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, a('scores') - 0.1 + i * 0.12);
+        tl.fromTo(`#of-s${i}`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(2)', immediateRender: false }, a('scores') + 0.1 + i * 0.12);
+      });
+      gsap.set(sheets, { opacity: 0 });
+      KIT.pop(tl, '#of-plate', a('carry') - 0.05, { from: 0.4 });
+      pulse(a('carry'), 0.12);
+
+      // ---- l07: each call gets a fresh context card for its role ----
+      tl.to('#of-cam', { scale: 1.05, x: 0, y: -60, duration: 0.5, ease: 'power3.inOut' }, b('call') - 0.1);
+      tl.to(rob, { x: 30, duration: 0.3, ease: 'power2.out' }, b('call'));
+      tl.to(R.eyes, { x: 10, y: -8, duration: 0.2 }, b('call'));
+      tl.fromTo(slot, { fill: '#071d35' }, { fill: '#ffb454', duration: 0.2, yoyo: true, repeat: 1 }, b('call') + 0.1);
+      pulse(b('call'), 0.12);
+      KIT.wipe(tl, '#of-acard', b('fresh') - 0.1, 0.45, { dir: 'down' });
+      KIT.rise(tl, ['#of-a1', '#of-a2'], b('context'), { y: 14, stagger: 0.18 });
+      KIT.pop(tl, '#of-fresh', b('fresh'), { from: 0.5 });
+      pulse(b('fresh'), 0.12);
+      KIT.wipe(tl, '#of-wcard', b('its') - 0.1, 0.45, { dir: 'down' });
+      KIT.rise(tl, ['#of-w1', '#of-w2', '#of-w3'], b('role') - 0.1, { y: 14, stagger: 0.14 });
+      pulse(b('role'), 0.12);
+      // "loses the conversation": the robot drops its tray of chat bubbles
+      tl.to(R.eyes, { x: 0, y: 6, duration: 0.2 }, b('loses'));
+      tl.to([tray, '#of-tray'], { y: 150, rotation: 14, opacity: 0, duration: 0.55, ease: 'power2.in' }, b('loses'));
+      KIT.sparks(tl, '#of-sparks', 185, 1250, b('conversation') - 0.1, { n: 10, r: 150 });
+      KIT.shake(tl, '#of-shk', b('conversation'), { amp: 8, dur: 0.22 });
+      // "not the work": the board keeps every candidate and its score
+      tl.to('#of-cam', { scale: 1, y: 0, duration: 0.45, ease: 'power3.inOut' }, b('not') - 0.1);
+      sheets.forEach((g, i) => tl.to(g, { scale: 1.08, svgOrigin: `${290 + i * 250} 424`, duration: 0.2, yoyo: true, repeat: 1, ease: 'power2.out' }, b('work') - 0.1 + i * 0.08));
+      KIT.pop(tl, '#of-kept', b('work') - 0.1, { from: 0.5 });
+      pulse(b('work'));
+      window.__timelines["office"] = tl;
+    })();
+  </script>
+</template>

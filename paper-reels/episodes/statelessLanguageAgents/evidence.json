@@ -1,0 +1,53 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2610.07625/paper-v1.pdf",
+ "note": "Receipts: real crops of arXiv 2610.07625v1, text passages only. stall = p.2 sec 1 (CORAL trace sentence), two highlights on the spoken words only, never on 98% or 1,500. office = p.1 Abstract, two highlights ('no agent carries its conversation', 'across invocations'); the board picture carries 'the harness owns the research state'. twist = p.3 sec 1, one highlight. Every number readable in a crop is in facts.json (numbers or evidence_incidental).",
+ "items": [
+  {
+   "id": "stall",
+   "page": 2,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "continues"
+   ],
+   "find": [
+    "make no tool calls",
+    "while token consumption continues"
+   ]
+  },
+  {
+   "id": "office",
+   "page": 1,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "conversation"
+   ],
+   "find": [
+    "no agent carries its conversation",
+    "across invocations"
+   ]
+  },
+  {
+   "id": "twist",
+   "page": 3,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "misjudge"
+   ],
+   "find": [
+    "horizons can misjudge methods"
+   ]
+  }
+ ]
+}

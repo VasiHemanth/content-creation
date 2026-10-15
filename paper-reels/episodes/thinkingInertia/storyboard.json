@@ -1,0 +1,233 @@
+{
+ "item": "2610.11765",
+ "name": "Thinking Inertia",
+ "renderer": "hyperframes",
+ "authors": ["Dianqiao Lei", "Kevin Qinghong Lin", "Pan Lu", "Philip Torr", "James Zou"],
+ "voice": { "preset": "aiden", "speed": 1.25 },
+ "ste": {
+  "names": ["thinking", "no-thinking", "Thinking Inertia", "thinking inertia", "AI"],
+  "terms": [
+   { "term": "explicit inference", "avoid": ["visible reasoning", "explicit reasoning", "chain of thought", "reasoning trace", "reasoning steps", "shows its work"] },
+   { "term": "thinking mode", "avoid": ["reasoning mode", "think mode", "thinking switch", "reasoning switch"] },
+   { "term": "answer only", "avoid": ["direct answer", "bare answer", "just the answer", "answer-only reply"] },
+   { "term": "answer space", "avoid": ["answer format", "question type", "answer interface", "question format"] },
+   { "term": "open-ended", "avoid": ["free-form", "open question", "open form"] },
+   { "term": "pre-answer text", "avoid": ["preamble", "lead-in", "reasoning text"] },
+   { "term": "strict prompt", "avoid": ["strict instruction", "strict mode", "answer-only instruction"] },
+   { "term": "judge model", "avoid": ["grader", "checker", "evaluator"] },
+   { "term": "model", "avoid": ["LLM", "chatbot"] }
+  ],
+  "allow": [
+   { "line": "l07", "rule": "ing", "why": "quotes the paper's M5 prompt word for word (Table 2, p. 7), and the screen types the same words" }
+  ]
+ },
+ "scenes": {
+  "hook": { "transition": "zoom" },
+  "setup": { "transition": "whip" },
+  "inertia": { "transition": "whip" },
+  "strict": { "transition": "whip" },
+  "forms": { "transition": "blur" },
+  "limit": { "transition": "punch" },
+  "close": {}
+ },
+ "lines": [
+  {
+   "id": "l01", "scene": "hook",
+   "say": "If you tell A I models not to think, do they stop?",
+   "text": "If you tell AI models not to think, do they stop?",
+   "data": {
+    "b1": "TOLD NOT TO THINK.",
+    "b2": "DO THEY STOP?",
+    "q": "Find the area of the rectangle.",
+    "prompt": "Give the final answer directly without any reasoning.",
+    "mode": "thinking mode",
+    "on": "ON",
+    "off": "OFF",
+    "you": "you",
+    "model": "model"
+   },
+   "sfx": [ { "t": 0.02, "kind": "whoosh" }, { "cue": "think", "kind": "click" }, { "cue": "think", "kind": "stamp" }, { "cue": "stop", "kind": "type" } ]
+  },
+  {
+   "id": "l02", "scene": "setup",
+   "say": "The paper disabled thinking mode in five models and set one to minimal. It used six benchmarks.",
+   "text": "The paper disabled thinking mode in five models and set one to minimal. It used six benchmarks.",
+   "data": {
+    "m1": "Qwen3-4B", "m2": "Qwen3-32B", "m3": "Qwen3-235B", "m4": "DeepSeek-V4-Flash", "m5": "GPT-5.4", "m6": "Gemini-3-Flash",
+    "off": "OFF", "minimal": "minimal",
+    "g1": "yes-or-no", "g2": "multiple choice", "g3": "open-ended (math)",
+    "k1": "BoolQ", "k2": "StrategyQA", "k3": "MMLU", "k4": "MMLU-Pro", "k5": "GSM8K", "k6": "MATH"
+   },
+   "sfx": [ { "cue": "disabled", "kind": "click" }, { "cue": "minimal", "kind": "pop" }, { "cue": "six", "kind": "whoosh" }, { "cue": "benchmarks", "kind": "thud" } ]
+  },
+  {
+   "id": "l03", "scene": "setup",
+   "say": "A judge model checked the pre answer text for explicit inference: a step from question to answer.",
+   "text": "A judge model checked the pre-answer text for explicit inference: a step from question to answer.",
+   "data": {
+    "pre": "pre-answer text",
+    "fin": "final answer",
+    "generic": "The answer is",
+    "nc": "not counted",
+    "ei": "explicit inference",
+    "qtag": "question",
+    "judge": "judge model"
+   },
+   "sfx": [ { "cue": "judge", "kind": "whoosh" }, { "cue": "explicit", "kind": "pop" }, { "cue": "step", "kind": "tick" }, { "cue": "answer", "nth": 1, "kind": "chime" } ]
+  },
+  {
+   "id": "l04", "scene": "inertia",
+   "say": "Across all replies, yes or no questions rarely had it. Multiple choice had it in almost half.",
+   "text": "Across all replies, yes-or-no questions rarely had it. Multiple choice had it in almost half.",
+   "data": {
+    "lever": "thinking mode: OFF",
+    "t1": "yes-or-no", "t2": "multiple choice", "t3": "open-ended (math)",
+    "rare": "rarely", "half": "almost half",
+    "pooled": "pooled over all replies",
+    "_bool": 5.15, "_mcq": 45.57
+   },
+   "sfx": [ { "t": 0.1, "kind": "thud" }, { "cue": "rarely", "kind": "stamp" }, { "cue": "half", "kind": "tick" } ]
+  },
+  {
+   "id": "l05", "scene": "inertia",
+   "say": "On open ended math, with no extra prompt, it appeared in ninety nine point seven percent of replies.",
+   "text": "On open-ended math, with no extra prompt, it appeared in 99.7% of replies.",
+   "data": {
+    "value": "99.7%",
+    "cond": "thinking mode off, no extra prompt",
+    "gem": "Gemini-3-Flash: minimal",
+    "pm": "each model: about the same"
+   },
+   "sfx": [ { "cue": "ninety", "kind": "riser", "offset": -1.1 }, { "cue": "ninety", "kind": "impact" }, { "cue": "replies", "kind": "pop" } ]
+  },
+  {
+   "id": "l06", "scene": "inertia",
+   "say": "The paper calls this thinking inertia. Visible explicit inference persists under no thinking controls.",
+   "text": "The paper calls this thinking inertia. Visible explicit inference persists under no-thinking controls.",
+   "data": {
+    "title": "THINKING INERTIA",
+    "receipt": "FROM THE PAPER · sec 3.2, p. 9"
+   },
+   "sfx": [ { "cue": "thinking", "kind": "type" }, { "cue": "persists", "kind": "tick" }, { "cue": "controls", "kind": "stamp" } ]
+  },
+  {
+   "id": "l07", "scene": "strict",
+   "say": "Then the authors added a strict prompt: give the final answer directly without any reasoning.",
+   "text": "Then the authors added a strict prompt: give the final answer directly without any reasoning.",
+   "data": {
+    "tag": "STRICT",
+    "prompt": "Give the final answer directly without any reasoning.",
+    "mode": "thinking mode",
+    "off": "OFF",
+    "src": "strict prompt, Table 2"
+   },
+   "sfx": [ { "cue": "strict", "kind": "stamp" }, { "cue": "give", "kind": "type" }, { "cue": "reasoning", "kind": "click" } ]
+  },
+  {
+   "id": "l08", "scene": "strict",
+   "say": "Explicit inference fell to sixty two percent on open ended math. That is still most replies.",
+   "text": "Explicit inference fell to 62% on open-ended math. That is still most replies.",
+   "data": {
+    "before": "99.7%",
+    "beforeTag": "no extra prompt",
+    "value": "62%",
+    "cond": "thinking mode off + strict prompt",
+    "half": "half",
+    "pooled": "pooled over all replies",
+    "varies": "varies by model",
+    "gem": "Gemini-3-Flash: minimal",
+    "_before": 99.69, "_after": 62.0
+   },
+   "sfx": [ { "cue": "fell", "kind": "whoosh" }, { "cue": "sixty", "kind": "impact" }, { "cue": "most", "kind": "tick" } ]
+  },
+  {
+   "id": "l09", "scene": "strict",
+   "say": "Accuracy fell too. On average, it dropped about fifteen percentage points across five models.",
+   "text": "Accuracy fell too. On average, it dropped about 15 percentage points across five models.",
+   "data": {
+    "base": "open-ended math",
+    "left": "answer only",
+    "right": "accuracy",
+    "drop": "about -15 points",
+    "avg": "mean of five models",
+    "varies": "varies by model",
+    "gem": "Gemini-3-Flash not in the mean"
+   },
+   "sfx": [ { "cue": "Accuracy", "kind": "pop" }, { "cue": "dropped", "kind": "thud" }, { "cue": "fifteen", "kind": "impact" }, { "cue": "five", "kind": "tick" } ]
+  },
+  {
+   "id": "l10", "scene": "strict",
+   "say": "On open ended tasks, no thinking comes at a cost.",
+   "text": "On open-ended tasks, no-thinking comes at a cost.",
+   "data": {
+    "receipt": "FROM THE PAPER · sec 3.3, p. 11",
+    "cost": "cost"
+   },
+   "sfx": [ { "cue": "tasks", "kind": "whoosh" }, { "cue": "cost", "kind": "stamp" } ]
+  },
+  {
+   "id": "l11", "scene": "forms",
+   "say": "One example put the same question in three forms, under the strict prompt.",
+   "text": "One example put the same question in three forms, under the strict prompt.",
+   "data": {
+    "q": "find the area",
+    "ex": "one example: Qwen3-32B, p. 13",
+    "strict": "STRICT",
+    "f1": "yes-or-no", "f2": "multiple choice", "f3": "open-ended",
+    "prop": "proposed answer",
+    "yes": "yes", "no": "no",
+    "a": "A", "b": "B", "c": "C", "d": "D"
+   },
+   "sfx": [ { "cue": "same", "kind": "whoosh" }, { "cue": "three", "kind": "pop" }, { "cue": "strict", "kind": "click" } ]
+  },
+  {
+   "id": "l12", "scene": "forms",
+   "say": "The yes or no and multiple choice forms got the answer only. The open ended form got the full solution.",
+   "text": "The yes-or-no and multiple-choice forms got the answer only. The open-ended form got the full solution.",
+   "data": {
+    "ao": "answer only",
+    "full": "full solution"
+   },
+   "sfx": [ { "cue": "yes", "kind": "stamp" }, { "cue": "multiple", "kind": "stamp" }, { "cue": "open", "kind": "whoosh" }, { "cue": "solution", "kind": "type" } ]
+  },
+  {
+   "id": "l13", "scene": "forms",
+   "say": "Even for the same question, the answer space shapes whether a model answers directly.",
+   "text": "Even for the same question, the answer space shapes whether a model answers directly.",
+   "data": {
+    "receipt": "FROM THE PAPER · sec 3.5, p. 12",
+    "scope": "Fig 6: Qwen3-32B, thinking mode off, matched math items",
+    "same": "same question, new answer space"
+   },
+   "sfx": [ { "cue": "Even", "kind": "whoosh" }, { "cue": "space", "kind": "tick" }, { "cue": "directly", "kind": "chime" } ]
+  },
+  {
+   "id": "l14", "scene": "limit",
+   "say": "One limit: the claims concern visible output, not what happens inside the model.",
+   "text": "One limit: the claims concern visible output, not what happens inside the model.",
+   "data": {
+    "stamp": "LIMIT",
+    "receipt": "FROM THE PAPER · sec 5.1, p. 15",
+    "vis": "visible output",
+    "q": "?"
+   },
+   "sfx": [ { "cue": "limit", "kind": "stamp" }, { "cue": "visible", "kind": "whoosh" }, { "cue": "inside", "kind": "pop" } ]
+  },
+  {
+   "id": "l15", "scene": "close",
+   "say": "If you ask for the answer only, read what comes before it.",
+   "text": "If you ask for the answer only, read what comes before it.",
+   "data": {
+    "q": "Find the area of the rectangle.",
+    "prompt": "Give the final answer directly without any reasoning.",
+    "mode": "thinking mode",
+    "off": "OFF",
+    "fin": "final answer",
+    "big": "READ WHAT COMES BEFORE IT.",
+    "handle": "hemanth_with_ai",
+    "credit": "arXiv 2610.11765 v1 · unofficial explainer"
+   },
+   "sfx": [ { "cue": "answer", "kind": "pop" }, { "cue": "read", "kind": "whoosh" }, { "cue": "before", "kind": "chime" } ]
+  }
+ ]
+}

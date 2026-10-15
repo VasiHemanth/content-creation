@@ -1,0 +1,119 @@
+<template id="dream-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #dream-night { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+      background: radial-gradient(1200px 1400px at 50% 38%, #2a1d63 0%, #170f3d 55%, #0a0822 100%); }
+    #dream-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #dream-title { left: 0; top: 170px; width: 1080px; text-align: center; font-size: 150px; color: #d9ccff; text-shadow: 0 0 28px rgba(190,170,255,.55); }
+    #dream-title .char { display: inline-block; }
+    #dream-agent2 { left: 90px; top: 930px; font-size: 32px; color: #d9ccff; border-color: #d9ccff; }
+    .dream-card { position: absolute; width: 240px; height: 124px; background: var(--white); box-shadow: 8px 8px 0 rgba(5,3,20,.6); }
+    .dream-card i { position: absolute; left: 18px; height: 10px; background: var(--faint); }
+    .dream-card b { position: absolute; left: 18px; bottom: 16px; height: 14px; background: var(--mint); transform-origin: 0 50%; }
+    .dream-card em { position: absolute; right: 12px; top: 10px; font: 700 20px "Mono", monospace; font-style: normal; color: var(--dim); }
+    #dream-best { font-size: 34px; }
+    #dream-back { left: 350px; top: 410px; font-size: 34px; }
+    #dream-grow { left: 620px; top: 1300px; font-size: 32px; }
+    #dream-next { left: 720px; top: 196px; font-size: 32px; color: #d9ccff; border-color: #d9ccff; }
+  </style>
+  <div id="root" data-composition-id="dream" data-width="1080" data-height="1920">
+    <div id="dream-night"></div>
+    <div id="dream-beat" style="position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 800px"><div id="dream-cam">
+      <svg class="ink" id="dream-stars" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"></svg>
+      <div id="dream-title" class="hd" data-bind="l07.dream"></div>
+      <svg class="ink sketch" id="dream-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path id="dream-cloud" fill="none" stroke="#d9ccff" stroke-width="5" d="M150 1300 C 40 1300 30 1130 120 1100 C 60 960 170 820 290 860 C 300 640 520 560 640 650 C 760 520 1000 600 980 790 C 1060 850 1060 1010 990 1060 C 1060 1180 980 1310 870 1300 Z" />
+        <g id="dream-mini"></g>
+        <g id="dream-bot"></g>
+        <g id="dream-real"></g>
+        <g id="dream-grow-g"></g>
+        <path id="dream-loop" fill="none" stroke="#d9ccff" stroke-width="6" stroke-linecap="round" d="M860 420 C 1000 520, 980 780, 820 820" />
+        <path id="dream-loophead" d="M820 820 L846 790 M820 820 L856 836" fill="none" stroke="#d9ccff" stroke-width="6" stroke-linecap="round" />
+        <path id="dream-minicloud" fill="none" stroke="#d9ccff" stroke-width="5" d="M800 400 C 760 400 750 350 785 338 C 780 300 830 285 852 310 C 875 280 930 292 925 330 C 960 335 960 400 920 400 Z" />
+      </svg>
+      <div id="dream-cards"></div>
+      <div id="dream-agent2" class="tag" data-bind="l07.agent2"></div>
+      <div id="dream-best" class="tag abs" data-bind="l07.best"></div>
+      <div id="dream-back" class="tag cyan" data-bind="l08.back"></div>
+      <div id="dream-grow" class="tag" data-bind="l08.grow"></div>
+      <div id="dream-next" class="tag" data-bind="l08.next"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'dream', a = (w, n) => KIT.cue('l07', w, n), b = (w, n) => KIT.cue('l08', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#dream-cam');
+      const tl = gsap.timeline({ paused: true }), r = KIT.rng(77);
+
+      // night: stars twinkle (finite), the title floats
+      const stars = document.querySelector('#dream-stars');
+      for (let i = 0; i < 60; i++) {
+        const st = KIT.svgEl('circle', { cx: (r() * 1080).toFixed(0), cy: (r() * 1450).toFixed(0), r: (1.5 + r() * 3).toFixed(1), fill: '#e9e2ff', id: `dream-s${i}` }, stars);
+        tl.fromTo(st, { opacity: 0.15 }, { opacity: 0.9, duration: 0.6 + r() * 0.8, ease: 'sine.inOut', yoyo: true, repeat: 7 }, r() * 1.2);
+      }
+      const ts = SplitText.create('#dream-title', { type: 'chars' });
+      tl.fromTo(ts.chars, { y: 80, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.5, stagger: 0.05, ease: 'power3.out' }, a('dreaming') - 0.25);
+      ts.chars.forEach((ch, k) => tl.to(ch, { y: -16, duration: 0.7, ease: 'sine.inOut', yoyo: true, repeat: 7 }, a('dreaming') + 0.4 + k * 0.08));
+
+      // the second agent and the replay tree it tests against
+      KIT.robot('#dream-bot', { id: 'dream-r', x: 250, y: 640, s: 0.95, stroke: '#e9e2ff', eye: '#ffb454' });
+      tl.fromTo('#dream-bot', { x: -380, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'back.out(1.5)' }, a('second') - 0.3);
+      tl.fromTo('#dream-agent2', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(2.4)' }, a('agent') - 0.05);
+      const M = KIT.tree('#dream-mini', { id: 'dream-m', x: 790, y: 470, w: 360, dy: 78, levels: [2, 4, 5], seed: 21, r: 9, edgeClass: 'ln cyan thin', nodeFill: '#a8dcf2', rootFill: '#d9ccff' });
+      tl.fromTo('#dream-mini', { opacity: 0, scale: 0.6, svgOrigin: '790 620' }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)', svgOrigin: '790 620' }, a('second'));
+
+      // it rewrites the policy many times: each version is scored on the replay tree
+      const host = document.querySelector('#dream-cards'), slots = [[380, 930], [650, 930], [380, 1090], [650, 1090], [380, 1250], [650, 1250]];
+      const scores = [0.42, 0.81, 0.36, 0.58, 0.63, 0.49], bestK = scores.indexOf(Math.max(...scores));
+      const tc0 = a('rewrites') - 0.05, tc1 = a('inside') - 0.05, step = (tc1 - tc0) / slots.length;
+      slots.forEach(([x, y], k) => {
+        const el = document.createElement('div'); el.className = 'dream-card'; el.id = `dream-c${k}`; el.style.left = `${x}px`; el.style.top = `${y}px`;
+        el.innerHTML = `<i style="top:20px;width:150px"></i><i style="top:42px;width:${110 + (k * 23) % 60}px"></i><i style="top:64px;width:${90 + (k * 37) % 70}px"></i><b style="width:${(204 * scores[k]).toFixed(0)}px"></b><em></em>`;
+        el.querySelector('em').textContent = KIT.data('l07').version; host.appendChild(el);
+        const t = tc0 + k * step;
+        tl.fromTo(el, { x: 270 - x, y: 760 - y, scale: 0.2, rotation: -40, opacity: 0 }, { x: 0, y: 0, scale: 1, rotation: (k % 2 ? 3 : -3), opacity: 1, duration: 0.3, ease: 'power3.out' }, t);
+        tl.fromTo(el.querySelector('b'), { scaleX: 0 }, { scaleX: 1, duration: 0.25, ease: 'power2.out' }, t + 0.25);
+        tl.to(M.nodes.slice(k % 4, (k % 4) + 4).map((n) => n.el), { fill: '#ffb454', duration: 0.06, yoyo: true, repeat: 1 }, t + 0.18);
+      });
+      KIT.draw(tl, '#dream-cloud', a('inside') - 0.1, 0.6, { ease: 'power2.inOut' });
+      tl.fromTo('#dream-cam', { scale: 1.06 }, { scale: 0.96, duration: 0.6, ease: 'power3.inOut' }, a('inside') - 0.1);
+
+      // l08: the best version returns to the real search
+      const best = `#dream-c${bestK}`, bx = slots[bestK][0], by = slots[bestK][1];
+      const bt = document.querySelector('#dream-best'); bt.style.left = `${bx + 40}px`; bt.style.top = `${by - 62}px`;
+      tl.to(best, { scale: 1.18, boxShadow: '0 0 0 6px #ffb454, 10px 10px 0 rgba(5,3,20,.6)', duration: 0.18, ease: 'back.out(3)' }, b('best') - 0.08);
+      tl.fromTo('#dream-best', { scale: 2.2, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.2, ease: 'power4.in' }, b('best') - 0.08);
+      KIT.shake(tl, '#dream-cam', b('best') + 0.12, { amp: 12, dur: 0.25 });
+      const tRet = b('returns') - 0.1;
+      tl.to('#dream-night', { opacity: 0, duration: 0.7, ease: 'power2.inOut' }, tRet);
+      tl.to(['#dream-stars', '#dream-title', '#dream-cloud', '#dream-mini', '#dream-bot', '#dream-agent2'], { opacity: 0, duration: 0.4 }, tRet);
+      tl.to(slots.map((_, k) => `#dream-c${k}`).filter((s) => s !== best), { opacity: 0, y: 120, duration: 0.35, stagger: 0.03 }, tRet);
+      tl.to(best, { x: 70 - bx, y: 380 - by, scale: 1, rotation: -2, duration: 0.6, ease: 'power3.inOut' }, tRet + 0.1);
+      tl.to('#dream-best', { x: 70 - bx, y: 380 - by, duration: 0.6, ease: 'power3.inOut' }, tRet + 0.1);
+      tl.to('#dream-cam', { scale: 1, duration: 0.6, ease: 'power3.inOut' }, tRet);
+      KIT.rise(tl, '#dream-back', b('real') - 0.1, { y: -20 });
+      // the real tree, then its new attempts grow
+      const R = KIT.tree('#dream-real', { id: 'dream-t', x: 540, y: 620, w: 760, dy: 150, levels: [3, 5, 6], seed: 21, r: 13, edgeClass: 'ln thick' });
+      tl.fromTo('#dream-real', { opacity: 0 }, { opacity: 1, duration: 0.4 }, b('search') - 0.2);
+      const grow = document.querySelector('#dream-grow-g'), leaves = R.byLevel[3], tg = b('grow') - 0.25;
+      leaves.forEach((p, k) => {
+        const nx = p.x + (k % 2 ? 26 : -26), ny = p.y + 150;
+        const e = KIT.svgEl('path', { d: `M${p.x.toFixed(1)} ${p.y.toFixed(1)} C ${p.x.toFixed(1)} ${(p.y + 75).toFixed(1)}, ${nx.toFixed(1)} ${(p.y + 75).toFixed(1)}, ${nx.toFixed(1)} ${ny.toFixed(1)}`, class: 'ln amber thick', id: `dream-ge${k}` }, grow);
+        const n = KIT.svgEl('circle', { cx: nx.toFixed(1), cy: ny.toFixed(1), r: 13, fill: '#ffb454', id: `dream-gn${k}` }, grow);
+        KIT.draw(tl, e, tg + k * 0.07, 0.22, { ease: 'none' });
+        tl.fromTo(n, { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.2, ease: 'back.out(3)' }, tg + k * 0.07 + 0.18);
+      });
+      KIT.rise(tl, '#dream-grow', b('attempts') - 0.05, { y: 30 });
+      // ...for the next dream: a small dream cloud, and the loop arrow back to it
+      const tN = b('next') - 0.3;
+      KIT.draw(tl, '#dream-minicloud', tN, 0.35);
+      KIT.draw(tl, '#dream-loop', tN + 0.1, 0.4, { ease: 'power2.out' });
+      KIT.draw(tl, '#dream-loophead', tN + 0.45, 0.12);
+      tl.fromTo('#dream-next', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(2.4)' }, b('next') - 0.05);
+
+      KIT.beats(tl, '#dream-beat', [b('real'), b('Its'), b('grow'), b('tree'), b('next')]);
+
+      window.__timelines["dream"] = tl;
+    })();
+  </script>
+</template>

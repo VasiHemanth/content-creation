@@ -1,0 +1,28 @@
+{
+  "pdf": "../../../llm-wiki/raw/assets/anthropic-scion/article-print-clean.pdf",
+  "note": "Actual source Chrome-print PDF. Episode-local phrase-only cropping to respect nine-word quotation budget.",
+  "items": [
+    {
+      "id": "online",
+      "page": 4,
+      "find": [
+        "Clients are always online."
+      ],
+      "circle": [
+        "online"
+      ],
+      "scale": 7
+    },
+    {
+      "id": "cache",
+      "page": 7,
+      "find": [
+        "any cache can answer it"
+      ],
+      "circle": [
+        "cache"
+      ],
+      "scale": 7
+    }
+  ]
+}

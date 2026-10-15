@@ -1,0 +1,123 @@
+<template id="anatomy-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #anatomy-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #anatomy-box-tag { left: 110px; top: 300px; font-size: 34px; }
+    #anatomy-card { position: absolute; left: 160px; top: 430px; width: 250px; height: 300px; background: var(--white); box-shadow: 10px 10px 0 var(--shadow); }
+    #anatomy-card i { position: absolute; left: 26px; height: 12px; background: var(--faint); }
+    #anatomy-prompt { left: 160px; top: 750px; font-size: 32px; color: var(--white); }
+    #anatomy-term { position: absolute; left: 520px; top: 440px; width: 410px; height: 250px; background: #020c18; border: 3px solid var(--cyan); box-shadow: 10px 10px 0 var(--shadow); }
+    #anatomy-term .bar { position: absolute; left: 0; top: 0; width: 100%; height: 44px; background: #0d3357; }
+    #anatomy-term .bar i { position: absolute; top: 14px; width: 16px; height: 16px; border-radius: 50%; }
+    #anatomy-cmd { position: absolute; left: 30px; top: 100px; font: 700 64px "Mono", monospace; color: var(--mint); white-space: nowrap; }
+    #anatomy-caret { position: absolute; left: 300px; top: 108px; width: 30px; height: 60px; background: var(--mint); }
+    #anatomy-hist { left: 166px; top: 856px; font-size: 32px; color: var(--dim); }
+    #anatomy-strike { position: absolute; left: 160px; top: 876px; width: 230px; height: 6px; background: var(--coral); transform-origin: 0 50%; }
+    #anatomy-repo { left: 560px; top: 1052px; font-size: 32px; color: var(--amber); }
+    #anatomy-cut { left: 160px; top: 1050px; font-size: 30px; }
+    #anatomy-same { left: 0; top: 1372px; width: 1080px; text-align: center; font-size: 36px; color: var(--white); }
+  </style>
+  <div id="root" data-composition-id="anatomy" data-width="1080" data-height="1920">
+    <div id="anatomy-cam">
+      <svg class="ink sketch" id="anatomy-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path id="anatomy-box" class="ln thick" d="M110 360 L970 360 L970 1150 L110 1150 Z" />
+        <path id="anatomy-box2" class="ln cyan thin" d="M126 376 L954 376 L954 1134 L126 1134 Z" />
+        <g id="anatomy-links">
+          <path class="ln dim dash" d="M300 1220 C 300 1200, 360 1180, 420 1150" />
+          <path class="ln dim dash" d="M540 1210 L540 1150" />
+          <path class="ln dim dash" d="M780 1220 C 780 1200, 720 1180, 660 1150" />
+        </g>
+        <g id="anatomy-chain">
+          <path id="anatomy-c-old" class="ln faint thick" d="M170 990 L560 990" />
+          <circle class="anatomy-old fl" cx="170" cy="990" r="22" style="fill:#3d78a6" />
+          <circle class="anatomy-old fl" cx="270" cy="990" r="22" style="fill:#3d78a6" />
+          <circle class="anatomy-old fl" cx="370" cy="990" r="22" style="fill:#3d78a6" />
+          <circle class="anatomy-old fl" cx="470" cy="990" r="22" style="fill:#3d78a6" />
+          <circle class="anatomy-old fl" cx="560" cy="990" r="22" style="fill:#3d78a6" />
+          <path id="anatomy-c-new" class="ln thick" d="M560 990 L680 990" />
+          <circle id="anatomy-pinned" class="fl amber" cx="680" cy="990" r="34" />
+          <g id="anatomy-pin"><path d="M680 990 L680 920" stroke="#f2f8ff" stroke-width="7" stroke-linecap="round" /><circle cx="680" cy="906" r="22" fill="#ff6b6b" stroke="#071d35" stroke-width="3" /></g>
+          <g id="anatomy-folder"><path class="ln cyan thick" d="M780 920 L820 920 L832 906 L900 906 L900 1036 L780 1036 Z" /><path class="ln cyan thin" d="M780 946 L900 946" /></g>
+          <path id="anatomy-cutline" class="ln coral thick dash" d="M620 900 L620 1090" />
+          <g id="anatomy-scissors" transform="translate(620 880)"><circle cx="-16" cy="-24" r="14" fill="none" stroke="#ff6b6b" stroke-width="6" /><circle cx="16" cy="-24" r="14" fill="none" stroke="#ff6b6b" stroke-width="6" /><path d="M-8 -12 L14 30 M8 -12 L-14 30" stroke="#ff6b6b" stroke-width="6" stroke-linecap="round" /></g>
+        </g>
+        <g id="anatomy-bots"></g>
+      </svg>
+      <div id="anatomy-box-tag" class="tag" data-bind="l06.box"></div>
+      <div id="anatomy-card"><i style="top:40px;width:180px"></i><i style="top:76px;width:198px"></i><i style="top:112px;width:150px"></i><i style="top:148px;width:190px;background:var(--amber)"></i><i style="top:184px;width:120px"></i><i style="top:220px;width:170px"></i></div>
+      <div id="anatomy-prompt" class="lbl" data-bind="l06.prompt"></div>
+      <div id="anatomy-term"><div class="bar"><i style="left:18px;background:#ff6b6b"></i><i style="left:44px;background:#ffb454"></i><i style="left:70px;background:#7be3b0"></i></div><div id="anatomy-cmd" data-bind="l06.tool"></div><div id="anatomy-caret"></div></div>
+      <div id="anatomy-hist" class="lbl" data-bind="l06.history"></div>
+      <div id="anatomy-strike"></div>
+      <div id="anatomy-repo" class="lbl" data-bind="l06.repo"></div>
+      <div id="anatomy-cut" class="tag coral" data-bind="l06.cut"></div>
+      <div id="anatomy-same" class="lbl" data-bind="l06.same"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'anatomy', c = (w, n) => KIT.cue('l06', w, n), D = KIT.sceneDur(S), NS = 'http://www.w3.org/2000/svg';
+      KIT.bind('#anatomy-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // three agents, one harness
+      const bots = document.querySelector('#anatomy-bots');
+      [300, 540, 780].forEach((x, k) => {
+        const g = document.createElementNS(NS, 'g'); g.setAttribute('id', `anatomy-bot${k}`);
+        g.innerHTML = `<path class="ln" d="M${x} 1222 L${x} 1200" /><circle class="fl amber" cx="${x}" cy="1194" r="8" />` +
+          `<rect x="${x - 54}" y="1222" width="108" height="82" rx="16" fill="#0a2340" stroke="#f2f8ff" stroke-width="5" />` +
+          `<circle class="fl amber" cx="${x - 22}" cy="1260" r="10" /><circle class="fl amber" cx="${x + 22}" cy="1260" r="10" />` +
+          `<path class="ln cyan" d="M${x - 22} 1284 L${x + 22} 1284" />`;
+        bots.appendChild(g);
+        tl.fromTo(g, { y: 140, opacity: 0, rotation: (k - 1) * 12, svgOrigin: `${x} 1260` }, { y: 0, opacity: 1, rotation: 0, duration: 0.45, ease: 'back.out(2.4)', svgOrigin: `${x} 1260` }, c('agent') - 0.2 + k * 0.09);
+      });
+      KIT.draw(tl, '#anatomy-box', 0.05, 0.55); KIT.draw(tl, '#anatomy-box2', 0.2, 0.55);
+      KIT.rise(tl, '#anatomy-box-tag', 0.25, { y: -24 });
+      KIT.draw(tl, '#anatomy-links path', c('gets') - 0.1, 0.35);
+      KIT.typeOn(tl, '#anatomy-same', c('gets'), 40);
+
+      // a short prompt
+      tl.fromTo('#anatomy-card', { x: -420, y: -260, rotation: -30, opacity: 0 }, { x: 0, y: 0, rotation: -3, opacity: 1, duration: 0.5, ease: 'back.out(1.5)' }, c('short') - 0.25);
+      tl.fromTo('#anatomy-card i', { scaleX: 0, transformOrigin: '0 50%' }, { scaleX: 1, duration: 0.14, stagger: 0.05 }, c('prompt') - 0.1);
+      KIT.rise(tl, '#anatomy-prompt', c('prompt'), { y: 24 });
+
+      // a repo pinned at one commit
+      tl.fromTo('#anatomy-folder', { y: -300, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'bounce.out' }, c('repo') - 0.25);
+      KIT.draw(tl, '#anatomy-c-old', c('repo'), 0.45, { from: '100% 100%', to: '0% 100%' });
+      tl.fromTo('.anatomy-old', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.2, stagger: { each: 0.05, from: 'end' }, ease: 'back.out(3)' }, c('repo') + 0.05);
+      KIT.draw(tl, '#anatomy-c-new', c('repo') - 0.05, 0.2);
+      tl.fromTo('#anatomy-pinned', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.3, ease: 'back.out(3)' }, c('pinned') - 0.15);
+      tl.fromTo('#anatomy-pin', { y: -220, opacity: 0 }, { y: 0, opacity: 1, duration: 0.18, ease: 'power4.in' }, c('pinned') - 0.05);
+      KIT.shake(tl, '#anatomy-chain', c('pinned') + 0.13, { amp: 6, dur: 0.2 });
+      KIT.fade(tl, '#anatomy-hist', c('pinned'), { dur: 0.3 });
+      KIT.rise(tl, '#anatomy-repo', c('commit') - 0.1, { y: 24 });
+
+      // with no git history: cut the chain, the old commits fall away
+      const tCut = c('no') - 0.1;
+      tl.fromTo('#anatomy-scissors', { x: 0, y: -60, opacity: 0, scale: 0.6 }, { y: 0, opacity: 1, scale: 1, duration: 0.18 }, tCut - 0.12);
+      KIT.draw(tl, '#anatomy-cutline', tCut, 0.25, { ease: 'power2.in' });
+      tl.to('#anatomy-scissors', { y: 210, duration: 0.25, ease: 'power2.in' }, tCut);
+      tl.to('#anatomy-scissors', { opacity: 0, duration: 0.15 }, tCut + 0.3);
+      tl.to(['#anatomy-c-old', '.anatomy-old'], { y: 360, rotation: 14, opacity: 0, duration: 0.6, ease: 'power2.in', stagger: 0.03, transformOrigin: '50% 50%' }, c('git') - 0.05);
+      tl.fromTo('#anatomy-strike', { scaleX: 0 }, { scaleX: 1, duration: 0.2, ease: 'power3.out' }, c('history') + 0.05);
+      KIT.glitch(tl, '#anatomy-hist', c('history') + 0.05, { amp: 10, dur: 0.25 });
+      KIT.pop(tl, '#anatomy-cut', c('history') + 0.2);
+      tl.to('#anatomy-cutline', { clipPath: 'inset(100% 0% 0% 0%)', duration: 0.2, ease: 'power2.in' }, c('and'));
+
+      // one bash tool
+      tl.fromTo('#anatomy-term', { scale: 0.2, opacity: 0, rotation: 8, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, rotation: 0, duration: 0.4, ease: 'back.out(2)' }, c('and') - 0.05);
+      KIT.typeOn(tl, '#anatomy-cmd', c('bash') - 0.15, 18);
+      tl.fromTo('#anatomy-caret', { x: -220 }, { x: 0, duration: 6 / 18, ease: 'steps(6)' }, c('bash') - 0.15);
+      tl.fromTo('#anatomy-caret', { opacity: 1 }, { opacity: 0, duration: 0.25, ease: 'steps(1)', yoyo: true, repeat: 7 }, 0.2);
+
+      // camera follows the attention: prompt, repo, cut, terminal
+      tl.fromTo('#anatomy-cam', { scale: 1, x: 0, y: 0 }, { scale: 1.05, x: 50, y: -40, duration: 0.5, ease: 'power2.inOut' }, c('short') - 0.2);
+      tl.to('#anatomy-cam', { scale: 1.08, x: -40, y: -90, duration: 0.5, ease: 'power2.inOut' }, c('repo') - 0.2);
+      tl.to('#anatomy-cam', { scale: 1.1, x: 0, y: -110, duration: 0.4, ease: 'power2.inOut' }, c('no') - 0.3);
+      tl.to('#anatomy-cam', { scale: 1.05, x: -70, y: -40, duration: 0.45, ease: 'power2.inOut' }, c('and') - 0.1);
+      tl.to('#anatomy-cam', { scale: 1.03, x: 0, y: 0, duration: D - c('tool') + 0.1, ease: 'sine.inOut' }, c('tool'));
+
+      window.__timelines["anatomy"] = tl;
+    })();
+  </script>
+</template>

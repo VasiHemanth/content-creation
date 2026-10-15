@@ -1,0 +1,369 @@
+{
+  "item": "anthropic-scion",
+  "name": "Scion",
+  "renderer": "hyperframes",
+  "authors": [
+    "Anthropic source control team"
+  ],
+  "voice": {
+    "preset": "aiden",
+    "speed": 1.12
+  },
+  "ste": {
+    "names": [
+      "Anthropic",
+      "Scion",
+      "Git",
+      "Spanner",
+      "CPU",
+      "memory",
+      "scion-daemon",
+      "scion-cache",
+      "scion-server"
+    ],
+    "terms": [
+      {
+        "term": "trees",
+        "avoid": [
+          "directory objects",
+          "folder objects"
+        ]
+      },
+      {
+        "term": "blobs",
+        "avoid": [
+          "file objects",
+          "file payloads"
+        ]
+      },
+      {
+        "term": "daemon",
+        "avoid": [
+          "node agent",
+          "sidecar"
+        ]
+      },
+      {
+        "term": "regional cache",
+        "avoid": [
+          "edge cache",
+          "regional mirror"
+        ]
+      },
+      {
+        "term": "server",
+        "avoid": [
+          "origin",
+          "control plane"
+        ]
+      },
+      {
+        "term": "jobs",
+        "avoid": [
+          "workers",
+          "tasks"
+        ]
+      },
+      {
+        "term": "infrastructure footprint",
+        "avoid": [
+          "total cost",
+          "compute savings"
+        ]
+      }
+    ],
+    "allow": []
+  },
+  "scenes": {
+    "pressure": {
+      "transition": "whip"
+    },
+    "design": {
+      "transition": "zoom"
+    },
+    "objects": {
+      "transition": "zoom"
+    },
+    "journey": {
+      "transition": "whip"
+    },
+    "service": {
+      "transition": "punch"
+    },
+    "payoff": {
+      "transition": "blur"
+    },
+    "caveat": {
+      "transition": "cut"
+    },
+    "loop": {
+      "transition": "cut"
+    }
+  },
+  "lines": [
+    {
+      "id": "l01",
+      "scene": "pressure",
+      "say": "Anthropic's agents outgrew its source control.",
+      "text": "Anthropic's agents outgrew its source control.",
+      "data": {
+        "hook": "Anthropic\u2019s agents outgrew its source control.",
+        "agents": "agents",
+        "gate": "source control",
+        "hookRows": [
+          "Anthropic\u2019s agents",
+          "outgrew its source",
+          "control."
+        ]
+      },
+      "sfx": [
+        {
+          "t": 0.15,
+          "kind": "impact"
+        }
+      ]
+    },
+    {
+      "id": "l02",
+      "scene": "pressure",
+      "say": "Anthropic averaged about twenty five hundred daily merges, then exceeded thirty thousand by September.",
+      "text": "Anthropic averaged about 2,500 daily merges, then exceeded 30,000 by September.",
+      "data": {
+        "may": "May",
+        "sep": "September",
+        "low": "about 2,500/day",
+        "high": "over 30,000/day",
+        "unit": "merged code changes",
+        "report": "Anthropic reports"
+      },
+      "sfx": [
+        {
+          "cue": "Anthropic",
+          "kind": "tick"
+        }
+      ]
+    },
+    {
+      "id": "l03",
+      "scene": "pressure",
+      "say": "Their jobs needed code. Git mirrors strained under the load.",
+      "text": "Their jobs needed code. Git mirrors strained under the load.",
+      "data": {
+        "jobs": "jobs need code",
+        "mirror": "Git mirrors",
+        "strain": "Anthropic\u2019s workload"
+      },
+      "sfx": [
+        {
+          "cue": "Their",
+          "kind": "tick"
+        }
+      ]
+    },
+    {
+      "id": "l04",
+      "scene": "pressure",
+      "say": "Git already supports partial clones. Anthropic used those tools and still hit limits.",
+      "text": "Git already supports partial clones. Anthropic used those tools and still hit limits.",
+      "data": {
+        "partial": "Git partial clone",
+        "limits": "workload limits",
+        "history": "history"
+      },
+      "sfx": []
+    },
+    {
+      "id": "l05",
+      "scene": "design",
+      "say": "Anthropic built Sigh on around one rule. Clients are always online.",
+      "text": "Anthropic built Scion around one rule. Clients are always online.",
+      "data": {
+        "title": "Scion",
+        "rule": "connected by design",
+        "receipt": "ANTHROPIC \u00b7 ENGINEERING",
+        "client": "client",
+        "server": "server"
+      },
+      "sfx": []
+    },
+    {
+      "id": "l06",
+      "scene": "design",
+      "say": "Think of a warehouse. Each job requests only the shelves and boxes it needs.",
+      "text": "Think of a warehouse. Each job requests only the shelves and boxes it needs.",
+      "data": {
+        "warehouse": "repository namespace",
+        "needed": "only what this job needs",
+        "job": "job",
+        "note": "conceptual view \u00b7 distributed objects"
+      },
+      "sfx": []
+    },
+    {
+      "id": "l07",
+      "scene": "objects",
+      "say": "The client requests specific trees and blobs. Each object keeps the same contents.",
+      "text": "The client requests specific trees and blobs. Each object keeps the same contents.",
+      "data": {
+        "trees": "trees",
+        "blobs": "blobs",
+        "immutable": "same object \u00b7 same contents",
+        "client": "client"
+      },
+      "sfx": [
+        {
+          "cue": "The",
+          "kind": "tick"
+        }
+      ]
+    },
+    {
+      "id": "l08",
+      "scene": "objects",
+      "say": "Any cache can answer it. A daemon shares objects across jobs on one node.",
+      "text": "Any cache can answer it. A daemon shares objects across jobs on one node.",
+      "data": {
+        "receipt": "ANTHROPIC \u00b7 ENGINEERING",
+        "node": "one node",
+        "daemon": "scion-daemon",
+        "jobs": "jobs",
+        "shared": "shared cached objects"
+      },
+      "sfx": []
+    },
+    {
+      "id": "l09",
+      "scene": "journey",
+      "say": "The daemon asks the regional cache for objects it lacks.",
+      "text": "The daemon asks the regional cache for objects it lacks.",
+      "data": {
+        "title": "Follow one cache miss",
+        "daemon": "scion-daemon",
+        "cache": "scion-cache",
+        "region": "regional cache",
+        "server": "scion-server",
+        "spanner": "Spanner",
+        "storage": "cloud storage",
+        "job": "job",
+        "missing": "object absent",
+        "conditional": "as needed",
+        "reuse": "local reuse",
+        "note": "one illustrative request"
+      },
+      "sfx": [
+        {
+          "cue": "The",
+          "kind": "tick"
+        }
+      ]
+    },
+    {
+      "id": "l10",
+      "scene": "journey",
+      "say": "A cache miss reaches the server. It reads Spanner or cloud storage as needed.",
+      "text": "A cache miss reaches the server. It reads Spanner or cloud storage as needed.",
+      "data": {},
+      "sfx": [
+        {
+          "cue": "A",
+          "kind": "tick"
+        }
+      ]
+    },
+    {
+      "id": "l11",
+      "scene": "journey",
+      "say": "The object returns through those tiers. The next job can reuse it.",
+      "text": "The object returns through those tiers. The next job can reuse it.",
+      "data": {
+        "return": "same object returns",
+        "next": "next job"
+      },
+      "sfx": []
+    },
+    {
+      "id": "l12",
+      "scene": "service",
+      "say": "The server handles history, merges, and commits. Some jobs need no local repository.",
+      "text": "The server handles history, merges, and commits. Some jobs need no local repository.",
+      "data": {
+        "title": "Source control as a service",
+        "server": "scion-server",
+        "history": "history",
+        "merge": "merges",
+        "commit": "commits",
+        "api": "source-control API",
+        "job": "API-only job",
+        "diff": "diff",
+        "optional": "local repository optional"
+      },
+      "sfx": [
+        {
+          "cue": "The",
+          "kind": "tick"
+        }
+      ]
+    },
+    {
+      "id": "l13",
+      "scene": "payoff",
+      "say": "Anthropic reports a two hundred times smaller infrastructure footprint for C P U and memory.",
+      "text": "Anthropic reports a 200 times smaller infrastructure footprint for CPU and memory.",
+      "data": {
+        "value": "200\u00d7",
+        "smaller": "smaller",
+        "scope": "infrastructure CPU + memory",
+        "report": "Anthropic reports",
+        "scion": "Scion",
+        "git": "prior Git mirrors"
+      },
+      "sfx": [
+        {
+          "cue": "hundred",
+          "kind": "impact"
+        }
+      ]
+    },
+    {
+      "id": "l14",
+      "scene": "payoff",
+      "say": "That compares Sigh on infrastructure with its old Git mirrors.",
+      "text": "That compares Scion infrastructure with its old Git mirrors.",
+      "data": {
+        "compare": "vs prior Git mirrors",
+        "scope": "infrastructure CPU + memory"
+      },
+      "sfx": []
+    },
+    {
+      "id": "l15",
+      "scene": "caveat",
+      "say": "Sigh on serves Anthropic's unusual workload. It does not replace Git for general use.",
+      "text": "Scion serves Anthropic's unusual workload. It does not replace Git for general use.",
+      "data": {
+        "title": "Different constraints",
+        "scion": "Scion",
+        "workload": "Anthropic\u2019s unusual workload",
+        "git": "Git",
+        "general": "general use",
+        "online": "online clients",
+        "offline": "offline work"
+      },
+      "sfx": []
+    },
+    {
+      "id": "l16",
+      "scene": "loop",
+      "say": "When agents multiply, the next limit may be the infrastructure that serves them.",
+      "text": "When agents multiply, the next limit may be the infrastructure that serves them.",
+      "data": {
+        "hook": "Anthropic\u2019s agents outgrew its source control.",
+        "agents": "agents",
+        "infra": "infrastructure",
+        "handle": "hemanth_with_ai",
+        "credit": "Unofficial explainer \u00b7 Anthropic engineering"
+      },
+      "sfx": []
+    }
+  ]
+}

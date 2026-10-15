@@ -1,0 +1,665 @@
+{
+ "item": "2610.07625",
+ "name": "Stateless Language Agents",
+ "renderer": "hyperframes",
+ "authors": [
+  "Qizheng Zhang",
+  "Changxiu Ji",
+  "Isaac Sun",
+  "Yuetai Li",
+  "Shubhangi Upasani",
+  "Sherry Ruan",
+  "Boyuan Ma",
+  "Fenglu Hong",
+  "Vamsidhar Kamanuru",
+  "Yoonho Lee",
+  "Yuzhen Mao",
+  "Genghan Zhang",
+  "Rulin Shao",
+  "Qiuyang Mang",
+  "Andy Dimnaku",
+  "Changran Hu",
+  "Radha Poovendran",
+  "Kunle Olukotun"
+ ],
+ "voice": {
+  "preset": "aiden",
+  "speed": 1.25
+ },
+ "ste": {
+  "names": [
+   "SLA"
+  ],
+  "terms": [
+   {
+    "term": "research state",
+    "avoid": [
+     "memory",
+     "notes",
+     "history",
+     "record",
+     "log",
+     "knowledge"
+    ]
+   },
+   {
+    "term": "method",
+    "avoid": [
+     "framework",
+     "orchestrator",
+     "scaffold",
+     "harness"
+    ]
+   },
+   {
+    "term": "conversation",
+    "avoid": [
+     "chat",
+     "transcript",
+     "session history"
+    ]
+   },
+   {
+    "term": "call",
+    "avoid": [
+     "invocation",
+     "turn"
+    ]
+   },
+   {
+    "term": "context",
+    "avoid": [
+     "prompt",
+     "brief",
+     "window",
+     "input"
+    ]
+   },
+   {
+    "term": "Advisor",
+    "avoid": [
+     "planner",
+     "manager",
+     "coordinator",
+     "foreman",
+     "boss"
+    ]
+   },
+   {
+    "term": "Workers",
+    "avoid": [
+     "crews",
+     "crew",
+     "sub-agents",
+     "subagents",
+     "helpers"
+    ]
+   },
+   {
+    "term": "experiment",
+    "avoid": [
+     "trial",
+     "attempt",
+     "idea",
+     "job"
+    ]
+   },
+   {
+    "term": "baseline",
+    "avoid": [
+     "rival",
+     "competitor",
+     "earlier system"
+    ]
+   },
+   {
+    "term": "evaluator",
+    "avoid": [
+     "scorer",
+     "grader",
+     "checker"
+    ]
+   },
+   {
+    "term": "tokens",
+    "avoid": [
+     "compute",
+     "inference",
+     "spend"
+    ]
+   }
+  ],
+  "allow": []
+ },
+ "scenes": {
+  "hook": {
+   "transition": "cut"
+  },
+  "stall": {
+   "transition": "whip"
+  },
+  "why": {
+   "transition": "zoom"
+  },
+  "office": {
+   "transition": "cut"
+  },
+  "assign": {
+   "transition": "whip"
+  },
+  "cost": {
+   "transition": "punch"
+  },
+  "result": {
+   "transition": "whip"
+  },
+  "twist": {
+   "transition": "blur"
+  },
+  "caveat": {
+   "transition": "cut"
+  },
+  "close": {
+   "transition": "cut"
+  }
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "Give research agents a billion tokens. Does the work still improve?",
+   "text": "Give research agents a billion tokens. Does the work still improve?",
+   "data": {
+    "b1": "A BILLION TOKENS.",
+    "b2": "DOES THE WORK",
+    "b3": "STILL IMPROVE?",
+    "meter": "tokens"
+   },
+   "sfx": [
+    {
+     "t": 0.02,
+     "kind": "whoosh"
+    },
+    {
+     "cue": "billion",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "tokens",
+     "kind": "pop"
+    },
+    {
+     "cue": "work",
+     "kind": "thud"
+    },
+    {
+     "cue": "improve",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "scene": "stall",
+   "say": "Not always. In one baseline run, the last improvement came long before the end.",
+   "text": "Not always. In one baseline run, the last improvement came long before the end.",
+   "data": {
+    "chip": "one baseline run · GPU kernel task",
+    "ylab": "best score",
+    "xlab": "tokens",
+    "xend": "1B tokens",
+    "last": "last improvement",
+    "sketch": "a sketch of Fig. 2(b), p. 3",
+    "meter": "tokens",
+    "_knee": 231,
+    "_axis": 1000
+   },
+   "voice": {
+    "preset": "aiden",
+    "seed": 7
+   },
+   "sfx": [
+    {
+     "cue": "always",
+     "kind": "tick"
+    },
+    {
+     "cue": "baseline",
+     "kind": "pop"
+    },
+    {
+     "cue": "improvement",
+     "kind": "click"
+    },
+    {
+     "cue": "end",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "stall",
+   "say": "Ninety eight percent of the final sessions make no tool calls while token consumption continues.",
+   "text": "98% of the final sessions make no tool calls while token consumption continues.",
+   "data": {
+    "big": "98%",
+    "lab": "of the final sessions: no tool calls",
+    "receipt": "FROM THE PAPER · Sec. 1, p. 2"
+   },
+   "sfx": [
+    {
+     "cue": "Ninety",
+     "kind": "impact"
+    },
+    {
+     "cue": "make",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "continues",
+     "kind": "tick"
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "why",
+   "say": "The paper traces the failures to two choices. Where does research state live? Who picks the next experiment?",
+   "text": "The paper traces the failures to two choices. Where does research state live? Who picks the next experiment?",
+   "data": {
+    "f1": "replay growing histories",
+    "f2": "duplicate work",
+    "f3": "stop experimenting",
+    "head": "TWO CHOICES",
+    "p1": "where research state lives",
+    "p2": "who picks the next experiment",
+    "src": "Abstract, p. 1"
+   },
+   "voice": {
+    "preset": "aiden",
+    "seed": 11
+   },
+   "sfx": [
+    {
+     "cue": "failures",
+     "kind": "pop"
+    },
+    {
+     "cue": "two",
+     "kind": "thud"
+    },
+    {
+     "cue": "live",
+     "kind": "click"
+    },
+    {
+     "cue": "picks",
+     "kind": "click"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "why",
+   "say": "In two baselines, agents keep long conversations.",
+   "text": "In two baselines, agents keep long conversations.",
+   "data": {
+    "wb": "conversation",
+    "chip": "CORAL · SwarmResearch"
+   },
+   "sfx": [
+    {
+     "cue": "baselines",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "long",
+     "kind": "pop"
+    },
+    {
+     "cue": "conversations",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "office",
+   "say": "In the new method, agents keep no conversation between calls. The code and the scores carry over.",
+   "text": "In the new method, agents keep no conversation between calls. The code and the scores carry over.",
+   "data": {
+    "sla": "SLA: the new method",
+    "receipt": "FROM THE PAPER · Abstract, p. 1",
+    "board": "research state",
+    "plate": "kept between calls",
+    "cand": "candidate",
+    "score": "score",
+    "wb": "conversation"
+   },
+   "sfx": [
+    {
+     "cue": "new",
+     "kind": "pop"
+    },
+    {
+     "cue": "agents",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "code",
+     "kind": "stamp"
+    },
+    {
+     "cue": "scores",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "office",
+   "say": "Each call gets a fresh context for its role. The agent loses the conversation, not the work.",
+   "text": "Each call gets a fresh context for its role. The agent loses the conversation, not the work.",
+   "data": {
+    "fresh": "fresh context, built for the role",
+    "acard": "Advisor",
+    "a1": "best code",
+    "a2": "evidence across directions",
+    "wcard": "Worker",
+    "w1": "assignment",
+    "w2": "its candidate",
+    "w3": "local feedback",
+    "conv": "conversation",
+    "kept": "kept: candidate and score"
+   },
+   "sfx": [
+    {
+     "cue": "call",
+     "kind": "click"
+    },
+    {
+     "cue": "fresh",
+     "kind": "type"
+    },
+    {
+     "cue": "role",
+     "kind": "pop"
+    },
+    {
+     "cue": "loses",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "work",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "scene": "assign",
+   "say": "A stateless Advisor reads the evidence and gives each Worker a different experiment.",
+   "text": "A stateless Advisor reads the evidence and gives each Worker a different experiment.",
+   "data": {
+    "adv": "Advisor",
+    "stl": "stateless",
+    "sheet": "evidence summary",
+    "w": "Worker"
+   },
+   "sfx": [
+    {
+     "cue": "Advisor",
+     "kind": "pop"
+    },
+    {
+     "cue": "reads",
+     "kind": "tick"
+    },
+    {
+     "cue": "gives",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "different",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l09",
+   "scene": "assign",
+   "say": "In one run without assignments, three Workers built the same feature. None improved the score.",
+   "text": "In one run without assignments, three Workers built the same feature. None improved the score.",
+   "data": {
+    "chip1": "one run without assignments · libexpat",
+    "chip2": "a trace example, not a rate",
+    "same": "same feature",
+    "nog": "no gain",
+    "src": "App. D.3, p. 22"
+   },
+   "sfx": [
+    {
+     "t": 0.05,
+     "kind": "glitch"
+    },
+    {
+     "cue": "three",
+     "kind": "pop"
+    },
+    {
+     "cue": "same",
+     "kind": "thud"
+    },
+    {
+     "cue": "None",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "cost",
+   "say": "In two runs, the Advisor used under zero point six percent of all tokens.",
+   "text": "In two runs, the Advisor used under 0.6% of all tokens.",
+   "data": {
+    "chip": "two analyzed runs",
+    "meter": "tokens",
+    "wk": "Workers",
+    "adv": "Advisor",
+    "big": "<0.6%",
+    "tag1": "share of tokens",
+    "tag2": "not cost: its cost share is higher",
+    "src": "Table 5, p. 10",
+    "_advisor": 0.51
+   },
+   "sfx": [
+    {
+     "cue": "runs",
+     "kind": "pop"
+    },
+    {
+     "cue": "Advisor",
+     "kind": "tick"
+    },
+    {
+     "cue": "zero",
+     "kind": "impact"
+    },
+    {
+     "cue": "tokens",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "result",
+   "say": "On one kernel task, the method matched the strongest baseline's final result. It used over eighty four percent fewer tokens.",
+   "text": "On one kernel task, the method matched the strongest baseline's final result. It used over 84% fewer tokens.",
+   "data": {
+    "chip1": "Anthropic kernel task",
+    "chip2": "Claude Code setup · one run",
+    "chip3": "lower of two setups",
+    "title": "tokens to first match the strongest baseline's final result",
+    "nb": "CORAL (strongest baseline)",
+    "ns": "SLA",
+    "x0": "0",
+    "x1": "1B tokens",
+    "big": "84% fewer tokens",
+    "src": "Table 1, p. 8",
+    "_base": 888.3,
+    "_sla": 138.5,
+    "_axis": 1000
+   },
+   "sfx": [
+    {
+     "cue": "kernel",
+     "kind": "pop"
+    },
+    {
+     "cue": "strongest",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "used",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "eighty",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "twist",
+   "say": "On four software tasks, it trailed the strongest baseline early. Then it improved more and led at the end.",
+   "text": "On four software tasks, it trailed the strongest baseline early. Then it improved more and led at the end.",
+   "data": {
+    "chip": "FrontierSWE · Codex · one run each",
+    "leg1": "SLA",
+    "leg2": "strongest baseline",
+    "t1": "libexpat",
+    "t2": "Git→Zig",
+    "t3": "Dart→Haskell",
+    "t4": "Lua",
+    "q": "a quarter of the budget",
+    "full": "full budget",
+    "src": "Table 2, p. 8",
+    "_s175": [
+     18.82,
+     20.42,
+     15.43,
+     80.22
+    ],
+    "_b175": [
+     19.67,
+     24.32,
+     26.7,
+     82.97
+    ],
+    "_s700": [
+     31.33,
+     28.84,
+     45.27,
+     96.15
+    ],
+    "_b700": [
+     24.58,
+     27.98,
+     38.59,
+     90.66
+    ]
+   },
+   "sfx": [
+    {
+     "cue": "four",
+     "kind": "pop"
+    },
+    {
+     "cue": "trailed",
+     "kind": "tick"
+    },
+    {
+     "cue": "improved",
+     "kind": "riser",
+     "offset": -0.6
+    },
+    {
+     "cue": "led",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "caveat",
+   "say": "Every task had an automatic score. No test let these agents keep their conversations.",
+   "text": "Every task had an automatic score. No test let these agents keep their conversations.",
+   "data": {
+    "ev": "automatic score",
+    "c1": "software engineering",
+    "c2": "kernel optimization",
+    "c3": "algorithm design",
+    "stamp": "scored",
+    "fog": "vague or slow goals",
+    "unt": "untested",
+    "chip": "most setups: one run",
+    "wb": "conversation",
+    "sla": "SLA",
+    "nt": "not tested",
+    "src": "Sec. 5, p. 11"
+   },
+   "sfx": [
+    {
+     "cue": "automatic",
+     "kind": "stamp"
+    },
+    {
+     "cue": "No",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "conversations",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l14",
+   "scene": "close",
+   "say": "So, does the work still improve? Here, yes: the final results beat the results at a quarter of the budget. Judge agents over the whole run.",
+   "text": "So does the work still improve? Here, yes the final results beat the results at a quarter of the budget. Judge agents over the whole run.",
+   "data": {
+    "advice": "the paper's advice: report several budgets",
+    "whole": "whole run",
+    "meter": "tokens",
+    "handle": "hemanth_with_ai",
+    "title1": "Stateless Language Agents:",
+    "title2": "Scaling Long-Horizon Automated Research",
+    "credit": "arXiv 2610.07625 · unofficial explainer",
+    "q1": "DOES THE WORK",
+    "q2": "STILL IMPROVE?",
+    "ans": "here, yes: final results beat quarter-budget results",
+    "scope": "kernel task + four software tasks",
+    "other": "on one SOL-ExecBench task, no method moved much"
+   },
+   "sfx": [
+    {
+     "cue": "does",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "yes",
+     "kind": "impact"
+    },
+    {
+     "cue": "whole",
+     "kind": "whoosh"
+    }
+   ]
+  }
+ ]
+}

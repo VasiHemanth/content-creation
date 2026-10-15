@@ -1,0 +1,62 @@
+# Credentials and tokens. Never commit these.
+# Variables to set live in uploader/.env (template: uploader/.env.example).
+# The Google OAuth client is uploader/client_secret*.json; the login it produces is uploader/youtube_tokens.json.
+.env
+.env.*
+!.env.example
+client_secret*.json
+*credentials*.json
+*token*.json
+.tokens/
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+.claude/settings.local.json
+.claude/*.local.*
+
+# Databases, backups and logs. This is state, not code.
+# Back up with: node paper-reels/bin/reels.mjs backup <dir>
+# data/threads/STYLE.md is a style guide the thread agents read, so it stays tracked.
+data/*
+!data/threads/
+data/threads/*
+!data/threads/STYLE.md
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3
+*.db
+*.log
+
+# Dependencies and Python environments.
+# Rebuild with npm ci in paper-reels/ and uploader/, and see paper-reels/requirements*.txt for the venvs.
+node_modules/
+.venv*/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Renders and generated media. Storyboards, scenes, treatments and the wiki are the source of truth.
+# paper-reels/ and its episodes rebuild them (see PIPELINE.md). Third-party videos stay out of the repo too.
+**/out/*
+!**/out/.gitkeep
+**/audio/*.wav
+*.mp4
+*.MP4
+*.mov
+*.MOV
+*.webm
+*.mp3
+*.m4a
+*.zip
+
+# Editor and OS files.
+.DS_Store
+.idea/
+.vscode/
+*.swp

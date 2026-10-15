@@ -1,0 +1,42 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #hook-title { left: 60px; top: 300px; width: 960px; text-align: center; white-space: normal; font-size: 112px; line-height: 1.04; text-shadow: 8px 8px 0 var(--shadow); }
+    #hook-title .char, #hook-title .word { display: inline-block; }
+    #hook-git { left: 360px; top: 640px; width: 360px; height: 230px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: 150px; }
+    #hook-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #hook-sub { left: 0; top: 925px; width: 1080px; text-align: center; font: 700 40px "Mono", monospace; color: var(--cyan); white-space: nowrap; }
+    #hook-why { left: 0; top: 1060px; width: 1080px; text-align: center; font-size: 230px; color: var(--amber); text-shadow: 10px 10px 0 var(--shadow); }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam">
+      <div id="hook-title" class="hd" data-bind="l01.title"></div>
+      <div id="hook-git" class="actor old" data-bind="l01.git"></div>
+      <svg class="ink" id="hook-svg" viewBox="0 0 1080 1920">
+        <path id="hook-strike" class="ln coral heavy" d="M330 880 L750 630" />
+      </svg>
+      <div id="hook-sub" class="abs" data-bind="l01.sub"></div>
+      <div id="hook-why" class="hd" data-bind="l01.why"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l01', w, n), D = KIT.sceneDur('hook');
+      KIT.bind('#hook-cam');
+      const tl = gsap.timeline({ paused: true });
+      // frame 0 already shows the claim; the camera starts moving at once
+      tl.fromTo('#hook-cam', { scale: 1.0 }, { scale: 1.07, duration: D, ease: 'sine.inOut' }, 0);
+      // an early hit the eye (and the engagement gate) can see: the GIT box punches in, then flares coral on "replaced"
+      tl.fromTo('#hook-git', { scale: 0.55 }, { scale: 1, duration: 0.35, ease: 'back.out(2.6)' }, 0.12);
+      tl.to('#hook-git', { backgroundColor: '#ff6b6b', color: '#071d35', duration: 0.12 }, c('replaced') - 0.05);
+      tl.to('#hook-git', { backgroundColor: '#071d35', color: '#ff6b6b', duration: 0.3 }, c('replaced') + 0.25);
+      KIT.draw(tl, '#hook-strike', c('replaced'), 0.3);
+      KIT.shake(tl, '#hook-git', c('replaced') + 0.3, { amp: 14, dur: 0.3 });
+      tl.to('#hook-git', { opacity: 0.55, duration: 0.3 }, c('replaced') + 0.35);
+      KIT.typeOn(tl, '#hook-sub', c('tracks') - 0.1, 40);
+      KIT.slam(tl, '#hook-why', c('Why') - 0.2, { shakeTarget: '#hook-cam', amp: 18 });
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

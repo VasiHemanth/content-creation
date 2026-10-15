@@ -1,0 +1,244 @@
+<template id="caveat-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #caveat-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #caveat-beat, #caveat-world, #caveat-stage, #caveat-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #caveat-beat { transform-origin: 540px 900px; }
+    #caveat-scrim { position: absolute; left: -1500px; top: -1500px; width: 4000px; height: 5000px; background: #061a30; opacity: 0; }
+    #caveat-ba, #caveat-bb { top: 380px; font-size: 28px; }
+    #caveat-ba { left: 200px; } #caveat-bb { left: 590px; }
+    #caveat-skip { left: 800px; top: 760px; font-size: 32px; padding: 4px 14px; transform: rotate(-12deg); }
+    #caveat-lrun { left: 160px; top: 972px; font-size: 28px; color: var(--white); }
+    #caveat-lskip { left: 450px; top: 1170px; font-size: 28px; color: var(--cyan); }
+    #caveat-sb { left: 150px; top: 1370px; font-size: 28px; } #caveat-lgb { right: 180px; top: 1370px; font-size: 28px; }
+    .caveat-gap { position: absolute; font: 400 52px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 5px 5px 0 var(--shadow); white-space: nowrap; }
+    #caveat-gap1 { left: 270px; top: 1270px; } #caveat-gap2 { left: 620px; top: 1080px; }
+    #caveat-most { left: 110px; top: 906px; font-size: 28px; padding: 4px 14px; }
+    .caveat-hudlab { position: absolute; padding: 10px 18px; font: 700 32px/1 "Mono", monospace; color: var(--amber); background: var(--deep); border: 3px solid var(--amber); white-space: nowrap; }
+    #caveat-h1 { left: 620px; top: 1090px; } #caveat-h2 { left: 560px; top: 1090px; }
+    #caveat-scope { left: 230px; top: 200px; font-size: 30px; }
+    .ac-chip { position: absolute; padding: 8px 16px 6px; font: 700 28px/1 "Mono", monospace; color: var(--white); background: #0f3a60; border: 4px solid var(--cyan);
+      border-radius: 12px; white-space: nowrap; box-shadow: 5px 5px 0 var(--shadow); transform-origin: 50% 50%; }
+    .ac-chip.old { color: var(--dim); border-color: var(--faint); background: #0b2a4a; }
+    .ac-press { position: absolute; height: 190px; }
+    .ac-rod { position: absolute; top: 0; width: 10px; height: 130px; background: var(--dim); }
+    .ac-plate { position: absolute; left: 0; top: 120px; height: 62px; background: var(--deep); border: 5px solid var(--amber); box-shadow: 8px 8px 0 var(--shadow);
+      font: 700 32px/52px "Mono", monospace; color: var(--amber); text-align: center; box-sizing: border-box; }
+    .ac-gauge { position: absolute; width: 46px; border: 5px solid var(--white); border-radius: 10px; box-sizing: border-box; background: var(--panel); overflow: visible; }
+    .ac-gfill { position: absolute; left: 4px; right: 4px; bottom: 4px; top: 4px; background: var(--cyan); transform-origin: 50% 100%; border-radius: 4px; }
+    .ac-gtick { position: absolute; left: -22px; width: 80px; height: 6px; background: var(--coral); }
+    .ac-card { position: absolute; background: var(--paper); color: var(--ink); border: 4px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); padding: 10px 0 8px; }
+    .ac-chead { font: 400 40px/1.1 "Marker", sans-serif; color: var(--ink); padding: 0 18px 6px; border-bottom: 3px solid #c9bfa8; }
+    .ac-crow { font: 700 28px/1 "Mono", monospace; color: var(--ink); padding: 12px 18px 4px; white-space: nowrap; transform-origin: 0 0; }
+    .ac-peg { position: absolute; width: 24px; height: 120px; }
+    .ac-stake { position: absolute; left: 8px; top: 0; width: 8px; height: 120px; background: var(--amber); border-radius: 3px; }
+    .ac-hand { position: absolute; width: 220px; height: 330px; }
+    .ac-cuff { position: absolute; left: 34px; top: 34px; width: 150px; text-align: center; font: 700 30px/1 "Mono", monospace; color: var(--cyan); }
+  </style>
+  <div id="root" data-composition-id="caveat" data-width="1080" data-height="1920">
+    <div id="caveat-cam">
+      <div id="caveat-beat"><div id="caveat-world">
+        <svg class="ink sketch" id="caveat-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"></svg>
+        <div id="caveat-ba" class="tag" data-bind="l11.badge"></div>
+        <div id="caveat-bb" class="tag" data-bind="l11.badge"></div>
+        <div id="caveat-skip" class="tag coral" data-bind="l11.skipped" data-layout-allow-overlap></div>
+        <div id="caveat-lrun" class="lbl" data-bind="l11.lrun"></div>
+        <div id="caveat-lskip" class="lbl" data-bind="l11.lskip"></div>
+        <div id="caveat-sb" class="lbl" data-bind="l11.sb"></div>
+        <div id="caveat-lgb" class="lbl" data-bind="l11.lgb"></div>
+        <div id="caveat-gap1" class="caveat-gap" data-bind="l11.gap"></div>
+        <div id="caveat-gap2" class="caveat-gap" data-bind="l12.gap"></div>
+        <div id="caveat-most" class="tag" data-bind="l12.most"></div>
+        <div id="caveat-scope" class="tag cyan" data-bind="l12.scope"></div>
+      </div></div>
+      <div id="caveat-scrim"></div>
+      <div id="caveat-stage"></div>
+    </div>
+    <div id="caveat-hud">
+      <div id="caveat-h1" class="caveat-hudlab" data-bind="l11.sb"></div>
+      <div id="caveat-h2" class="caveat-hudlab" data-bind="l11.lgb"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      // ---- shared drawing kit for this episode (same code in every scene, so the hook and the close match) ----
+      const AC = (() => {
+        const W = '#f2f8ff', PANEL = '#0a2340', AMB = '#ffb454', COR = '#ff6b6b', CY = '#a8dcf2', DIM = '#6aa9d0';
+        const $ = (s) => (typeof s === 'string' ? document.querySelector(s) : s);
+        const svg = (tag, attrs, parent) => KIT.svgEl(tag, attrs, parent);
+        const div = (cls, id, css, parent, txt) => { const e = document.createElement('div'); if (cls) e.className = cls; e.id = id; if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; $(parent).appendChild(e); return e; };
+        const ln = (d, parent, o = {}) => svg('path', { d, fill: 'none', stroke: o.c || W, 'stroke-width': o.w || 3.4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', id: o.id, 'stroke-dasharray': o.dash }, parent);
+
+        /** A hiker facing right. (x, y) = ground point between the feet; s = scale (1 = about 230 px tall).
+         *  Animate `${id}` (x in local units = px / s), `${id}-body` (turns), `${id}-legF/-legB`, `${id}-pack`, `${id}-arm`. */
+        function hiker(host, { id, x, y, s = 1, mag = false, pack = 1 }) {
+          const pos = svg('g', { transform: `translate(${x} ${y}) scale(${s})` }, host);
+          const g = svg('g', { id }, pos), body = svg('g', { id: `${id}-body` }, g);
+          const legB = svg('g', { id: `${id}-legB` }, body); ln('M2 -86 L-8 -42 L-14 0 L-1 0', legB, { c: DIM, w: 4.2 });
+          const pk = svg('g', { id: `${id}-pack` }, body);
+          svg('rect', { x: -66, y: -184, width: 56, height: 100, rx: 15, fill: PANEL, stroke: W, 'stroke-width': 3.6 }, pk);
+          ln('M-66 -160 L-10 -160', pk, { w: 2.6 }); ln('M-50 -132 L-26 -132', pk, { c: DIM, w: 2.6 });
+          ln('M-60 -84 L-62 -76 M-16 -84 L-14 -76', pk, { w: 2.6 });
+          ln('M-10 -172 L4 -148', body, { c: AMB, w: 3 });
+          ln('M2 -150 L-8 -116 L-4 -94', body, { c: DIM, w: 4 });
+          ln('M2 -170 L2 -86', body, { w: 5 });
+          const legF = svg('g', { id: `${id}-legF` }, body); ln('M2 -86 L14 -42 L12 0 L26 0', legF, { w: 4.4 });
+          svg('circle', { cx: 6, cy: -194, r: 19, fill: PANEL, stroke: W, 'stroke-width': 3.6 }, body);
+          ln('M-14 -200 Q6 -228 26 -201 L36 -199', body, { w: 3.4 });
+          svg('circle', { cx: 15, cy: -196, r: 2.6, fill: W }, body);
+          const arm = svg('g', { id: `${id}-arm` }, body);
+          if (mag) { ln('M2 -150 L30 -122 L52 -110', arm, { w: 4.2 }); svg('circle', { cx: 64, cy: -98, r: 14, fill: 'rgba(168,220,242,.18)', stroke: AMB, 'stroke-width': 3.6 }, arm); ln('M54 -108 L50 -112', arm, { c: AMB, w: 4 }); }
+          else ln('M2 -150 L18 -116 L26 -94', arm, { w: 4.2 });
+          gsap.set(`#${id}-pack`, { scale: pack, svgOrigin: '-38 -84' });
+          return { pos, g, body, x, y, s, packTop: [x - 38 * s, y - 184 * s * pack], packBox: [x - 66 * s, y - 184 * s * pack, 56 * s, 100 * s * pack] };
+        }
+        /** Walk cycle: legs swing on keyframes (tl.to only, so several walks can follow each other). */
+        function walk(tl, id, t0, dur, step = 0.26) {
+          const n = Math.max(2, Math.round(dur / step)), kf = (sgn) => { const k = []; for (let i = 0; i < n; i++) k.push({ rotation: (i % 2 ? -1 : 1) * 20 * sgn, duration: dur / n, ease: 'sine.inOut' }); k.push({ rotation: 0, duration: 0.12 }); return k; };
+          tl.to(`#${id}-legF`, { keyframes: kf(1), svgOrigin: '2 -86' }, t0);
+          tl.to(`#${id}-legB`, { keyframes: kf(-1), svgOrigin: '2 -86' }, t0);
+        }
+        /** A trail flag on the ground line; the label sits above the cloth (right-aligned when `right`). */
+        function flag(host, parent, { id, x, y, h = 210, label, right = false, color = AMB, below = false }) {
+          const g = svg('g', { id }, host);
+          ln(`M${x} ${y} L${x} ${y - h}`, g, { w: 5 });
+          const cloth = svg('path', { d: `M${x + 2} ${y - h} L${x + 74} ${y - h + 22} L${x + 2} ${y - h + 46} Z`, fill: color, stroke: color, 'stroke-width': 2, id: `${id}-cloth` }, g);
+          const lab = label != null ? div('lbl white', `${id}-lab`, `top:${below ? y + 30 : y - h - 48}px;${right ? `right:${1080 - x - 6}px` : `left:${x - 6}px`};font-size:28px`, parent, label) : null;
+          return { g, cloth, lab };
+        }
+        /** A chip of carried context (search, tool output, ...). */
+        const chip = (parent, id, txt, x, y) => div('ac-chip', id, `left:${x}px;top:${y}px`, parent, txt);
+        /** The press: rods and a plate labelled compact(). Slam it with tl.to(`#${id}`, { y }). */
+        function press(parent, { id, x, y, w = 200, label }) {
+          const p = div('ac-press', id, `left:${x}px;top:${y - 120}px;width:${w}px`, parent);
+          div('ac-rod', `${id}-r1`, `left:${w * 0.25 - 5}px`, p); div('ac-rod', `${id}-r2`, `left:${w * 0.75 - 5}px`, p);
+          div('ac-plate', `${id}-plate`, `width:${w}px`, p, label);
+          return p;
+        }
+        /** The context gauge strap: outline, fill (scaleY), red limit tick and labels. */
+        function gauge(parent, { id, x, y, h = 300, lim = 0.9, limitTxt, ctxTxt, fill = 0.5 }) {
+          const g = div('ac-gauge', id, `left:${x}px;top:${y}px;height:${h}px`, parent);
+          const f = div('ac-gfill', `${id}-fill`, '', g);
+          const tk = div('ac-gtick', `${id}-tick`, `top:${(1 - lim) * h - 3}px`, g);
+          div('lbl', `${id}-lim`, `left:${x - 96}px;top:${y + (1 - lim) * h - 20}px;font-size:28px;color:#ff9d9d`, parent, limitTxt);
+          div('lbl', `${id}-ctx`, `left:${x - 40}px;top:${y + h + 12}px;font-size:28px`, parent, ctxTxt);
+          gsap.set(f, { scaleY: fill });
+          return { g, f, tk };
+        }
+        /** The summary card: a header and three rows (rows hidden until shown). */
+        function card(parent, { id, x, y, w = 330, head, rows }) {
+          const c = div('ac-card', id, `left:${x}px;top:${y}px;width:${w}px`, parent);
+          div('ac-chead', `${id}-h`, '', c, head);
+          const rs = rows.map((r, i) => div('ac-crow', `${id}-r${i}`, '', c, r));
+          return { c, rs };
+        }
+        /** A compact() peg: stake plus tag. */
+        function peg(parent, { id, x, y, label }) {
+          const p = div('ac-peg', id, `left:${x - 12}px;top:${y - 120}px`, parent);
+          div('ac-stake', `${id}-s`, '', p); div('tag', `${id}-t`, 'left:-8px;top:-52px;font-size:26px;padding:4px 12px', p, label);
+          return p;
+        }
+        /** The judge's hand, pointing down, with a labelled cuff. */
+        function hand(parent, { id, x, y, label }) {
+          const h = div('ac-hand', id, `left:${x}px;top:${y}px`, parent);
+          const sv = KIT.svgEl('svg', { viewBox: '0 0 220 330', width: 220, height: 330, style: 'position:absolute;left:0;top:0;overflow:visible' }, h);
+          svg('rect', { x: 34, y: 0, width: 150, height: 120, rx: 10, fill: PANEL, stroke: CY, 'stroke-width': 6 }, sv);
+          svg('path', { d: 'M44 120 L44 210 C44 236 60 250 84 250 L150 250 C170 250 182 236 182 214 L182 120 Z', fill: PANEL, stroke: W, 'stroke-width': 6, 'stroke-linejoin': 'round' }, sv);
+          [[52, 300], [86, 322], [120, 318], [152, 296]].forEach(([fx, fy]) => svg('path', { d: `M${fx} 236 L${fx} ${fy}`, stroke: W, 'stroke-width': 24, 'stroke-linecap': 'round' }, sv));
+          [[52, 300], [86, 322], [120, 318], [152, 296]].forEach(([fx, fy]) => svg('path', { d: `M${fx} 238 L${fx} ${fy - 2}`, stroke: PANEL, 'stroke-width': 12, 'stroke-linecap': 'round' }, sv));
+          svg('path', { d: 'M182 170 C214 180 220 214 206 236', fill: 'none', stroke: W, 'stroke-width': 18, 'stroke-linecap': 'round' }, sv);
+          div('ac-cuff', `${id}-cuff`, '', h, label);
+          return h;
+        }
+        /** A pair of footprints on the ground. */
+        const prints = (host, id, x, y, c = DIM) => { const g = svg('g', { id }, host); svg('ellipse', { cx: x, cy: y - 7, rx: 15, ry: 5.5, fill: c }, g); svg('ellipse', { cx: x + 22, cy: y + 5, rx: 15, ry: 5.5, fill: c }, g); return g; };
+        return { $, svg, div, ln, hiker, walk, flag, chip, press, gauge, card, peg, hand, prints, C: { W, PANEL, AMB, COR, CY, DIM } };
+      })();
+      const S = 'caveat', a = (w, n) => KIT.cue('l11', w, n), b = (w, n) => KIT.cue('l12', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#caveat-cam'); KIT.bind('#caveat-hud');
+      const d4 = KIT.data('l04'), d11 = KIT.data('l11'), d12 = KIT.data('l12'), tl = gsap.timeline({ paused: true });
+      const SV = '#caveat-svg', GY = 860;
+
+      // ---- two identical trained hikers, side by side ----
+      AC.ln(`M100 ${GY} L900 ${GY}`, SV, { w: 5, id: 'caveat-ground' });
+      AC.hiker(SV, { id: 'caveat-ha', x: 300, y: GY, s: 1.2, pack: 0.9 });
+      AC.hiker(SV, { id: 'caveat-hb', x: 690, y: GY, s: 1.2, pack: 0.9 });
+      const pa = AC.peg('#caveat-world', { id: 'caveat-pa', x: 410, y: GY, label: d4.peg });
+      const pb = AC.peg('#caveat-world', { id: 'caveat-pb', x: 800, y: GY, label: d4.peg });
+
+      // ---- the drop chart: the reference line is "compaction runs"; each column is how far "compact calls skipped" falls below it (Figure 3d gaps, not printed) ----
+      const RY = 1020, PX = 15, g = d11._g.map((x) => x / 5), XS = [0, 1, 2, 3, 4, 5].map((i) => 220 + i * 130);
+      const ref = AC.ln(`M160 ${RY} L900 ${RY}`, SV, { w: 6, id: 'caveat-ref' });
+      const cols = XS.map((x, i) => AC.svg('rect', { x: x - 34, y: RY, width: 68, height: g[i] * PX, fill: '#6aa9d0', id: `caveat-col${i}` }, SV));
+      const br1 = AC.ln(`M${XS[0] + 44} ${RY + 4} L${XS[0] + 58} ${RY + 4} L${XS[0] + 58} ${RY + g[0] * PX} L${XS[0] + 44} ${RY + g[0] * PX}`, SV, { c: AC.C.AMB, w: 4, id: 'caveat-br1' });
+      const br2 = AC.ln(`M${XS[5] - 44} ${RY + 2} L${XS[5] - 58} ${RY + 2} L${XS[5] - 58} ${RY + g[5] * PX + 2} L${XS[5] - 44} ${RY + g[5] * PX + 2}`, SV, { c: AC.C.AMB, w: 4, id: 'caveat-br2' });
+
+      // "Skip the trained agent's": two identical hikers, both badged AutoCompact
+      KIT.pop(tl, ['#caveat-ba', '#caveat-bb'], a('trained') - 0.1, { from: 0.4 });
+      // "compact calls": the right hiker's peg is taped "skipped"; its pack stays full
+      KIT.slam(tl, '#caveat-skip', a('compact') - 0.12, { from: 2.4, amp: 8, shakeTarget: '#caveat-beat' });
+      tl.to('#caveat-pb', { opacity: 0.45, duration: 0.2 }, a('compact') + 0.1);
+      tl.to('#caveat-hb-pack', { keyframes: [{ scale: 1.25, duration: 0.12 }, { scale: 1.15, duration: 0.2 }], svgOrigin: '-38 -84' }, a('calls'));
+      tl.to('#caveat-ha-pack', { keyframes: [{ scale: 0.6, duration: 0.12 }, { scale: 0.75, duration: 0.2 }], svgOrigin: '-38 -84' }, a('calls') + 0.15);
+      // "and its pass rate drops": the chart draws; the columns hang below the reference line
+      KIT.draw(tl, ref, a('and') - 0.1, 0.35);
+      tl.fromTo(['#caveat-lrun', '#caveat-sb', '#caveat-lgb'], { opacity: 0 }, { opacity: 1, duration: 0.25 }, a('its'));
+      cols.forEach((c, i) => tl.fromTo(c, { scaleY: 0, svgOrigin: `${XS[i]} ${RY}` }, { scaleY: 1, svgOrigin: `${XS[i]} ${RY}`, duration: 0.25, ease: 'power2.in' }, a('pass') - 0.05 + i * 0.08));
+      tl.fromTo('#caveat-lskip', { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.25 }, a('drops'));
+      KIT.shake(tl, '#caveat-beat', a('drops') + 0.05, { amp: 8, dur: 0.22 });
+
+      // receipt R4, first phrase: "The advantage is 19.9% at $0.10"
+      const tR1 = a('the', 1) - 0.5;
+      tl.to('#caveat-scrim', { opacity: 0.9, duration: 0.3 }, tR1);
+      tl.to('#caveat-world', { opacity: 0, duration: 0.25 }, tR1 + 0.3);
+      const P1 = KIT.read(tl, { cam: '#caveat-cam', parent: '#caveat-stage', hud: '#caveat-hud', tagY: 560, id: 'adv1', t: tR1, label: d11.receipt,
+        x: 40, y: 820, width: 1000, zoom: 2.8, fx: 90, fy: 860, follow: 0,
+        marks: [[a('the', 1), a('at') + 0.3, [[a('advantage'), 0.13], [a('is'), 0.42], [a('nineteen'), 0.48], [a('points'), 0.62], [a('at'), 0.66]]]],
+        circles: [{ word: '19.9%', t: a('nine') }] });
+      tl.fromTo('#caveat-h1', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.25 }, a('at') - 0.05);
+      const tB1 = a('at') + 0.35;
+      tl.set('#caveat-cam', { x: 0, y: 0, scale: 1 }, tB1);
+      tl.set(P1.el, { opacity: 0 }, tB1);
+      tl.set('#caveat-stage-adv1-tag', { opacity: 0 }, tB1);
+      tl.set(['#caveat-hud', '#caveat-scrim'], { opacity: 0 }, tB1);
+      tl.set('#caveat-world', { opacity: 1 }, tB1);
+      // "at the smallest budget": back on the chart, a gap bracket at the smallest-budget end, labelled
+      KIT.draw(tl, br1, tB1 + 0.02, 0.25);
+      KIT.pop(tl, '#caveat-gap1', a('smallest') - 0.05, { from: 0.4 });
+      tl.to('#caveat-col0', { attr: { fill: '#a8dcf2' }, duration: 0.15 }, a('smallest'));
+
+      // l12, receipt R4 second phrase: "remains 1.9% at $4.00" (read while the voice says "the advantage is one point nine points")
+      const tR2 = b('The') - 0.35;
+      tl.to(['#caveat-ba', '#caveat-bb'], { opacity: 0, duration: 0.2 }, tR2);
+      tl.to('#caveat-scrim', { opacity: 0.9, duration: 0.25 }, tR2);
+      tl.to('#caveat-hud', { opacity: 1, duration: 0.01 }, tR2);
+      tl.to('#caveat-h1', { opacity: 0, duration: 0.01 }, tR2);
+      tl.to('#caveat-world', { opacity: 0, duration: 0.25 }, tR2 + 0.25);
+      const P2 = KIT.read(tl, { cam: '#caveat-cam', parent: '#caveat-stage', hud: '#caveat-hud', tagY: 560, id: 'adv2', t: tR2, label: d11.receipt,
+        x: 40, y: 820, width: 1000, zoom: 2.8, fx: 90, fy: 860, follow: 0,
+        marks: [[b('advantage'), b('largest') + 0.15, [[b('one'), 0.35], [b('points'), 0.55], [b('at'), 0.6]]]],
+        circles: [{ word: '1.9%', t: b('nine') - 0.05, dur: 0.3 }] });
+      tl.fromTo('#caveat-h2', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.25 }, b('largest') - 0.35);
+      const tB2 = b('largest') + 0.25;
+      tl.set('#caveat-cam', { x: 0, y: 0, scale: 1 }, tB2);
+      tl.set(P2.el, { opacity: 0 }, tB2);
+      tl.set(['#caveat-hud', '#caveat-scrim'], { opacity: 0 }, tB2);
+      tl.set('#caveat-world', { opacity: 1 }, tB2);
+      // "budget": the camera pans to the largest-budget end; a small bracket, labelled
+      tl.to('#caveat-beat', { scale: 1.08, x: -60, y: -20, duration: 0.4, ease: 'power2.inOut' }, tB2);
+      KIT.draw(tl, br2, tB2 + 0.1, 0.2);
+      KIT.pop(tl, '#caveat-gap2', tB2 + 0.2, { from: 0.4 });
+      tl.to('#caveat-col5', { attr: { fill: '#a8dcf2' }, duration: 0.15 }, tB2 + 0.1);
+      // "Compaction itself helps most on a tight budget": back to the smallest-budget end; its column and bracket pulse
+      tl.to('#caveat-beat', { scale: 1.08, x: 60, y: -20, duration: 0.45, ease: 'power2.inOut' }, b('Compaction') - 0.1);
+      tl.to('#caveat-col0', { keyframes: [{ attr: { fill: '#ffb454' }, duration: 0.12 }, { attr: { fill: '#a8dcf2' }, duration: 0.25 }, { attr: { fill: '#ffb454' }, duration: 0.12 }] }, b('helps') - 0.05);
+      tl.to(br1, { keyframes: [{ attr: { 'stroke-width': 9 }, duration: 0.12 }, { attr: { 'stroke-width': 4 }, duration: 0.2 }] }, b('helps'));
+      KIT.slam(tl, '#caveat-most', b('tight') - 0.15, { from: 2.2, amp: 8, shakeTarget: '#caveat-beat' });
+      tl.to('#caveat-beat', { scale: 1, x: 0, y: 0, duration: 0.5, ease: 'power2.inOut' }, b('budget', 1) + 0.15);
+      tl.fromTo('#caveat-scope', { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.3 }, b('budget', 1) + 0.3);
+
+      KIT.beats(tl, '#caveat-beat', [a('Skip'), a('trained')], { amp: 0.02, shift: 12 });
+      window.__timelines["caveat"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,73 @@
+<template id="scope-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #scope-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #scope-shows { left: 190px; top: 200px; font-size: 120px; color: var(--mint); }
+    #scope-not { left: 190px; top: 800px; font-size: 104px; color: var(--coral); }
+    #scope-shows .char, #scope-not .char { display: inline-block; }
+    .scope-it { position: absolute; left: 90px; width: 900px; height: 96px; }
+    .scope-it .bx { position: absolute; left: 0; top: 12px; width: 70px; height: 70px; border: 5px solid var(--mint); background: var(--panel); }
+    .scope-it .tx { position: absolute; left: 100px; top: 18px; font: 700 44px "Mono", monospace; color: var(--white); white-space: nowrap; }
+    .scope-it.no .bx { border: 5px dashed var(--coral); }
+    .scope-it.no .tx { color: var(--cyan); }
+    .scope-it svg { position: absolute; left: 0; top: 0; overflow: visible; }
+  </style>
+  <div id="root" data-composition-id="scope" data-width="1080" data-height="1920">
+    <div id="scope-cam">
+      <svg class="ink sketch" id="scope-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path id="scope-bigcheck" d="M86 268 L126 312 L170 222" fill="none" stroke="#7be3b0" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+        <path id="scope-bigx" d="M92 846 L166 920 M166 846 L92 920" fill="none" stroke="#ff6b6b" stroke-width="16" stroke-linecap="round" />
+        <path id="scope-div" class="ln dim dash" d="M70 760 L1010 760" />
+      </svg>
+      <div id="scope-shows" class="hd" data-bind="l10.shows"></div>
+      <div id="scope-not" class="hd" data-bind="l10.not"></div>
+      <div id="scope-items"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'scope', c = (w, n) => KIT.cue('l10', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#scope-cam');
+      const d = KIT.data('l10'), tl = gsap.timeline({ paused: true }), host = document.querySelector('#scope-items');
+
+      const hs = SplitText.create('#scope-shows', { type: 'chars' });
+      tl.fromTo(hs.chars, { y: 120, opacity: 0, rotation: 12 }, { y: 0, opacity: 1, rotation: 0, duration: 0.35, stagger: 0.04, ease: 'back.out(2.2)' }, 0.05);
+      KIT.draw(tl, '#scope-bigcheck', 0.3, 0.35, { ease: 'power3.out' });
+
+      const showT = [c('clear') - 0.05, c('finish') - 0.05, c('long') - 0.05];
+      d.showsItems.forEach((t, k) => {
+        const el = document.createElement('div'); el.className = 'scope-it'; el.id = `scope-s${k}`; el.style.top = `${380 + k * 118}px`;
+        el.innerHTML = `<div class="bx"></div><svg width="80" height="96" viewBox="0 0 80 96"><path id="scope-ck${k}" d="M14 50 L32 70 L66 24" fill="none" stroke="#7be3b0" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" /></svg><div class="tx"></div>`;
+        el.querySelector('.tx').textContent = t; host.appendChild(el);
+        tl.fromTo(el, { x: -120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }, showT[k]);
+        KIT.draw(tl, `#scope-ck${k}`, showT[k] + 0.2, 0.22, { ease: 'power2.out' });
+      });
+
+      // not measured
+      const tN = c('Not');
+      KIT.draw(tl, '#scope-div', tN - 0.3, 0.4);
+      const hn = SplitText.create('#scope-not', { type: 'chars' });
+      tl.fromTo(hn.chars, { scale: 2.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.18, stagger: 0.025, ease: 'power4.in' }, tN - 0.12);
+      KIT.draw(tl, '#scope-bigx', tN + 0.15, 0.25, { ease: 'power3.out' });
+      KIT.shake(tl, '#scope-cam', tN + 0.12, { amp: 12, dur: 0.28 });
+      tl.to('#scope-s0, #scope-s1, #scope-s2', { opacity: 0.55, duration: 0.4 }, tN);
+      const noT = [c('code') - 0.05, c('partial') - 0.05, c('vague') - 0.05];
+      d.notItems.forEach((t, k) => {
+        const el = document.createElement('div'); el.className = 'scope-it no'; el.id = `scope-n${k}`; el.style.top = `${980 + k * 118}px`;
+        el.innerHTML = `<div class="bx"></div><svg width="80" height="96" viewBox="0 0 80 96"><path id="scope-dash${k}" d="M18 48 L56 48" fill="none" stroke="#ff6b6b" stroke-width="10" stroke-linecap="round" /></svg><div class="tx"></div>`;
+        el.querySelector('.tx').textContent = t; host.appendChild(el);
+        tl.fromTo(el, { scale: 1.6, opacity: 0, x: 40 }, { scale: 1, opacity: 1, x: 0, duration: 0.2, ease: 'power4.in', transformOrigin: '0% 50%' }, noT[k]);
+        KIT.draw(tl, `#scope-dash${k}`, noT[k] + 0.18, 0.15, { ease: 'power2.out' });
+        KIT.shake(tl, el, noT[k] + 0.2, { amp: 6, dur: 0.18 });
+      });
+      // camera beats: a small push on every item, a reset on "not measured", then a push down the second list
+      const beat = (t, s, y) => tl.to('#scope-cam', { scale: s, y, duration: 0.3, ease: 'power3.out' }, t);
+      tl.set('#scope-cam', { scale: 1, y: 0 }, 0);
+      beat(showT[0] + 0.05, 1.03, -12); beat(showT[1] + 0.05, 1.05, -28); beat(showT[2] + 0.05, 1.07, -44);
+      tl.to('#scope-cam', { scale: 1, y: 0, duration: 0.35, ease: 'power3.inOut' }, tN - 0.2);
+      beat(noT[0] + 0.05, 1.03, -30); beat(noT[1] + 0.05, 1.05, -60); beat(noT[2] + 0.05, 1.07, -90);
+
+      window.__timelines["scope"] = tl;
+    })();
+  </script>
+</template>

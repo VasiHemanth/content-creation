@@ -1,0 +1,22 @@
+<template id="g04-template">
+  <div id="root" data-composition-id="g04" data-width="1080" data-height="1350">
+    <div class="pk-page">
+      <h2 class="pk-h2" data-bind="g04.title"></h2>
+      <div class="pk-body is-sub" data-bind="g04.unit"></div>
+      <div class="pk-bars">
+        <div class="pk-bar is-coral" data-var="--pct:g04.rows.0._pct">
+          <div class="pk-bar-head"><span class="pk-bar-label" data-bind="g04.rows.0.label"></span><span class="pk-bar-val" data-bind="g04.rows.0.value"></span></div>
+          <div class="pk-bar-track"><i class="pk-bar-fill"></i></div>
+        </div>
+        <div class="pk-bar is-mint" data-var="--pct:g04.rows.1._pct">
+          <div class="pk-bar-head"><span class="pk-bar-label" data-bind="g04.rows.1.label"></span><span class="pk-bar-val" data-bind="g04.rows.1.value"></span></div>
+          <div class="pk-bar-track"><i class="pk-bar-fill"></i></div>
+        </div>
+      </div>
+      <div class="pk-stack is-tight">
+        <div class="pk-bar-label" data-bind="g04.meter_label"></div>
+        <div class="pk-meter" data-var="--pct:g04._meter"></div>
+      </div>
+    </div>
+  </div>
+</template>

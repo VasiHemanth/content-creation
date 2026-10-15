@@ -1,0 +1,174 @@
+{
+  "item": "2609.33987",
+  "name": "Opera",
+  "renderer": "hyperframes",
+  "voice": {
+    "preset": "heart"
+  },
+  "lines": [
+    {
+      "id": "scene-1",
+      "scene": "scene-1",
+      "say": "Most AI critics break code that works. Opera leaves a persistent note.",
+      "text": "Most AI critics break code that works. Opera leaves a persistent note.",
+      "data": {
+        "text": "Most AI critics break code that works. Opera leaves a persistent note."
+      }
+    },
+    {
+      "id": "scene-2",
+      "scene": "scene-2",
+      "say": "Agents that write code make mistakes over long horizons.",
+      "text": "Agents that write code make mistakes over long horizons.",
+      "data": {
+        "text": "Agents that write code make mistakes over long horizons."
+      }
+    },
+    {
+      "id": "scene-3",
+      "scene": "scene-3",
+      "say": "Standard critics give feedback once and forget.",
+      "text": "Standard critics give feedback once and forget.",
+      "data": {
+        "text": "Standard critics give feedback once and forget."
+      }
+    },
+    {
+      "id": "scene-4",
+      "scene": "scene-4",
+      "say": "The agent repeats the exact same error.",
+      "text": "The agent repeats the exact same error.",
+      "data": {
+        "text": "The agent repeats the exact same error."
+      }
+    },
+    {
+      "id": "scene-5",
+      "scene": "scene-5",
+      "say": "Opera treats feedback as a sticky note.",
+      "text": "Opera treats feedback as a sticky note.",
+      "data": {
+        "text": "Opera treats feedback as a sticky note."
+      }
+    },
+    {
+      "id": "scene-6",
+      "scene": "scene-6",
+      "say": "The note stays open during the fix.",
+      "text": "The note stays open during the fix.",
+      "data": {
+        "text": "The note stays open during the fix."
+      }
+    },
+    {
+      "id": "scene-7",
+      "scene": "scene-7",
+      "say": "The system checks the code again.",
+      "text": "The system checks the code again.",
+      "data": {
+        "text": "The system checks the code again."
+      }
+    },
+    {
+      "id": "scene-8",
+      "scene": "scene-8",
+      "say": "It closes the note only when the code passes.",
+      "text": "It closes the note only when the code passes.",
+      "data": {
+        "text": "It closes the note only when the code passes."
+      }
+    },
+    {
+      "id": "scene-9",
+      "scene": "scene-9",
+      "say": "It also knows when to speak.",
+      "text": "It also knows when to speak.",
+      "data": {
+        "text": "It also knows when to speak."
+      }
+    },
+    {
+      "id": "scene-10",
+      "scene": "scene-10",
+      "say": "Opera combines periodic and event-driven triggers with the option to stay silent.",
+      "text": "Opera combines periodic and event-driven triggers with the option to stay silent.",
+      "data": {
+        "text": "Opera combines periodic and event-driven triggers with the option to stay silent."
+      }
+    },
+    {
+      "id": "scene-11",
+      "scene": "scene-11",
+      "say": "This stops bad advice.",
+      "text": "This stops bad advice.",
+      "data": {
+        "text": "This stops bad advice."
+      }
+    },
+    {
+      "id": "scene-12",
+      "scene": "scene-12",
+      "say": "The results set a new bar.",
+      "text": "The results set a new bar.",
+      "data": {
+        "text": "The results set a new bar."
+      }
+    },
+    {
+      "id": "scene-13",
+      "scene": "scene-13",
+      "say": "Opera achieves the highest resolve rate of any rival critic on three benchmarks.",
+      "text": "Opera achieves the highest resolve rate of any rival critic on three benchmarks.",
+      "data": {
+        "text": "Opera achieves the highest resolve rate of any rival critic on three benchmarks."
+      }
+    },
+    {
+      "id": "scene-14",
+      "scene": "scene-14",
+      "say": "It boosts the Qwen model by fifteen percentage points.",
+      "text": "It boosts the Qwen model by fifteen percentage points.",
+      "data": {
+        "text": "It boosts the Qwen model by fifteen percentage points."
+      }
+    },
+    {
+      "id": "scene-15",
+      "scene": "scene-15",
+      "say": "The data it generates trains better models.",
+      "text": "The data it generates trains better models.",
+      "data": {
+        "text": "The data it generates trains better models."
+      }
+    },
+    {
+      "id": "scene-16",
+      "scene": "scene-16",
+      "say": "Weaker agents generally benefit more from it.",
+      "text": "Weaker agents generally benefit more from it.",
+      "data": {
+        "text": "Weaker agents generally benefit more from it."
+      }
+    },
+    {
+      "id": "scene-17",
+      "scene": "scene-17",
+      "say": "But if a model is completely incapable, the critic cannot save it.",
+      "text": "But if a model is completely incapable, the critic cannot save it.",
+      "data": {
+        "text": "But if a model is completely incapable, the critic cannot save it."
+      }
+    },
+    {
+      "id": "scene-18",
+      "scene": "scene-18",
+      "say": "Which answers the question:",
+      "text": "@hemanth_with_ai arXiv 2609.33987",
+      "data": {
+        "text": "@hemanth_with_ai arXiv 2609.33987",
+        "handle": "hemanth_with_ai",
+        "credit": "arXiv 2609.33987"
+      }
+    }
+  ]
+}

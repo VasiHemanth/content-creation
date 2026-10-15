@@ -1,0 +1,114 @@
+<template id="caveat-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #caveat-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #caveat-push, #caveat-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 860px; }
+    #caveat-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #caveat-stage, #caveat-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #caveat-scrim { position: absolute; left: -1500px; top: -1500px; width: 4000px; height: 5000px; background: #061a30; opacity: 0; }
+    #caveat-limit { left: 0; top: 262px; width: 1080px; text-align: center; }
+    #caveat-limit span { display: inline-block; padding: 4px 40px 10px; font: 400 100px/1.1 "Marker", sans-serif; color: var(--coral); background: var(--deep);
+      border: 8px solid var(--coral); box-shadow: 10px 10px 0 var(--shadow); }
+    .caveat-col { position: absolute; top: 640px; width: 80px; height: 400px; }
+    .caveat-card { position: absolute; left: 0; top: 0; width: 80px; height: 200px; border-radius: 8px; background: #f4efe3; border: 4px solid #f4efe3; box-shadow: 6px 6px 0 var(--shadow); }
+    .caveat-card i { position: absolute; left: 10px; height: 8px; border-radius: 4px; background: #a9b6c4; }
+    .caveat-col svg { position: absolute; left: 0; top: 214px; width: 80px; height: 170px; }
+    #caveat-once { left: 330px; top: 690px; font-size: 92px; padding: 0 30px 4px; border-width: 8px; outline-width: 3px; outline-offset: -20px; }
+    #caveat-learned { top: 1054px; width: 360px; text-align: center; font-size: 30px; color: var(--dim); }
+    #caveat-notl { top: 1054px; width: 420px; text-align: center; font-size: 30px; color: var(--amber); }
+    #caveat-setting { left: 470px; top: 1124px; font-size: 30px; }
+    #caveat-held { left: 0; top: 1080px; width: 1080px; text-align: center; }
+    #caveat-held span { display: inline-block; padding: 10px 22px; font: 700 30px/1 "Mono", monospace; color: var(--cyan); background: var(--deep); border: 3px solid var(--cyan); }
+  </style>
+  <div id="root" data-composition-id="caveat" data-width="1080" data-height="1920">
+    <div id="caveat-cam">
+      <div id="caveat-push"><div id="caveat-beat"><div id="caveat-world">
+        <div id="caveat-limit" class="abs"><span data-bind="l12.limit"></span></div>
+        <svg class="ink sketch" id="caveat-gauge" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <path id="caveat-arc" class="ln thick" d="M732 560 A68 68 0 0 1 868 560" />
+          <g id="caveat-needle"><path d="M800 560 L800 502" stroke="#ffb454" stroke-width="8" stroke-linecap="round" /><circle cx="800" cy="560" r="12" fill="#ffb454" /></g>
+        </svg>
+        <div id="caveat-cols"></div>
+        <div id="caveat-token" style="position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--amber);box-shadow:0 0 22px rgba(255,180,84,.7)"></div>
+        <div id="caveat-once" class="stamp" data-bind="l12.once"></div>
+        <div id="caveat-learned" class="lbl" data-bind="l12.learned"></div>
+        <div id="caveat-notl" class="lbl" data-bind="l12.notlearned"></div>
+        <div id="caveat-setting" class="lbl" data-bind="l12.setting"></div>
+      </div></div></div>
+      <div id="caveat-scrim"></div>
+      <div id="caveat-stage"></div>
+    </div>
+    <div id="caveat-hud"><div id="caveat-held" class="abs"><span data-bind="l12.heldout"></span></div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'caveat', a = (w, n) => KIT.cue('l12', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#caveat-world'); KIT.bind('#caveat-hud');
+      const d12 = KIT.data('l12'), tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+      const mkEl = (tag, cls, id, css, parent, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; e.id = id; if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; (typeof parent === 'string' ? q(parent) : parent).appendChild(e); return e; };
+
+      // ---- task cards; each has room for three runs and gets one. The split follows the held-in / held-out counts ----
+      const NC = 9, nIn = Math.round(NC * d12._in / (d12._in + d12._out)), W = 80, GAP = 10, X0 = (1080 - (NC * W + (NC - 1) * GAP)) / 2, SH = 80;
+      const cols = [];
+      for (let i = 0; i < NC; i++) {
+        const col = mkEl('div', 'caveat-col', `caveat-c${i}`, `left:${X0 + i * (W + GAP)}px`, '#caveat-cols');
+        const card = mkEl('div', 'caveat-card', `caveat-k${i}`, '', col);
+        [[22, 50], [48, 36], [74, 56], [100, 30], [126, 46], [152, 40], [176, 52]].forEach(([yy, w], k) => mkEl('i', '', `caveat-k${i}l${k}`, `top:${yy}px;width:${w}px`, card));
+        const sv = KIT.svgEl('svg', { viewBox: '0 0 80 150', id: `caveat-sv${i}` }, col);
+        const slots = [0, 1, 2].map((k) => KIT.svgEl('circle', { cx: 40, cy: 26 + k * 56, r: 19, fill: 'none', stroke: k ? '#3d78a6' : '#6aa9d0', 'stroke-width': 4,
+          'stroke-dasharray': k ? '6 6' : 'none', id: `caveat-s${i}-${k}` }, sv));
+        const dot = KIT.svgEl('circle', { cx: 40, cy: 26, r: 14, fill: '#ffb454', id: `caveat-d${i}` }, sv);
+        cols.push({ col, card, slots, dot, x: X0 + i * (W + GAP) });
+      }
+      // "One limit"
+      KIT.slam(tl, '#caveat-limit', a('limit') - 0.18, { from: 2.2, amp: 12, shakeTarget: '#caveat-beat' });
+      // "each task": the cards deal out
+      cols.forEach((c, i) => tl.fromTo(c.col, { y: -60, opacity: 0, rotation: -8 }, { y: 0, opacity: 1, rotation: 0, duration: 0.24, ease: 'back.out(2)' }, a('each') - 0.15 + i * 0.045));
+      // "ran once": one run token sweeps the row; each task gets exactly one run
+      const tT = a('ran') - 0.1, sweep = a('once') - tT + 0.05;
+      tl.fromTo('#caveat-token', { x: X0 - 50, y: 592, opacity: 0 }, { x: X0 - 50, y: 592, opacity: 1, duration: 0.1 }, tT - 0.1);
+      tl.to('#caveat-token', { x: X0 + NC * (W + GAP), duration: sweep, ease: 'none' }, tT);
+      tl.to('#caveat-token', { opacity: 0, duration: 0.15 }, tT + sweep);
+      cols.forEach((c, i) => tl.fromTo(c.dot, { scale: 0, opacity: 0, svgOrigin: '40 26' }, { scale: 1, opacity: 1, svgOrigin: '40 26', duration: 0.16, ease: 'back.out(3)' }, tT + sweep * ((i + 0.5) / NC)));
+      KIT.slam(tl, '#caveat-once', a('once') - 0.16, { from: 2.2, amp: 10, shakeTarget: '#caveat-beat' });
+      tl.to('#caveat-once', { opacity: 0, y: -40, duration: 0.25, ease: 'power2.in' }, a('On') - 0.15);
+      // "On tasks it did not learn from": the row splits into the tasks it learned from and the rest
+      const tS = a('On') - 0.05;
+      cols.forEach((c, i) => tl.to(c.col, { x: i < nIn ? -80 : 80, duration: 0.4, ease: 'power3.inOut' }, tS));
+      tl.to(cols.slice(0, nIn).map((c) => c.card), { opacity: 0.4, duration: 0.3 }, tS + 0.2);
+      tl.to(cols.slice(nIn).map((c) => c.card), { borderColor: '#ffb454', boxShadow: '0 0 26px rgba(255,180,84,.55), 6px 6px 0 rgba(2,12,24,.62)', duration: 0.3 }, a('not') - 0.1);
+      const midL = X0 - 80 + (nIn * (W + GAP) - GAP) / 2, midR = X0 + 80 + nIn * (W + GAP) + ((NC - nIn) * (W + GAP) - GAP) / 2;
+      q('#caveat-learned').style.left = `${midL - 180}px`; q('#caveat-notl').style.left = `${midR - 210}px`;
+      tl.fromTo('#caveat-learned', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.25 }, a('tasks') + 0.1);
+      tl.fromTo('#caveat-notl', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.25 }, a('not'));
+
+      // the paper says it: "held-out changes vary by setting." (camera holds the start of the phrase in frame)
+      const tR = a('from') - 0.55;
+      KIT.beats(tl, '#caveat-beat', [a('limit') + 0.3, a('each'), a('ran'), a('On'), a('did')], { amp: 0.018, shift: 14, reset: tR - 0.05 });
+      tl.to('#caveat-scrim', { opacity: 0.88, duration: 0.3 }, tR);
+      tl.to('#caveat-world', { opacity: 0, duration: 0.2 }, tR + 0.3);
+      const P = KIT.read(tl, { cam: '#caveat-cam', parent: '#caveat-stage', hud: '#caveat-hud', tagY: 560, id: 'vary', t: tR, label: d12.receipt,
+        x: 40, y: 820, width: 1000, zoom: 2.7, fx: 90, fy: 860, follow: 0,
+        marks: [[a('from'), a('setting') + 0.42, [[a('changes'), 0.27], [a('vary'), 0.535], [a('by'), 0.67], [a('setting'), 0.76]]]],
+        circles: [{ word: 'vary', t: a('vary') }] });
+      tl.fromTo('#caveat-held', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: 'back.out(2)' }, a('from') + 0.1);
+      // a hard cut back to the tasks it did not learn from
+      const tB = a('setting') + 0.45;
+      tl.set('#caveat-cam', { x: 0, y: 0, scale: 1 }, tB);
+      tl.set(P.el, { opacity: 0 }, tB);
+      tl.set('#caveat-hud', { opacity: 0 }, tB);
+      tl.set('#caveat-scrim', { opacity: 0 }, tB);
+      tl.set('#caveat-world', { opacity: 1 }, tB);
+      // back on the tasks it did not learn from: the needle swings (decoration, no scale) and the setting is named
+      KIT.draw(tl, '#caveat-arc', tB + 0.05, 0.25);
+      tl.fromTo('#caveat-needle', { opacity: 0, rotation: 0, svgOrigin: '800 560' }, { opacity: 1, rotation: -40, svgOrigin: '800 560', duration: 0.2 }, tB + 0.1);
+      tl.to('#caveat-needle', { keyframes: [{ rotation: 38, duration: 0.22 }, { rotation: -30, duration: 0.2 }, { rotation: 24, duration: 0.2 }], svgOrigin: '800 560', ease: 'sine.inOut' }, tB + 0.3);
+      tl.fromTo('#caveat-setting', { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.25 }, tB + 0.15);
+      tl.fromTo('#caveat-push', { scale: 1 }, { scale: 1.03, duration: tR, ease: 'sine.inOut' }, 0);
+      tl.to('#caveat-push', { scale: 1.06, duration: D - tB, ease: 'power2.out' }, tB);
+
+      window.__timelines["caveat"] = tl;
+    })();
+  </script>
+</template>

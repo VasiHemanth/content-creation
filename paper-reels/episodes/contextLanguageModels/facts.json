@@ -1,0 +1,8 @@
+{
+ "note": "Only the numbers shown on screen. Source: arXiv 2609.37725v1; the result is the authors' own zero-shot run (Qwen3.6-27B, 32K context, shared Mini-SWE-Agent backbone). No FLOPs numbers are shown or spoken.",
+ "paper": "raw/sources/arxiv-2609-37725.md",
+ "numbers": {
+  "59.4": "BrowseComp-Plus accuracy, CLM, zero-shot; exceeds the strongest baseline, Codex-style summarization (sec 5.1.1, Figure 5a)",
+  "2609.37725": "arXiv id (corner credit in the last line)"
+ }
+}

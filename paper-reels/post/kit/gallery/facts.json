@@ -1,0 +1,7 @@
+{
+  "note": "Gallery of the slide kit. The two numbers are counted from the strings in this post.",
+  "numbers": {
+    "23": "words in the sentence g03.x_before, counted with the word splitter of hf/bin/ste.mjs",
+    "10": "words in the longest sentence of g03.after, counted the same way"
+  }
+}

@@ -1,0 +1,19 @@
+/* PARTS: styles for the drawing helpers in parts.js. Colours come from the tokens in kit/blueprint.css (:root).
+   Inline this file after blueprint.css in the root page, so the variables resolve. */
+.part-chip { position: absolute; padding: 8px 16px 6px; font: 700 28px/1 "Mono", monospace; color: var(--white); background: #0f3a60; border: 4px solid var(--cyan);
+  border-radius: 12px; white-space: nowrap; box-shadow: 5px 5px 0 var(--shadow); transform-origin: 50% 50%; }
+.part-chip.old { color: var(--dim); border-color: var(--faint); background: #0b2a4a; }
+.part-press { position: absolute; height: 190px; }
+.part-rod { position: absolute; top: 0; width: 10px; height: 130px; background: var(--dim); }
+.part-plate { position: absolute; left: 0; top: 120px; height: 62px; background: var(--deep); border: 5px solid var(--amber); box-shadow: 8px 8px 0 var(--shadow);
+  font: 700 32px/52px "Mono", monospace; color: var(--amber); text-align: center; box-sizing: border-box; }
+.part-gauge { position: absolute; width: 46px; border: 5px solid var(--white); border-radius: 10px; box-sizing: border-box; background: var(--panel); overflow: visible; }
+.part-gfill { position: absolute; left: 4px; right: 4px; bottom: 4px; top: 4px; background: var(--cyan); transform-origin: 50% 100%; border-radius: 4px; }
+.part-gtick { position: absolute; left: -22px; width: 80px; height: 6px; background: var(--coral); }
+.part-card { position: absolute; background: var(--paper); color: var(--ink); border: 4px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); padding: 10px 0 8px; }
+.part-chead { font: 400 40px/1.1 "Marker", sans-serif; color: var(--ink); padding: 0 18px 6px; border-bottom: 3px solid #c9bfa8; }
+.part-crow { font: 700 28px/1 "Mono", monospace; color: var(--ink); padding: 12px 18px 4px; white-space: nowrap; transform-origin: 0 0; }
+.part-peg { position: absolute; width: 24px; height: 120px; }
+.part-stake { position: absolute; left: 8px; top: 0; width: 8px; height: 120px; background: var(--amber); border-radius: 3px; }
+.part-hand { position: absolute; width: 220px; height: 330px; }
+.part-cuff { position: absolute; left: 34px; top: 34px; width: 150px; text-align: center; font: 700 30px/1 "Mono", monospace; color: var(--cyan); }

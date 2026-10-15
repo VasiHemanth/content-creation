@@ -1,0 +1,128 @@
+<template id="result-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #rs-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 860px; }
+    .rs-layer { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #rs-svg, #rs-bsvg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #rs-yl { left: 170px; top: 452px; font-size: 32px; }
+    #rs-xl { left: 640px; top: 1238px; font-size: 32px; }
+    #rs-avg { left: 80px; top: 1316px; width: 920px; font-size: 30px; line-height: 1.3; white-space: normal; color: var(--cyan); }
+    #rs-nf { left: 590px; top: 548px; font-size: 32px; }
+    #rs-ns { left: 230px; top: 1030px; font-size: 32px; color: var(--mint); border-color: var(--mint); }
+    #rs-nl { left: 280px; top: 1110px; font-size: 32px; }
+    #rs-best { left: 400px; top: 470px; font-size: 34px; }
+    #rs-axis { left: 170px; top: 430px; font-size: 34px; }
+    #rs-bestp { left: 190px; top: 470px; font-size: 34px; color: var(--mint); border-color: var(--mint); }
+    .rs-val { position: absolute; width: 260px; text-align: center; font: 400 112px/1 "Marker", sans-serif; text-shadow: 6px 6px 0 var(--shadow); white-space: nowrap; }
+    #rs-v1 { left: 220px; top: 560px; color: var(--mint); }
+    #rs-v2 { left: 550px; top: 940px; color: var(--amber); }
+    #rs-b1 { left: 240px; top: 1202px; font-size: 32px; color: var(--mint); border-color: var(--mint); }
+    #rs-b2 { left: 570px; top: 1202px; font-size: 32px; }
+    #rs-unit { left: 60px; top: 1290px; width: 960px; text-align: center; font-size: 32px; color: var(--white); }
+    #rs-est { left: 340px; top: 1356px; font-size: 32px; }
+    #rs-src { left: 60px; top: 1428px; font-size: 22px; color: var(--dim); }
+    #rs-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="result" data-width="1080" data-height="1920">
+    <div id="rs-cam">
+      <div id="rs-chart" class="rs-layer">
+        <svg id="rs-svg" class="ink sketch" viewBox="0 0 1080 1920">
+          <path id="rs-ay" class="ln thick" d="M170 1220 L170 500 M170 500 L154 528 M170 500 L186 528" />
+          <path id="rs-ax" class="ln thick" d="M170 1220 L930 1220 M930 1220 L902 1204 M930 1220 L902 1236" />
+        </svg>
+        <div id="rs-yl" class="lbl cyan" data-bind="l08.y"></div>
+        <div id="rs-xl" class="lbl cyan" data-bind="l08.x"></div>
+        <div id="rs-nf" class="tag" data-bind="l08.n1"></div>
+        <div id="rs-ns" class="tag" data-bind="l08.n2"></div>
+        <div id="rs-nl" class="tag coral" data-bind="l08.n3"></div>
+        <div id="rs-avg" class="lbl" data-bind="l08.avg"></div>
+        <div id="rs-best" class="tag" data-bind="l09.best"></div>
+      </div>
+      <div id="rs-bars" class="rs-layer">
+        <svg id="rs-bsvg" class="ink sketch" viewBox="0 0 1080 1920">
+          <path id="rs-base" class="ln dim thick" d="M170 1180 L930 1180" />
+          <path id="rs-bay" class="ln thick" d="M170 1180 L170 500 M170 500 L154 528 M170 500 L186 528" />
+          <rect id="rs-bar1" class="fl mint" x="250" y="680" width="200" height="500" />
+          <rect id="rs-bar2" class="fl amber" x="580" y="1084" width="200" height="96" />
+        </svg>
+        <div id="rs-axis" class="lbl cyan" data-bind="l09.axis"></div>
+        <div id="rs-bestp" class="tag" data-bind="l09.bestp"></div>
+        <div id="rs-v1" class="rs-val" data-bind="l09.v1"></div>
+        <div id="rs-v2" class="rs-val" data-bind="l09.v2"></div>
+        <div id="rs-b1" class="tag" data-bind="l09.b1"></div>
+        <div id="rs-b2" class="tag" data-bind="l09.b2"></div>
+        <div id="rs-unit" class="lbl" data-bind="l09.unit"></div>
+        <div id="rs-est" class="tag cyan" data-bind="l09.est"></div>
+        <div id="rs-src" class="lbl" data-bind="l09.src"></div>
+      </div>
+    </div>
+    <div id="rs-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l08', w, n), b = (w, n) => KIT.cue('l09', w, n), D = KIT.sceneDur('result');
+      KIT.bind('#rs-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t) => tl.fromTo('#rs-flash', { opacity: 0.2 }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const svg = document.getElementById('rs-svg'), E = (tag, at, p) => KIT.svgEl(tag, at, p || svg);
+
+      // ---- the sketch of Fig. 1 (average of the games): log dollars across, score up. No figures are printed. ----
+      const X = (c) => 170 + 760 * (Math.log10(c) + 1) / 4.3, Y = (s) => 1220 - 7 * s;
+      const sig = (z) => 1 / (1 + Math.exp(-z));
+      const fable = (c) => 43 + 40 * sig((Math.log10(c) - 2.3) / 0.3);
+      const solf = (c) => 18 + 38 * sig((Math.log10(c) - 1.75) / 0.2);
+      const luna = (c) => 7 - 3 * (Math.log10(c) + 0.854) / 2.03;
+      const path = (f, c0, c1, n = 70) => { let d = ''; for (let k = 0; k <= n; k++) { const c = c0 * Math.pow(c1 / c0, k / n); d += `${k ? 'L' : 'M'}${X(c).toFixed(1)} ${Y(f(c)).toFixed(1)} `; } return d; };
+      E('path', { id: 'rs-lf', d: path(fable, 0.14, 1600), class: 'ln amber heavy' });
+      E('path', { id: 'rs-ls', d: path(solf, 0.14, 500), class: 'ln mint heavy' });
+      E('path', { id: 'rs-ll', d: path(luna, 0.14, 15, 20), class: 'ln coral heavy dash' });
+      const dots = [['rs-df', 'fl amber', fable(0.14)], ['rs-ds', 'fl mint', solf(0.14)], ['rs-dl', 'fl coral', luna(0.14)]];
+      dots.forEach(([id, cls, s]) => E('circle', { id, class: cls, cx: X(0.14).toFixed(1), cy: Y(s).toFixed(1), r: 15 }));
+      const endF = [X(1600), Y(fable(1600))];
+      E('circle', { id: 'rs-ring', class: 'ln amber thick', cx: endF[0].toFixed(1), cy: endF[1].toFixed(1), r: 30, opacity: 0 });
+
+      // ---------- l08 ----------
+      KIT.draw(tl, '#rs-ay', 0.05, 0.45); KIT.draw(tl, '#rs-ax', 0.12, 0.45);
+      KIT.rise(tl, '#rs-yl', 0.3, { y: 12 }); KIT.rise(tl, '#rs-xl', 0.4, { y: 12 });
+      const pop = (id, t) => tl.fromTo(id, { scale: 0, svgOrigin: `${X(0.14).toFixed(1)} ${id === '#rs-df' ? Y(fable(0.14)).toFixed(1) : id === '#rs-ds' ? Y(solf(0.14)).toFixed(1) : Y(luna(0.14)).toFixed(1)}` }, { scale: 1, svgOrigin: `${X(0.14).toFixed(1)} ${id === '#rs-df' ? Y(fable(0.14)).toFixed(1) : id === '#rs-ds' ? Y(solf(0.14)).toFixed(1) : Y(luna(0.14)).toFixed(1)}`, duration: 0.3, ease: 'back.out(3)' }, t);
+      pop('#rs-ds', a('Sol')); KIT.pop(tl, '#rs-ns', a('Sol') + 0.05, { from: 0.4 });
+      KIT.draw(tl, '#rs-ls', a('gained'), 1.0, { ease: 'power2.inOut' });
+      pop('#rs-dl', a('Luna')); KIT.pop(tl, '#rs-nl', a('Luna') + 0.05, { from: 0.4 });
+      KIT.draw(tl, '#rs-ll', a('did'), 0.6, { ease: 'power1.out' });
+      pop('#rs-df', a('Fable')); KIT.pop(tl, '#rs-nf', a('Fable') + 0.05, { from: 0.4 });
+      KIT.draw(tl, '#rs-lf', a('gained', 1), 1.0, { ease: 'power2.inOut' });
+      KIT.rise(tl, '#rs-avg', a('Fable'), { y: 12 });
+      [a('Sol'), a('Luna'), a('not'), a('Fable'), a('lot', 1)].forEach(pulse);
+      tl.to('#rs-ns', { y: -8, duration: 0.15, yoyo: true, repeat: 1 }, a('lot'));
+      tl.to('#rs-nl', { x: 6, duration: 0.08, yoyo: true, repeat: 3 }, a('not'));
+
+      // ---------- l09: best test score is Fable 5; best plasticity is Sol ----------
+      tl.fromTo('#rs-ring', { opacity: 0, scale: 0.4, svgOrigin: `${endF[0].toFixed(1)} ${endF[1].toFixed(1)}` }, { opacity: 1, scale: 1, svgOrigin: `${endF[0].toFixed(1)} ${endF[1].toFixed(1)}`, duration: 0.35, ease: 'back.out(3)', immediateRender: false }, b('best'));
+      KIT.pop(tl, '#rs-best', b('best') + 0.05, { from: 0.4 });
+      KIT.shake(tl, '#rs-cam', b('best') + 0.2, { amp: 9, dur: 0.25 });
+      pulse(b('best')); pulse(b('score'));
+      // wipe (not fold) from the lines to the bars at "but"
+      tl.fromTo('#rs-chart', { clipPath: 'inset(0 0 0 0%)' }, { clipPath: 'inset(0 0 0 100%)', duration: 0.5, ease: 'power2.in', immediateRender: false }, b('but') - 0.05);
+      tl.fromTo('#rs-bars', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.5, ease: 'power2.out' }, b('but') - 0.05);
+      const v1 = parseFloat(KIT.data('l09').v1), v2 = parseFloat(KIT.data('l09').v2), HMAX = 500, BASE = 1180;
+      const h1 = HMAX, h2 = HMAX * v2 / v1, r1 = document.querySelector('#rs-bar1'), r2 = document.querySelector('#rs-bar2');
+      r1.setAttribute('y', BASE - h1); r1.setAttribute('height', h1); r2.setAttribute('y', BASE - h2); r2.setAttribute('height', h2);
+      document.querySelector('#rs-v1').style.top = `${BASE - h1 - 130}px`; document.querySelector('#rs-v2').style.top = `${BASE - h2 - 130}px`;
+      KIT.draw(tl, '#rs-base', b('but') + 0.2, 0.3); KIT.draw(tl, '#rs-bay', b('but') + 0.25, 0.3);
+      KIT.rise(tl, '#rs-axis', b('but') + 0.3, { y: 12 });
+      tl.fromTo('#rs-bar1', { scaleY: 0, svgOrigin: `350 ${BASE}` }, { scaleY: 1, svgOrigin: `350 ${BASE}`, duration: 0.8, ease: 'power3.out' }, b('Sol') - 0.05);
+      tl.fromTo('#rs-bar2', { scaleY: 0, svgOrigin: `680 ${BASE}` }, { scaleY: 1, svgOrigin: `680 ${BASE}`, duration: 0.6, ease: 'power3.out' }, b('Sol') + 0.15);
+      tl.fromTo('#rs-v1', { opacity: 0 }, { opacity: 1, duration: 0.2 }, b('Sol') - 0.05); KIT.count(tl, '#rs-v1', b('Sol') - 0.05, 0.8);
+      tl.fromTo('#rs-v2', { opacity: 0 }, { opacity: 1, duration: 0.2 }, b('Sol') + 0.15); KIT.count(tl, '#rs-v2', b('Sol') + 0.15, 0.6);
+      KIT.pop(tl, '#rs-b1', b('Sol') + 0.1, { from: 0.4 }); KIT.pop(tl, '#rs-b2', b('Sol') + 0.25, { from: 0.4 });
+      KIT.rise(tl, '#rs-unit', b('but') + 0.5, { y: 12 });
+      KIT.pop(tl, '#rs-bestp', b('plasticity') - 0.25, { from: 0.4 });
+      KIT.pop(tl, '#rs-est', b('best', 1), { from: 0.4 });
+      KIT.fade(tl, '#rs-src', b('best', 1), { to: 0.8 });
+      KIT.shake(tl, '#rs-cam', b('Sol') + 0.5, { amp: 10, dur: 0.25 });
+      [b('Sol'), b('had'), b('plasticity')].forEach(pulse);
+      tl.fromTo('#rs-cam', { scale: 1 }, { scale: 1.03, duration: D, ease: 'sine.inOut', immediateRender: false }, 0);
+      window.__timelines["result"] = tl;
+    })();
+  </script>
+</template>

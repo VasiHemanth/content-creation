@@ -1,0 +1,130 @@
+<template id="policy-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #policy-cam, #policy-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 700px; }
+    #policy-label { left: 0; top: 212px; width: 1080px; text-align: center; }
+    #policy-label span { display: inline-block; padding: 4px 36px 10px; font: 400 84px/1.1 "Marker", sans-serif; color: var(--amber); background: var(--deep);
+      border: 7px solid var(--amber); box-shadow: 10px 10px 0 var(--shadow); }
+    #policy-screen { position: absolute; left: 250px; top: 420px; width: 580px; height: 720px; border: 6px solid var(--white); border-radius: 26px;
+      background: var(--panel); overflow: hidden; box-shadow: 12px 12px 0 var(--shadow); }
+    #policy-strip { position: absolute; left: 0; top: 0; width: 568px; height: 96px; background: #0c2b4c; border-bottom: 4px solid var(--cyan); }
+    .policy-btn { position: absolute; top: 22px; height: 52px; padding: 9px 16px 0; border: 4px solid var(--cyan); border-radius: 12px; background: var(--deep);
+      font: 700 28px/1 "Mono", monospace; color: var(--cyan); white-space: nowrap; }
+    #policy-area { position: absolute; left: 0; top: 100px; width: 568px; height: 608px; overflow: hidden; }
+    .policy-bub { position: absolute; height: 56px; border: 4px solid var(--dim); border-radius: 16px; background: #0f3a60; padding: 10px 16px 0;
+      font: 600 28px/1 "Mono", monospace; color: var(--white); white-space: nowrap; overflow: hidden; }
+    .policy-bub.ev { border-color: var(--amber); color: var(--amber); background: #2e2614; }
+    .policy-bub i { position: absolute; left: 16px; height: 10px; border-radius: 5px; background: #2b5f8a; }
+    #policy-helper { position: absolute; left: 846px; top: 640px; width: 170px; height: 250px; border: 5px solid var(--white); border-radius: 18px;
+      background: var(--panel); box-shadow: 10px 10px 0 var(--shadow); }
+    #policy-helper i { position: absolute; left: 18px; height: 12px; border-radius: 6px; background: #2b5f8a; }
+    #policy-hlab { left: 846px; top: 596px; font-size: 28px; }
+    .policy-chip { position: absolute; width: 50px; height: 28px; border-radius: 8px; background: var(--cyan); box-shadow: 4px 4px 0 var(--shadow); }
+    #policy-same { left: 680px; top: 1290px; font-size: 30px; }
+  </style>
+  <div id="root" data-composition-id="policy" data-width="1080" data-height="1920">
+    <div id="policy-cam"><div id="policy-beat">
+      <div id="policy-label" class="abs"><span data-bind="l05.policy"></span></div>
+      <div id="policy-helper"><i style="top:30px;width:110px"></i><i style="top:62px;width:80px"></i><i style="top:94px;width:120px"></i><i style="top:126px;width:70px"></i></div>
+      <div id="policy-hlab" class="lbl" data-bind="l05.helper"></div>
+      <svg class="ink sketch" id="policy-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path id="policy-drawer" class="ln thick" d="M70 780 L230 780 L230 960 L70 960 Z M70 840 L230 840 M126 900 L174 900" />
+        <path id="policy-dmouth" class="ln cyan thick" d="M86 780 L214 780" />
+        <path id="policy-lock" d="M624 1312 L624 1298 C624 1276 654 1276 654 1298 L654 1312" fill="none" stroke="#ffb454" stroke-width="7" />
+        <rect id="policy-lockb" x="614" y="1308" width="50" height="40" rx="6" fill="#ffb454" />
+        <g id="policy-bot"></g>
+      </svg>
+      <div id="policy-screen">
+        <div id="policy-area"></div>
+        <div id="policy-strip"></div>
+      </div>
+      <div id="policy-flies"></div>
+      <div id="policy-same" class="tag" data-bind="l05.same"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'policy', c = (w, n) => KIT.cue('l05', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#policy-cam');
+      const d1 = KIT.data('l01'), d5 = KIT.data('l05'), tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+      const SX = 256, SY = 426 + 100;                       // world position of the feed area's top-left corner
+
+      // controls on the strip, one per dimension of the context policy
+      const strip = q('#policy-strip'), BT = [['entry', 24], ['history', 186], ['sharing', 380]], btns = {};
+      BT.forEach(([k, x]) => { const el = document.createElement('div'); el.className = 'policy-btn'; el.id = `policy-btn-${k}`; el.textContent = d5[k]; el.style.left = `${x}px`; strip.appendChild(el); btns[k] = el; });
+
+      // the feed
+      const area = q('#policy-area'), IW = 568, H = 56, G = 14, bubs = [];
+      const spec = [['tool', 'R', 236], ['file', 'L', 150], ['log', 'R', 200], ['file', 'L', 150], ['tool', 'R', 236], ['log', 'L', 200], ['file', 'R', 150]];
+      spec.forEach(([k, side, w], i) => {
+        const el = document.createElement('div'); el.className = 'policy-bub'; el.id = `policy-b${i}`; el.textContent = d1[k];
+        const x = side === 'L' ? 16 : IW - 16 - w, y = 14 + i * (H + G);
+        el.style.cssText = `left:${x}px;top:${y}px;width:${w}px`; area.appendChild(el); bubs.push({ el, x, y, w });
+      });
+      // a long tool result that will enter from below
+      const lg = document.createElement('div'); lg.className = 'policy-bub'; lg.id = 'policy-long'; lg.textContent = d1.log;
+      lg.style.cssText = `left:${IW - 16 - 330}px;top:${14 + 7 * (H + G)}px;width:330px;height:130px`;
+      for (let s = 0; s < 3; s++) { const st = document.createElement('i'); st.style.top = `${52 + s * 24}px`; st.style.width = `${[80, 64, 72][s]}%`; lg.appendChild(st); }
+      area.appendChild(lg);
+      const lk = KIT.svgEl('svg', { viewBox: '0 0 40 26', id: 'policy-link', style: 'position:absolute;right:14px;top:12px;width:40px;height:26px' }, lg);
+      KIT.svgEl('path', { d: 'M4 13 L20 13 M15 6 C27 6 36 8 36 13 C36 18 27 20 15 20', fill: 'none', stroke: '#a8dcf2', 'stroke-width': 4, 'stroke-linecap': 'round' }, lk);
+
+      // moving copies outside the screen (the screen clips its own content)
+      const flies = q('#policy-flies');
+      const mk = (id, txt, cls, x, y, w) => { const el = document.createElement('div'); el.className = `policy-bub${cls}`; el.id = id; el.textContent = txt; el.style.cssText = `left:${x}px;top:${y}px;width:${w}px`; flies.appendChild(el); return el; };
+      const old = mk('policy-old', d1.tool, '', SX + bubs[0].x, SY + bubs[0].y, bubs[0].w);
+      const ev = mk('policy-ev', d1.ev, ' ev', SX + 16, SY + 14, 232);
+      const chip = document.createElement('div'); chip.className = 'policy-chip'; chip.id = 'policy-chip'; chip.style.cssText = 'left:906px;top:780px'; flies.appendChild(chip);
+
+      const R = KIT.robot('#policy-bot', { id: 'policy-r', x: 540, y: 1196, s: 0.78 });
+
+      // the strip draws in and the label stamps on "policy"
+      tl.fromTo(strip, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.4, ease: 'power2.inOut' }, c('context') - 0.15);
+      tl.fromTo(Object.values(btns), { y: -30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25, stagger: 0.08, ease: 'back.out(2)' }, c('context') + 0.15);
+      KIT.slam(tl, '#policy-label', c('policy') - 0.18, { from: 2.2, amp: 10, shakeTarget: '#policy-beat' });
+      const lit = (k, t) => { tl.to(btns[k], { backgroundColor: '#ffb454', color: '#071d35', borderColor: '#ffb454', duration: 0.12 }, t); tl.to(btns[k], { backgroundColor: '#071d35', color: '#a8dcf2', borderColor: '#a8dcf2', duration: 0.3 }, t + 0.75); };
+
+      // entry: a long result arrives and is kept as one short line with a link back to its source
+      lit('entry', c('decides') - 0.1);
+      tl.fromTo(lg, { y: 200, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out' }, c('decides') - 0.15);
+      tl.to(lg, { height: 56, duration: 0.25, ease: 'power3.inOut' }, c('decides') + 0.25);
+      tl.to(lg.querySelectorAll('i'), { opacity: 0, duration: 0.12 }, c('decides') + 0.25);
+      tl.fromTo(lk, { scale: 0, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.2, ease: 'back.out(3)' }, c('decides') + 0.45);
+      // history: an old message is filed in the drawer...
+      lit('history', c('what') - 0.1);
+      const t0 = c('what') - 0.05;
+      tl.set(bubs[0].el, { opacity: 0 }, t0);
+      tl.fromTo(old, { opacity: 0 }, { opacity: 1, duration: 0.01 }, t0);
+      const oc = [SX + bubs[0].x + bubs[0].w / 2, SY + bubs[0].y + H / 2];
+      tl.to(old, { x: 150 - oc[0], y: 812 - oc[1], scale: 0.55, duration: 0.42, ease: 'power2.inOut' }, t0);
+      tl.to(old, { opacity: 0, duration: 0.1 }, t0 + 0.4);
+      KIT.shake(tl, '#policy-drawer', t0 + 0.45, { amp: 6, dur: 0.2 });
+      // ...and the evidence is fetched back into view
+      const ec = [SX + 16 + 116, SY + 14 + H / 2];
+      tl.fromTo(ev, { x: 150 - ec[0], y: 850 - ec[1], scale: 0.5, opacity: 0 }, { x: 150 - ec[0], y: 806 - ec[1], scale: 0.6, opacity: 1, duration: 0.15 }, c('sees') - 0.35);
+      tl.to(ev, { x: 0, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, c('sees') - 0.2);
+      tl.to('#policy-dmouth', { stroke: '#ffb454', duration: 0.1, yoyo: true, repeat: 1 }, c('sees') - 0.35);
+
+      // sharing: a sub-agent splits off to the right and hands back one small result
+      lit('sharing', c('The') - 0.1);
+      tl.fromTo('#policy-helper', { x: -200, opacity: 0, scale: 0.8 }, { x: 0, opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, c('The') - 0.05);
+      tl.fromTo('#policy-hlab', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.25 }, c('The') + 0.2);
+      tl.fromTo(chip, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.15, ease: 'back.out(2)' }, c('itself') - 0.15);
+      tl.to(chip, { x: 300 - 906, y: 1092 - 780, duration: 0.4, ease: 'power2.inOut' }, c('itself'));
+      tl.to(chip, { scale: 0.8, duration: 0.2 }, c('itself') + 0.4);
+
+      // "stays the same": the model gets a padlock badge
+      tl.fromTo(['#policy-lock', '#policy-lockb'], { scale: 0, opacity: 0, transformOrigin: '50% 100%' }, { scale: 1, opacity: 1, duration: 0.25, ease: 'back.out(3)' }, c('stays') - 0.1);
+      KIT.slam(tl, '#policy-same', c('stays') - 0.05, { from: 2.2, amp: 8, shakeTarget: '#policy-beat' });
+      tl.to(R.eyes, { scaleY: 0.12, transformOrigin: '50% 50%', duration: 0.06, yoyo: true, repeat: 1 }, c('same') - 0.1);
+
+      // camera: settle, then push in on the strip
+      tl.fromTo('#policy-cam', { scale: 1 }, { scale: 1.02, duration: c('same') - 0.2, ease: 'sine.inOut' }, 0);
+      tl.to('#policy-cam', { scale: 1.06, duration: 0.6, ease: 'power2.out' }, c('same') - 0.15);
+      KIT.beats(tl, '#policy-beat', [c('policy'), c('decides'), c('what'), c('sees'), c('The'), c('itself'), c('stays')], { amp: 0.015, shift: 14 });
+
+      window.__timelines["policy"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,620 @@
+{
+ "item": "2609.34649",
+ "name": "ContextEvo",
+ "renderer": "hyperframes",
+ "authors": [
+  "Weiyuan Li",
+  "Jinghan Xu",
+  "Aili Chen",
+  "Xintao Wang",
+  "Shuang Liang",
+  "Jiaqing Liang",
+  "Deqing Yang"
+ ],
+ "voice": {
+  "preset": "aiden",
+  "speed": 1.12
+ },
+ "ste": {
+  "names": [
+   "ContextEvo",
+   "coding"
+  ],
+  "terms": [
+   {
+    "term": "context policy",
+    "avoid": [
+     "rules",
+     "memory rules",
+     "context rules",
+     "context strategy",
+     "memory policy",
+     "context management"
+    ]
+   },
+   {
+    "term": "evidence",
+    "avoid": [
+     "clue",
+     "clues",
+     "information",
+     "facts"
+    ]
+   },
+   {
+    "term": "runs",
+    "avoid": [
+     "trajectory",
+     "trajectories",
+     "rollout",
+     "rollouts",
+     "episode",
+     "episodes",
+     "attempts"
+    ]
+   },
+   {
+    "term": "skills",
+    "avoid": [
+     "playbook",
+     "playbooks",
+     "manual",
+     "manuals",
+     "procedures"
+    ]
+   },
+   {
+    "term": "model",
+    "avoid": [
+     "LLM",
+     "base model",
+     "brain"
+    ]
+   },
+   {
+    "term": "step",
+    "avoid": [
+     "decision point",
+     "turn",
+     "moment"
+    ]
+   },
+   {
+    "term": "score",
+    "avoid": [
+     "reward",
+     "accuracy",
+     "pass rate"
+    ]
+   },
+   {
+    "term": "replay",
+    "avoid": [
+     "rerun",
+     "reruns",
+     "simulate"
+    ]
+   },
+   {
+    "term": "benchmarks",
+    "avoid": [
+     "test sets",
+     "evals",
+     "exams"
+    ]
+   }
+  ],
+  "allow": [
+   {
+    "line": "l03",
+    "rule": "passive",
+    "why": "quotes the abstract word for word; the receipt highlights the same words"
+   },
+   {
+    "line": "l07",
+    "rule": "ing",
+    "why": "missing is one of the paper's four failure labels (sec 4.2); the scene stamps the same word"
+   },
+   {
+    "line": "l12",
+    "rule": "ing",
+    "why": "quotes the conclusion (held-out changes vary by setting); the receipt highlights the same words"
+   }
+  ]
+ },
+ "scenes": {
+  "hook": {
+   "transition": "zoom"
+  },
+  "buried": {
+   "transition": "whip"
+  },
+  "policy": {
+   "transition": "whip"
+  },
+  "learn": {
+   "transition": "cut"
+  },
+  "replay": {
+   "transition": "punch"
+  },
+  "results": {
+   "transition": "blur"
+  },
+  "caveat": {
+   "transition": "whip"
+  },
+  "close": {}
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "This agent learned skills from its own runs. Its score dropped.",
+   "text": "This agent learned skills from its own runs. Its score dropped.",
+   "data": {
+    "t1": "NEW SKILLS.",
+    "t2": "LOWER SCORE.",
+    "kicker": "on long tasks",
+    "skills": "skills",
+    "log": "log",
+    "file": "file",
+    "tool": "tool output",
+    "ev": "evidence",
+    "score": "score",
+    "start": "start"
+   },
+   "sfx": [
+    {
+     "cue": "learned",
+     "kind": "pop"
+    },
+    {
+     "cue": "learned",
+     "kind": "pop",
+     "offset": 0.15
+    },
+    {
+     "cue": "learned",
+     "kind": "pop",
+     "offset": 0.3
+    },
+    {
+     "cue": "skills",
+     "kind": "thud"
+    },
+    {
+     "cue": "own",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "dropped",
+     "kind": "impact"
+    }
+   ],
+   "voice": {
+    "preset": "aiden",
+    "seed": 11
+   }
+  },
+  {
+   "id": "l02",
+   "scene": "hook",
+   "say": "The same agent learned what its model should see instead. Its score rose.",
+   "text": "The same agent learned what its model should see instead. Its score rose.",
+   "data": {
+    "t1": "WHAT IT SEES.",
+    "t2": "HIGHER SCORE."
+   },
+   "sfx": [
+    {
+     "cue": "same",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "learned",
+     "kind": "click"
+    },
+    {
+     "cue": "what",
+     "kind": "click"
+    },
+    {
+     "cue": "model",
+     "kind": "pop"
+    },
+    {
+     "cue": "rose",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "rose",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "buried",
+   "say": "On long tasks, useful evidence can be buried by redundant or outdated context.",
+   "text": "On long tasks, useful evidence can be buried by redundant or outdated context.",
+   "data": {
+    "receipt": "FROM THE PAPER · Abstract",
+    "redundant": "redundant",
+    "outdated": "outdated",
+    "out": "out of view"
+   },
+   "sfx": [
+    {
+     "cue": "On",
+     "kind": "tick"
+    },
+    {
+     "cue": "tasks",
+     "kind": "tick"
+    },
+    {
+     "cue": "useful",
+     "kind": "pop",
+     "offset": -0.25
+    },
+    {
+     "cue": "redundant",
+     "kind": "stamp"
+    },
+    {
+     "cue": "outdated",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "buried",
+   "say": "In over half the skill runs, the agent never opened a skill.",
+   "text": "In over half the skill runs, the agent never opened a skill.",
+   "data": {
+    "notopened": "skill not opened",
+    "_read": 20,
+    "_runs": 44
+   },
+   "sfx": [
+    {
+     "cue": "In",
+     "kind": "pop"
+    },
+    {
+     "cue": "skill",
+     "kind": "tick"
+    },
+    {
+     "cue": "opened",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "policy",
+   "say": "A context policy decides what the model sees. The model itself stays the same.",
+   "text": "A context policy decides what the model sees. The model itself stays the same.",
+   "data": {
+    "policy": "context policy",
+    "entry": "entry",
+    "history": "history",
+    "sharing": "sharing",
+    "helper": "sub-agent",
+    "same": "same model"
+   },
+   "sfx": [
+    {
+     "cue": "policy",
+     "kind": "stamp"
+    },
+    {
+     "cue": "decides",
+     "kind": "click"
+    },
+    {
+     "cue": "sees",
+     "kind": "pop"
+    },
+    {
+     "cue": "itself",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "stays",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "learn",
+   "say": "Context Evo learns this policy from past runs. It rebuilds what the model saw, page by page.",
+   "text": "ContextEvo learns this policy from past runs. It rebuilds what the model saw, page by page.",
+   "data": {
+    "name": "ContextEvo",
+    "failed": "failed",
+    "passed": "passed",
+    "saw": "what the model saw",
+    "note": "running note",
+    "n1": "progress",
+    "n2": "open items",
+    "n3": "context changes"
+   },
+   "sfx": [
+    {
+     "cue": "Context",
+     "kind": "pop"
+    },
+    {
+     "cue": "past",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "rebuilds",
+     "kind": "type"
+    },
+    {
+     "cue": "page",
+     "kind": "tick"
+    },
+    {
+     "cue": "page",
+     "nth": 1,
+     "kind": "tick"
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "learn",
+   "say": "Was the evidence missing, degraded, buried, or polluted? Or was it the model's own mistake?",
+   "text": "Was the evidence missing, degraded, buried, or polluted? Or was it the model's own mistake?",
+   "data": {
+    "missing": "missing",
+    "degraded": "degraded",
+    "buried": "buried",
+    "polluted": "polluted",
+    "ctx": "context",
+    "own": "model's own mistake"
+   },
+   "sfx": [
+    {
+     "cue": "missing",
+     "kind": "stamp"
+    },
+    {
+     "cue": "degraded",
+     "kind": "stamp"
+    },
+    {
+     "cue": "buried",
+     "kind": "stamp"
+    },
+    {
+     "cue": "polluted",
+     "kind": "stamp"
+    },
+    {
+     "cue": "model's",
+     "kind": "pop"
+    },
+    {
+     "cue": "mistake",
+     "kind": "impact",
+     "offset": 0.45
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "scene": "replay",
+   "say": "To test a fix, it can replay only that step, with an edited context. Does the next move improve?",
+   "text": "To test a fix, it can replay only that step, with an edited context. Does the next move improve?",
+   "data": {
+    "fixed": "fixed",
+    "notrun": "not run",
+    "edited": "edited context",
+    "before": "before",
+    "after": "after",
+    "q": "?"
+   },
+   "sfx": [
+    {
+     "cue": "replay",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "edited",
+     "kind": "pop"
+    },
+    {
+     "cue": "next",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "improve",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l09",
+   "scene": "replay",
+   "say": "If the checks support the fix, it updates the context policy. If not, it changes nothing.",
+   "text": "If the checks support the fix, it updates the context policy. If not, it changes nothing.",
+   "data": {
+    "c1": "compare runs",
+    "c2": "replay",
+    "rule": "keep a record of verified facts",
+    "noedit": "no edit"
+   },
+   "sfx": [
+    {
+     "cue": "checks",
+     "kind": "tick"
+    },
+    {
+     "cue": "support",
+     "kind": "tick"
+    },
+    {
+     "cue": "updates",
+     "kind": "type"
+    },
+    {
+     "cue": "changes",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "results",
+   "say": "On long terminal tasks, the average score with skills falls from point four one seven to point three seven.",
+   "text": "On long terminal tasks, the average score with skills falls from 0.417 to 0.370.",
+   "data": {
+    "title": "Long-Horizon-Terminal-Bench",
+    "sub": "average score · all tasks, including the ones it learned from",
+    "start": "start",
+    "b1": "starting agent",
+    "v1": "0.417",
+    "b2": "with skills",
+    "v2": "0.370",
+    "tok": "mean tokens per run",
+    "receipt": "FROM THE PAPER · Analysis",
+    "_tok1": 8.57,
+    "_tok2": 9.61
+   },
+   "sfx": [
+    {
+     "cue": "average",
+     "kind": "tick"
+    },
+    {
+     "cue": "score",
+     "kind": "tick"
+    },
+    {
+     "cue": "falls",
+     "kind": "thud"
+    },
+    {
+     "cue": "point",
+     "kind": "pop",
+     "offset": -0.2
+    },
+    {
+     "cue": "seven",
+     "nth": 1,
+     "kind": "pop"
+    }
+   ],
+   "voice": {
+    "preset": "aiden",
+    "seed": 11
+   }
+  },
+  {
+   "id": "l11",
+   "scene": "results",
+   "say": "Context Evo reaches point four four eight and uses fewer tokens on average.",
+   "text": "ContextEvo reaches 0.448 and uses fewer tokens on average.",
+   "data": {
+    "b3": "ContextEvo",
+    "v3": "0.448",
+    "fewer": "fewer tokens, on average",
+    "_tok3": 7.52
+   },
+   "sfx": [
+    {
+     "cue": "eight",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "eight",
+     "kind": "impact"
+    },
+    {
+     "cue": "fewer",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "caveat",
+   "say": "One limit: each task ran once. On tasks it did not learn from, changes vary by setting.",
+   "text": "One limit: each task ran once. On tasks it did not learn from, changes vary by setting.",
+   "data": {
+    "limit": "one limit",
+    "once": "ran once",
+    "learned": "learned from",
+    "notlearned": "did not learn from",
+    "heldout": "held-out = tasks it did not learn from",
+    "setting": "setting = benchmark + model",
+    "receipt": "FROM THE PAPER · Conclusion",
+    "_in": 20,
+    "_out": 26
+   },
+   "sfx": [
+    {
+     "cue": "limit",
+     "kind": "thud"
+    },
+    {
+     "cue": "each",
+     "kind": "pop"
+    },
+    {
+     "cue": "once",
+     "kind": "stamp"
+    },
+    {
+     "cue": "not",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "vary",
+     "kind": "click"
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "close",
+   "say": "So before you add skills, check what your agent can see.",
+   "text": "So before you add skills, check what your agent can see.",
+   "data": {
+    "c1": "CHECK WHAT YOUR",
+    "c2": "AGENT CAN SEE.",
+    "handle": "hemanth_with_ai",
+    "credit": "ContextEvo · arXiv 2609.34649 · unofficial explainer"
+   },
+   "sfx": [
+    {
+     "cue": "before",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "check",
+     "kind": "pop"
+    },
+    {
+     "cue": "see",
+     "kind": "impact"
+    },
+    {
+     "cue": "see",
+     "kind": "chime",
+     "offset": 0.9
+    }
+   ]
+  }
+ ]
+}

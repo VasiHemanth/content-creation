@@ -1,0 +1,118 @@
+<template id="lock-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #lock-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 700px; }
+    #lock-tests { left: 120px; top: 382px; font-size: 36px; }
+    #lock-shear { left: 744px; top: 640px; font-size: 26px; }
+    .lock-row { position: absolute; left: 90px; width: 900px; height: 130px; }
+    .lock-row .nm { position: absolute; left: 150px; top: 40px; font: 600 34px "Mono", monospace; white-space: nowrap; }
+    #lock-ra .nm { color: var(--amber); } #lock-rb .nm { color: var(--cyan); }
+    .lock-row .res { position: absolute; right: 0; top: 16px; font-size: 54px; padding: 0 20px; outline-offset: -14px; border-width: 6px; outline-width: 3px; }
+    #lock-works { left: 690px; top: 1265px; font-size: 30px; }
+    #lock-stamp { left: 150px; top: 520px; font-size: 130px; }
+  </style>
+  <div id="root" data-composition-id="lock" data-width="1080" data-height="1920">
+    <div id="lock-cam">
+      <svg class="ink sketch" id="lock-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <rect id="lock-house-fill" x="120" y="470" width="840" height="410" fill="#0a2340" opacity="0.9" />
+        <path id="lock-house" class="ln thick" d="M120 470 L960 470 L960 880 L120 880 Z" />
+        <path id="lock-plug" class="ln cyan" d="M160 700 L920 700 L920 840 L160 840 Z" />
+        <rect id="lock-plugfill" x="160" y="700" width="760" height="140" fill="#7be3b0" opacity="0" />
+        <path id="lock-shearline" class="ln amber dash" d="M140 700 L940 700" />
+        <g id="lock-chambers"></g>
+        <g id="lock-pins"></g>
+        <g id="lock-keyA"></g>
+        <g id="lock-keyB"></g>
+      </svg>
+      <div id="lock-tests" class="tag cyan" data-bind="l04.lock"></div>
+      <div id="lock-shear" class="lbl amber" data-bind="l04.shear"></div>
+      <div class="lock-row" id="lock-ra" style="top:1010px">
+        <svg class="ink" style="left:0;top:20px;width:130px;height:90px" viewBox="0 0 130 90"><circle cx="34" cy="45" r="26" fill="none" stroke="#ffb454" stroke-width="7" /><path d="M60 45 L124 45 M84 45 L84 62 M100 45 L100 58 M116 45 L116 64" stroke="#ffb454" stroke-width="7" fill="none" stroke-linecap="round" /></svg>
+        <div class="nm" data-bind="l04.keyA"></div>
+        <div class="stamp mint res" id="lock-pass" data-bind="l04.pass"></div>
+      </div>
+      <div class="lock-row" id="lock-rb" style="top:1160px">
+        <svg class="ink" style="left:0;top:20px;width:130px;height:90px" viewBox="0 0 130 90"><circle cx="34" cy="45" r="26" fill="none" stroke="#a8dcf2" stroke-width="7" /><path d="M60 45 L124 45 M84 45 L84 56 M100 45 L100 66 M116 45 L116 54" stroke="#a8dcf2" stroke-width="7" fill="none" stroke-linecap="round" /></svg>
+        <div class="nm" data-bind="l04.keyB"></div>
+        <div class="stamp res" id="lock-rej" data-bind="l04.stamp"></div>
+      </div>
+      <div id="lock-works" class="tag" style="color:var(--mint);border-color:var(--mint)"><span>&#10003; </span><span data-bind="l04.works"></span></div>
+      <div id="lock-stamp" class="stamp" data-bind="l04.stamp" data-layout-allow-overlap></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'lock', c = (w, n) => KIT.cue('l04', w, n), D = KIT.sceneDur(S), NS = 'http://www.w3.org/2000/svg';
+      KIT.bind('#lock-cam');
+      const tl = gsap.timeline({ paused: true });
+      const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); (typeof parent === 'string' ? document.querySelector(parent) : parent).appendChild(e); return e; };
+
+      // pin stacks: chamber, spring, driver pin (white), key pin (amber). Key pin lengths h; rest bottom at y=826.
+      const X = [290, 410, 530, 650, 770], H = [62, 38, 84, 50, 72], WRONG = [30, -26, 22, -30, 26], REST = 826, DRV = 74;
+      const pins = X.map((x, k) => {
+        mk('path', { class: 'ln faint thin', d: `M${x - 24} 486 L${x - 24} 700 M${x + 24} 486 L${x + 24} 700`, id: `lock-ch-${k}` }, '#lock-chambers');
+        const g = mk('g', { id: `lock-stack-${k}` }, '#lock-pins');
+        const kTop = REST - H[k], dTop = kTop - DRV;
+        const spring = mk('path', { class: 'ln cyan thin', id: `lock-spring-${k}`, d: (() => { let d = `M${x} 488`; const n = 9, L = dTop - 488; for (let i = 1; i <= n; i++) d += ` L${x + (i % 2 ? 16 : -16)} ${488 + (L * (i - 0.5)) / n}`; return d + ` L${x} ${dTop}`; })() }, g);
+        const drv = mk('rect', { id: `lock-drv-${k}`, x: x - 19, y: dTop, width: 38, height: DRV, rx: 6, fill: '#f2f8ff' }, g);
+        const kp = mk('rect', { id: `lock-kp-${k}`, x: x - 19, y: kTop, width: 38, height: H[k], rx: 6, fill: '#ffb454' }, g);
+        return { x, spring, drv, kp, dTop, kTop, L: dTop - 488 };
+      });
+      // a key: bow + blade whose tooth under pin k reaches y = 700 + H[k] + off[k]
+      function key(gsel, off, col, id) {
+        let d = `M150 812`;
+        X.forEach((x, k) => { const y = 700 + H[k] + off[k]; d += ` L${x - 46} 812 L${x - 20} ${y} L${x + 20} ${y} L${x + 46} 812`; });
+        d += ` L900 812 L930 826 L900 842 L150 842 Z`;
+        mk('path', { d, fill: col, opacity: 0.92, stroke: '#071d35', 'stroke-width': 3, id: `${id}-blade` }, gsel);
+        mk('circle', { cx: 78, cy: 827, r: 62, fill: 'none', stroke: col, 'stroke-width': 18, id: `${id}-bow` }, gsel);
+        mk('path', { d: 'M140 827 L150 827', stroke: col, 'stroke-width': 18, id: `${id}-neck` }, gsel);
+      }
+      key('#lock-keyA', [0, 0, 0, 0, 0], '#ffb454', 'lock-ka');
+      key('#lock-keyB', WRONG, '#a8dcf2', 'lock-kb');
+      // move a stack so its key pin bottom sits at y = bottom
+      const lift = (t, bottom, d = 0.16, ease = 'back.out(2)') => pins.forEach((p, k) => {
+        const dy = bottom(k) - REST;
+        tl.to([p.kp, p.drv], { y: dy, duration: d, ease }, t + k * 0.03);
+        tl.to(p.spring, { scaleY: (p.L + dy) / p.L, svgOrigin: `${p.x} 488`, duration: d, ease }, t + k * 0.03);
+      });
+
+      // draw the cylinder
+      KIT.draw(tl, '#lock-house', 0.02, 0.5); KIT.fade(tl, '#lock-house-fill', 0.02, { dur: 0.4, to: 0.9 });
+      KIT.draw(tl, '#lock-plug', 0.2, 0.4); KIT.draw(tl, '#lock-shearline', 0.35, 0.4);
+      tl.fromTo('#lock-chambers path', { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.25, stagger: 0.04 }, 0.3);
+      tl.fromTo('#lock-pins g', { y: -260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'bounce.out', stagger: 0.06 }, 0.35);
+      KIT.rise(tl, '#lock-tests', c('tests') - 0.1, { y: -30 });
+      KIT.fade(tl, '#lock-shear', c('tests') + 0.2);
+      tl.fromTo('#lock-cam', { scale: 1 }, { scale: 1.05, duration: D, ease: 'sine.inOut' }, 0);
+
+      // key A, the merged fix: in, every pin to the shear line, the plug turns
+      const tA = c('written'), tPass = c('fix');
+      tl.fromTo('#lock-keyA', { x: -980 }, { x: 0, duration: tPass - 0.18 - tA, ease: 'power2.inOut' }, tA);
+      KIT.rise(tl, '#lock-ra', c('written') + 0.1, { x: -60, y: 0 });
+      lift(tPass - 0.22, (k) => 700 + H[k]);
+      tl.fromTo('#lock-plugfill', { opacity: 0 }, { opacity: 0.35, duration: 0.12 }, tPass);
+      tl.fromTo('#lock-shearline', { stroke: '#ffb454' }, { stroke: '#7be3b0', duration: 0.1 }, tPass);
+      KIT.slam(tl, '#lock-pass', tPass, { from: 2.2, amp: 6, shakeTarget: '#lock-ra' });
+
+      // key B, another working fix: different cut, pins land off the line, it jiggles and is rejected
+      const tOut = c('so') - 0.12, tB = c('different') - 0.05, tIn = c('fix', 1);
+      tl.to('#lock-plugfill', { opacity: 0, duration: 0.12 }, tOut);
+      tl.to('#lock-shearline', { stroke: '#ffb454', duration: 0.1 }, tOut);
+      tl.to('#lock-keyA', { x: -980, duration: 0.3, ease: 'power2.in' }, tOut);
+      lift(tOut + 0.08, () => REST, 0.22, 'bounce.out');
+      tl.fromTo('#lock-keyB', { x: -980 }, { x: 0, duration: tIn - tB, ease: 'power2.inOut' }, tB);
+      KIT.rise(tl, '#lock-rb', tB + 0.05, { x: -60, y: 0 });
+      lift(tIn - 0.06, (k) => 700 + H[k] + WRONG[k]);
+      KIT.pop(tl, '#lock-works', c('works') - 0.05);
+      const tJ = c('can') - 0.05;
+      tl.to('#lock-keyB', { keyframes: [{ x: -14, duration: 0.06 }, { x: 10, duration: 0.06 }, { x: -12, duration: 0.06 }, { x: 8, duration: 0.06 }, { x: 0, duration: 0.06 }] }, tJ);
+      pins.forEach((p, k) => { if (WRONG[k]) tl.to(WRONG[k] > 0 ? p.drv : p.kp, { fill: '#ff6b6b', duration: 0.08 }, tJ + 0.1); });
+      const tF = c('fail');
+      KIT.slam(tl, '#lock-stamp', tF - 0.04, { from: 3, amp: 18, shakeTarget: '#lock-cam' });
+      tl.fromTo('#lock-stamp', { rotation: 4 }, { rotation: -9, duration: 0.2, ease: 'power3.out' }, tF - 0.04);
+      KIT.slam(tl, '#lock-rej', tF + 0.06, { from: 2.2, amp: 4, shake: false });
+
+      window.__timelines["lock"] = tl;
+    })();
+  </script>
+</template>

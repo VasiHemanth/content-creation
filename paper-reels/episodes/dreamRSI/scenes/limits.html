@@ -1,0 +1,91 @@
+<template id="limits-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #limits-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #limits-title { left: 0; top: 170px; width: 1080px; text-align: center; font-size: 120px; color: var(--coral); }
+    #limits-title .char { display: inline-block; }
+    #limits-l1 { left: 70px; top: 340px; font-size: 32px; }
+    #limits-untried { left: 760px; top: 760px; font-size: 28px; color: var(--dim); }
+    #limits-l2 { left: 70px; top: 930px; font-size: 32px; }
+    #limits-counted { left: 150px; top: 1040px; font-size: 30px; color: var(--mint); border-color: var(--mint); }
+    #limits-not { left: 640px; top: 1040px; font-size: 30px; }
+  </style>
+  <div id="root" data-composition-id="limits" data-width="1080" data-height="1920">
+    <div id="limits-beat" style="position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 760px"><div id="limits-cam">
+      <div id="limits-title" class="hd" data-bind="l11.title"></div>
+      <div id="limits-l1" class="tag cyan" data-bind="l11.lim1"></div>
+      <svg class="ink sketch" id="limits-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <g id="limits-tree"></g>
+        <g id="limits-ghost"></g>
+        <circle id="limits-cursor" cx="420" cy="440" r="26" fill="none" stroke="#a8dcf2" stroke-width="7" opacity="0" />
+        <path id="limits-x" class="ln coral heavy" d="M846 818 L886 858 M886 818 L846 858" />
+        <path id="limits-box" class="ln mint thick dash" d="M110 1100 L470 1100 L470 1430 L110 1430 Z" />
+        <g id="limits-bot1"></g>
+        <g id="limits-bot2"></g>
+        <g id="limits-coins"></g>
+      </svg>
+      <div id="limits-untried" class="lbl" data-bind="l11.untried"></div>
+      <div id="limits-l2" class="tag cyan" data-bind="l11.lim2"></div>
+      <div id="limits-counted" class="tag" data-bind="l11.counted"></div>
+      <div id="limits-not" class="tag coral" data-bind="l11.notcounted"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'limits', c = (w, n) => KIT.cue('l11', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#limits-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      const ts = SplitText.create('#limits-title', { type: 'words,chars' });
+      tl.fromTo(ts.chars, { scale: 2.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.18, stagger: 0.03, ease: 'power4.in' }, c('Two') - 0.1);
+      KIT.shake(tl, '#limits-cam', c('limits') + 0.05, { amp: 12, dur: 0.25 });
+
+      // limit 1: a dream replays only the paths already tried
+      const T = KIT.tree('#limits-tree', { id: 'limits-t', x: 420, y: 440, w: 560, dy: 120, levels: [2, 4, 5], seed: 33, r: 13, edgeClass: 'ln thick' });
+      [T.root, ...T.nodes].forEach((n, k) => {
+        if (n.edge) KIT.draw(tl, n.edge, 0.15 + k * 0.03, 0.2, { ease: 'none' });
+        tl.fromTo(n.el, { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.15 }, 0.25 + k * 0.03);
+      });
+      // ghost branches that were never tried, out to the right
+      const ghost = document.querySelector('#limits-ghost'), from = T.byLevel[2][3];
+      [[780, 700], [880, 760], [840, 830]].forEach(([gx, gy], k) => {
+        const e = KIT.svgEl('path', { d: `M${from.x.toFixed(0)} ${from.y.toFixed(0)} C ${(from.x + 120).toFixed(0)} ${from.y.toFixed(0)}, ${gx - 60} ${gy}, ${gx} ${gy}`, class: 'ln faint thick dash', id: `limits-g${k}` }, ghost);
+        KIT.svgEl('circle', { cx: gx, cy: gy, r: 13, fill: 'none', stroke: '#3d78a6', 'stroke-width': 4, 'stroke-dasharray': '6 6', id: `limits-gn${k}` }, ghost);
+        KIT.draw(tl, e, c('only') - 0.1 + k * 0.08, 0.3);
+      });
+      tl.fromTo('#limits-ghost circle', { opacity: 0 }, { opacity: 1, duration: 0.2, stagger: 0.08 }, c('only') + 0.1);
+      KIT.rise(tl, '#limits-l1', c('dream') - 0.15, { y: -20 });
+      KIT.fade(tl, '#limits-untried', c('paths'), { dur: 0.25 });
+      // the replay cursor walks recorded branches, tries a ghost branch and bounces back
+      const path = [T.root, T.byLevel[1][1], T.byLevel[2][3]];
+      tl.set('#limits-cursor', { opacity: 1 }, c('replays') - 0.2);
+      path.forEach((n, k) => tl.to('#limits-cursor', { attr: { cx: n.x, cy: n.y }, duration: 0.25, ease: 'power2.inOut' }, c('replays') - 0.2 + k * 0.3));
+      const tB = c('already') - 0.1;
+      tl.to('#limits-cursor', { attr: { cx: 760, cy: 700 }, duration: 0.25, ease: 'power2.in' }, tB);
+      tl.to('#limits-cursor', { attr: { cx: path[2].x, cy: path[2].y }, duration: 0.35, ease: 'back.out(3)' }, tB + 0.25);
+      KIT.draw(tl, '#limits-x', tB + 0.22, 0.18, { ease: 'power3.out' });
+      tl.fromTo('#limits-cursor', { attr: { stroke: '#a8dcf2' } }, { attr: { stroke: '#ff6b6b' }, duration: 0.1, yoyo: true, repeat: 3 }, tB + 0.25);
+
+      // limit 2: the cost numbers count the coding agent, not the second agent
+      KIT.rise(tl, '#limits-l2', c('cost') - 0.15, { y: -20 });
+      KIT.robot('#limits-bot1', { id: 'limits-r1', x: 290, y: 1170, s: 0.85 });
+      KIT.robot('#limits-bot2', { id: 'limits-r2', x: 790, y: 1170, s: 0.85, stroke: '#e9e2ff' });
+      tl.fromTo('#limits-bot1', { y: 200, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'back.out(1.6)' }, c('cost') - 0.2);
+      tl.fromTo('#limits-bot2', { y: 200, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'back.out(1.6)' }, c('numbers') - 0.1);
+      KIT.draw(tl, '#limits-box', c('numbers'), 0.4);
+      const coins = document.querySelector('#limits-coins');
+      for (let i = 0; i < 5; i++) {
+        const coin = KIT.svgEl('ellipse', { cx: 410, cy: 1400 - i * 14, rx: 34, ry: 10, fill: i % 2 ? '#ffb454' : '#f0a43c', stroke: '#071d35', 'stroke-width': 3, id: `limits-coin${i}` }, coins);
+        tl.fromTo(coin, { y: -300, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2, ease: 'bounce.out' }, c('numbers') + 0.1 + i * 0.06);
+      }
+      tl.fromTo('#limits-counted', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(2.4)' }, c('count') - 0.2);
+      tl.fromTo('#limits-not', { scale: 2.4, opacity: 0, rotation: 8 }, { scale: 1, opacity: 1, rotation: 3, duration: 0.2, ease: 'power4.in' }, c('second') - 0.1);
+      KIT.shake(tl, '#limits-bot2', c('second') + 0.1, { amp: 8, dur: 0.22 });
+      tl.fromTo('#limits-cam', { scale: 1 }, { scale: 1.04, duration: D, ease: 'sine.inOut' }, 0);
+
+      KIT.beats(tl, '#limits-beat', [c('dream'), c('replays'), c('paths'), c('already'), c('tried'), c('cost'), c('numbers'), c('count')]);
+
+      window.__timelines["limits"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,11 @@
+Anthropic reports a 200× smaller CPU and memory footprint for its source-control infrastructure versus its old Git mirrors. This is how the cache architecture works.
+
+Scion serves the immutable trees and blobs a job needs through a shared node daemon, regional caches, and authoritative servers. Some source-control API jobs need no local repository.
+
+Git already supports partial clones and sparse tools; Anthropic used those features before this redesign. Scion targets its unusual enormous-monorepo and always-online agent workload. It is not a general Git replacement. Adoption would also require bespoke code review, search, and CI.
+
+Unofficial explainer of Anthropic’s October 13, 2026 engineering article. Measurements are Anthropic-reported operational results, not independent benchmarks. Schematic objects and requests are illustrative.
+
+Source: https://www.anthropic.com/engineering/redesigning-source-control
+
+#SoftwareEngineering #AIagents #SystemDesign #SourceControl #Anthropic

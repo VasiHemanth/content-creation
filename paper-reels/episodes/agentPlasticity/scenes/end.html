@@ -1,0 +1,68 @@
+<template id="end-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #end-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 860px; }
+    #end-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #end-chart { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #end-dot { left: 120px; top: 800px; font-size: 34px; }
+    #end-arr { left: 380px; top: 326px; font-size: 34px; }
+    #end-word { left: 0; top: 170px; width: 1080px; text-align: center; font: 400 128px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); white-space: nowrap; }
+    #end-handle { left: 0; top: 700px; width: 1080px; text-align: center; font: 400 92px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; }
+    #end-title { left: 40px; top: 880px; width: 1000px; text-align: center; font: 700 42px/1.3 "Mono", monospace; color: var(--white); white-space: normal; }
+    #end-credit { left: 0; top: 1060px; width: 1080px; text-align: center; font: 600 36px "Mono", monospace; color: var(--cyan); white-space: nowrap; }
+    #end-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="end" data-width="1080" data-height="1920">
+    <div id="end-cam">
+      <div id="end-chart">
+        <svg id="end-svg" class="ink sketch" viewBox="0 0 1080 1920">
+          <path id="end-axy" class="ln dim thick" d="M150 870 L150 400 M150 400 L134 428 M150 400 L166 428" />
+          <path id="end-axx" class="ln dim thick" d="M150 870 L900 870 M900 870 L872 854 M900 870 L872 886" />
+          <path id="end-arrow" class="ln amber thick dash" d="M280 740 C 430 710 560 590 790 440" />
+          <path id="end-head" class="fl amber" d="M0 -20 L40 0 L0 20 Z" />
+          <circle id="end-ring" class="ln cyan" cx="250" cy="760" r="22" opacity="0" />
+          <circle id="end-pt" class="fl" cx="250" cy="760" r="22" />
+        </svg>
+        <div id="end-dot" class="tag cyan" data-bind="l14.dot"></div>
+        <div id="end-arr" class="tag" data-bind="l14.arrow"></div>
+      </div>
+      <div id="end-word" class="abs" data-bind="l14.word"></div>
+      <div id="end-handle" class="abs" data-bind="l14.handle"></div>
+      <div id="end-title" class="abs"><div data-bind="l14.title1"></div><div data-bind="l14.title2"></div></div>
+      <div id="end-credit" class="abs" data-bind="l14.credit"></div>
+    </div>
+    <div id="end-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const c = (w, n) => KIT.cue('l14', w, n), D = KIT.sceneDur('end');
+      KIT.bind('#end-cam');
+      const tl = gsap.timeline({ paused: true });
+      const pulse = (t) => tl.fromTo('#end-flash', { opacity: 0.2 }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+
+      // "A score shows skill today": the dot from the opening, labelled again
+      KIT.draw(tl, '#end-axy', 0.1, 0.5); KIT.draw(tl, '#end-axx', 0.2, 0.5);
+      tl.fromTo('#end-pt', { scale: 0, svgOrigin: '250 760' }, { scale: 1, svgOrigin: '250 760', duration: 0.3, ease: 'back.out(3)' }, c('score'));
+      KIT.pop(tl, '#end-dot', c('shows'), { from: 0.4 });
+      tl.fromTo('#end-ring', { scale: 1, opacity: 0, svgOrigin: '250 760' }, { scale: 2.6, opacity: 1, duration: 0.5, ease: 'power2.out', immediateRender: false }, c('skill'));
+      tl.to('#end-ring', { opacity: 0, duration: 0.2 }, c('skill') + 0.5);
+      pulse(c('score')); pulse(c('skill'));
+      // "Plasticity shows how well a model learns": the word, then the dashed arrow that climbs
+      KIT.slam(tl, '#end-word', c('Plasticity') - 0.05, { from: 2.2, shake: false });
+      KIT.shake(tl, '#end-cam', c('Plasticity') + 0.15, { amp: 12, dur: 0.3 });
+      KIT.draw(tl, '#end-arrow', c('Plasticity') + 0.2, 1.0, { ease: 'power1.inOut' });
+      tl.fromTo('#end-head', { opacity: 0, x: 280, y: 740, rotation: -26 }, { opacity: 1, x: 280, y: 740, rotation: -26, duration: 0.05 }, c('Plasticity') + 0.2);
+      tl.to('#end-head', { x: 790, y: 440, rotation: -36, duration: 1.0, ease: 'power1.inOut' }, c('Plasticity') + 0.2);
+      KIT.pop(tl, '#end-arr', c('well'), { from: 0.5 });
+      pulse(c('Plasticity')); pulse(c('how'));
+      // the end card: handle, the paper's title, its id and the words "unofficial explainer"
+      tl.to(['#end-chart', '#end-word'], { opacity: 0.06, duration: 0.35 }, c('model') - 0.05);
+      KIT.slam(tl, '#end-handle', c('model') + 0.05, { from: 1.4, shake: false });
+      KIT.rise(tl, '#end-title', c('model') + 0.3, { y: 24 });
+      KIT.rise(tl, '#end-credit', c('learns') - 0.1, { y: 14 });
+      pulse(c('model')); pulse(c('learns'));
+      tl.fromTo('#end-cam', { scale: 1 }, { scale: 1.03, duration: D, ease: 'sine.inOut', immediateRender: false }, 0);
+      window.__timelines["end"] = tl;
+    })();
+  </script>
+</template>

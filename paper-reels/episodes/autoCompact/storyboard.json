@@ -1,0 +1,638 @@
+{
+ "item": "2610.02163",
+ "name": "AutoCompact",
+ "renderer": "hyperframes",
+ "authors": [
+  "Xuan Zhang",
+  "Longtao Zheng",
+  "Cunxiao Du",
+  "Bo An",
+  "Xin Dong"
+ ],
+ "voice": {
+  "preset": "aiden",
+  "speed": 1.12
+ },
+ "ste": {
+  "names": [
+   "AutoCompact",
+   "coding",
+   "GitHub",
+   "Reinforcement learning"
+  ],
+  "terms": [
+   {
+    "term": "context",
+    "avoid": [
+     "memory",
+     "transcript",
+     "chat log"
+    ]
+   },
+   {
+    "term": "compact",
+    "avoid": [
+     "compress",
+     "compression",
+     "condense",
+     "prune",
+     "trim",
+     "wipe"
+    ]
+   },
+   {
+    "term": "summary",
+    "avoid": [
+     "recap",
+     "digest",
+     "notes",
+     "working state"
+    ]
+   },
+   {
+    "term": "judge",
+    "avoid": [
+     "teacher",
+     "coach",
+     "reviewer",
+     "critic",
+     "grader"
+    ]
+   },
+   {
+    "term": "action",
+    "avoid": [
+     "move",
+     "moves",
+     "turn"
+    ]
+   },
+   {
+    "term": "stage",
+    "avoid": [
+     "phase",
+     "milestone",
+     "checkpoint"
+    ]
+   },
+   {
+    "term": "run",
+    "avoid": [
+     "trajectory",
+     "trajectories",
+     "rollout",
+     "rollouts",
+     "episode",
+     "episodes"
+    ]
+   },
+   {
+    "term": "base model",
+    "avoid": [
+     "original model",
+     "untrained model",
+     "vanilla model"
+    ]
+   },
+   {
+    "term": "pass rate",
+    "avoid": [
+     "score",
+     "accuracy",
+     "success rate",
+     "solve rate"
+    ]
+   },
+   {
+    "term": "tasks",
+    "avoid": [
+     "issues",
+     "problems",
+     "jobs"
+    ]
+   },
+   {
+    "term": "budget",
+    "avoid": [
+     "spend",
+     "cost cap",
+     "price"
+    ]
+   }
+  ],
+  "allow": []
+ },
+ "scenes": {
+  "hook": {
+   "transition": "zoom"
+  },
+  "stale": {
+   "transition": "whip"
+  },
+  "idea": {
+   "transition": "whip"
+  },
+  "judge": {
+   "transition": "cut"
+  },
+  "reward": {
+   "transition": "punch"
+  },
+  "results": {
+   "transition": "blur"
+  },
+  "caveat": {
+   "transition": "whip"
+  },
+  "close": {}
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "Popular coding agents compact when their context nears the limit. Wrong moment?",
+   "text": "Popular coding agents compact when their context nears the limit. Wrong moment?",
+   "data": {
+    "t1": "COMPACT AT THE LIMIT.",
+    "t2": "WRONG MOMENT?",
+    "search": "search",
+    "tool": "tool output",
+    "log": "test log",
+    "code": "code",
+    "ctx": "context",
+    "limit": "limit",
+    "press": "compact()",
+    "q": "?"
+   },
+   "sfx": [
+    {
+     "cue": "coding",
+     "kind": "pop"
+    },
+    {
+     "cue": "compact",
+     "kind": "tick"
+    },
+    {
+     "cue": "context",
+     "kind": "pop"
+    },
+    {
+     "cue": "nears",
+     "kind": "tick"
+    },
+    {
+     "cue": "limit",
+     "kind": "thud"
+    },
+    {
+     "cue": "moment",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "scene": "hook",
+   "say": "Compaction replaces the agent's context with a short summary.",
+   "text": "Compaction replaces the agent's context with a short summary.",
+   "data": {
+    "card": "summary",
+    "r1": "state",
+    "r2": "target file",
+    "r3": "next step"
+   },
+   "sfx": [
+    {
+     "cue": "Compaction",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "replaces",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "short",
+     "kind": "click"
+    },
+    {
+     "cue": "summary",
+     "kind": "click"
+    },
+    {
+     "cue": "summary",
+     "kind": "click",
+     "offset": 0.2
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "stale",
+   "say": "As a task progresses, earlier exploration becomes stale. A full context can force compaction in the middle of a stage.",
+   "text": "As a task progresses, earlier exploration becomes stale. A full context can force compaction in the middle of a stage.",
+   "data": {
+    "f1": "bug localized",
+    "f2": "edit file",
+    "f3": "run tests",
+    "receipt": "FROM THE PAPER · Abstract",
+    "stage": "stage: find the bug",
+    "needed": "evidence still needed",
+    "stale": "stale"
+   },
+   "sfx": [
+    {
+     "cue": "task",
+     "kind": "tick"
+    },
+    {
+     "cue": "progresses",
+     "kind": "tick"
+    },
+    {
+     "cue": "earlier",
+     "kind": "pop",
+     "offset": -0.3
+    },
+    {
+     "cue": "force",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "compaction",
+     "kind": "thud"
+    },
+    {
+     "cue": "stage",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "idea",
+   "say": "Auto Compact trains the agent to decide when to compact, what to keep, and how to continue.",
+   "text": "AutoCompact trains the agent to decide when to compact, what to keep, and how to continue.",
+   "data": {
+    "name": "AutoCompact",
+    "when": "when",
+    "what": "what",
+    "how": "how",
+    "peg": "compact()"
+   },
+   "sfx": [
+    {
+     "cue": "Auto",
+     "kind": "pop"
+    },
+    {
+     "cue": "trains",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "when",
+     "kind": "stamp"
+    },
+    {
+     "cue": "keep",
+     "kind": "pop"
+    },
+    {
+     "cue": "how",
+     "kind": "pop"
+    },
+    {
+     "cue": "continue",
+     "kind": "whoosh"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "judge",
+   "say": "The base model rarely invoked compact before the limit, even with rules in its prompt.",
+   "text": "The base model rarely invoked compact before the limit, even with rules in its prompt.",
+   "data": {
+    "badge": "base model",
+    "receipt": "FROM THE PAPER · Section 2.2",
+    "rules": "compaction rules"
+   },
+   "sfx": [
+    {
+     "cue": "base",
+     "kind": "pop"
+    },
+    {
+     "cue": "rarely",
+     "kind": "pop",
+     "offset": -0.3
+    },
+    {
+     "cue": "prompt",
+     "kind": "whoosh"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "judge",
+   "say": "So a judge checked each action before it ran. The run continued from the judge's fix.",
+   "text": "So a judge checked each action before it ran. The run continued from the judge's fix.",
+   "data": {
+    "judge": "judge",
+    "ghost": "search repo",
+    "fix": "compact()"
+   },
+   "sfx": [
+    {
+     "cue": "judge",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "before",
+     "kind": "tick"
+    },
+    {
+     "cue": "continued",
+     "kind": "stamp"
+    },
+    {
+     "cue": "fix",
+     "kind": "pop"
+    },
+    {
+     "cue": "fix",
+     "kind": "pop",
+     "offset": 0.25
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "judge",
+   "say": "Sometimes the agent ignored its summary and searched again. The judge sent it to the edit.",
+   "text": "Sometimes the agent ignored its summary and searched again. The judge sent it to the edit.",
+   "data": {
+    "ignores": "ignores the summary",
+    "follow": "follow the summary"
+   },
+   "sfx": [
+    {
+     "cue": "summary",
+     "kind": "tick"
+    },
+    {
+     "cue": "again",
+     "kind": "stamp"
+    },
+    {
+     "cue": "judge",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "edit",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "scene": "reward",
+   "say": "Then the judge left. One reward, pass or fail, trained coding and compaction together.",
+   "text": "Then the judge left. One reward, pass or fail, trained coding and compaction together.",
+   "data": {
+    "removed": "judge removed",
+    "badge": "AutoCompact",
+    "pass": "pass",
+    "fail": "fail",
+    "coding": "coding",
+    "peg": "compact()"
+   },
+   "sfx": [
+    {
+     "cue": "left",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "reward",
+     "kind": "pop"
+    },
+    {
+     "cue": "pass",
+     "kind": "tick"
+    },
+    {
+     "cue": "fail",
+     "kind": "tick"
+    },
+    {
+     "cue": "trained",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "compaction",
+     "kind": "pop"
+    },
+    {
+     "cue": "together",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l09",
+   "scene": "results",
+   "say": "The base model with its full context passed thirty point four percent. Auto Compact passed thirty nine point six percent.",
+   "text": "The base model with its full context passed 30.4%. AutoCompact passed 39.6%.",
+   "data": {
+    "title": "SWE-bench Verified",
+    "sub": "real GitHub tasks · pass rate · average of three runs",
+    "b1": "base model · full context",
+    "v1": "30.4%",
+    "b2": "AutoCompact",
+    "v2": "39.6%",
+    "same": "same model, same scaffold"
+   },
+   "sfx": [
+    {
+     "cue": "base",
+     "kind": "tick"
+    },
+    {
+     "cue": "full",
+     "kind": "tick"
+    },
+    {
+     "cue": "percent",
+     "kind": "thud"
+    },
+    {
+     "cue": "six",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "six",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "results",
+   "say": "In a small context, it also beat compaction at the limit. The authors say compaction based on task progress is more effective.",
+   "text": "In a small context, it also beat compaction at the limit. The authors say compaction based on task progress is more effective.",
+   "data": {
+    "forced": "forced compaction",
+    "limit": "limit",
+    "lb": "base model: compacts at the limit",
+    "la": "AutoCompact: same limit, plus its own choice",
+    "budget": "budget per task",
+    "smallest": "smallest",
+    "largest": "largest",
+    "higher": "higher at every budget",
+    "receipt": "FROM THE PAPER · Section 3.3",
+    "_g": [
+     55,
+     44,
+     44,
+     46,
+     46,
+     46
+    ]
+   },
+   "sfx": [
+    {
+     "cue": "small",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "beat",
+     "kind": "pop"
+    },
+    {
+     "cue": "limit",
+     "kind": "pop"
+    },
+    {
+     "cue": "authors",
+     "kind": "pop",
+     "offset": -0.3
+    },
+    {
+     "cue": "effective",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "caveat",
+   "say": "Skip the trained agent's compact calls, and its pass rate drops. The advantage is nineteen point nine points at the smallest budget.",
+   "text": "Skip the trained agent's compact calls, and its pass rate drops. The advantage is 19.9 points at the smallest budget.",
+   "data": {
+    "badge": "AutoCompact",
+    "skipped": "skipped",
+    "lrun": "compaction runs",
+    "lskip": "compact calls skipped",
+    "sb": "smallest budget",
+    "lgb": "largest budget",
+    "gap": "19.9 points",
+    "receipt": "FROM THE PAPER · Section 3.3",
+    "_g": [
+     100,
+     62,
+     30,
+     11,
+     9,
+     9
+    ]
+   },
+   "sfx": [
+    {
+     "cue": "compact",
+     "kind": "stamp"
+    },
+    {
+     "cue": "drops",
+     "kind": "thud"
+    },
+    {
+     "cue": "advantage",
+     "kind": "pop",
+     "offset": -0.3
+    },
+    {
+     "cue": "smallest",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "caveat",
+   "say": "The advantage is one point nine points at the largest budget. Compaction itself helps most on a tight budget.",
+   "text": "The advantage is 1.9 points at the largest budget. Compaction itself helps most on a tight budget.",
+   "data": {
+    "gap": "1.9 points",
+    "most": "compaction helps most here",
+    "scope": "one base model · one scaffold"
+   },
+   "sfx": [
+    {
+     "cue": "advantage",
+     "kind": "pop",
+     "offset": -0.3
+    },
+    {
+     "cue": "largest",
+     "kind": "pop"
+    },
+    {
+     "cue": "itself",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "tight",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "close",
+   "say": "Your agent will compact. The question is when.",
+   "text": "Your agent will compact. The question is when.",
+   "data": {
+    "c1": "THE QUESTION",
+    "c2": "IS WHEN.",
+    "handle": "hemanth_with_ai",
+    "credit": "AutoCompact · arXiv 2610.02163 · unofficial explainer"
+   },
+   "sfx": [
+    {
+     "cue": "Your",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "compact",
+     "kind": "tick"
+    },
+    {
+     "cue": "question",
+     "kind": "pop"
+    },
+    {
+     "cue": "when",
+     "kind": "impact"
+    },
+    {
+     "cue": "when",
+     "kind": "chime",
+     "offset": 0.9
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,134 @@
+{
+ "merges": {
+  "img": "evidence/merges.png",
+  "w": 266,
+  "h": 368,
+  "page": 0,
+  "rects": [
+   {
+    "x": 0.015,
+    "y": 0.215,
+    "w": 0.786,
+    "h": 0.245
+   }
+  ],
+  "circles": {},
+  "text": "30,401 merged on Sep 9",
+  "source": {
+   "url": "https://www.anthropic.com/engineering/redesigning-source-control",
+   "figure": "Changes merged to our monorepo per day",
+   "css_clip": {
+    "x": 898.984,
+    "y": 810.232875,
+    "width": 133.49599999999995,
+    "height": 183.99149999999997
+   },
+   "dpr": 2
+  }
+ },
+ "cache": {
+  "img": "evidence/cache.png",
+  "w": 384,
+  "h": 82,
+  "page": 0,
+  "rects": [
+   {
+    "x": 0.036458333333333336,
+    "y": 0.17073170731707318,
+    "w": 0.9270833333333334,
+    "h": 0.6585365853658537
+   }
+  ],
+  "circles": {},
+  "text": "any cache can answer",
+  "source": {
+   "url": "https://www.anthropic.com/engineering/redesigning-source-control",
+   "phrases": [
+    "any cache can answer"
+   ],
+   "dpr": 2
+  }
+ },
+ "footprint": {
+  "img": "evidence/footprint.png",
+  "w": 606,
+  "h": 82,
+  "page": 0,
+  "rects": [
+   {
+    "x": 0.0231023102310231,
+    "y": 0.17073170731707318,
+    "w": 0.3564356435643564,
+    "h": 0.6585365853658537
+   },
+   {
+    "x": 0.49174917491749176,
+    "y": 0.17073170731707318,
+    "w": 0.48514851485148514,
+    "h": 0.6585365853658537
+   }
+  ],
+  "circles": {},
+  "text": "200x smaller CPU and memory",
+  "source": {
+   "url": "https://www.anthropic.com/engineering/redesigning-source-control",
+   "phrases": [
+    "200x smaller",
+    "CPU and memory"
+   ],
+   "dpr": 2
+  }
+ },
+ "no": {
+  "img": "evidence/no.png",
+  "w": 232,
+  "h": 188,
+  "page": 0,
+  "rects": [
+   {
+    "x": 0.0603448275862069,
+    "y": 0.07446808510638298,
+    "w": 0.2672413793103448,
+    "h": 0.2872340425531915
+   },
+   {
+    "x": 0.0603448275862069,
+    "y": 0.6382978723404256,
+    "w": 0.8793103448275862,
+    "h": 0.2872340425531915
+   }
+  ],
+  "circles": {},
+  "text": "tell Claude “no.”",
+  "source": {
+   "url": "https://www.anthropic.com/engineering/redesigning-source-control",
+   "phrases": [
+    "tell Claude “no.”"
+   ],
+   "dpr": 2
+  }
+ },
+ "scope": {
+  "img": "evidence/scope.png",
+  "w": 704,
+  "h": 82,
+  "page": 0,
+  "rects": [
+   {
+    "x": 0.019886363636363636,
+    "y": 0.17073170731707318,
+    "w": 0.9602272727272727,
+    "h": 0.6585365853658537
+   }
+  ],
+  "circles": {},
+  "text": "by no means a suitable replacement for git",
+  "source": {
+   "url": "https://www.anthropic.com/engineering/redesigning-source-control",
+   "phrases": [
+    "by no means a suitable replacement for git"
+   ],
+   "dpr": 2
+  }
+ }
+}

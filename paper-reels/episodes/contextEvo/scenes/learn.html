@@ -1,0 +1,163 @@
+<template id="learn-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #learn-cam, #learn-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 860px; }
+    #learn-p1, #learn-p2 { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #learn-p1 { transform-origin: 835px 1050px; }
+    #learn-p2 { transform-origin: 540px 900px; }
+    #learn-name { left: 70px; top: 176px; font-size: 76px; color: var(--amber); text-shadow: 6px 6px 0 var(--shadow); }
+    .learn-strip { position: absolute; left: 200px; width: 780px; height: 96px; border: 4px solid var(--white); border-radius: 14px; background: var(--panel);
+      box-shadow: 8px 8px 0 var(--shadow); }
+    .learn-strip i { position: absolute; top: 14px; width: 104px; height: 60px; border-radius: 6px; background: #f4efe3; }
+    .learn-tab { position: absolute; left: 60px; height: 50px; padding: 8px 14px 0; font: 700 28px/1 "Mono", monospace; background: var(--deep); border: 4px solid; white-space: nowrap; }
+    .learn-page { position: absolute; width: 190px; height: 300px; border-radius: 6px; background: #f4efe3; box-shadow: 8px 8px 0 var(--shadow); }
+    .learn-page i { position: absolute; left: 18px; height: 9px; border-radius: 4px; background: #a9b6c4; }
+    .learn-scr { position: absolute; border: 5px solid var(--white); border-radius: 22px; background: var(--panel); overflow: hidden; box-shadow: 10px 10px 0 var(--shadow); }
+    .learn-bub { position: absolute; height: 52px; border: 4px solid var(--dim); border-radius: 16px; background: #0f3a60; padding: 9px 14px 0;
+      font: 600 28px/1 "Mono", monospace; color: var(--white); white-space: nowrap; }
+    .learn-bub.ev { border-color: var(--amber); color: var(--amber); background: #2e2614; }
+    #learn-saw { left: 110px; top: 372px; font-size: 28px; }
+    #learn-note { position: absolute; left: 560px; top: 420px; width: 370px; height: 300px; background: var(--white); border: 3px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); }
+    .learn-nl { position: absolute; left: 24px; font: 700 28px/1 "Mono", monospace; color: var(--deep); white-space: nowrap; }
+    #learn-ntitle { top: 22px; color: #1d5a8c; }
+    #learn-saw2 { left: 330px; top: 314px; font-size: 28px; }
+    .learn-st { position: absolute; padding: 2px 16px; font: 400 44px/1.15 "Marker", sans-serif; color: var(--coral); background: var(--deep);
+      border: 5px solid var(--coral); white-space: nowrap; transform-origin: 50% 50%; }
+    #learn-ctx { left: 214px; top: 1206px; font-size: 30px; }
+    #learn-own { left: 690px; top: 736px; font-size: 28px; color: var(--white); }
+  </style>
+  <div id="root" data-composition-id="learn" data-width="1080" data-height="1920">
+    <div id="learn-cam"><div id="learn-beat">
+      <div id="learn-p1">
+        <div id="learn-strips"></div>
+        <div id="learn-pages"></div>
+        <svg class="ink sketch" id="learn-perf" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <path class="ln dim thick dash" id="learn-pf1" d="M310 888 L310 1210" /><path class="ln dim thick dash" id="learn-pf2" d="M520 888 L520 1210" /><path class="ln dim thick dash" id="learn-pf3" d="M730 888 L730 1210" />
+        </svg>
+        <div id="learn-scr" class="learn-scr" style="left:110px;top:420px;width:360px;height:360px"><div id="learn-feed" style="position:absolute;left:0;top:0;width:350px;height:900px"></div></div>
+        <div id="learn-saw" class="lbl" data-bind="l06.saw"></div>
+        <div id="learn-note"><div id="learn-ntitle" class="learn-nl" data-bind="l06.note"></div></div>
+        <svg class="ink" id="learn-flag" style="left:870px;top:838px;width:70px;height:80px" viewBox="0 0 70 80"><path d="M10 78 L10 6" stroke="#f2f8ff" stroke-width="6" stroke-linecap="round" /><path d="M12 8 L60 20 L12 34 Z" fill="#ff6b6b" /></svg>
+        <svg class="ink" id="learn-mag" style="left:0;top:0;width:180px;height:180px" viewBox="0 0 180 180"><circle cx="70" cy="70" r="56" fill="rgba(168,220,242,0.18)" stroke="#f2f8ff" stroke-width="9" /><path d="M112 112 L166 166" stroke="#ffb454" stroke-width="16" stroke-linecap="round" /></svg>
+      </div>
+      <div id="learn-p2">
+        <div id="learn-scr2" class="learn-scr" style="left:330px;top:360px;width:420px;height:320px"><div id="learn-feed2" style="position:absolute;left:0;top:0;width:410px;height:900px"></div></div>
+        <svg class="ink" id="learn-up" style="left:690px;top:300px;width:60px;height:80px" viewBox="0 0 60 80"><path d="M30 76 L30 10 M8 32 L30 8 L52 32" fill="none" stroke="#ffb454" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        <div id="learn-saw2" class="lbl" data-bind="l06.saw"></div>
+        <div id="learn-pg" class="learn-page" style="left:400px;top:760px;width:280px;height:360px"></div>
+        <svg class="ink" id="learn-flag2" style="left:640px;top:704px;width:90px;height:100px" viewBox="0 0 70 80"><path d="M10 78 L10 6" stroke="#f2f8ff" stroke-width="6" stroke-linecap="round" /><path d="M12 8 L60 20 L12 34 Z" fill="#ff6b6b" /></svg>
+        <svg class="ink sketch" id="learn-fork" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <path id="learn-stem" class="ln thick" d="M540 1124 L540 1190" />
+          <path id="learn-left" class="ln cyan thick" d="M540 1190 L180 1190 L180 1140" />
+          <path id="learn-right" class="ln thick" d="M540 1190 L850 1190 L850 980" />
+          <g id="learn-needle"><circle cx="540" cy="1190" r="16" fill="#ffb454" /><path d="M540 1190 L540 1254" stroke="#ffb454" stroke-width="9" stroke-linecap="round" /></g>
+          <g id="learn-bot"></g>
+        </svg>
+        <div id="learn-stamps"></div>
+        <div id="learn-ctx" class="lbl" data-bind="l07.ctx"></div>
+        <div id="learn-own" class="lbl" data-bind="l07.own"></div>
+      </div>
+      <div id="learn-name" class="hd" data-bind="l06.name"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'learn', a = (w, n) => KIT.cue('l06', w, n), b = (w, n) => KIT.cue('l07', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#learn-cam');
+      const d1 = KIT.data('l01'), d6 = KIT.data('l06'), d7 = KIT.data('l07'), tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+      const mkEl = (tag, cls, id, css, parent, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; e.id = id; if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; (typeof parent === 'string' ? q(parent) : parent).appendChild(e); return e; };
+
+      // ---- part 1: past runs, printed as strips; the top failed one is laid out page by page ----
+      const strips = [['failed', 'coral', 330], ['failed', 'coral', 446], ['passed', 'mint', 562]].map(([k, col, y], i) => {
+        const st = mkEl('div', 'learn-strip', `learn-s${i}`, `top:${y}px`, '#learn-strips');
+        for (let f = 0; f < 6; f++) mkEl('i', '', `learn-s${i}f${f}`, `left:${16 + f * 126}px`, st);
+        const tab = mkEl('div', 'learn-tab', `learn-t${i}`, `top:${y + 22}px;color:var(--${col});border-color:var(--${col})`, '#learn-strips', d6[k]);
+        return { st, tab, y };
+      });
+      strips.forEach((s, i) => tl.fromTo([s.st, s.tab], { x: 900, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }, 0.12 + i * 0.14));
+      KIT.pop(tl, '#learn-name', a('Context') - 0.1, { from: 0.4 });
+
+      // "from past runs": the other strips leave, the top one drops to the bench and unrolls into pages
+      tl.to([strips[1].st, strips[1].tab, strips[2].st, strips[2].tab], { x: 900, opacity: 0, duration: 0.35, ease: 'power3.in', stagger: 0.05 }, a('from') - 0.1);
+      tl.to([strips[0].st, strips[0].tab], { y: 560, opacity: 0, duration: 0.4, ease: 'power2.in' }, a('past') - 0.2);
+      const PX = [110, 320, 530, 740], pages = PX.map((x, i) => {
+        const p = mkEl('div', 'learn-page', `learn-pp${i}`, `left:${x}px;top:900px`, '#learn-pages');
+        [[30, 150], [62, 120], [94, 140], [126, 96], [158, 150], [190, 130], [222, 110], [254, 140]].forEach(([yy, w], k) => mkEl('i', '', `learn-pp${i}l${k}`, `top:${yy}px;width:${w}px`, p));
+        tl.fromTo(p, { y: -380, x: 300 - x, scaleX: 0.35, scaleY: 0.25, opacity: 0, transformOrigin: '50% 0%' }, { y: 0, x: 0, scaleX: 1, scaleY: 1, opacity: 1, duration: 0.36, ease: 'power3.out' }, a('past') + 0.08 + i * 0.09);
+        return p;
+      });
+      KIT.draw(tl, ['#learn-pf1', '#learn-pf2', '#learn-pf3'], a('runs') + 0.05, 0.3);
+
+      // "It rebuilds what the model saw": a magnifier on page 1; a small screen assembles what the model saw
+      const MAG = (i) => ({ x: PX[i] + 95 - 70, y: 900 + 120 - 70 });
+      tl.fromTo('#learn-mag', { x: MAG(0).x, y: MAG(0).y - 160, opacity: 0, scale: 1.3 }, { x: MAG(0).x, y: MAG(0).y, opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.8)' }, a('It') - 0.05);
+      tl.fromTo('#learn-scr', { scale: 0.6, opacity: 0, transformOrigin: '50% 100%' }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.6)' }, a('rebuilds'));
+      KIT.typeOn(tl, '#learn-saw', a('what') - 0.1, 40);
+      const feed = q('#learn-feed'), FS = [['file', 'L', 130], ['ev', 'R', 210], ['log', 'L', 150], ['tool', 'R', 230], ['file', 'L', 130], ['log', 'R', 150], ['tool', 'L', 230]];
+      FS.forEach(([k, side, w], i) => {
+        const el = mkEl('div', `learn-bub${k === 'ev' ? ' ev' : ''}`, `learn-fb${i}`, `left:${side === 'L' ? 12 : 350 - 12 - w}px;top:${14 + i * 66}px;width:${w}px`, feed, d1[k]);
+        if (i < 5) tl.fromTo(el, { scale: 0.3, opacity: 0, transformOrigin: side === 'L' ? '0% 50%' : '100% 50%' }, { scale: 1, opacity: 1, duration: 0.2, ease: 'back.out(2.5)' }, a('what') + i * 0.13);
+        else tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.01 }, a('page') - 0.1 + (i - 5) * (a('page', 1) - a('page')));
+      });
+      // the running note: one line per page reviewed
+      tl.fromTo('#learn-note', { x: 120, opacity: 0, rotation: 6 }, { x: 0, opacity: 1, rotation: 1.5, duration: 0.35, ease: 'back.out(1.6)' }, a('model') - 0.2);
+      const NL = ['n1', 'n2', 'n3'].map((k, i) => mkEl('div', 'learn-nl', `learn-n${i}`, `top:${92 + i * 62}px`, '#learn-note', `· ${d6[k]}`));
+      [a('saw') - 0.05, a('page') + 0.05, a('page', 1) + 0.05].forEach((t, i) => KIT.typeOn(tl, NL[i], t, 34));
+      // "page by page": the magnifier hops along; the screen scrolls with each page
+      tl.to('#learn-mag', { x: MAG(1).x, y: MAG(1).y, duration: 0.22, ease: 'power2.inOut' }, a('page') - 0.12);
+      tl.to('#learn-mag', { x: MAG(2).x, y: MAG(2).y, duration: 0.22, ease: 'power2.inOut' }, a('page', 1) - 0.12);
+      tl.to(feed, { y: -66, duration: 0.22, ease: 'power2.out' }, a('page') - 0.1);
+      tl.to(feed, { y: -132, duration: 0.22, ease: 'power2.out' }, a('page', 1) - 0.1);
+      // a flag on the next page: the step that failed
+      tl.to('#learn-mag', { x: MAG(3).x, y: MAG(3).y, duration: 0.25, ease: 'power2.inOut' }, KIT.line('l07').t0 - 0.2);
+      tl.fromTo('#learn-flag', { scale: 0, opacity: 0, transformOrigin: '15% 100%' }, { scale: 1, opacity: 1, duration: 0.22, ease: 'back.out(3)' }, KIT.line('l07').t0);
+
+      // ---- part 2: push into the flagged page ----
+      const tZ = b('Was') - 0.12;
+      tl.to('#learn-p1', { scale: 1.9, opacity: 0, duration: 0.4, ease: 'power2.in' }, tZ);
+      tl.fromTo('#learn-p2', { scale: 0.62, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'power2.out' }, tZ + 0.12);
+      const feed2 = q('#learn-feed2'), F2 = [['ev', 'R', 230], ['log', 'R', 170], ['file', 'L', 150], ['tool', 'R', 240], ['log', 'L', 170], ['file', 'R', 150], ['tool', 'L', 240]];
+      F2.forEach(([k, side, w], i) => mkEl('div', `learn-bub${k === 'ev' ? ' ev' : ''}`, `learn-gb${i}`, `left:${side === 'L' ? 14 : 410 - 14 - w}px;top:${16 + i * 68}px;width:${w}px`, feed2, d1[k]));
+      [[30, 220], [64, 180], [98, 230], [132, 150], [166, 210], [200, 190], [234, 120], [268, 200], [302, 160]].forEach(([yy, w], k) => mkEl('i', '', `learn-pgl${k}`, `top:${yy}px;width:${w}px`, '#learn-pg'));
+      // "the evidence": in what the model saw at this step, the evidence has scrolled out of view
+      tl.to(feed2, { y: -150, duration: 0.45, ease: 'power2.inOut' }, b('evidence') - 0.1);
+      tl.fromTo('#learn-up', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25, ease: 'back.out(2)' }, b('evidence') + 0.25);
+      // four failure types, each on its word
+      const ST = [['missing', 760, -4], ['degraded', 862, 3], ['buried', 964, -3], ['polluted', 1066, 4]], stamps = {};
+      ST.forEach(([k, yy, rot]) => {
+        const s = mkEl('div', 'learn-st', `learn-st-${k}`, `left:60px;top:${yy}px`, '#learn-stamps', d7[k]);
+        tl.fromTo(s, { scale: 2.3, opacity: 0, rotation: rot * 3 }, { scale: 1, opacity: 1, rotation: rot, duration: 0.18, ease: 'power4.in' }, b(k) - 0.12);
+        KIT.shake(tl, '#learn-p2', b(k) + 0.06, { amp: 6, dur: 0.18 });
+        stamps[k] = s;
+      });
+      // "Or was it the model's own mistake?": a fork between the context and the model
+      KIT.draw(tl, '#learn-stem', b('Or', 1) - 0.1, 0.18, { ease: 'none' });
+      KIT.draw(tl, '#learn-left', b('Or', 1) + 0.08, 0.35);
+      KIT.draw(tl, '#learn-right', b('Or', 1) + 0.08, 0.35);
+      tl.fromTo('#learn-ctx', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.25 }, b('was', 1));
+      tl.fromTo('#learn-needle', { scale: 0, opacity: 0, svgOrigin: '540 1190' }, { scale: 1, opacity: 1, svgOrigin: '540 1190', duration: 0.2, ease: 'back.out(3)' }, b('it'));
+      KIT.robot('#learn-bot', { id: 'learn-r', x: 850, y: 820, s: 0.55 });
+      tl.fromTo('#learn-bot', { scale: 0, opacity: 0, svgOrigin: '850 900' }, { scale: 1, opacity: 1, svgOrigin: '850 900', duration: 0.3, ease: 'back.out(2.4)' }, b("model's") - 0.1);
+      tl.fromTo('#learn-own', { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.25 }, b("model's") + 0.05);
+      // the pointer wobbles between the two branches...
+      tl.to('#learn-needle', { keyframes: [
+        { rotation: 55, duration: 0.16, ease: 'power2.out' }, { rotation: -55, duration: 0.24, ease: 'power2.inOut' },
+        { rotation: 40, duration: 0.2, ease: 'power2.inOut' }, { rotation: -70, duration: 0.2, ease: 'power2.inOut' }], svgOrigin: '540 1190' }, b('own') - 0.05);
+      // ...then, in this case, the "buried" stamp lands on the page
+      const tS = b('mistake') + 0.25;
+      tl.to(stamps.buried, { x: 470 - 60, y: 880 - 964, scale: 1.25, rotation: -8, duration: 0.2, ease: 'power3.in' }, tS);
+      KIT.shake(tl, '#learn-cam', tS + 0.2, { amp: 14, dur: 0.3 });
+      tl.to('#learn-left', { stroke: '#ffb454', duration: 0.15 }, tS + 0.2);
+      KIT.sparks(tl, '#learn-p2', 560, 900, tS + 0.2, { n: 10, r: 200, color: '#ff6b6b' });
+
+      // camera
+      tl.fromTo('#learn-cam', { scale: 1 }, { scale: 1.03, duration: tZ, ease: 'sine.inOut' }, 0);
+      tl.to('#learn-cam', { scale: 1.0, duration: 0.01 }, tZ + 0.1);
+      tl.to('#learn-cam', { scale: 1.04, duration: D - tZ - 0.2, ease: 'sine.inOut' }, tZ + 0.12);
+      KIT.beats(tl, '#learn-beat', [a('Context'), a('learns'), a('past'), a('It'), a('saw'), a('page', 1), b('missing'), b('buried'), b('polluted'), b('Or', 1), b("model's")], { amp: 0.018, shift: 14, reset: tS - 0.2 });
+
+      window.__timelines["learn"] = tl;
+    })();
+  </script>
+</template>
