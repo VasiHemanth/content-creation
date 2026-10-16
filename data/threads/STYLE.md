@@ -2,7 +2,7 @@
 
 Learned from three threads: @hemanthvasi Dream-RSI (4 posts) and WikiSkill (5 posts), and a 3-post summary thread by @omarsar0. Post 1 carries the image. Every later post is a reply to the one before it.
 
-## Shape (4 to 6 posts)
+## Shape (3 to 6 posts, usually 4 or 5)
 1. Hook, image, arXiv link. One claim or tension from the paper in plain words, then the paper name and who wrote it. The link goes in the text (image posts cannot hold a link card).
 2. The problem. What fails today, with the paper's own evidence and its scope (which run, which task).
 3. The idea. How the method works, in two or three short sentences.

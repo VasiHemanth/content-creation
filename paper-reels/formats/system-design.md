@@ -1,6 +1,6 @@
-# Format: system-design (draft)
+# Format: system-design
 
-An engineering blog post or design write-up: how a company built a system and why the standard tool failed. `storyboard.format` is `"system-design"`. Item kind `topic`, added with `reels add-topic`. Status draft. First episode: `scionV3` (Scion remake, 2026-10-15): 26 lines, 436 spoken words, 162.3 s, 55 MB at CRF 23, validator PASS, critic 7.0. The numbers below come from that run.
+An engineering blog post or design write-up: how a company built a system and why the standard tool failed. `storyboard.format` is `"system-design"`. Item kind `topic`, added with `reels add-topic`. Tested on one episode: `scionV3` (Scion remake, 2026-10-15): 26 lines, 436 spoken words, 162.3 s, 55 MB at CRF 23, validator PASS, critic 7.0. The numbers below come from that run.
 
 Reference: `paper-reels/reference/kodekloud-scion.md` (measured breakdown of a reel that explains Scion to people with no software background). Learn its grammar, not its look. Our look stays the blueprint style of `hf/kit/blueprint.css`.
 

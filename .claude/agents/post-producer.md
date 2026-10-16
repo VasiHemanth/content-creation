@@ -5,7 +5,7 @@ tools: Bash, Read, Write, Edit, Grep, Glob, WebFetch, WebSearch
 model: sonnet
 ---
 
-You produce one post in `paper-reels/posts/<slug>/` and hand it to the validator. Read `paper-reels/post/SPEC.md`, `paper-reels/post/README.md` (the steps, the slide components, the rules that broke things) and `treatment.md` in the post folder first: its hook, slide plan, video excerpt, numbers budget and caption are the brief.
+You produce one post in `paper-reels/posts/<slug>/` and hand it to the validator. Read `paper-reels/post/SPEC.md` and `treatment.md` in the post folder first: its hook, slide plan, video excerpt, numbers budget and caption are the brief.
 
 Steps, in order:
 1. Register the item. A paper: `node paper-reels/bin/reels.mjs add <url> --name ... --topic ... --thumb-name ... --thumb-hook ...`. A topic or a tweet: `node paper-reels/bin/reels.mjs add-topic <slug> --title ... --url ... --topic ... --name ...`. The item may already exist because a reel was made for it; then the post only adds its own assets and its own `instagram_post` text.

@@ -51,7 +51,7 @@ class LintBundleTest(unittest.TestCase):
         con.execute("INSERT INTO items VALUES ('9.9999','paper')")
         con.commit()
         errors = lint_bundle(root, db)
-        self.assertTrue(any("9.9999 has no wiki" in e for e in errors))
+        self.assertFalse(any("9.9999 has no wiki" in e for e in errors))  # a dossier is optional
         self.assertTrue(any("1.0001.md has no database item" in e for e in errors))
 
 

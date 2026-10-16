@@ -60,15 +60,14 @@ def validate_style(path: Path, root: Path) -> list[str]:
 
 
 def validate_db(root: Path, db_path: Path) -> list[str]:
-    """Every paper item has a dossier; every dossier has an item. Wiki and DB must agree on ids."""
+    """Every dossier has a database item. A paper item may have no dossier: since 2026-10-16 the reel and post
+    pipelines work from raw/assets and the item's one_liner, and a dossier is written only on request."""
     if not db_path.exists():
         return [f"database not found: {db_path}"]
     con = sqlite3.connect(db_path)
     ids = {r[0] for r in con.execute("SELECT id FROM items WHERE kind = 'paper'")}
     pages = {p.stem for p in (root / "wiki" / "papers").glob("*.md") if p.name not in RESERVED}
-    errors = [f"database item {i} has no wiki/papers/{i}.md" for i in sorted(ids - pages)]
-    errors += [f"wiki/papers/{i}.md has no database item" for i in sorted(pages - ids)]
-    return errors
+    return [f"wiki/papers/{i}.md has no database item" for i in sorted(pages - ids)]
 
 
 def lint_bundle(root: Path, db_path: Path | None = None) -> list[str]:

@@ -54,7 +54,7 @@ sources:
 
 ## Paper dossier contract
 
-A paper gets a dossier before any post text is written. It answers:
+A dossier is written on request: an ingest, a deep dive, or a comment thread that needs one. The reel, post and thread pipelines do not write one; they work from the source text in `raw/assets/` and the item's `one_liner` in the database. (Changed 2026-10-16: an audit found that no agent or script read a dossier after it was written.) When you write one, it answers:
 
 1. Identity: title, authors, arXiv id, and the version the video was made from.
 2. What problem does it address, in one sentence?
@@ -79,7 +79,7 @@ Plain, specific prose. No hype words, no antithesis padding ("not just X, it's Y
 
 **Ingest.** Add a dated record under `raw/sources/`. Search for overlap. Create or update the paper dossier and its topic page. Update `index.md`. Append `## [YYYY-MM-DD] ingest | <title>` to `log.md`. Run lint.
 
-**Make a video.** `node paper-reels/bin/reels.mjs add <arxiv url>` creates the database item. Write the dossier. Draft script, scenes, thumbnail text. Store post text with `reels.mjs text`. Render, then publish.
+**Make a video.** Run `/make-reel <url>` (steps in `.claude/skills/make-reel/SKILL.md`). It saves the source under `raw/assets/<id>/` and stores the item, its one-liner and its post text in the database. It writes no wiki page; code appends the log lines.
 
 **Query.** Start at `index.md`. Prefer human-reviewed over machine-confirmed over unverified pages. Re-open the source for stale or high-stakes claims. File durable new synthesis back into `wiki/concepts/` and log it.
 
@@ -89,10 +89,10 @@ Plain, specific prose. No hype words, no antithesis padding ("not just X, it's Y
 
 ## Publishing
 
-Post text lives in the database as numbered revisions. Each `posts` row records which revision went live. Editing a caption adds a revision; it never overwrites. Posting rules (approval gate, autonomy level) are set by the human and recorded here:
+Post text lives in the database as numbered revisions. Each `posts` row records which revision went live. Editing a caption adds a revision; it never overwrites. The posting rules (validation gate, the human's recorded approval, autopublish, the Notion vault) live in `PIPELINE.md`, "Publishing". The history of each rule:
 
 - Current rule: nothing is posted unless (a) `paper-reels/bin/validate.mjs` has passed for the exact video and thumbnail (enforced by `reels publish`) and (b) the human has said to post that item. Whether (b) can be dropped for unattended runs is an open question for the human. Set 2026-10-04 after a corrupt video was posted.
-- How (b) is recorded: a spawned publisher never sees the human's chat, so the session that talks to the human runs `reels approve <id> --platforms ... --quote "<the human's words>"` (with `--post` for a carousel) right after the yes. It writes `approval.json` beside `validation.json` (a post: `out/approval.json`) with the quote and the file hashes, and logs an `approve` line here. `reels publish` and `reels publish-post` refuse without a record that matches the current files and platforms; `--dry-run` shows the refusals. Only that session runs `approve`, and only after the human's yes for those files. `approve` refuses under `REELS_NO_PUBLISH`. Added 2026-10-15 after the reel-publisher could not post an approved reel.
+- How (b) is recorded: a spawned publisher never sees the human's chat, so the session that talks to the human runs `reels approve <id> --platforms ... --quote "<the human's words>"` (with `--post` for a carousel) right after the yes. It writes `approval.json` beside `validation.json` (a post: `out/approval.json`) with the quote and the file hashes, and logs an `approve` line here. `reels publish` and `reels publish-post` refuse without a record that matches the current files and platforms; `--dry-run` shows the refusals. Only that session runs `approve`, and only after the human's yes for those files. `approve` refuses under `REELS_NO_PUBLISH`. Added 2026-10-15 after the reel-publisher could not post an approved reel. Since 2026-10-16 there are no publisher agents: the orchestrator runs `publish` itself after `approve`.
 - After a paper reel goes live, `reels publish` adds the paper to the public Notion Research Paper Vault page (`lib/notion-vault.mjs`). It adds one bullet (title, arXiv link, one-liner) under the topic's heading. It runs only after a post is live, so it needs no extra approval. A Notion failure only notifies; retry with `reels notion-sync`. The page is public, so the one-liner must pass the same facts check as the post text. Added 2026-10-10.
 
 ## Boundaries

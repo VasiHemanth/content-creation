@@ -10,7 +10,7 @@ Run from `content-creation/`. The posting code is `uploader/scripts/post_thread.
 
 1. **Prepare.** `node scripts/thread-prep.mjs <url>`. It downloads the PDF if missing, extracts the text, and renders page 1 to `data/threads/<id>/page1.png`. Open the PNG yourself: title, authors and abstract must be readable.
 2. **Draft.** Spawn `thread-writer` with the id and the paths. It writes `thread.json` and `numbers.md`.
-3. **Check.** Spawn `thread-checker`. On FAIL, send the failures to `thread-writer` and check again. Stop after three rounds and report what is still failing. Never let the writer judge its own draft.
+3. **Check.** Spawn `thread-checker`. On FAIL, send the failures to the same `thread-writer` (SendMessage), ask which posts changed, and check again, naming those posts so the checker re-checks only them. Stop after three rounds and report what is still failing. Never let the writer judge its own draft.
 4. **Find the reel link.** If the caller gave an Instagram URL, use it. Otherwise run `node scripts/reel-links.mjs <id>` and take `instagram`. If it is `null`, no reel is live: continue without the link (the poster drops the placeholder line) and say so to the human.
 5. **Approve.** Show the human the image, every post in full with its byte count, the checker's verdict and the reel link.
    - `settings.autopublish` is off (default; see `node paper-reels/bin/reels.mjs settings`): wait for the human's explicit yes for this thread. A yes given before the draft existed does not count.

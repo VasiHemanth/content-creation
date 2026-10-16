@@ -1,14 +1,14 @@
 # Reel pipeline
 
-One link in, one validated video out, posted only after a human says yes (rule recorded in `llm-wiki/AGENTS.md`).
+One link in, one validated video out, posted only after a human says yes (see Publishing below).
 
-    link -> reel-director -> cold-viewer -> reel-producer -> cold-viewer -> reel-validator -> retention-critic -> publish policy
-                  ^    FAIL     |                ^   FAIL      |                 |                  |
-                  +-------------+                +-------------+------ FAIL -----+------ FAIL ------+
+    link -> reel-director -> cold-viewer -> producer (script) -> cold-viewer -> producer (build, new spawn) -> validator + critic (parallel) -> publish policy
+                  ^    FAIL     |                ^      FAIL       |                    ^          merged FAIL list          |
+                  +-------------+                +-----------------+                    +-----------------------------------+
 
-    formats: `paper` (arXiv, 60 to 80 s) and `system-design` (engineering article, 120 to 170 s, draft). See `paper-reels/formats/`.
+    formats: `paper` (arXiv, 60 to 80 s) and `system-design` (engineering article, 120 to 170 s). See `paper-reels/formats/`.
 
-    publish policy: autopublish off (default) = ask the human; on = `reels autopublish <id>` posts only if every gate holds
+    publish policy: autopublish off (default) = ask the human, record the yes, the orchestrator runs `reels publish`; on = `reels autopublish <id>` posts only if every gate holds
 
 Run it with `/make-reel <url>` from a Claude Code session started in this folder, so `.claude/agents/` loads.
 
@@ -23,7 +23,7 @@ After a paper reel is live, `reels publish` also lists the paper on the public N
 ## Gates (enforced in code, not in prompts)
 - `paper-reels/bin/validate.mjs <id>` checks the files registered in the database: frame count against the storyboard timeline, video and audio stream lengths, full decode, freezes, loudness, frames decoded from the MP4 against what the renderer draws (canvas stills or HyperFrames snapshots), thumbnail against the database hook, facts and branding. It writes `validation.json` with sha256 hashes of the video and thumbnail.
 - `reels publish` refuses unless `validation.json` says PASS and both hashes still match the files it is about to upload. There is no bypass flag.
-- `reels publish` and `reels publish-post` also refuse without `approval.json`, the human's recorded yes for the same files and platforms. The orchestrator writes it with `reels approve <id> [--post] --platforms ... --quote "..."` after the human says yes in chat; the publisher agents only check it (`--dry-run` first). `autopublish` does not need it.
+- `reels publish` and `reels publish-post` also refuse without `approval.json`, the human's recorded yes for the same files and platforms. The orchestrator writes it with `reels approve <id> [--post] --platforms ... --quote "..."` after the human says yes in chat, then runs `publish --dry-run` and `publish` itself (there is no publisher agent). `autopublish` does not need it.
 - The renderer holds a lock per episode and style and writes through a temp file, so two renders can no longer corrupt one output.
 
 ## Why there is a cold viewer
@@ -39,7 +39,14 @@ Template videos (cards of text, 0.3 s fade between lines, 7 to 13 s per line) ha
 - `bin/validate.mjs` has an engagement gate (first event within 1.5 s, no gap over 3.5 s, 30 or more events a minute).
 - Paper receipts (HyperFrames): real crops of the PDF, found by text search. QA fails if a crop shows a number that is not in `facts.json`.
 - `retention-critic` scores hook, pacing, visuals, clarity and payoff from frames decoded from the MP4. Its score is advisory in interactive mode and required (`min_critic_score`) for autopublish.
-- The producer is told what the critic and validator found and fixes it, at most two rounds.
+- The critic and the validator run in parallel on the same render. The build-phase producer gets one merged list of their findings and fixes it, at most three rounds.
+
+## Publishing
+- Nothing is posted unless (a) `validate.mjs` passed for the exact video and thumbnail and (b) the human said to post that item, in chat, after seeing it. `reels publish` enforces (a) and the recorded form of (b).
+- (b) is recorded with `reels approve <id> --platforms ... --quote "<the human's words>"` (`--post` for a carousel). It writes `approval.json` with the quote and the file hashes. Only the session that talks to the human runs it, only after a yes for those files. A yes given before the files existed does not count. `approve` refuses under `REELS_NO_PUBLISH`.
+- `settings.autopublish` on: `reels autopublish` posts without (b) only if every gate in "Unattended mode" holds. It is off by default.
+- After a paper reel is live, `reels publish` adds the paper to the public Notion vault page. The one-liner there passes the same facts check as the post text. A failure only notifies; retry with `reels notion-sync`.
+- History of these rules: `llm-wiki/AGENTS.md`, "Publishing".
 
 ## Rules
 - Never run a render in the background. One render at a time per episode.

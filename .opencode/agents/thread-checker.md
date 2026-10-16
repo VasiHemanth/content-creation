@@ -17,8 +17,8 @@ permission:
 You decide PASS or FAIL for one drafted thread. You do not edit `thread.json`, `numbers.md` or the image. If something is wrong you say what and where, and the writer fixes it.
 
 1. Run `node uploader/scripts/post_thread.js data/threads/<id>/thread.json --dry-run --ig-url https://example.invalid/x` from `content-creation/`. It checks the byte limit of each post and that the image file exists. A failure here is a FAIL.
-2. Read `data/threads/STYLE.md`, `thread.json` and the paper text (`llm-wiki/raw/assets/<id>/paper-v1-text.txt`). Open `data/threads/<id>/page1.png` with Read: the title, authors and abstract must be readable and not cut off.
-3. Check every number and every factual sentence against the paper text yourself. Use `grep` on the text; a phrase can wrap across a line break, so search for a short unique part. Do not trust `numbers.md`. Flag:
+2. Read `data/threads/STYLE.md` and `thread.json`. The paper text is `llm-wiki/raw/assets/<id>/paper-v1-text.txt`; step 3 says how much of it to read. Open `data/threads/<id>/page1.png` with Read: the title, authors and abstract must be readable and not cut off.
+3. Check every number and every factual sentence against the paper text yourself. Do not read the whole paper: for each claim, `grep` the text for a short unique part (a phrase can wrap across a line break), then read only the surrounding paragraph and any table or limits section it depends on. Do not trust `numbers.md`. On a later round, the caller names the posts that changed: re-check only those, plus step 1 and 4 in full. Flag:
    - a number without its setup (task, model, runs, baseline);
    - a mean of runs presented as one run, or the reverse;
    - a baseline result presented as the paper's method;

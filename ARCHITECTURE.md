@@ -26,25 +26,24 @@ A person must approve each post, unless the setting `autopublish` is `on`.
     link
       |
       v
-    reel-director --> treatment.md
+    reel-director --> source in llm-wiki/raw/assets, treatment.md
       |
-      v
-    reel-producer --> wiki records, storyboard, facts, voice, MP4, thumbnail, post text
+    cold-viewer (on the treatment script)
       |
-      v
-    reel-validator --> validation.json (PASS or FAIL)
+    reel-producer, script phase --> item, storyboard, facts, evidence
       |
-      v
-    retention-critic --> critic review (score)
+    cold-viewer (on the storyboard)
       |
-      v
-    publish policy --> human approval, or autopublish gates
+    reel-producer, build phase (a new spawn) --> scenes, voice, MP4, thumbnail, post text, validate.mjs PASS
       |
-      v
-    uploader --> YouTube, Instagram, Threads
+    reel-validator + retention-critic (in parallel) --> reviews tied to the video hash
+      |
+    publish policy --> human approval recorded with reels approve, or autopublish gates
+      |
+    reels publish (run by the orchestrator) --> YouTube, Instagram; Threads thread for a paper
 
-If the validator or the critic returns FAIL, the producer fixes the episode.
-The producer can do this two times at most.
+The validator and the critic send one merged list of findings to the build-phase producer.
+The producer fixes the episode. There are three rounds at most.
 
 ## 4. Components
 
@@ -52,7 +51,7 @@ The producer can do this two times at most.
 
 | Folder | Function |
 |---|---|
-| `llm-wiki/` | Knowledge: source records, paper dossiers, topic pages. Markdown in git. |
+| `llm-wiki/` | Knowledge. `raw/assets/` holds the source PDFs and text that the pipeline reads. Dossiers and topic pages are written on request only. Markdown in git. |
 | `data/` | `content.sqlite`: items, episodes, post text, posts, queue, reviews, settings. Not in git. |
 | `lib/` | Shared code: database (`db.mjs`), notifications (`notify.mjs`), wiki log (`wikilog.mjs`). |
 | `paper-reels/` | The video engine, the CLI and the episodes. |
@@ -74,12 +73,11 @@ The producer can do this two times at most.
 
 | Agent | Input | Output | Limit |
 |---|---|---|---|
-| `reel-director` | Paper text | `treatment.md`: hook options, one visual metaphor, shot list | Does not render. |
+| `reel-director` | Source text, `formats/` | `treatment.md`: hook options, one visual metaphor, shot list | Does not render. |
 | `cold-viewer` | Spoken lines only (no tools, no files) | Say-back, term table, lost points, PASS or FAIL | Runs on the treatment and on the storyboard, before voice. Does not rewrite. |
-| `reel-producer` | Treatment | Rendered and registered episode | Does not publish. Does not validate itself. |
-| `reel-validator` | Registered MP4 | `validation.json` | Read-only. Does not fix. |
+| `reel-producer` | Treatment (script phase); storyboard (build phase) | Item and script; then the rendered and registered episode | Two separate spawns. Does not publish. Does not validate itself. |
+| `reel-validator` | Registered MP4, source text | Validator and facts reviews | Read-only. Checks claims line by line. Does not fix. |
 | `retention-critic` | Frames from the MP4 | Scores for hook, pacing, visuals, clarity, payoff | Advisory. |
-| `reel-publisher` | Validated episode | Live posts | Starts only after PASS and human approval. |
 
 ### 4.4 Renderers
 
@@ -227,20 +225,14 @@ Main tables in `content.sqlite`:
 
 ## 6. Procedure: make one video
 
+The steps are in `.claude/skills/make-reel/SKILL.md`. In short:
+
 1. Add the link: `reels queue add <url>`, or run `/make-reel <url>`.
-2. The director reads the full paper and writes `treatment.md`.
-3. The producer registers the item: `reels add <url> --name ... --topic ... --thumb-name ... --thumb-hook ...`.
-4. The producer saves the PDF and text in `llm-wiki/raw/assets/<id>/`.
-5. The producer writes the source record, the dossier and the topic page. It runs `lint_wiki.py` and commits the wiki.
-6. The producer writes `storyboard.json`, `facts.json`, `evidence.json` and the scenes (`scenes/<scene>.html`).
-7. The producer runs `hf/bin/ste.mjs <dir>`. It corrects the narration until the checker finds no hard error.
-8. The producer makes the voice, the word times and the paper crops, then builds the project: `hf.mjs <dir> voice`, `words`, `evidence`, `build`.
-9. The producer runs `hf.mjs <dir> check` and examines the snapshots (`hf.mjs <dir> snap`).
-10. The producer renders, one step at a time, in the foreground: `hf.mjs <dir> render`, `audio`, `mux`.
-11. The producer registers the result: `reels episode <id> 9x16 <final.mp4>`, `reels thumb <id>`, `reels text <id> <platform> --body ...`.
-12. The producer runs `validate.mjs <id>` and fixes the gaps that it reports.
-13. The validator runs the gate on the real MP4. The critic scores the decoded frames.
-14. The policy step decides how to post (see section 9).
+2. The director saves the source in `llm-wiki/raw/assets/<id>/`, reads the full text and writes `treatment.md`. A cold viewer checks its script.
+3. The producer (script phase) registers the item (`reels add` or `reels add-topic`, with a one-liner) and writes `storyboard.json`, `facts.json` and `evidence.json`. It runs `hf/bin/ste.mjs <dir>` until the checker finds no hard error. A cold viewer checks the spoken lines.
+4. A new producer (build phase) writes the scenes, makes the voice, the word times and the paper crops, builds, checks, renders (`render`, `audio`, `mux`, one step at a time, in the foreground), registers the result (`reels episode`, `reels thumb`, `reels text`) and runs `validate.mjs <id>` until it passes.
+5. The validator and the critic check the episode in parallel and record their reviews.
+6. The policy step decides how to post (see section 9).
 
 For a canvas episode, steps 8 to 10 use `render-episode.mjs <dir> voice|audio|video|mux`.
 
@@ -249,7 +241,7 @@ Target length depends on the format (`storyboard.format`, see `paper-reels/forma
 | Format | Target | Gate |
 |---|---|---|
 | `paper` (default) | 60 to 80 seconds | 45 to 90 seconds |
-| `system-design` (draft) | 120 to 170 seconds | 90 to 178 seconds |
+| `system-design` | 120 to 170 seconds | 90 to 178 seconds |
 
 The gate stays under 180 seconds, so the video stays a YouTube Short. The video file must be 100 MB or less, because the uploader sends it to Cloudinary with one plain upload.
 
@@ -457,7 +449,7 @@ Failure handling:
 
 ## 12. Known limits
 
-- The `system-design` format is a draft. No episode passed it yet. The unattended runner stops a session after 60 minutes (`pipeline.mjs --timeout-min`), which can be too short for a 170-second episode.
+- The `system-design` format has one episode (scionV3, posted 2026-10-15). The unattended runner stops a session after 60 minutes (`pipeline.mjs --timeout-min`), which can be too short for a 170-second episode.
 - The `cold-viewer` agent is a model that acts as a newcomer. It can know a term and still claim that it does not. Its verdict is a strong signal, not proof.
 
 - No person checks the audio by ear. The validator measures loudness and silence only.
@@ -470,4 +462,3 @@ Failure handling:
 - The STE checker does not contain the STE dictionary. It has no part-of-speech tagger. Thus its noun-cluster check is soft, and it can be wrong.
 - A HyperFrames render takes approximately 2.5 minutes for a 75-second video on this computer.
 - The YouTube OAuth consent screen is in Testing mode. The refresh token expires after 7 days.
-- The Threads upload code is not tested against a live account.

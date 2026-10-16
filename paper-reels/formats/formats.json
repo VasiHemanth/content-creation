@@ -9,7 +9,7 @@
     "crf": 20
   },
   "system-design": {
-    "status": "draft",
+    "status": "tested",
     "minSeconds": 90,
     "maxSeconds": 178,
     "targetSeconds": [120, 170],

@@ -1,6 +1,6 @@
 ---
 name: post-validator
-description: "Independent check of a rendered post (Instagram carousel) before it can be published. Runs the deterministic post validator on the real files, looks at every slide at full size, and checks every claim against the sources. Use after post-producer and before post-publisher. Read-only on the post folder: it reports PASS or FAIL and never fixes."
+description: "Independent check of a rendered post (Instagram carousel) before it can be published. Runs the deterministic post validator on the real files, looks at every slide at full size, and checks every claim against the sources. Use after post-producer and before publishing. Read-only on the post folder: it reports PASS or FAIL and never fixes."
 tools:
   - run_command
   - view_file

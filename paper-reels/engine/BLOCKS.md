@@ -75,7 +75,7 @@ Why: template videos (v1 blocks, 0.3 s dip between lines, 7-13 s lines) had stre
 ## Pacing rules (checked by `bin/validate.mjs`, the engagement gate)
 - A visual event (an element appears or moves in, a scene change, a count-up step, a mascot action) at least every **2.5 s**. The gate fails a gap over **3.5 s** (the last 5 s end card excluded), fewer than **30 events a minute**, or no event in the first **1.5 s**. An event is a 0.25 s change of more than 3.0 mean grey levels outside the caption band, measured on the decoded MP4.
 - Hook (line 1) must put a claim, a question with stakes or a surprise on screen and in the voice within 2 s. A topic label is not a hook.
-- Target 45 to 65 s, one central idea, at most 4 numbers on screen across the whole video. Lines of at most about 20 spoken words (about 6 s) unless the block schedules a new visual event every 2.5 s through `at`.
+- Length: see `../formats/formats.json` (paper 60 to 80 s). One central idea, at most 4 numbers on screen across the whole video. Lines of at most about 20 spoken words (about 6 s) unless the block schedules a new visual event every 2.5 s through `at`.
 - Words in the caption should be highlighted as they are spoken (renderer, word timing estimated by character share).
 
 ## Motion kit: `engine/motion.mjs`
