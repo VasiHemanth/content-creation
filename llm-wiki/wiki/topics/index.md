@@ -10,3 +10,4 @@
 
 - [Agent infrastructure](agent-infrastructure.md)
 - [Scion source control](scion-source-control.md)
+- [Rust under Python](rust-under-python.md)

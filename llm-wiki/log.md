@@ -361,3 +361,40 @@ Picture only, no word or voice change. The hook's GIT box stays on the board, tu
 ## [2026-10-15] publish | anthropic-scion-v3
 - youtube
 - instagram
+
+## [2026-10-16] add | 2610.21170 MemScope: Evolving Agent Memory Architectures through Localized Code Repair
+Database item created. Dossier still to write: wiki/papers/2610.21170.md
+
+## [2026-10-16] render | 2610.21170 9x16
+85.4s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/memScope/out/hf/final.mp4
+
+## [2026-10-16] render | 2610.21170 9x16
+85.4s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/memScope/out/hf/final.mp4
+
+## [2026-10-16] render | 2610.21170 9x16
+85.2s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/memScope/out/hf/final.mp4
+
+## [2026-10-16] render | 2610.21170 9x16
+82.3s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/memScope/out/hf/final.mp4
+
+## [2026-10-16] render | 2610.21170 9x16
+82.3s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/memScope/out/hf/final.mp4
+
+## [2026-10-16] render | 2610.21170 9x16
+82.5s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/memScope/out/hf/final.mp4
+
+## [2026-10-16] approve | 2610.21170
+- reel for youtube,instagram,threads: "upload memscope video to youtube and instagram also to threads"
+
+## [2026-10-16] publish | 2610.21170
+- youtube
+- instagram
+
+## [2026-10-16] publish | 2610.21170
+- threads
+
+## [2026-10-17] add | rust-under-python The notebook stays Python. The new tools are Rust.
+Database item created (kind topic). Source records and the wiki page are still to write.
+
+## [2026-10-17] ingest | Rust under Python
+Topic item `rust-under-python`. Source records for the tools, the Polars PDS-H post (factor 94.0, pandas 365.71 s, polars streaming 3.89 s, 96 vCPUs, pandas not run at scale factor 100), Rust, the Red Hat GIL and PyO3 path, NumPy as C, PyTorch as C++ and CUDA, Qdrant, LanceDB, Candle, Burn, and free-threaded Python 3.14 still optional. Topic page `wiki/topics/rust-under-python.md`. Records also keep the pages that stay off the carousel: ty speeds, the March 2026 Astral agreement (not closed on those pages), the Rust Foundation $600,000 (not a model-language claim), DuckDB as C++, and safetensors (a Rust crate, not a stated Rust core). No publication.
