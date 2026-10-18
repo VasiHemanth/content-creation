@@ -1,0 +1,91 @@
+<template id="fail-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #fail-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #fail-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+
+    /* Central memo card */
+    #fail-memo { position: absolute; left: 240px; top: 380px; width: 600px; height: 680px; background: var(--white);
+      border: 4px solid var(--white); border-radius: 14px; box-shadow: 16px 16px 0 var(--shadow); opacity: 0; }
+    .fail-memo-header { position: absolute; left: 40px; top: 40px; width: 280px; height: 24px; background: var(--deep); border-radius: 4px; }
+    .fail-memo-body { position: absolute; left: 40px; top: 90px; width: 520px; height: 530px;
+      background: repeating-linear-gradient(0deg, #d8e2ec 0 10px, transparent 10px 30px); border-radius: 6px; }
+
+    /* Issue tag */
+    #fail-issue { left: 220px; top: 290px; font-size: 34px; opacity: 0; }
+
+    /* Score stamp and tag */
+    #fail-stamp { left: 340px; top: 620px; font-size: 130px; padding: 12px 50px; opacity: 0; }
+    #fail-tag { left: 260px; top: 1110px; font-size: 36px; opacity: 0; }
+
+    /* l06 Open-world cards */
+    #fail-env { left: 140px; top: 1240px; font-size: 40px; opacity: 0; }
+    #fail-missing { left: 480px; top: 1240px; font-size: 40px; opacity: 0; }
+
+    /* Robot shrugged icon in SVG */
+    #fail-bot { opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="fail" data-width="1080" data-height="1920">
+    <div id="fail-cam">
+      <div id="fail-beat">
+        <div id="fail-issue" class="tag coral" data-bind="l05.issue"></div>
+
+        <div id="fail-memo">
+          <div class="fail-memo-header"></div>
+          <div class="fail-memo-body"></div>
+        </div>
+
+        <div id="fail-stamp" class="stamp coral" data-bind="l05.score"></div>
+        <div id="fail-tag" class="tag" data-bind="l05.tag"></div>
+
+        <svg class="ink sketch" id="fail-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <g id="fail-bot"></g>
+          <!-- Alert X marks over conflicting figures -->
+          <path id="fail-x1" class="ln coral thick" d="M320 540 L380 600 M380 540 L320 600" style="opacity:0" />
+          <path id="fail-x2" class="ln coral thick" d="M680 720 L740 780 M740 720 L680 780" style="opacity:0" />
+        </svg>
+
+        <div id="fail-env" class="tag cyan" data-bind="l06.env"></div>
+        <div id="fail-missing" class="tag coral" data-bind="l06.missing"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'fail', a = (w, n) => KIT.cue('l05', w, n), b = (w, n) => KIT.cue('l06', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#fail-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // l05: memo appears
+      KIT.rise(tl, '#fail-memo', 0.1, { y: 140, dur: 0.5 });
+
+      // "missed mismatched files"
+      const tMissed = a('missed');
+      KIT.pop(tl, '#fail-issue', tMissed - 0.1, { from: 0.4 });
+      tl.set(['#fail-x1', '#fail-x2'], { opacity: 1 }, tMissed);
+      KIT.draw(tl, '#fail-x1', tMissed, 0.25);
+      KIT.draw(tl, '#fail-x2', tMissed + 0.12, 0.25);
+      KIT.shake(tl, '#fail-memo', tMissed, { amp: 10, dur: 0.3 });
+
+      // "and scored forty three out of one hundred"
+      const tScore = a('forty');
+      KIT.slam(tl, '#fail-stamp', tScore - 0.15, { from: 2.8, amp: 20 });
+      KIT.sparks(tl, '#fail-beat', 540, 720, tScore, { n: 10, color: '#ff6b6b' });
+      KIT.pop(tl, '#fail-tag', tScore + 0.2, { from: 0.5 });
+
+      // l06: "In the real world"
+      const tReal = b('real');
+      KIT.pop(tl, '#fail-env', tReal - 0.1, { from: 0.4 });
+
+      // "the AI has no answer key"
+      const tNo = b('no');
+      KIT.slam(tl, '#fail-missing', tNo - 0.1, { from: 2.4, amp: 14 });
+
+      // Camera motion: zoom in slightly on stamp, then reframe
+      tl.fromTo('#fail-cam', { scale: 1, y: 0 }, { scale: 1.07, y: -40, duration: D, ease: 'sine.inOut' }, 0);
+      KIT.beats(tl, '#fail-beat', [a('first'), a('missed'), a('scored'), a('forty'), b('real'), b('answer'), b('check')], { amp: 0.02, shift: 12 });
+
+      window.__timelines["fail"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,102 @@
+<template id="data-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #data-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 850px; }
+    #data-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 850px; }
+
+    #data-bench { left: 180px; top: 220px; font-size: 56px; padding: 10px 44px; opacity: 0; }
+    #data-model { left: 320px; top: 330px; font-size: 32px; opacity: 0; }
+
+    /* Chart bars */
+    .data-bar { position: absolute; width: 180px; transform-origin: 50% 100%; border-radius: 8px 8px 0 0; box-shadow: 10px 10px 0 var(--shadow); }
+    #data-bar-base { left: 240px; background: var(--white); opacity: 0; }
+    #data-bar-res { left: 620px; background: var(--amber); opacity: 0; }
+
+    .data-val { position: absolute; width: 220px; text-align: center; font: 400 64px/1 "Marker", sans-serif; opacity: 0; }
+    #data-val-base { left: 220px; color: var(--white); }
+    #data-val-res { left: 600px; color: var(--amber); }
+
+    #data-gain { left: 590px; top: 480px; font-size: 54px; padding: 12px 36px; opacity: 0; }
+    #data-tag { left: 160px; top: 1240px; font-size: 36px; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="data" data-width="1080" data-height="1920">
+    <div id="data-cam">
+      <div id="data-beat">
+        <div id="data-bench" class="tag cyan" data-bind="l15.benchmark"></div>
+        <div id="data-model" class="tag" data-bind="l15.model"></div>
+
+        <!-- Baseline axes -->
+        <svg class="ink sketch" id="data-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <path id="data-axis" class="ln thick" d="M120 1140 L960 1140" style="opacity:0" />
+        </svg>
+
+        <!-- Base bar -->
+        <div id="data-bar-base" class="data-bar"></div>
+        <div id="data-val-base" class="data-val" data-bind="l15.base"></div>
+
+        <!-- Harness2 result bar -->
+        <div id="data-bar-res" class="data-bar"></div>
+        <div id="data-val-res" class="data-val" data-bind="l15.result" data-layout-allow-overlap></div>
+
+        <div id="data-gain" class="stamp amber" data-bind="l15.gain" data-layout-allow-overlap></div>
+        <div id="data-tag" class="tag mint" data-bind="l15.tag"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'data', a = (w, n) => KIT.cue('l15', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#data-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      const d = KIT.data('l15');
+      const vBase = parseFloat(d.base);
+      const vRes = parseFloat(d.result);
+
+      // Heights calculated strictly from storyboard data
+      const BASE_Y = 1140;
+      const MAX_H = 600;
+      const hBase = MAX_H * (vBase / 100);
+      const hRes = MAX_H * (vRes / 100);
+
+      const barBase = document.querySelector('#data-bar-base');
+      const barRes = document.querySelector('#data-bar-res');
+      barBase.style.top = `${BASE_Y - hBase}px`;
+      barBase.style.height = `${hBase}px`;
+      barRes.style.top = `${BASE_Y - hRes}px`;
+      barRes.style.height = `${hRes}px`;
+
+      const valBase = document.querySelector('#data-val-base');
+      const valRes = document.querySelector('#data-val-res');
+      valBase.style.top = `${BASE_Y - hBase - 80}px`;
+      valRes.style.top = `${BASE_Y - hRes - 80}px`;
+
+      // l15: "Across office tasks"
+      KIT.pop(tl, '#data-bench', 0.1, { from: 0.4 });
+      KIT.pop(tl, '#data-model', 0.25, { from: 0.4 });
+      tl.set('#data-axis', { opacity: 1 }, 0.2);
+      KIT.draw(tl, '#data-axis', 0.2, 0.4);
+
+      // Base bar rises
+      tl.fromTo('#data-bar-base', { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, duration: 0.5, ease: 'power2.out' }, a('office'));
+      KIT.pop(tl, '#data-val-base', a('tasks') - 0.1, { from: 0.4 });
+
+      // "the method gained eleven points on average"
+      const tGain = a('gained');
+      tl.fromTo('#data-bar-res', { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, duration: 0.6, ease: 'back.out(1.4)' }, tGain - 0.1);
+      KIT.pop(tl, '#data-val-res', tGain + 0.1, { from: 0.4 });
+      KIT.slam(tl, '#data-gain', tGain + 0.15, { from: 2.8, amp: 20 });
+      KIT.sparks(tl, '#data-beat', 710, BASE_Y - hRes, tGain + 0.2, { n: 16, color: '#ffb454' });
+
+      // "points on average" -> tag
+      const tTag = a('points');
+      KIT.pop(tl, '#data-tag', tTag + 0.1, { from: 0.5 });
+
+      // Camera motion & beats
+      tl.fromTo('#data-cam', { scale: 1 }, { scale: 1.06, duration: D, ease: 'sine.inOut' }, 0);
+      KIT.beats(tl, '#data-beat', [a('office'), a('tasks'), a('method'), a('gained'), a('eleven'), a('points')], { amp: 0.02, shift: 12 });
+
+      window.__timelines["data"] = tl;
+    })();
+  </script>
+</template>

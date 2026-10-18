@@ -1,0 +1,111 @@
+<template id="task-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #task-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 850px; }
+    #task-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 850px; }
+
+    #task-job { left: 80px; top: 200px; width: 920px; text-align: center; font-size: 50px; }
+
+    /* Three document cards */
+    .task-card { position: absolute; width: 260px; height: 320px; background: var(--white); color: var(--deep);
+      border: 3px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); border-radius: 8px; opacity: 0; }
+    .task-card-title { position: absolute; left: 16px; top: 20px; width: 228px; font: 700 24px "Mono", monospace; color: var(--deep); word-break: break-all; }
+    .task-card-lines { position: absolute; left: 20px; top: 90px; width: 220px; height: 180px;
+      background: repeating-linear-gradient(0deg, #d8e2ec 0 8px, transparent 8px 24px); border-radius: 4px; }
+    
+    #task-card0 { left: 90px; top: 400px; transform: rotate(-5deg); }
+    #task-card1 { left: 410px; top: 380px; }
+    #task-card2 { left: 730px; top: 410px; transform: rotate(5deg); }
+
+    /* Folder for execution harness */
+    #task-folder { position: absolute; left: 100px; top: 920px; width: 880px; height: 420px; background: var(--panel);
+      border: 4px solid var(--cyan); border-radius: 16px; box-shadow: 14px 14px 0 var(--shadow); opacity: 0; }
+    #task-folder-tab { position: absolute; left: 40px; top: -50px; width: 340px; height: 50px; background: var(--panel);
+      border: 4px solid var(--cyan); border-bottom: none; border-radius: 12px 12px 0 0; }
+    #task-label { left: 60px; top: 940px; font-size: 44px; opacity: 0; }
+
+    .task-comp { position: absolute; padding: 12px 24px; font: 700 28px "Mono", monospace; background: var(--deep);
+      border: 3px solid var(--white); border-radius: 8px; box-shadow: 6px 6px 0 var(--shadow); opacity: 0; }
+    #task-comp0 { left: 80px; top: 1100px; color: var(--amber); border-color: var(--amber); }
+    #task-comp1 { left: 380px; top: 1100px; color: var(--cyan); border-color: var(--cyan); }
+    #task-comp2 { left: 660px; top: 1100px; color: var(--mint); border-color: var(--mint); }
+  </style>
+  <div id="root" data-composition-id="task" data-width="1080" data-height="1920">
+    <div id="task-cam">
+      <div id="task-beat">
+        <div id="task-job" class="tag amber" data-bind="l03.job"></div>
+
+        <!-- Three task files -->
+        <div id="task-card0" class="task-card">
+          <div class="task-card-title" data-bind="l03.files.0"></div>
+          <div class="task-card-lines"></div>
+        </div>
+        <div id="task-card1" class="task-card">
+          <div class="task-card-title" data-bind="l03.files.1"></div>
+          <div class="task-card-lines"></div>
+        </div>
+        <div id="task-card2" class="task-card">
+          <div class="task-card-title" data-bind="l03.files.2"></div>
+          <div class="task-card-lines"></div>
+        </div>
+
+        <!-- Arrows connecting files -->
+        <svg class="ink sketch" id="task-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <path id="task-arr1" class="ln cyan thick dash" d="M360 480 Q 400 440 410 450" style="opacity:0" />
+          <path id="task-arr2" class="ln cyan thick dash" d="M680 450 Q 700 440 730 480" style="opacity:0" />
+          <path id="task-arr3" class="ln amber thick dash" d="M220 730 Q 540 850 860 740" style="opacity:0" />
+        </svg>
+
+        <!-- Execution harness folder -->
+        <div id="task-folder">
+          <div id="task-folder-tab"></div>
+        </div>
+        <div id="task-label" class="tag" data-bind="l04.label"></div>
+
+        <div id="task-comp0" class="task-comp" data-bind="l04.components.0"></div>
+        <div id="task-comp1" class="task-comp" data-bind="l04.components.1"></div>
+        <div id="task-comp2" class="task-comp" data-bind="l04.components.2"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'task', a = (w, n) => KIT.cue('l03', w, n), b = (w, n) => KIT.cue('l04', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#task-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // l03: "Take one complex job"
+      KIT.pop(tl, '#task-job', 0.1, { from: 0.4 });
+
+      // "an AI agent reconciles a schedule, roster, and budget"
+      const tSched = a('schedule');
+      KIT.rise(tl, '#task-card0', tSched - 0.2, { y: 120 });
+      KIT.rise(tl, '#task-card1', tSched + 0.1, { y: 120 });
+      KIT.rise(tl, '#task-card2', tSched + 0.35, { y: 120 });
+
+      // "reconciles" -> arrows connect the files
+      const tRec = a('reconciles');
+      tl.set(['#task-arr1', '#task-arr2', '#task-arr3'], { opacity: 1 }, tRec);
+      KIT.draw(tl, '#task-arr1', tRec, 0.4);
+      KIT.draw(tl, '#task-arr2', tRec + 0.15, 0.4);
+      KIT.draw(tl, '#task-arr3', tRec + 0.3, 0.6);
+
+      // l04: "We call the instructions, files, and tools around the AI its harness."
+      const tFolder = b('instructions') - 0.3;
+      KIT.rise(tl, '#task-folder', tFolder, { y: 100 });
+      KIT.pop(tl, '#task-comp0', b('instructions'), { from: 0.4 });
+      KIT.pop(tl, '#task-comp1', b('files'), { from: 0.4 });
+      KIT.pop(tl, '#task-comp2', b('tools'), { from: 0.4 });
+
+      // "its harness" -> stamp execution harness label
+      const tHarness = b('harness');
+      KIT.slam(tl, '#task-label', tHarness - 0.1, { from: 2.4, amp: 16 });
+
+      // Camera motion: slow push into the folder
+      tl.fromTo('#task-cam', { scale: 1, y: 0 }, { scale: 1.08, y: -60, duration: D, ease: 'sine.inOut' }, 0);
+      KIT.beats(tl, '#task-beat', [a('complex'), a('reconciles'), a('schedule'), a('budget'), b('instructions'), b('tools'), b('harness')], { amp: 0.02, shift: 12 });
+
+      window.__timelines["task"] = tl;
+    })();
+  </script>
+</template>

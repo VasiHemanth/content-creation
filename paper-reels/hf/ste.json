@@ -1,5 +1,6 @@
 {
- "note": "Narration profile based on ASD-STE100 (Issue 9) writing rules, for spoken scripts. It checks the rules that can be measured without the official dictionary: sentence length, active voice, simple tenses, -ing forms, phrasal verbs, unclear or hype words, and one term per concept. Hard rules fail QA; soft rules print warnings. The first and last line (hook and close) may be questions and are exempt from the soft rules only. Per-episode technical names and term choices live in storyboard.json under \"ste\".",
+ "enforce": false,
+ "note": "Narration profile based on ASD-STE100 (Issue 9) writing rules, for spoken scripts. It checks the rules that can be measured without the official dictionary: sentence length, active voice, simple tenses, -ing forms, phrasal verbs, unclear or hype words, and one term per concept. Hard rules fail QA; soft rules print warnings. The first and last line (hook and close) may be questions and are exempt from the soft rules only. While enforce is false (set 2026-10-17 by the owner, to compare reels and posts without the gate), every rule except term (one name per concept) prints as a warning and fails nothing; set it to true to restore the gate. Per-episode technical names and term choices live in storyboard.json under \"ste\".",
  "maxWords": 20,
  "targetWords": 15,
  "maxSentencesPerLine": 3,

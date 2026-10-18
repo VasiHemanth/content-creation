@@ -1,0 +1,147 @@
+<template id="result-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #result-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #result-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #result-scope { left: 0; top: 176px; width: 1080px; text-align: center; }
+    #result-scope span { display: inline-block; padding: 8px 22px; font: 700 30px "Mono", monospace; color: var(--cyan); border: 3px solid var(--cyan); background: var(--deep); }
+    #result-same { left: 0; top: 250px; width: 1080px; text-align: center; font-size: 28px; color: #c3a6ff; }
+    #result-note { left: 548px; top: 784px; padding: 4px 12px; font-size: 26px; color: var(--amber); background: var(--deep); border: 3px solid var(--amber); }
+    #result-metric { left: 0; top: 1164px; width: 1080px; text-align: center; font-size: 26px; color: var(--white); }
+    #result-full { left: 548px; top: 840px; }
+    #result-full > span { display: inline-block; padding: 6px 14px; font: 700 30px "Mono", monospace; color: #c3a6ff; background: var(--deep); border: 3px dashed #c3a6ff; white-space: nowrap; }
+    .rlbl { position: absolute; top: 554px; width: 400px; text-align: center; }
+    .rlbl span { display: inline-block; padding: 8px 16px; font: 700 28px "Mono", monospace; color: var(--white); background: var(--deep); border: 3px solid var(--white); white-space: nowrap; }
+    #result-la { left: 80px; } #result-lb { left: 535px; }
+    .bar { position: absolute; width: 170px; background: var(--white); transform-origin: 50% 100%; box-shadow: 8px 0 0 var(--shadow); }
+    #result-ba { left: 195px; } #result-bb { left: 650px; }
+    .val { position: absolute; width: 400px; text-align: center; font: 400 104px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 6px 6px 0 var(--shadow); white-space: nowrap; }
+    #result-va { left: 80px; } #result-vb { left: 535px; }
+    #result-base { position: absolute; left: 90px; top: 1150px; width: 840px; height: 6px; background: var(--dim); }
+    .cell { position: absolute; width: 34px; height: 34px; border: 3px solid var(--faint); background: rgba(168,220,242,.06); box-sizing: border-box; }
+    #result-slip { position: absolute; left: 330px; top: 430px; width: 90px; height: 110px; background: #d9dde3; box-shadow: 6px 6px 0 var(--shadow); }
+    #result-slip i { position: absolute; left: 12px; height: 8px; background: #8a95a3; }
+    #result-film { position: absolute; left: 790px; top: 420px; width: 120px; height: 70px; background: #0d1b2c; border-top: 3px solid var(--white); border-bottom: 3px solid var(--white); }
+    #result-film i { position: absolute; top: 12px; width: 32px; height: 40px; border: 3px solid var(--white); box-sizing: border-box; }
+    #result-nc { position: absolute; left: 820px; top: 500px; width: 40px; height: 54px; background: var(--amber); border: 3px solid var(--deep); }
+    .pnl { position: absolute; top: 380px; width: 410px; height: 1030px; border: 4px solid var(--faint); background: rgba(168,220,242,.04); box-sizing: border-box; }
+    #result-pa { left: 75px; } #result-pb { left: 530px; }
+    #result-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #fff7e6; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="result" data-width="1080" data-height="1920">
+    <div id="result-cam"><div id="result-beat">
+      <div id="result-scope" class="abs"><span data-bind="l12.scope"></span></div>
+      <div id="result-same" class="lbl" data-bind="l12.head"></div>
+      <div id="result-pa" class="pnl"></div>
+      <div id="result-pb" class="pnl"></div>
+      <svg class="ink" id="result-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <g id="result-ra"></g><g id="result-rb"></g>
+      </svg>
+      <div id="result-slip"></div>
+      <div id="result-film"></div>
+      <div id="result-nc"></div>
+      <div id="result-la" class="rlbl"><span data-bind="l12.aLabel"></span></div>
+      <div id="result-lb" class="rlbl"><span data-bind="l13.bLabel"></span></div>
+      <div id="result-base"></div>
+      <div id="result-ba" class="bar"></div>
+      <div id="result-bb" class="bar"></div>
+      <div id="result-va" class="val" data-bind="l12.aValue" data-to=""></div>
+      <div id="result-vb" class="val" data-bind="l13.bValue" data-to=""></div>
+      <div id="result-grid"></div>
+      <div id="result-note" class="lbl" data-bind="l13.bNote"></div>
+      <div id="result-metric" class="lbl" data-bind="l12.metric"></div>
+      <svg class="ink" id="result-fsvg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"><path id="result-fl" class="ln thick dash" style="stroke:#c3a6ff" d="M0 0" /></svg>
+      <div id="result-full" class="abs"><span><span data-bind="l13.full"></span>: <span data-bind="l13.fValue"></span></span></div>
+    </div></div>
+    <div id="result-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'result', a = (w, n) => KIT.cue('l12', w, n), b = (w, n) => KIT.cue('l13', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#result-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // proportions come from the storyboard values
+      const va = parseFloat(KIT.data('l12').aValue), vb = parseFloat(KIT.data('l13').bValue), BASE = 1150, MAXH = 470;
+      const ha = MAXH * va / 100, hb = MAXH * vb / 100;
+      const set = (sel, h) => { const el = document.querySelector(sel); el.style.top = `${BASE - h}px`; el.style.height = `${h}px`; };
+      set('#result-ba', ha); set('#result-bb', hb);
+      document.querySelector('#result-va').style.top = `${BASE - ha - 106}px`;
+      document.querySelector('#result-vb').style.top = `${BASE - hb - 106}px`;
+
+      tl.fromTo('#result-scope', { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }, 0.05);
+      tl.fromTo('#result-base', { scaleX: 0, transformOrigin: '50% 50%' }, { scaleX: 1, duration: 0.4, ease: 'power3.out' }, 0.2);
+
+      // "Two versions": two copies of the Patch Agent, side by side
+      KIT.robot('#result-ra', { id: 'result-r1', x: 280, y: 420, s: 0.42, stroke: '#c3a6ff', eye: '#c3a6ff' });
+      KIT.robot('#result-rb', { id: 'result-r2', x: 735, y: 420, s: 0.42, stroke: '#c3a6ff', eye: '#c3a6ff' });
+      tl.fromTo('#result-ra', { y: -300, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'back.out(1.6)' }, a('tested') - 0.1);
+      tl.fromTo('#result-rb', { y: -300, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'back.out(1.6)' }, a('Patch') - 0.1);
+      // two panels, one per version: they draw in, flash on "questions", then the first lights up on "One"
+      tl.fromTo('#result-pa', { scaleY: 0, opacity: 0, transformOrigin: '50% 0%' }, { scaleY: 1, opacity: 1, duration: 0.4, ease: 'power3.out' }, a('authors') - 0.05);
+      tl.fromTo('#result-pb', { scaleY: 0, opacity: 0, transformOrigin: '50% 0%' }, { scaleY: 1, opacity: 1, duration: 0.4, ease: 'power3.out' }, a('tested') - 0.05);
+      tl.fromTo(['#result-pa', '#result-pb'], { borderColor: '#3d78a6', backgroundColor: 'rgba(168,220,242,.04)' }, { borderColor: '#a8dcf2', backgroundColor: 'rgba(168,220,242,.16)', duration: 0.15, yoyo: true, repeat: 1 }, a('inputs'));
+      tl.to('#result-pa', { borderColor: '#c3a6ff', backgroundColor: 'rgba(195,166,255,.14)', duration: 0.3 }, a('With'));
+      tl.to('#result-ra', { scale: 1.25, svgOrigin: '280 480', duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.out' }, a('With'));
+      tl.to('#result-pa', { borderColor: '#3d78a6', backgroundColor: 'rgba(168,220,242,.04)', duration: 0.3 }, b('With'));
+      tl.to('#result-pb', { borderColor: '#c3a6ff', backgroundColor: 'rgba(195,166,255,.14)', duration: 0.3 }, b('With'));
+      // "the same questions": one grid of question cards under each version
+      KIT.fade(tl, '#result-same', a('different') - 0.05, { dur: 0.3 });
+      const grid = document.querySelector('#result-grid'), N = 30, COLS = 6, CELL = 34, GAP = 8, cells = { a: [], b: [] };
+      [['a', 280], ['b', 735]].forEach(([k, cx]) => {
+        const w = COLS * CELL + (COLS - 1) * GAP;
+        for (let i = 0; i < N; i++) {
+          const el = document.createElement('div'); el.className = 'cell'; el.id = `result-c${k}${i}`;
+          el.style.left = `${cx - w / 2 + (i % COLS) * (CELL + GAP)}px`; el.style.top = `${1212 + Math.floor(i / COLS) * (CELL + GAP)}px`; grid.appendChild(el); cells[k].push(el);
+        }
+      });
+      tl.fromTo([...cells.a, ...cells.b], { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.16, stagger: 0.012, ease: 'back.out(2)' }, a('different'));
+
+      // version one: "saw only the short report"
+      const slip = document.querySelector('#result-slip');
+      [20, 40, 60, 80].forEach((y, k) => { const i = document.createElement('i'); i.id = `result-sl${k}`; i.style.top = `${y}px`; i.style.width = `${[60, 48, 66, 40][k]}px`; slip.appendChild(i); });
+      tl.fromTo('#result-slip', { x: -260, opacity: 0, rotation: -14 }, { x: 0, opacity: 1, rotation: 4, duration: 0.35, ease: 'back.out(1.5)' }, a('short') - 0.15);
+      KIT.pop(tl, '#result-la', a('only'));
+      // "sixty three percent right"
+      tl.fromTo('#result-ba', { scaleY: 0 }, { scaleY: 1, duration: 0.6, ease: 'power3.out' }, a('sixty') - 0.2);
+      tl.fromTo('#result-va', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.2 }, a('sixty') - 0.1);
+      KIT.count(tl, '#result-va', a('sixty') - 0.1, 0.6);
+      KIT.fade(tl, '#result-metric', a('percent') - 0.1, { dur: 0.3 });
+      const nA = Math.round(N * va / 100), nB = Math.round(N * vb / 100);
+      tl.to(cells.a.slice(0, nA), { borderColor: '#7be3b0', background: 'rgba(123,227,176,.55)', duration: 0.12, stagger: 0.02 }, a('right') - 0.1);
+
+      // version two: "saw the trace, plus the saved notes"
+      const film = document.querySelector('#result-film');
+      [6, 44, 82].forEach((x, k) => { const i = document.createElement('i'); i.id = `result-fi${k}`; i.style.left = `${x}px`; film.appendChild(i); });
+      tl.fromTo('#result-film', { x: 260, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: 'back.out(1.5)' }, b('trace') - 0.15);
+      KIT.pop(tl, '#result-lb', b('trace'));
+      tl.fromTo('#result-nc', { y: 120, opacity: 0, rotation: 12 }, { y: 0, opacity: 1, rotation: -6, duration: 0.3, ease: 'back.out(2)' }, b('saved') - 0.1);
+      // "eighty seven percent": the second bar shoots past the first
+      const tE = b('eighty');
+      tl.fromTo('#result-bb', { scaleY: 0 }, { scaleY: 1, duration: 0.35, ease: 'power4.out' }, tE - 0.15);
+      tl.fromTo('#result-vb', { opacity: 0, scale: 2.2 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'power4.in' }, tE - 0.05);
+      KIT.count(tl, '#result-vb', tE - 0.05, 0.35);
+      tl.fromTo('#result-bb', { background: '#f2f8ff' }, { background: '#ffb454', duration: 0.2 }, tE + 0.2);
+      tl.fromTo('#result-flash', { opacity: 0 }, { opacity: 0.28, duration: 0.04 }, tE + 0.15);
+      tl.to('#result-flash', { opacity: 0, duration: 0.3 }, tE + 0.19);
+      KIT.sparks(tl, '#result-beat', 735, BASE - hb - 60, tE + 0.15, { n: 12, r: 200 });
+      KIT.shake(tl, '#result-beat', tE + 0.15, { amp: 14, dur: 0.3 });
+      KIT.fade(tl, '#result-note', b('percent'), { dur: 0.3 });
+      // "Full MemScope: eighty three": a dashed marker at its height across the second bar, and its tag
+      const vf = parseFloat(KIT.data('l13').fValue), yf = BASE - MAXH * vf / 100;
+      document.querySelector('#result-fl').setAttribute('d', `M560 ${yf.toFixed(0)} L870 ${yf.toFixed(0)}`);
+      KIT.draw(tl, '#result-fl', b('Full') - 0.05, 0.4, { ease: 'power2.out' });
+      tl.fromTo('#result-full', { x: 120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'back.out(1.6)' }, b('MemScope') - 0.1);
+      tl.to('#result-full', { scale: 1.08, duration: 0.15, yoyo: true, repeat: 1 }, b('eighty', 1));
+      tl.to(cells.b.slice(0, nB), { borderColor: '#7be3b0', background: 'rgba(123,227,176,.55)', duration: 0.12, stagger: 0.015 }, b('seven'));
+
+      // camera: slow push, then a punch toward the second number
+      tl.fromTo('#result-cam', { scale: 1, x: 0, y: 0 }, { scale: 1.04, x: 0, y: 0, duration: tE - 0.2, ease: 'sine.inOut' }, 0);
+      tl.to('#result-cam', { scale: 1.12, x: -40, y: 30, duration: 0.3, ease: 'power3.out' }, tE + 0.1);
+      tl.to('#result-cam', { scale: 1.02, x: 0, y: 0, duration: 0.5, ease: 'power2.inOut' }, b('Full') - 0.3);
+      KIT.beats(tl, '#result-beat', [a('their'), a('different'), a('short'), b('With'), b('plus'), b('notes'), b('Full')], { amp: 0.025, shift: 14 });
+
+      window.__timelines["result"] = tl;
+    })();
+  </script>
+</template>

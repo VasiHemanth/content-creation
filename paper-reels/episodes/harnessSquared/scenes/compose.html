@@ -1,0 +1,103 @@
+<template id="compose-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #compose-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #compose-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 850px; }
+    #compose-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #compose-scrim { position: absolute; left: -1500px; top: -1500px; width: 4000px; height: 5000px; background: #061a30; opacity: 0; }
+    #compose-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #compose-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #compose-hud .receipt-tag { font-size: 26px; padding: 8px 18px; }
+
+    #compose-act { left: 360px; top: 220px; font-size: 64px; padding: 10px 48px; opacity: 0; }
+    #compose-filter { left: 240px; top: 340px; font-size: 34px; opacity: 0; }
+
+    /* Green successor folder */
+    #compose-folder { position: absolute; left: 200px; top: 580px; width: 680px; height: 480px; background: var(--panel);
+      border: 5px solid var(--mint); border-radius: 16px; box-shadow: 14px 14px 0 var(--shadow); opacity: 0; }
+    #compose-folder-tab { position: absolute; left: 40px; top: -50px; width: 280px; height: 50px; background: var(--panel);
+      border: 5px solid var(--mint); border-bottom: none; border-radius: 12px 12px 0 0; }
+    
+    /* Winning chips being combined */
+    .compose-chip { position: absolute; width: 260px; height: 70px; border-radius: 8px; opacity: 0; }
+    #compose-chip-cyan { left: 240px; top: 700px; background: var(--cyan); }
+    #compose-chip-amber { left: 580px; top: 700px; background: var(--amber); }
+
+    /* Magnifying lens */
+    #compose-lens { position: absolute; left: 450px; top: 480px; width: 180px; height: 180px; border: 8px solid #c3a6ff;
+      border-radius: 50%; box-shadow: 0 0 30px rgba(195, 166, 255, 0.6); opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="compose" data-width="1080" data-height="1920">
+    <div id="compose-cam">
+      <div id="compose-beat">
+        <div id="compose-world">
+          <div id="compose-act" class="tag mint" data-bind="l09.action"></div>
+          <div id="compose-filter" class="tag" data-bind="l09.filter" data-layout-allow-overlap></div>
+
+          <div id="compose-lens"></div>
+
+          <!-- Successor folder -->
+          <div id="compose-folder">
+            <div id="compose-folder-tab"></div>
+          </div>
+
+          <div id="compose-chip-cyan" class="compose-chip"></div>
+          <div id="compose-chip-amber" class="compose-chip"></div>
+        </div>
+      </div>
+      <div id="compose-scrim"></div>
+      <div id="compose-stage"></div>
+    </div>
+    <div id="compose-hud"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'compose', a = (w, n) => KIT.cue('l09', w, n), b = (w, n) => KIT.cue('l10', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#compose-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // l09: "Harness2 compares both runs"
+      const tComp = a('compares');
+      KIT.pop(tl, '#compose-lens', tComp - 0.1, { from: 0.3 });
+      tl.to('#compose-lens', { x: 80, duration: 0.5, ease: 'sine.inOut' }, tComp + 0.1);
+
+      // "and combines only the edits that clearly helped"
+      const tComb = a('combines');
+      KIT.pop(tl, '#compose-act', tComb - 0.1, { from: 0.4 });
+      KIT.pop(tl, '#compose-filter', tComb + 0.1, { from: 0.4 });
+      KIT.rise(tl, '#compose-folder', tComb, { y: 120 });
+      KIT.pop(tl, '#compose-chip-cyan', tComb + 0.15, { from: 0.5 });
+      KIT.pop(tl, '#compose-chip-amber', tComb + 0.25, { from: 0.5 });
+      tl.to(['#compose-chip-cyan', '#compose-chip-amber'], { y: 60, scale: 0.85, opacity: 0.9, stagger: 0.1, duration: 0.4 }, tComb + 0.45);
+
+      // l10: "Each decision is tied to a concrete observation rather than a presumed score gain"
+      // Receipt R1: "observation"
+      const tR = b('decision') - 0.05;
+      tl.to('#compose-scrim', { opacity: 0.9, duration: 0.35 }, tR);
+      tl.to('#compose-world', { opacity: 0, duration: 0.25 }, tR + 0.25);
+
+      KIT.read(tl, {
+        cam: '#compose-cam', parent: '#compose-stage', hud: '#compose-hud', tagY: 340, id: 'observation', t: tR,
+        label: KIT.data('l10').receipt,
+        x: 40, y: 840, width: 1000, zoom: 1.85, fx: 80, fy: 860, follow: 0,
+        marks: [[b('concrete') - 0.05, b('score') + 0.1, [[b('observation'), 0.45], [b('presumed'), 0.75]]]],
+        circles: [{ word: 'concrete observation', t: b('concrete') + 0.05 }]
+      });
+
+      // After receipt (2.0s hold), cut back to the composed green folder
+      const tBack = b('gain') + 0.25;
+      tl.set('#compose-cam', { x: 0, y: 0, scale: 1 }, tBack);
+      tl.set('#compose-stage', { opacity: 0 }, tBack);
+      tl.set('#compose-hud', { opacity: 0 }, tBack);
+      tl.set('#compose-scrim', { opacity: 0 }, tBack);
+      tl.set('#compose-world', { opacity: 1 }, tBack);
+      KIT.sparks(tl, '#compose-beat', 540, 800, tBack, { n: 12, color: '#7be3b0' });
+
+      // Camera beats
+      tl.fromTo('#compose-beat', { scale: 1 }, { scale: 1.05, duration: D, ease: 'sine.inOut' }, 0);
+      KIT.beats(tl, '#compose-beat', [a('compares'), a('combines'), a('edits'), b('decision')], { amp: 0.02, shift: 12 });
+
+      window.__timelines["compose"] = tl;
+    })();
+  </script>
+</template>

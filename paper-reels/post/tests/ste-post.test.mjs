@@ -7,6 +7,9 @@ import { checkPost, RULES } from '../lib/ste-post.mjs';
 import { describeData } from '../lib/data.mjs';
 import { checkFacts, numbersIn } from '../lib/facts.mjs';
 
+// tests exercise the gate itself, so they switch it on whatever hf/ste.json says
+import { PROFILE as STE_PROFILE } from '../../hf/bin/ste.mjs';
+STE_PROFILE.enforce = true;
 const BAD = 'The configuration file was edited by the operator, and then the new settings were applied by the system after the restart was completed.';
 const GOOD = 'The operator edits the file.';
 const slide = (id, data, extra = {}) => ({ id, kind: 'image', alt: 'x', data, ...extra });

@@ -1,0 +1,97 @@
+<template id="data-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #data-shk, #data-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #data-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #data-svg, #data-svg2 { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #data-tag { left: 0; top: 0; font-size: 38px; }
+    #data-tag2 { left: 0; top: 0; font-size: 32px; }
+    .data-bar { position: absolute; width: 200px; box-sizing: border-box; transform-origin: 50% 100%; }
+    #data-b0 { background: #c9d6e3; border: 5px solid var(--white); }
+    #data-b1 { background: #c9d6e3; border: 5px solid var(--white); }
+    #data-b1g { background: var(--amber); border: 5px solid var(--white); border-bottom: none; }
+    .data-val { position: absolute; width: 260px; text-align: center; font: 400 76px/1 "Marker", sans-serif; color: var(--white); text-shadow: 6px 6px 0 var(--shadow); }
+    #data-v1 { color: var(--amber); }
+    #data-gain { left: 0; top: 0; font: 400 112px/1 "Marker", sans-serif; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); white-space: nowrap; }
+    .data-lbl sup { font-size: .65em; vertical-align: .6em; }
+    .data-lbl { position: absolute; width: 300px; text-align: center; font: 700 36px "Mono", monospace; color: var(--cyan); white-space: nowrap; }
+    #data-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="data" data-width="1080" data-height="1920">
+    <div id="data-shk">
+      <div id="data-cam">
+        <svg id="data-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="data-b0" class="data-bar"></div>
+        <div id="data-b1" class="data-bar"></div>
+        <div id="data-b1g" class="data-bar"></div>
+        <svg id="data-svg2" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="data-v0" class="data-val" data-bind="l15.base" data-to=""></div>
+        <div id="data-v1" class="data-val" data-bind="l15.result"></div>
+        <div id="data-gain" class="abs" data-bind="l15.gain"></div>
+        <div id="data-l0" class="data-lbl" data-bind="l15.baseLbl"></div>
+        <div id="data-l1" class="data-lbl"><span data-bind="l15.r1"></span><sup data-bind="l15.r2"></sup></div>
+      </div>
+    </div>
+    <div id="data-hud">
+      <div id="data-tag" class="tag" data-bind="l15.tag"></div>
+      <div id="data-tag2" class="tag cyan" data-bind="l15.tag2"></div>
+    </div>
+    <div id="data-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l15', w, n), D = KIT.sceneDur('data');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('data-svg'), svg2 = document.getElementById('data-svg2'), E = (t, at, p) => KIT.svgEl(t, at, p || svg);
+      const pulse = (t, o = 0.16) => tl.fromTo('#data-flash', { opacity: o }, { opacity: 0, duration: 0.45, ease: 'none', immediateRender: false }, t);
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+      const d = KIT.data('l15'), v0 = parseFloat(d.base), v1 = parseFloat(d.result);
+      // bars on a 0..100 score axis, from the storyboard values
+      const BY = 1290, K = 8, X0 = 250, X1 = 610, h0 = v0 * K, h1 = v1 * K, yBase = BY - h0, yRes = BY - h1;
+      gsap.set('#data-tag', { left: 540, top: 180, xPercent: -50 }); gsap.set('#data-tag2', { left: 540, top: 262, xPercent: -50 });
+      gsap.set('#data-b0', { left: X0, top: yBase, height: h0 });
+      gsap.set('#data-b1', { left: X1, top: yBase, height: h0 });
+      gsap.set('#data-b1g', { left: X1, top: yRes, height: h1 - h0 + 2 });
+      gsap.set('#data-v0', { left: X0 - 30, top: yBase - 96 });
+      gsap.set('#data-v1', { left: X1 - 30, top: yRes - 96 });
+      gsap.set('#data-l0', { left: X0 - 50, top: BY + 22 }); gsap.set('#data-l1', { left: X1 - 50, top: BY + 22 });
+      E('path', { d: `M170 ${BY} H900`, class: 'ln', 'stroke-width': 8 });
+      E('path', { d: `M170 ${BY} V${BY - 100 * K}`, class: 'ln dim', 'stroke-width': 5 });
+      for (let k = 1; k <= 4; k++) E('path', { d: `M160 ${BY - k * 20 * K} H180`, class: 'ln dim', 'stroke-width': 5 });
+      // the base level carried across, and the bracket for the gain
+      const dash = E('path', { id: 'data-dash', d: `M${X0} ${yBase} H${X1 + 260}`, class: 'ln amber dash', 'stroke-width': 6 }, svg2);
+      const brk = E('path', { id: 'data-brk', d: `M${X1 + 230} ${yBase} h24 V${yRes} h-24`, fill: 'none', stroke: '#ffb454', 'stroke-width': 8, 'stroke-linejoin': 'round' }, svg2);
+      gsap.set(brk, { drawSVG: '0%' });
+      gsap.set('#data-gain', { left: X1 + 100, top: yRes - 230, xPercent: -50 });
+
+      // frame 0: the axis and both scope tags; the base bar rises at once
+      tl.fromTo('#data-cam', cam(1.02, 540, 920), { ...cam(1.0, 540, 900), duration: 1.8, ease: 'sine.out' }, 0);
+      tl.fromTo('#data-b0', { scaleY: 0 }, { scaleY: 1, duration: 0.7, ease: 'power3.out' }, 0.05);
+      gsap.set(['#data-v0', '#data-v1', '#data-gain', '#data-l1'], { opacity: 0 });
+      tl.fromTo('#data-v0', { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, 0.1);
+      KIT.count(tl, '#data-v0', 0.1, 0.65);
+      KIT.rise(tl, '#data-tag', a('office') - 0.1, { y: -20, dur: 0.3 });
+      tl.fromTo('#data-tag2', { scale: 1.12 }, { scale: 1, duration: 0.3, ease: 'power3.out' }, 0);
+      tl.to('#data-tag2', { borderColor: '#ffb454', color: '#ffb454', duration: 0.15, yoyo: true, repeat: 1 }, a('average'));
+      // "the method": the second bar rises to the same base level
+      tl.fromTo('#data-b1', { scaleY: 0 }, { scaleY: 1, duration: 0.5, ease: 'power3.out' }, a('the') - 0.2);
+      KIT.pop(tl, '#data-l1', a('method') - 0.1, { from: 0.5 });
+      // "gained": the amber gain segment grows on top; the value counts from the base to the result
+      const tG = a('gained') - 0.05;
+      tl.fromTo('#data-b1g', { scaleY: 0 }, { scaleY: 1, duration: 0.45, ease: 'power3.out' }, tG);
+      const v1el = document.getElementById('data-v1'), st = { v: v0 };
+      tl.fromTo('#data-v1', { opacity: 0, y: h1 - h0 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out', immediateRender: false }, tG);
+      tl.fromTo(st, { v: v0 }, { v: v1, duration: 0.45, ease: 'power3.out', immediateRender: false, onUpdate() { v1el.textContent = st.v >= v1 - 1e-9 ? d.result : st.v.toFixed(1); } }, tG);
+      KIT.draw(tl, dash, tG + 0.1, 0.4);
+      // "eleven points": the bracket closes and the gain lands; the camera dives to it
+      const tE = a('eleven');
+      tl.to(brk, { drawSVG: '100%', duration: 0.25, ease: 'power2.out' }, tE - 0.15);
+      KIT.slam(tl, '#data-gain', tE - 0.05, { from: 2.4, amp: 14, shakeTarget: '#data-shk' });
+      pulse(tE + 0.15, 0.22);
+      tl.to('#data-cam', { ...cam(1.12, 640, 860), duration: 0.5, ease: 'power3.inOut' }, tE - 0.1);
+      tl.to('#data-cam', { ...cam(1.06, 600, 880), duration: D - a('average'), ease: 'sine.inOut' }, a('average'));
+      window.__timelines["data"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,149 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-shk, #hook-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #hook-svg { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #hook-title { left: 0; top: 176px; width: 1080px; text-align: center; font-size: 124px; text-shadow: 8px 8px 0 var(--shadow); }
+    #hook-sub { left: 0; top: 318px; width: 1080px; text-align: center; font: 400 70px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; text-shadow: 6px 6px 0 var(--shadow); }
+    #hook-method sup { font-size: .55em; vertical-align: .75em; }
+    #hook-method { left: 0; top: 196px; width: 1080px; text-align: center; font-size: 150px; color: var(--amber); text-shadow: 9px 9px 0 var(--shadow); opacity: 0; }
+    #hook-cart { position: absolute; left: 744px; top: 640px; width: 230px; height: 112px; box-sizing: border-box; background: var(--amber);
+      border: 6px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); display: flex; align-items: center; justify-content: center;
+      font: 700 34px "Mono", monospace; color: var(--deep); white-space: nowrap; }
+    #hook-cart::before { content: ""; position: absolute; left: -26px; top: 30px; width: 26px; height: 40px; background: var(--white); }
+    #hook-job { position: absolute; left: 96px; top: 1020px; width: 300px; height: 360px; box-sizing: border-box; background: var(--paper);
+      border: 6px solid var(--white); box-shadow: 12px 12px 0 var(--shadow); opacity: 0; }
+    #hook-jobtag { position: absolute; left: 22px; top: 22px; font-size: 32px; padding: 6px 14px; }
+    .hook-jl { position: absolute; left: 28px; height: 16px; border-radius: 8px; background: #8aa4bd; }
+    #hook-loop1 { left: 0; top: 1056px; width: 1080px; text-align: center; opacity: 0; }
+    #hook-loop2 { left: 0; top: 1214px; width: 1080px; text-align: center; opacity: 0; }
+    #hook-loop1 span, #hook-loop2 span { display: inline-block; padding: 8px 20px; font: 700 38px "Mono", monospace; background: var(--deep); border: 4px solid currentColor; }
+    #hook-loop1 { color: var(--cyan); } #hook-loop2 { color: #c3a6ff; }
+    #hook-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-shk">
+      <div id="hook-cam">
+        <svg id="hook-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="hook-job">
+          <div id="hook-jobtag" class="tag" data-bind="l01.next"></div>
+          <div class="hook-jl" style="top:120px;width:230px"></div>
+          <div class="hook-jl" style="top:160px;width:190px"></div>
+          <div class="hook-jl" style="top:200px;width:220px"></div>
+          <div class="hook-jl" style="top:240px;width:150px"></div>
+          <div class="hook-jl" style="top:280px;width:205px"></div>
+        </div>
+        <svg id="hook-svg2" class="ink" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920"></svg>
+        <div id="hook-cart"><span id="hook-cartl" data-bind="l01.skill"></span></div>
+      </div>
+    </div>
+    <div id="hook-hud">
+      <div id="hook-title" class="hd" data-bind="l01.title" data-layout-allow-overlap></div>
+      <div id="hook-sub" class="abs" data-bind="l01.sub" data-layout-allow-overlap></div>
+      <div id="hook-method" class="hd" data-layout-allow-overlap><span data-bind="l02.m1"></span><sup data-bind="l02.m2"></sup></div>
+      <div id="hook-loop1" class="abs"><span data-bind="l02.loop1"></span></div>
+      <div id="hook-loop2" class="abs"><span data-bind="l02.loop2"></span></div>
+    </div>
+    <div id="hook-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l01', w, n), b = (w, n) => KIT.cue('l02', w, n), D = KIT.sceneDur('hook');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('hook-svg'), svg2 = document.getElementById('hook-svg2'), E = (t, at, p) => KIT.svgEl(t, at, p || svg);
+      const pulse = (t, o = 0.18) => tl.fromTo('#hook-flash', { opacity: o }, { opacity: 0, duration: 0.45, ease: 'none', immediateRender: false }, t);
+      // camera: world point (px, py) at screen (540, sy), scale s
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+
+      // ---- the loops, drawn behind the agent (revealed on "two loops") ----
+      const CX = 540, CY = 800;
+      const ring1 = E('ellipse', { id: 'hook-ring1', cx: CX, cy: CY, rx: 250, ry: 262, class: 'ln cyan thick', 'stroke-width': 8 });
+      const ring2 = E('ellipse', { id: 'hook-ring2', cx: CX, cy: CY, rx: 420, ry: 420, fill: 'none', stroke: '#c3a6ff', 'stroke-width': 8, 'stroke-linecap': 'round' });
+      // arrow heads that ride the rings
+      const dot1 = E('g', { id: 'hook-dot1', opacity: 0 });
+      E('circle', { cx: 0, cy: 0, r: 22, fill: '#a8dcf2' }, dot1); E('path', { d: 'M-8 -10 L8 0 L-8 10', fill: 'none', stroke: '#071d35', 'stroke-width': 5, 'stroke-linecap': 'round' }, dot1);
+      const dot2 = E('g', { id: 'hook-dot2', opacity: 0 });
+      E('circle', { cx: 0, cy: 0, r: 26, fill: '#c3a6ff' }, dot2); E('path', { d: 'M-9 -11 L9 0 L-9 11', fill: 'none', stroke: '#071d35', 'stroke-width': 5, 'stroke-linecap': 'round' }, dot2);
+
+      // ---- the agent on a bench ----
+      E('path', { d: 'M150 1000 H930', class: 'ln dim thick' });
+      const R = KIT.robot(svg, { id: 'hook-r', x: 540, y: 620, s: 1.35 });
+      const slot = E('rect', { id: 'hook-slot', x: 480, y: 870, width: 120, height: 56, rx: 8, fill: '#071d35', stroke: '#ffb454', 'stroke-width': 5 });
+      // crack on the head (drawn on "break")
+      const crack = E('path', { id: 'hook-crack', d: 'M470 640 L512 690 L486 718 L534 764 L516 790', class: 'ln coral', 'stroke-width': 8 }, svg2);
+      const chestHit = E('path', { id: 'hook-zap', d: 'M540 850 L520 900 L556 904 L532 956', class: 'ln coral', 'stroke-width': 9 }, svg2);
+      const jobX = E('path', { id: 'hook-jobx', d: 'M130 1060 L360 1340 M360 1060 L130 1340', class: 'ln coral', 'stroke-width': 14 }, svg2);
+      gsap.set([crack, chestHit, jobX], { drawSVG: '0%' });
+
+      // frame 0: claim in big type, agent close up, the skill waiting beside it
+      tl.fromTo('#hook-cam', cam(1.14, 560, 820), { ...cam(1.0, 540, 800), duration: 3.0, ease: 'power2.out' }, 0);
+      tl.fromTo('#hook-title', { scale: 1.08, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.5, ease: 'power3.out' }, 0);
+
+      // "New skills": the cartridge plugs into the chest, the eyes turn happy
+      const tSk = a('skills');
+      tl.to('#hook-cart', { x: 540 - 860, y: 898 - 696, scale: 0.5, duration: 0.42, ease: 'power3.in' }, tSk - 0.1);
+      tl.to('#hook-cartl', { opacity: 0, duration: 0.1 }, tSk + 0.2);
+      tl.to(R.eyes, { attr: { fill: '#7be3b0' }, duration: 0.15 }, tSk + 0.32);
+      tl.to(R.ant, { attr: { fill: '#7be3b0' }, duration: 0.15 }, tSk + 0.32);
+      KIT.sparks(tl, '#hook-cam', 540, 898, tSk + 0.32, { n: 10, r: 180, color: '#7be3b0' });
+      pulse(tSk + 0.32, 0.14);
+
+      // "break": the chest sparks, a crack runs down the head, the claim glitches
+      const tBr = a('break');
+      tl.to(R.eyes, { attr: { fill: '#ff6b6b' }, duration: 0.08 }, tBr);
+      tl.to(R.ant, { attr: { fill: '#ff6b6b' }, duration: 0.08 }, tBr);
+      tl.to(crack, { drawSVG: '100%', duration: 0.22, ease: 'power2.out' }, tBr);
+      tl.to(chestHit, { drawSVG: '100%', duration: 0.18, ease: 'power2.out' }, tBr + 0.05);
+      KIT.sparks(tl, '#hook-cam', 540, 900, tBr + 0.05, { n: 14, r: 260, color: '#ff6b6b' });
+      KIT.shake(tl, '#hook-shk', tBr + 0.05, { amp: 18, dur: 0.35 });
+      KIT.glitch(tl, '#hook-sub', tBr, { amp: 18, dur: 0.4 });
+      tl.to('#hook-sub', { color: '#ff6b6b', duration: 0.1 }, tBr + 0.05);
+      pulse(tBr + 0.05, 0.26);
+
+      // "next job": the next job slides onto the bench and fails
+      tl.fromTo('#hook-job', { x: 760, rotation: 8, opacity: 0 }, { x: 0, rotation: -3, opacity: 1, duration: 0.32, ease: 'power3.out' }, a('next') - 0.2);
+      const tJob = a('job');
+      tl.to('#hook-job', { borderColor: '#ff6b6b', duration: 0.1 }, tJob);
+      tl.to(jobX, { drawSVG: '100%', duration: 0.25, ease: 'power2.out' }, tJob);
+      tl.to('#hook-job', { rotation: -9, scaleY: 0.9, y: 20, duration: 0.25, ease: 'back.out(3)' }, tJob + 0.15);
+      KIT.shake(tl, '#hook-shk', tJob + 0.1, { amp: 12, dur: 0.3 });
+
+      // ---- l02: Harness^2 takes the title; the agent heals; two loops wrap it ----
+      const tH = b('Harness');
+      tl.to(['#hook-title', '#hook-sub'], { y: -60, opacity: 0, duration: 0.25, ease: 'power2.in' }, tH - 0.15);
+      KIT.slam(tl, '#hook-method', tH, { from: 2.2, amp: 12, shakeTarget: '#hook-shk' });
+      pulse(tH + 0.2, 0.12);
+      const tSol = b('solves');
+      tl.to([crack, chestHit], { drawSVG: '100% 100%', duration: 0.3, ease: 'power2.in' }, tSol);
+      tl.to(R.eyes, { attr: { fill: '#ffb454' }, duration: 0.2 }, tSol);
+      tl.to(R.ant, { attr: { fill: '#ffb454' }, duration: 0.2 }, tSol);
+      tl.to('#hook-jobtag', { opacity: 0, duration: 0.08 }, tSol - 0.05);
+      tl.to(jobX, { opacity: 0, duration: 0.2 }, tSol);
+      tl.to('#hook-job', { x: -520, opacity: 0, rotation: -20, duration: 0.4, ease: 'power2.in' }, tSol);
+      tl.to('#hook-cam', { ...cam(0.98, 540, 820), duration: 0.5, ease: 'power2.inOut' }, tSol);
+
+      // "two loops": the camera pulls out, the inner ring and the outer ring draw and start to turn
+      const tTwo = b('two', 1);
+      gsap.set([ring1, ring2], { drawSVG: '0%' });
+      tl.to(ring1, { drawSVG: '100%', duration: 0.45, ease: 'power2.inOut' }, tTwo - 0.1);
+      tl.to(ring2, { drawSVG: '100%', duration: 0.6, ease: 'power2.inOut' }, b('loops'));
+      tl.to('#hook-cam', { ...cam(0.86, 540, 830, 840), duration: 0.8, ease: 'power3.inOut' }, tTwo - 0.15);
+      KIT.rise(tl, '#hook-loop1', tTwo + 0.1, { y: 30, dur: 0.3 });
+      KIT.rise(tl, '#hook-loop2', b('loops') + 0.25, { y: 30, dur: 0.3 });
+      pulse(b('loops') + 0.2, 0.12);
+      // the two arrows ride their rings (inner fast, outer slow) until the scene ends
+      const orbit = (el, rx, ry, t0, turns, phase) => {
+        const st = { a: 0 }, place = () => { const ang = phase + st.a * Math.PI * 2; el.setAttribute('transform', `translate(${(CX + rx * Math.cos(ang)).toFixed(1)} ${(CY + ry * Math.sin(ang)).toFixed(1)}) rotate(${((ang * 180) / Math.PI + 90).toFixed(1)})`); };
+        place();
+        tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0);
+        tl.fromTo(st, { a: 0 }, { a: turns, duration: D - t0, ease: 'none', onUpdate: place, immediateRender: false }, t0);
+      };
+      orbit(dot1, 250, 262, tTwo + 0.2, 1.1, -Math.PI / 2);
+      orbit(dot2, 420, 420, b('loops') + 0.45, 0.45, Math.PI / 2);
+      KIT.shake(tl, '#hook-shk', b('improvement'), { amp: 6, dur: 0.2 });
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

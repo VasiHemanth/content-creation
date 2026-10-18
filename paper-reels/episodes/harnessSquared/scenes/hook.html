@@ -1,0 +1,114 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #hook-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    
+    /* Hook typography visible at frame 0 */
+    #hook-title { left: 0; top: 220px; width: 1080px; text-align: center; font-size: 100px; color: var(--white); }
+    #hook-sub { left: 0; top: 350px; width: 1080px; text-align: center; font-size: 52px; color: var(--amber); letter-spacing: 2px; }
+    #hook-alert { left: 340px; top: 430px; font-size: 32px; opacity: 0; }
+
+    /* Desk and workspace */
+    #hook-desk { position: absolute; left: 140px; top: 960px; width: 800px; height: 380px; }
+    #hook-table { position: absolute; left: 0; top: 120px; width: 800px; height: 16px; background: var(--cyan); border-radius: 8px; box-shadow: 0 8px 0 var(--shadow); }
+    
+    /* Chaotic tabs - visual color chips without hardcoded text */
+    .hook-tab { position: absolute; width: 80px; height: 28px; border-radius: 6px; box-shadow: 4px 4px 0 var(--shadow); }
+    #hook-tab1 { left: 80px; top: 75px; background: var(--coral); transform: rotate(-12deg); }
+    #hook-tab2 { left: 210px; top: 65px; background: var(--amber); transform: rotate(8deg); }
+    #hook-tab3 { left: 560px; top: 70px; background: var(--cyan); transform: rotate(-6deg); }
+    #hook-tab4 { left: 670px; top: 80px; background: #c3a6ff; transform: rotate(14deg); }
+
+    /* Task envelope / job drop */
+    #hook-job { position: absolute; left: 390px; top: 980px; width: 160px; height: 110px; background: var(--white);
+      border: 3px solid var(--amber); border-radius: 8px; box-shadow: 8px 8px 0 var(--shadow); opacity: 0; }
+
+    /* l02 elements */
+    #hook-method { left: 330px; top: 490px; font-size: 64px; padding: 10px 36px; opacity: 0; }
+    #hook-loop1 { left: 130px; top: 1360px; font-size: 32px; opacity: 0; }
+    #hook-loop2 { left: 630px; top: 1360px; font-size: 32px; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam">
+      <div id="hook-beat">
+        <!-- Frame 0 hook copy -->
+        <div id="hook-title" class="hd" data-bind="l01.title"></div>
+        <div id="hook-sub" class="lbl amber" data-bind="l01.sub"></div>
+        <div id="hook-alert" class="tag coral" data-bind="l01.alert"></div>
+
+        <!-- Robot and workspace -->
+        <svg class="ink sketch" id="hook-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <g id="hook-bot"></g>
+          <!-- Orbital rings for l02 -->
+          <ellipse id="hook-ring1" class="ln cyan thick dash" cx="540" cy="850" rx="340" ry="240" style="opacity:0" />
+          <ellipse id="hook-ring2" class="ln mint thick dash" cx="540" cy="850" rx="420" ry="310" style="opacity:0" />
+        </svg>
+
+        <div id="hook-desk">
+          <div id="hook-table"></div>
+          <div id="hook-tab1" class="hook-tab"></div>
+          <div id="hook-tab2" class="hook-tab"></div>
+          <div id="hook-tab3" class="hook-tab"></div>
+          <div id="hook-tab4" class="hook-tab"></div>
+        </div>
+
+        <div id="hook-job"></div>
+
+        <!-- l02 tags -->
+        <div id="hook-method" class="tag" data-bind="l02.method"></div>
+        <div id="hook-loop1" class="tag cyan" data-bind="l02.loop1"></div>
+        <div id="hook-loop2" class="tag mint" data-bind="l02.loop2"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'hook', a = (w, n) => KIT.cue('l01', w, n), b = (w, n) => KIT.cue('l02', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#hook-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // Frame 0: Hook text already visible at full opacity.
+      // Small pulse at 0.0s to confirm life
+      tl.fromTo('#hook-title', { scale: 1 }, { scale: 1.02, duration: 0.6, ease: 'sine.inOut' }, 0);
+
+      // Robot at desk
+      const bot = KIT.robot('#hook-bot', { id: 'hook-r', x: 540, y: 710, s: 1.15, asleep: false });
+
+      // l01: "break an AI" -> glitch & warning
+      const tBreak = a('break');
+      KIT.glitch(tl, '#hook-sub', tBreak, { amp: 16, dur: 0.35 });
+      KIT.shake(tl, '#hook-desk', tBreak, { amp: 14, dur: 0.3 });
+      KIT.pop(tl, '#hook-alert', tBreak + 0.1, { from: 0.4 });
+
+      // l01: "on its next job" -> envelope drops and bounces
+      const tJob = a('job');
+      KIT.slam(tl, '#hook-job', tJob - 0.15, { from: 3.0, dur: 0.22, amp: 18 });
+      tl.to('#hook-job', { x: 90, rotation: 18, duration: 0.4, ease: 'power2.out' }, tJob + 0.15);
+
+      // l02: "Harness2, a new method" -> method stamp drops in
+      const tMethod = b('Harness');
+      KIT.pop(tl, '#hook-method', tMethod - 0.1, { from: 0.3 });
+      tl.to('#hook-alert', { opacity: 0, duration: 0.2 }, tMethod);
+
+      // l02: "two loops of improvement" -> rings draw, clutter clears
+      const tTwo = b('two');
+      tl.set('#hook-ring1', { opacity: 1 }, tTwo);
+      tl.set('#hook-ring2', { opacity: 1 }, tTwo + 0.15);
+      KIT.draw(tl, '#hook-ring1', tTwo, 0.7);
+      KIT.draw(tl, '#hook-ring2', tTwo + 0.15, 0.8);
+
+      const tImp = b('improvement');
+      tl.to('.hook-tab', { opacity: 0, y: -20, stagger: 0.05, duration: 0.3 }, tImp - 0.2);
+      tl.to('#hook-job', { opacity: 0, duration: 0.2 }, tImp);
+      KIT.pop(tl, '#hook-loop1', tImp - 0.15, { from: 0.5 });
+      KIT.pop(tl, '#hook-loop2', tImp + 0.05, { from: 0.5 });
+
+      // Camera pacing
+      tl.fromTo('#hook-cam', { scale: 1 }, { scale: 1.05, duration: D, ease: 'none' }, 0);
+      KIT.beats(tl, '#hook-beat', [a('skills'), a('break'), a('job'), b('Harness'), b('two'), b('loops')], { amp: 0.02, shift: 12 });
+
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

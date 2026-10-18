@@ -147,7 +147,7 @@ export function mixAudio({ voices, events, total, outFile, workDir }) {
     f.push(`[${kIn[k]}:a]${fmt},volume=${g}dB,asplit=${evs.length}${evs.map((_, n) => `[${k}${n}]`).join('')}`);
     evs.forEach((e, n) => { f.push(`[${k}${n}]adelay=${Math.round(e.t * 1000)}:all=1[${k}d${n}]`); mixIns.push(`[${k}d${n}]`); });
   }
-  f.push(`${mixIns.join('')}amix=inputs=${mixIns.length}:normalize=0:dropout_transition=0,loudnorm=I=-14:TP=-1.5:LRA=7,alimiter=limit=0.85:level=disabled,aresample=44100,apad=whole_dur=${T},atrim=0:${T}[out]`);
+  f.push(`${mixIns.join('')}amix=inputs=${mixIns.length}:normalize=0:dropout_transition=0,loudnorm=I=-14:TP=-1.5:LRA=7,alimiter=limit=0.79:level=disabled,aresample=44100,apad=whole_dur=${T},atrim=0:${T}[out]`);
   const script = path.join(workDir, 'filter.txt');
   fs.writeFileSync(script, f.join(';\n'));
   const tmp = outFile.replace(/(\.\w+)$/, '.partial$1');

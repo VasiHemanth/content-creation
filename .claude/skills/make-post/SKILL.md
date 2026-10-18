@@ -7,7 +7,7 @@ Argument: a URL (a paper, an article, a tweet) or a topic in words, and optional
 
 Posts are carousels of 4:5 slides (1080 x 1350) made by `paper-reels/post/`. The spec is `paper-reels/post/SPEC.md`. For a reel, use `/make-reel` instead.
 
-1. Read the source yourself first (for a tweet or an article, fetch it; if X blocks the fetch, use a public mirror and say so). Pick a slug (`kebab-case`). Spawn `post-director` with the source, what it said and the slug. It writes `treatment.md` and `research.md`. Read the hook; if it is a topic label rather than a claim, send it back once.
+1. Read the source yourself first (for a tweet or an article, fetch it; if X blocks the fetch, use a public mirror and say so). Pick a slug (`kebab-case`). Spawn `post-director` with the source, what it said and the slug. It writes `treatment.md` and `research.md`. Read the hook against the Hook section of `paper-reels/post/SPEC.md`. If a stranger cannot tell the subject from that line alone, or the line is only a name, send it back once.
 2. Spawn `post-producer` with the slug and the treatment path. Wait for its report.
 3. Spawn `post-validator` for the item id. On FAIL, send the failures to the same `post-producer` (SendMessage) and validate again. Stop after three rounds and report what is still failing.
 4. Show the human the contact sheet, each slide, the caption and the validator's verdict. Publishing needs the human's explicit yes for this post. Never publish on a general instruction given before the slides existed.

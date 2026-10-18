@@ -7,6 +7,9 @@ import fs from 'node:fs';
 import { buildManifest, manifestHash, verifyManifest } from '../lib/manifest.mjs';
 import { fakeJpeg, fakeMp4, renderFake, rm, writePost } from './helpers.mjs';
 
+// tests exercise the gate itself, so they switch it on whatever hf/ste.json says
+import { PROFILE as STE_PROFILE } from '../../hf/bin/ste.mjs';
+STE_PROFILE.enforce = true;
 const sha = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const video = [{ id: 's01', kind: 'image', data: { hook: 'Plain words', label: 'Unofficial guide' } },
   { id: 's02', kind: 'video', source: { item: 'x', from: 0, to: 2 }, data: { title: 'A reel', handle: 'hemanth_with_ai' } }];

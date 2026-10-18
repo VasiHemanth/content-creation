@@ -1,0 +1,147 @@
+<template id="fail-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #fail-shk, #fail-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #fail-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #fail-svg, #fail-svg2 { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #fail-memo { position: absolute; left: 190px; top: 900px; width: 700px; height: 500px; box-sizing: border-box; background: var(--paper); border: 6px solid var(--white); box-shadow: 14px 14px 0 var(--shadow); }
+    .fail-mh { position: absolute; left: 0; top: 0; width: 100%; height: 72px; background: #123a62; color: var(--white); font: 700 36px/72px "Mono", monospace; text-align: center; white-space: nowrap; }
+    #fail-issue { left: 222px; top: 1316px; font-size: 34px; }
+    #fail-key { position: absolute; left: 590px; top: 900px; width: 320px; height: 360px; box-sizing: border-box; background: #eefaf3; border: 6px solid var(--mint); box-shadow: 12px 12px 0 var(--shadow); opacity: 0; }
+    .fail-kh { position: absolute; left: 0; top: 0; width: 100%; height: 66px; background: #1d6b4c; color: var(--white); font: 700 34px/66px "Mono", monospace; text-align: center; white-space: nowrap; }
+    #fail-hole { position: absolute; left: 580px; top: 900px; width: 340px; height: 360px; box-sizing: border-box; border: 6px dashed var(--coral); opacity: 0; }
+    #fail-missing { left: 596px; top: 918px; font-size: 34px; padding: 6px 10px; }
+    #fail-q { left: 690px; top: 1010px; width: 120px; text-align: center; font: 400 210px/1 "Marker", sans-serif; color: var(--coral); text-shadow: 8px 8px 0 var(--shadow); }
+    #fail-num { left: 340px; top: 676px; width: 400px; text-align: center; font: 400 140px/1 "Marker", sans-serif; color: var(--coral); text-shadow: 8px 8px 0 var(--shadow); }
+    #fail-of { left: 640px; top: 744px; font: 700 44px "Mono", monospace; color: var(--white); }
+    #fail-tag { left: 0; top: 0; font-size: 34px; }
+    #fail-env { left: 60px; top: 180px; font-size: 36px; }
+    #fail-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="fail" data-width="1080" data-height="1920">
+    <div id="fail-shk">
+      <div id="fail-cam">
+        <svg id="fail-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="fail-memo"><div id="fail-mh" class="fail-mh" data-bind="l05.memo"></div></div>
+        <div id="fail-key"><div class="fail-kh" data-bind="l06.key"></div></div>
+        <div id="fail-hole"></div>
+        <svg id="fail-svg2" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="fail-issue" class="tag coral" data-bind="l05.issue"></div>
+        <div id="fail-num" class="abs" data-bind="l05.score" data-to=""></div>
+        <div id="fail-of" class="abs">/ <span data-bind="l05.scale"></span></div>
+        <div id="fail-tag" class="tag coral" data-bind="l05.tag"></div>
+        <div id="fail-missing" class="tag coral" data-bind="l06.missing"></div>
+        <div id="fail-q" class="abs">?</div>
+      </div>
+    </div>
+    <div id="fail-hud">
+      <div id="fail-env" class="tag cyan" data-bind="l06.env"></div>
+    </div>
+    <div id="fail-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l05', w, n), b = (w, n) => KIT.cue('l06', w, n), D = KIT.sceneDur('fail');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('fail-svg'), svg2 = document.getElementById('fail-svg2'), E = (t, at, p) => KIT.svgEl(t, at, p || svg);
+      const pulse = (t, o = 0.16) => tl.fromTo('#fail-flash', { opacity: o }, { opacity: 0, duration: 0.45, ease: 'none', immediateRender: false }, t);
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+      const d5 = KIT.data('l05'), V = parseFloat(d5.score) / parseFloat(d5.scale);
+
+      // ---- the score gauge (same geometry as the payoff scene) ----
+      const GX = 540, GY = 660, GR = 270, arcD = `M${GX - GR} ${GY} A ${GR} ${GR} 0 0 1 ${GX + GR} ${GY}`;
+      const gauge = E('g', { id: 'fail-gauge' });
+      const track = E('path', { id: 'fail-track', d: arcD, fill: 'none', stroke: '#123a62', 'stroke-width': 44, 'stroke-linecap': 'butt' }, gauge);
+      const rim = E('path', { id: 'fail-rim', d: `M${GX - GR - 30} ${GY} A ${GR + 30} ${GR + 30} 0 0 1 ${GX + GR + 30} ${GY}`, class: 'ln', 'stroke-width': 5 }, gauge);
+      for (let k = 0; k <= 10; k++) { const th = Math.PI + (Math.PI * k) / 10; E('path', { d: `M${(GX + (GR + 30) * Math.cos(th)).toFixed(1)} ${(GY + (GR + 30) * Math.sin(th)).toFixed(1)} L${(GX + (GR + 52) * Math.cos(th)).toFixed(1)} ${(GY + (GR + 52) * Math.sin(th)).toFixed(1)}`, class: 'ln', 'stroke-width': k % 5 ? 4 : 7 }, gauge); }
+      const fill = E('path', { id: 'fail-fill', d: arcD, fill: 'none', stroke: '#ff6b6b', 'stroke-width': 44, 'stroke-linecap': 'butt' }, gauge);
+      const needle = E('g', { id: 'fail-needle' }, gauge);
+      E('path', { d: `M${GX} ${GY} L${GX - GR + 40} ${GY}`, stroke: '#f2f8ff', 'stroke-width': 12, 'stroke-linecap': 'round' }, needle);
+      E('circle', { cx: GX, cy: GY, r: 24, fill: '#f2f8ff' }, gauge);
+      gsap.set(fill, { drawSVG: '0%' });
+      gsap.set(gauge, { opacity: 0 });
+      gsap.set('#fail-tag', { left: 540, top: 822, xPercent: -50 });
+
+      // ---- the memo: five rows; two values disagree with the files ----
+      const add = (host, css) => { const d = document.createElement('div'); d.style.cssText = `position:absolute;${css}`; document.querySelector(host).appendChild(d); return d; };
+      const rows = [], cells = [];
+      for (let r = 0; r < 5; r++) {
+        rows.push(add('#fail-memo', `left:40px;top:${102 + r * 60}px;width:${[300, 250, 330, 220, 280][r]}px;height:20px;border-radius:10px;background:#8aa4bd`));
+        cells.push(add('#fail-memo', `left:480px;top:${92 + r * 60}px;width:160px;height:40px;border:4px solid #3d78a6;box-sizing:border-box;background:#fbfaf6`));
+      }
+      // pen loops around the two wrong values (memo origin 190, 900)
+      const loops = [1, 3].map((r, k) => E('ellipse', { id: `fail-loop${k}`, cx: 190 + 560, cy: 900 + 112 + r * 60, rx: 112, ry: 40, class: 'ln coral', 'stroke-width': 8 }, svg2));
+      gsap.set(loops, { drawSVG: '0%' });
+
+      // frame 0: the memo close up, rows being written
+      tl.fromTo('#fail-cam', cam(1.1, 540, 1150), { ...cam(1.06, 540, 1140), duration: 1.6, ease: 'sine.out' }, 0);
+      tl.fromTo(rows, { scaleX: 0, transformOrigin: '0 50%' }, { scaleX: 1, duration: 0.2, stagger: 0.18, ease: 'power2.out' }, 0.1);
+      tl.fromTo(cells, { opacity: 0.2 }, { opacity: 1, duration: 0.12, stagger: 0.18 }, 0.25);
+      // "missed mismatched files": two values circled in red
+      loops.forEach((el, k) => tl.to(el, { drawSVG: '100%', duration: 0.3, ease: 'power2.inOut' }, a('missed') + k * 0.2));
+      KIT.shake(tl, '#fail-memo', a('mismatched'), { amp: 8, dur: 0.25 });
+      gsap.set('#fail-issue', { opacity: 0 });
+      KIT.pop(tl, '#fail-issue', a('mismatched') + 0.05, { from: 0.4 });
+      pulse(a('mismatched'), 0.12);
+
+      // "scored forty three": tilt up to the gauge, the needle sweeps to 43
+      const tSc = a('scored');
+      tl.to('#fail-cam', { ...cam(0.92, 540, 900), duration: 0.6, ease: 'power3.inOut' }, tSc - 0.25);
+      tl.fromTo(gauge, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, tSc - 0.1);
+      const tF = a('forty');
+      tl.fromTo(needle, { rotation: 0, svgOrigin: `${GX} ${GY}` }, { rotation: 180 * V, svgOrigin: `${GX} ${GY}`, duration: 0.55, ease: 'back.out(1.4)' }, tF - 0.15);
+      tl.to(fill, { drawSVG: `${(V * 100).toFixed(1)}%`, duration: 0.55, ease: 'power3.out' }, tF - 0.15);
+      gsap.set(['#fail-num', '#fail-of', '#fail-tag'], { opacity: 0 });
+      tl.fromTo('#fail-num', { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'power3.out', immediateRender: false }, tF - 0.1);
+      KIT.count(tl, '#fail-num', tF - 0.1, 0.5);
+      KIT.shake(tl, '#fail-shk', tF + 0.4, { amp: 14, dur: 0.3 });
+      pulse(tF + 0.4, 0.2);
+      KIT.rise(tl, '#fail-of', a('hundred') - 0.1, { x: -20, y: 0, dur: 0.25 });
+      KIT.pop(tl, '#fail-tag', a('hundred') + 0.15, { from: 0.5 });
+
+      // ---- l06: in the real world there is no answer key ----
+      const tR = b('real');
+      KIT.rise(tl, '#fail-env', tR - 0.1, { x: -50, y: 0, dur: 0.3 });
+      tl.to('#fail-cam', { ...cam(0.9, 540, 960, 900), duration: 0.6, ease: 'power2.inOut' }, tR - 0.1);
+      tl.to('#fail-memo', { x: -150, scale: 0.66, transformOrigin: '0% 0%', duration: 0.45, ease: 'power3.inOut' }, tR);
+      tl.to(['#fail-issue', ...loops], { opacity: 0, duration: 0.2 }, tR);
+      tl.to('#fail-mh', { color: 'rgba(242,248,255,0)', duration: 0.2 }, tR);
+      tl.to('#fail-tag', { opacity: 0, duration: 0.2 }, tR);
+      // the answer key appears beside the memo, with ticks down its side
+      tl.fromTo('#fail-key', { opacity: 0, x: 300 }, { opacity: 1, x: 0, duration: 0.35, ease: 'power3.out' }, b('the', 1) - 0.1);
+      const ticks = [0, 1, 2, 3].map((k) => { const g = E('path', { id: `fail-tick${k}`, d: `M${640} ${1010 + k * 60} l18 18 l34 -38`, stroke: '#1d9a68', 'stroke-width': 10, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, svg2); return g; });
+      const kbars = [0, 1, 2, 3].map((k) => E('rect', { x: 710, y: 1012 + k * 60, width: [150, 120, 160, 110][k], height: 18, rx: 9, fill: '#9ccbb6' }, svg2));
+      tl.fromTo([...ticks, ...kbars], { opacity: 0 }, { opacity: 1, duration: 0.1, stagger: 0.05, immediateRender: false }, b('the', 1) + 0.15);
+      gsap.set([...ticks, ...kbars], { opacity: 0 });
+      // "no answer key": struck through, it breaks apart and falls out of the frame
+      const tNo = b('no');
+      const kx = E('path', { id: 'fail-kx', d: 'M600 912 L900 1250 M900 912 L600 1250', class: 'ln coral', 'stroke-width': 16 }, svg2);
+      gsap.set(kx, { drawSVG: '0%' });
+      tl.to(kx, { drawSVG: '100%', duration: 0.2, ease: 'power2.out' }, tNo - 0.05);
+      const tGo = b('answer') + 0.1;
+      tl.to(['#fail-key', kx, ...ticks, ...kbars], { opacity: 0, duration: 0.08 }, tGo);
+      const rr = KIT.rng(17);
+      for (let k = 0; k < 8; k++) {
+        const fx = 600 + (k % 2) * 160, fy = 912 + Math.floor(k / 2) * 86;
+        const sh = E('rect', { x: fx, y: fy, width: 150, height: 80, fill: k < 2 ? '#1d6b4c' : '#eefaf3', stroke: '#7be3b0', 'stroke-width': 3, opacity: 0 }, svg2);
+        tl.fromTo(sh, { opacity: 0 }, { opacity: 1, duration: 0.01, immediateRender: false }, tGo);
+        tl.to(sh, { y: 620 + rr() * 200, x: (rr() - 0.5) * 260, rotation: (rr() - 0.5) * 120, svgOrigin: `${fx + 75} ${fy + 40}`, opacity: 0, duration: 0.7, ease: 'power2.in' }, tGo + 0.01);
+      }
+      KIT.shake(tl, '#fail-shk', tGo, { amp: 10, dur: 0.25 });
+      tl.fromTo('#fail-hole', { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, tGo + 0.1);
+      gsap.set(['#fail-missing', '#fail-q'], { opacity: 0 });
+      KIT.pop(tl, '#fail-missing', b('key') - 0.05, { from: 0.5 });
+      KIT.slam(tl, '#fail-q', b('check') - 0.1, { from: 2.4, amp: 8, shakeTarget: '#fail-shk' });
+      // "check its own output": a lens looks for the key and finds the hole
+      const lens = E('g', { id: 'fail-lens', opacity: 0 }, svg2);
+      E('circle', { cx: 0, cy: 0, r: 70, fill: 'rgba(168,220,242,0.15)', stroke: '#a8dcf2', 'stroke-width': 10 }, lens);
+      E('path', { d: 'M50 50 L110 110', stroke: '#a8dcf2', 'stroke-width': 18, 'stroke-linecap': 'round' }, lens);
+      tl.fromTo(lens, { opacity: 0, x: 300, y: 1080 }, { opacity: 1, x: 330, y: 1060, duration: 0.25, immediateRender: false }, b('check'));
+      tl.to(lens, { x: 750, y: 1120, duration: 0.45, ease: 'power2.inOut' }, b('own') - 0.15);
+      tl.to(lens, { rotation: 18, svgOrigin: '0 0', duration: 0.12, yoyo: true, repeat: 3 }, b('output') + 0.2);
+      tl.to(needle, { rotation: 180 * V - 6, svgOrigin: `${GX} ${GY}`, duration: 0.1, yoyo: true, repeat: 3 }, tNo);
+      window.__timelines["fail"] = tl;
+    })();
+  </script>
+</template>

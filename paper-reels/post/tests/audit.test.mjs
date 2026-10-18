@@ -6,6 +6,9 @@ import assert from 'node:assert/strict';
 import { judgeAudit } from '../lib/audit.mjs';
 import { describeData } from '../lib/data.mjs';
 
+// tests exercise the gate itself, so they switch it on whatever hf/ste.json says
+import { PROFILE as STE_PROFILE } from '../../hf/bin/ste.mjs';
+STE_PROFILE.enforce = true;
 const mkPost = (...datas) => ({ slides: datas.map((data, i) => ({ id: `s0${i + 1}`, kind: 'image', alt: 'x', data })) });
 
 /** A clean measurement of a slide: every printed leaf is bound, visible, 44 px and inside the margin. */

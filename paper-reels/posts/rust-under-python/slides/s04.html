@@ -1,0 +1,36 @@
+<template id="s04-template">
+  <style>
+    .s04-label { flex: 1 1 auto; min-width: 0; }
+  </style>
+  <div id="root" data-composition-id="s04" data-width="1080" data-height="1350">
+    <div class="pk-page">
+      <h2 class="pk-h2" data-bind="s04.title"></h2>
+      <div class="pk-stack is-tight">
+        <div class="pk-body" data-bind="s04.suite"></div>
+        <div class="pk-body is-sub" data-bind="s04.scale"></div>
+      </div>
+      <div class="pk-bars">
+        <div class="pk-bar is-coral" data-var="--n:s04._pandas;--max:s04._max">
+          <div class="pk-bar-head">
+            <span class="pk-bar-label s04-label" data-bind="s04.pandas_label"></span>
+            <span class="pk-bar-val" data-bind="s04.pandas_s"></span>
+          </div>
+          <div class="pk-bar-track"><i class="pk-bar-fill"></i></div>
+        </div>
+        <div class="pk-bar is-mint" data-var="--n:s04._polars;--max:s04._max">
+          <div class="pk-bar-head">
+            <span class="pk-bar-label s04-label" data-bind="s04.polars_label"></span>
+            <span class="pk-bar-val" data-bind="s04.polars_s"></span>
+          </div>
+          <div class="pk-bar-track"><i class="pk-bar-fill"></i></div>
+        </div>
+      </div>
+      <div class="pk-stack is-tight">
+        <div class="pk-body" data-bind="s04.factor"></div>
+        <div class="pk-body" data-bind="s04.machine"></div>
+        <div class="pk-body" data-bind="s04.larger"></div>
+        <div class="pk-body" data-bind="s04.notall"></div>
+      </div>
+    </div>
+  </div>
+</template>

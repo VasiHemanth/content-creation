@@ -1,0 +1,82 @@
+<template id="close-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #close-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 850px; }
+    #close-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 850px; }
+
+    /* Caveat card */
+    #close-caveat { left: 100px; top: 220px; width: 880px; font-size: 32px; white-space: normal; text-align: center; opacity: 0; }
+    #close-takeaway { left: 100px; top: 380px; width: 880px; font-size: 32px; white-space: normal; text-align: center; opacity: 0; }
+
+    /* Desk and robot */
+    #close-desk { position: absolute; left: 160px; top: 880px; width: 760px; height: 260px; }
+    #close-table { position: absolute; left: 0; top: 80px; width: 760px; height: 14px; background: var(--cyan); border-radius: 7px; }
+
+    /* End card */
+    #close-end { position: absolute; left: 140px; top: 620px; width: 800px; height: 420px; background: var(--panel);
+      border: 4px solid var(--white); border-radius: 20px; box-shadow: 16px 16px 0 var(--shadow);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; }
+    #close-handle { font: 700 68px "Mono", monospace; color: var(--amber); margin-bottom: 24px; }
+    #close-credit { font: 600 28px "Mono", monospace; color: var(--dim); text-align: center; max-width: 720px; }
+  </style>
+  <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+    <div id="close-cam">
+      <div id="close-beat">
+        <div id="close-caveat" class="tag coral" data-bind="l16.caveat"></div>
+        <div id="close-takeaway" class="tag mint" data-bind="l16.takeaway"></div>
+
+        <div id="close-desk">
+          <div id="close-table"></div>
+        </div>
+
+        <svg class="ink sketch" id="close-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <g id="close-bot"></g>
+          <!-- Clock icon for compute time -->
+          <circle id="close-clock" cx="540" cy="540" r="44" class="ln coral thick" style="opacity:0" />
+          <path id="close-hands" class="ln coral thick" d="M540 514 L540 540 L560 540" style="opacity:0" />
+        </svg>
+
+        <!-- Final end card -->
+        <div id="close-end">
+          <div id="close-handle" data-bind="l16.handle"></div>
+          <div id="close-credit" data-bind="l16.credit"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'close', a = (w, n) => KIT.cue('l16', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#close-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // Clean robot at desk
+      const bot = KIT.robot('#close-bot', { id: 'c-bot', x: 540, y: 760, s: 1.1 });
+
+      // "One caveat: extra test probes take more computing time"
+      const tCav = a('caveat');
+      KIT.pop(tl, '#close-caveat', tCav - 0.1, { from: 0.4 });
+      tl.set(['#close-clock', '#close-hands'], { opacity: 1 }, tCav);
+      KIT.draw(tl, '#close-clock', tCav, 0.35);
+      KIT.draw(tl, '#close-hands', tCav + 0.15, 0.25);
+
+      // "But resetting after each task keeps the AI from breaking on its next job"
+      const tReset = a('resetting');
+      tl.to(['#close-caveat', '#close-clock', '#close-hands'], { opacity: 0, duration: 0.25 }, tReset - 0.1);
+      KIT.pop(tl, '#close-takeaway', tReset, { from: 0.4 });
+
+      // Final end card rises at end-1.6s
+      const tEnd = KIT.cue('l16', 'end-1.6');
+      tl.to('#close-takeaway', { opacity: 0, duration: 0.2 }, tEnd - 0.1);
+      KIT.rise(tl, '#close-end', tEnd, { y: 160, dur: 0.5 });
+      KIT.pop(tl, '#close-handle', tEnd + 0.15, { from: 0.5 });
+      KIT.fade(tl, '#close-credit', tEnd + 0.3, { dur: 0.3 });
+
+      // Camera motion & beats
+      tl.fromTo('#close-cam', { scale: 1 }, { scale: 1.05, duration: D, ease: 'sine.inOut' }, 0);
+      KIT.beats(tl, '#close-beat', [a('caveat'), a('probes'), a('computing'), a('resetting'), a('task'), a('breaking'), a('job')], { amp: 0.02, shift: 10 });
+
+      window.__timelines["close"] = tl;
+    })();
+  </script>
+</template>

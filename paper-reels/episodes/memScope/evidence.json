@@ -1,0 +1,22 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2610.21170/paper-v1.pdf",
+ "note": "Receipts: real crops of arXiv 2610.21170v1. Every number readable in a crop must be in facts.json (numbers or evidence_incidental); qa checks it. Play with KIT.read, follow: 0, left-aligned highlight start, about 2 s hold.",
+ "items": [
+  {
+   "id": "score",
+   "page": 5,
+   "context": [0, 0],
+   "scale": 7,
+   "circle": ["alone"],
+   "find": ["A score alone cannot"]
+  },
+  {
+   "id": "job",
+   "page": 15,
+   "context": [0, 0],
+   "scale": 7,
+   "circle": ["minimal"],
+   "find": ["make one minimal, evidence-backed patch"]
+  }
+ ]
+}

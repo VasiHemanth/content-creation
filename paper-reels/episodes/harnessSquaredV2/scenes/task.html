@@ -1,0 +1,140 @@
+<template id="task-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #task-shk, #task-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #task-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #task-svg, #task-svg2 { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #task-job { left: 0; top: 176px; width: 1080px; text-align: center; }
+    #task-job span { display: inline-block; padding: 10px 26px; font: 700 40px "Mono", monospace; color: var(--deep); background: var(--amber); box-shadow: 8px 8px 0 var(--shadow); }
+    #task-agent { left: 450px; top: 930px; font-size: 34px; }
+    .task-sheet { position: absolute; width: 310px; height: 330px; box-sizing: border-box; background: var(--paper); border: 6px solid var(--white); box-shadow: 12px 12px 0 var(--shadow); }
+    .task-sh { position: absolute; left: 0; top: 0; width: 100%; height: 64px; background: #123a62; color: var(--white); font: 700 32px/64px "Mono", monospace; text-align: center; white-space: nowrap; }
+    #task-s0 { left: 64px; top: 330px; } #task-s1 { left: 706px; top: 330px; } #task-s2 { left: 385px; top: 1020px; }
+    .task-part { position: absolute; font-size: 32px; padding: 6px 14px; }
+    #task-p0 { left: 136px; top: 760px; } #task-p1 { left: 760px; top: 760px; } #task-p2 { left: 480px; top: 1190px; }
+    #task-stamp { left: 0; top: 0; font-size: 70px; padding: 2px 30px; border-width: 8px; outline-offset: -18px; }
+    #task-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="task" data-width="1080" data-height="1920">
+    <div id="task-shk">
+      <div id="task-cam">
+        <svg id="task-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="task-s0" class="task-sheet"><div class="task-sh" data-bind="l03.files.0"></div></div>
+        <div id="task-s1" class="task-sheet"><div class="task-sh" data-bind="l03.files.1"></div></div>
+        <div id="task-s2" class="task-sheet"><div class="task-sh" data-bind="l03.files.2"></div></div>
+        <svg id="task-svg2" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="task-agent" class="tag cyan" data-bind="l03.agent"></div>
+        <div id="task-p0" class="tag cyan task-part" data-bind="l04.components.0"></div>
+        <div id="task-p1" class="tag cyan task-part" data-bind="l04.components.1"></div>
+        <div id="task-p2" class="tag cyan task-part" data-bind="l04.components.2"></div>
+        <div id="task-stamp" class="stamp mint" data-bind="l04.label"></div>
+      </div>
+    </div>
+    <div id="task-hud">
+      <div id="task-job" class="abs"><span data-bind="l03.job"></span></div>
+    </div>
+    <div id="task-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l03', w, n), b = (w, n) => KIT.cue('l04', w, n), D = KIT.sceneDur('task');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('task-svg'), svg2 = document.getElementById('task-svg2'), E = (t, at, p) => KIT.svgEl(t, at, p || svg);
+      const pulse = (t, o = 0.16) => tl.fromTo('#task-flash', { opacity: o }, { opacity: 0, duration: 0.45, ease: 'none', immediateRender: false }, t);
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+      const sheets = ['#task-s0', '#task-s1', '#task-s2'];
+
+      // sheet contents, drawn as HTML overlays inside each sheet: a calendar grid, a name list, a column of figures
+      const add = (host, css) => { const d = document.createElement('div'); d.style.cssText = `position:absolute;${css}`; document.querySelector(host).appendChild(d); return d; };
+      for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) add('#task-s0', `left:${22 + c * 66}px;top:${86 + r * 56}px;width:56px;height:44px;border:3px solid #3d78a6;box-sizing:border-box;${(r + c) % 3 === 0 ? 'background:#a8dcf2' : ''}`);
+      for (let r = 0; r < 5; r++) { add('#task-s1', `left:24px;top:${88 + r * 46}px;width:30px;height:30px;border-radius:50%;background:#3d78a6`); add('#task-s1', `left:68px;top:${96 + r * 46}px;width:${[170, 130, 190, 150, 120][r]}px;height:14px;border-radius:7px;background:#8aa4bd`); }
+      for (let r = 0; r < 5; r++) add('#task-s2', `left:${120 + [40, 0, 70, 20, 50][r]}px;top:${92 + r * 44}px;width:${[110, 150, 80, 130, 100][r]}px;height:16px;border-radius:8px;background:#8aa4bd`);
+      // the mismatched row in each file (marked when the agent reconciles them)
+      const bad = [add('#task-s0', 'left:154px;top:198px;width:56px;height:44px;border:6px solid #ff6b6b;box-sizing:border-box;opacity:0'),
+                   add('#task-s1', 'left:16px;top:172px;width:266px;height:44px;border:6px solid #ff6b6b;box-sizing:border-box;opacity:0'),
+                   add('#task-s2', 'left:100px;top:172px;width:190px;height:42px;border:6px solid #ff6b6b;box-sizing:border-box;opacity:0')];
+
+      // ---- the agent at the centre, with three empty places waiting for the files ----
+      const slots = [[64, 330], [706, 330], [385, 1020]].map(([x, y], i) => E('rect', { id: `task-slot${i}`, x, y, width: 310, height: 330, rx: 10, fill: 'rgba(168,220,242,0.05)', stroke: '#6aa9d0', 'stroke-width': 5, 'stroke-dasharray': '18 12' }));
+      const R = KIT.robot(svg, { id: 'task-r', x: 540, y: 640, s: 1.0 });
+      // red thread through the three mismatched rows (drawn after "budget")
+      const thread = E('path', { id: 'task-thread', d: 'M250 545 C 420 560, 470 820, 540 760 C 610 700, 640 560, 836 548 M540 760 C 520 900, 470 1000, 560 1212', class: 'ln coral dash', 'stroke-width': 7 }, svg2);
+      // scan beams from the agent to the three files (on "reconciles")
+      const beams = [['M520 700 L360 560'], ['M560 700 L720 560'], ['M540 900 L540 1060']].map(([d], i) => E('path', { id: `task-beam${i}`, d, class: 'ln amber', 'stroke-width': 7 }));
+      gsap.set(beams, { drawSVG: '0%' });
+
+      // ---- l04: the harness parts and the shell ----
+      const shell = E('rect', { id: 'task-shell', x: 392, y: 572, width: 296, height: 360, rx: 60, fill: 'rgba(123,227,176,0.06)', stroke: '#7be3b0', 'stroke-width': 9, 'stroke-dasharray': '22 14', opacity: 0 }, svg2);
+      const scroll = E('g', { id: 'task-scroll', opacity: 0 }, svg2);
+      E('rect', { x: 170, y: 600, width: 170, height: 130, rx: 10, fill: '#f4efe3', stroke: '#f2f8ff', 'stroke-width': 6 }, scroll);
+      E('rect', { x: 156, y: 590, width: 198, height: 26, rx: 13, fill: '#a8dcf2' }, scroll); E('rect', { x: 156, y: 716, width: 198, height: 26, rx: 13, fill: '#a8dcf2' }, scroll);
+      [640, 668, 696].forEach((y, k) => E('path', { d: `M196 ${y} H${[310, 280, 300][k]}`, stroke: '#3d78a6', 'stroke-width': 8, 'stroke-linecap': 'round' }, scroll));
+      const folder = E('g', { id: 'task-folder', opacity: 0 }, svg2);
+      E('path', { d: 'M760 612 H830 L850 632 H930 V732 H760 Z', fill: '#ffb454', stroke: '#f2f8ff', 'stroke-width': 6, 'stroke-linejoin': 'round' }, folder);
+      E('rect', { x: 772, y: 650, width: 146, height: 70, rx: 4, fill: '#ffd08a' }, folder);
+      const wrench = E('g', { id: 'task-wrench', opacity: 0 }, svg2);
+      E('path', { d: 'M470 1110 L600 1050', stroke: '#f2f8ff', 'stroke-width': 26, 'stroke-linecap': 'round' }, wrench);
+      E('circle', { cx: 612, cy: 1044, r: 34, fill: '#f2f8ff' }, wrench); E('rect', { x: 600, y: 1016, width: 40, height: 30, fill: '#0b2a4a', transform: 'rotate(-24 612 1044)' }, wrench);
+      // struts that clip each part to the shell
+      const struts = ['M340 665 L392 690', 'M760 672 L688 690', 'M540 932 L540 1040'].map((d, i) => E('path', { id: `task-strut${i}`, d, stroke: '#7be3b0', 'stroke-width': 8, 'stroke-linecap': 'round' }, svg2));
+      gsap.set(struts, { drawSVG: '0%' });
+
+      // ---- l03: one complex job ----
+      tl.fromTo('#task-cam', cam(1.12, 540, 760), { ...cam(1.0, 540, 790), duration: 1.4, ease: 'power2.out' }, 0);
+      gsap.set('#task-agent', { opacity: 0 });
+      tl.fromTo('#task-job', { y: -50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, 0.05);
+      tl.to('#task-job', { scale: 1.14, transformOrigin: '50% 50%', duration: 0.12, yoyo: true, repeat: 1 }, a('job') - 0.05);
+      KIT.shake(tl, '#task-shk', a('job'), { amp: 8, dur: 0.25 });
+      pulse(a('job'), 0.12);
+      KIT.pop(tl, '#task-agent', a('agent') - 0.1);
+      tl.to(R.eyes, { scaleY: 0.15, svgOrigin: '540 702', duration: 0.08, yoyo: true, repeat: 1 }, a('agent'));
+      // "reconciles": the agent sends three beams to three empty places
+      beams.forEach((el, i) => tl.to(el, { drawSVG: '100%', duration: 0.3, ease: 'power2.out' }, a('reconciles') + i * 0.06));
+      tl.to(R.ant, { attr: { fill: '#ff6b6b' }, duration: 0.1, yoyo: true, repeat: 3 }, a('reconciles'));
+      // the three files fly in on their names
+      const fly = [[-520, -120, -14], [520, -120, 14], [0, 520, 0]];
+      ['schedule', 'roster', 'budget'].forEach((w, i) => {
+        const t = a(w) - 0.18, [x, y, r] = fly[i];
+        tl.fromTo(sheets[i], { x, y, rotation: r, opacity: 0 }, { x: 0, y: 0, rotation: [-3, 3, 0][i], opacity: 1, duration: 0.34, ease: 'power3.out' }, t);
+        KIT.shake(tl, sheets[i], t + 0.34, { amp: 6, dur: 0.18 });
+      });
+      tl.to(beams, { opacity: 0, duration: 0.2 }, a('budget') + 0.2);
+      // the mismatched rows light up and the red thread ties them together
+      const tBad = a('budget') + 0.35;
+      bad.forEach((el, i) => tl.fromTo(el, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.18, ease: 'back.out(3)' }, tBad + i * 0.08));
+      KIT.draw(tl, thread, tBad + 0.1, 0.5);
+      tl.to('#task-cam', { ...cam(0.94, 540, 800, 850), duration: 0.6, ease: 'power2.inOut' }, tBad);
+
+      // ---- l04: the camera dives on the agent; the harness clicks on around it ----
+      const t4 = b('We');
+      tl.to(sheets, { opacity: 0, scale: 0.8, duration: 0.4, ease: 'power2.in' }, t4 - 0.1);
+      tl.to(slots, { opacity: 0, duration: 0.3 }, t4 - 0.1);
+      tl.to([thread, ...bad], { opacity: 0, duration: 0.3 }, t4 - 0.1);
+      tl.to(['#task-job', '#task-agent'], { opacity: 0, duration: 0.25 }, t4);
+      tl.to('#task-cam', { ...cam(1.18, 548, 820, 870), duration: 0.7, ease: 'power3.inOut' }, t4 - 0.05);
+      tl.fromTo(shell, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, b('call'));
+      KIT.draw(tl, shell, b('call'), 0.5);
+      const dock = (el, strut, tag, t, from) => {
+        tl.fromTo(el, { opacity: 0, x: from[0], y: from[1], rotation: from[2] }, { opacity: 1, x: 0, y: 0, rotation: 0, duration: 0.3, ease: 'back.out(1.6)' }, t - 0.15);
+        tl.to(strut, { drawSVG: '100%', duration: 0.15 }, t + 0.15);
+        KIT.pop(tl, tag, t + 0.05, { from: 0.5 });
+        KIT.sparks(tl, '#task-cam', ...from[3], t + 0.15, { n: 6, r: 90, color: '#7be3b0' });
+      };
+      dock(scroll, struts[0], '#task-p0', b('instructions'), [-300, -40, -20, [366, 676]]);
+      dock(folder, struts[1], '#task-p1', b('files'), [300, -40, 20, [722, 682]]);
+      dock(wrench, struts[2], '#task-p2', b('tools'), [0, 300, 40, [540, 990]]);
+      // "around": the shell closes solid; "harness": the name stamps on top of it
+      tl.to(shell, { attr: { 'stroke-dasharray': '0 0' }, fill: 'rgba(123,227,176,0.14)', duration: 0.2 }, b('around'));
+      tl.to('#task-shk', { scale: 1.03, transformOrigin: '540px 800px', duration: 0.12, yoyo: true, repeat: 1 }, b('around'));
+      pulse(b('around'), 0.12);
+      const st = document.getElementById('task-stamp');
+      gsap.set(st, { left: 540, top: 410, xPercent: -50 });
+      tl.fromTo(st, { scale: 2.4, opacity: 0, rotation: -5, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, rotation: -5, duration: 0.2, ease: 'power4.in' }, b('harness') - 0.12);
+      KIT.shake(tl, '#task-shk', b('harness') + 0.1, { amp: 14, dur: 0.3 });
+      tl.to(R.eyes, { attr: { fill: '#7be3b0' }, duration: 0.15 }, b('harness') + 0.1);
+      tl.to('#task-cam', { ...cam(1.12, 548, 820, 870), duration: D - b('harness') - 0.2, ease: 'sine.out' }, b('harness') + 0.2);
+      window.__timelines["task"] = tl;
+    })();
+  </script>
+</template>

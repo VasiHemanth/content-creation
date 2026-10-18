@@ -1,0 +1,48 @@
+{
+ "score": {
+  "img": "evidence/score.png",
+  "w": 2966,
+  "h": 76,
+  "page": 5,
+  "rects": [
+   {
+    "x": 0.7704787938841585,
+    "y": 0.09091377428265907,
+    "w": 0.19672049809312026,
+    "h": 0.6290823828194617
+   }
+  ],
+  "text": "provider code through the read-only tools in Table 1 to identify a repair target. A score alone cannot",
+  "circles": {
+   "alone": {
+    "x": 0.8488331883490223,
+    "y": 0.09091377428265907,
+    "w": 0.04957973753038909,
+    "h": 0.6290823828194617
+   }
+  }
+ },
+ "job": {
+  "img": "evidence/job.png",
+  "w": 2907,
+  "h": 83,
+  "page": 15,
+  "rects": [
+   {
+    "x": 0.18428641608406923,
+    "y": 0.4307080443456263,
+    "w": 0.39178762706072856,
+    "h": 0.47191894644675947
+   }
+  ],
+  "text": "Your job is to make one minimal, evidence-backed patch to the CURRENT provider.",
+  "circles": {
+   "minimal": {
+    "x": 0.27493139574129577,
+    "y": 0.4307080443456263,
+    "w": 0.06877263941455447,
+    "h": 0.3727513842053806
+   }
+  }
+ }
+}

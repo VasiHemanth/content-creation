@@ -1,0 +1,140 @@
+<template id="reset-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #reset-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #reset-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 850px; }
+    #reset-world { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #reset-scrim { position: absolute; left: -1500px; top: -1500px; width: 4000px; height: 5000px; background: #061a30; opacity: 0; }
+    #reset-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #reset-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #reset-hud .receipt-tag { font-size: 26px; padding: 8px 18px; }
+
+    /* l12 Clutter hazard */
+    #reset-hazard { left: 160px; top: 220px; font-size: 34px; opacity: 0; }
+
+    /* l13 tags */
+    #reset-action { left: 140px; top: 320px; font-size: 34px; opacity: 0; }
+    #reset-storage { left: 450px; top: 320px; font-size: 26px; opacity: 0; }
+
+    /* Overhead violet library cabinet */
+    #reset-cabinet { position: absolute; left: 240px; top: 440px; width: 600px; height: 260px; background: var(--panel);
+      border: 4px solid #c3a6ff; border-radius: 12px; box-shadow: 12px 12px 0 var(--shadow); opacity: 0; }
+    .reset-drawer { position: absolute; left: 30px; width: 540px; height: 90px; background: var(--deep); border: 2px solid #c3a6ff; border-radius: 6px; }
+    #reset-d1 { top: 25px; }
+    #reset-d2 { top: 140px; }
+
+    /* Floating lesson card */
+    #reset-lesson { position: absolute; left: 420px; top: 860px; width: 240px; height: 120px; background: var(--white);
+      border: 3px solid var(--mint); border-radius: 8px; box-shadow: 8px 8px 0 var(--shadow); opacity: 0; }
+
+    /* Worker desk at bottom */
+    #reset-desk { position: absolute; left: 160px; top: 1040px; width: 760px; height: 280px; }
+    #reset-table { position: absolute; left: 0; top: 80px; width: 760px; height: 14px; background: var(--cyan); border-radius: 7px; }
+  </style>
+  <div id="root" data-composition-id="reset" data-width="1080" data-height="1920">
+    <div id="reset-cam">
+      <div id="reset-beat">
+        <div id="reset-world">
+          <div id="reset-hazard" class="tag coral" data-bind="l12.hazard"></div>
+          <div id="reset-action" class="tag cyan" data-bind="l13.action" data-layout-allow-overlap></div>
+          <div id="reset-storage" class="tag mint" data-bind="l13.storage" data-layout-allow-overlap></div>
+
+          <!-- Overhead cabinet -->
+          <div id="reset-cabinet">
+            <div id="reset-d1" class="reset-drawer"></div>
+            <div id="reset-d2" class="reset-drawer"></div>
+          </div>
+
+          <!-- Floating lesson card -->
+          <div id="reset-lesson"></div>
+
+          <!-- Worker desk -->
+          <div id="reset-desk">
+            <div id="reset-table"></div>
+          </div>
+
+          <svg class="ink sketch" id="reset-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+            <g id="reset-bot"></g>
+          </svg>
+        </div>
+      </div>
+      <div id="reset-scrim"></div>
+      <div id="reset-stage"></div>
+    </div>
+    <div id="reset-hud"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'reset',
+        a = (w, n) => KIT.cue('l12', w, n),
+        b = (w, n) => KIT.cue('l13', w, n),
+        c = (w, n) => KIT.cue('l14', w, n),
+        D = KIT.sceneDur(S);
+      KIT.bind('#reset-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // Worker robot at desk
+      const bot = KIT.robot('#reset-bot', { id: 'r-bot', x: 540, y: 920, s: 1.0 });
+
+      // l12: "If an agent keeps every past edit, future jobs break"
+      const tHazard = a('keeps');
+      KIT.pop(tl, '#reset-hazard', tHazard, { from: 0.4 });
+      const tBreak = a('break');
+      KIT.glitch(tl, '#reset-hazard', tBreak, { amp: 14, dur: 0.3 });
+      KIT.shake(tl, '#reset-desk', tBreak, { amp: 12, dur: 0.3 });
+
+      // l13: "Instead, Harness2 resets the AI agent to clean files"
+      const tReset = b('resets');
+      tl.to('#reset-hazard', { opacity: 0, duration: 0.2 }, tReset);
+      KIT.pop(tl, '#reset-action', tReset, { from: 0.4 });
+      KIT.shake(tl, '#reset-bot', tReset, { amp: 6, dur: 0.2 });
+
+      // "and saves only the lesson" -> overhead cabinet appears, lesson floats up
+      const tSave = b('saves');
+      KIT.rise(tl, '#reset-cabinet', tSave - 0.2, { y: -60, dur: 0.4 });
+      KIT.pop(tl, '#reset-storage', tSave, { from: 0.4 });
+      KIT.pop(tl, '#reset-lesson', tSave + 0.1, { from: 0.3 });
+      tl.to('#reset-lesson', { y: -340, scale: 0.7, opacity: 0.9, duration: 0.7, ease: 'power2.out' }, tSave + 0.2);
+
+      // l14: "The execution harness is the system being improved, and the improvement harness is the mechanism that improves it."
+      // First half: desk and cabinet active
+      const tExec = c('execution');
+      KIT.shake(tl, '#reset-desk', tExec, { amp: 14, dur: 0.3 });
+      KIT.sparks(tl, '#reset-beat', 540, 1080, tExec, { n: 14, color: '#a8dcf2' });
+
+      const tSys = c('system');
+      tl.to('#reset-cabinet', { scale: 1.08, borderColor: '#ffb454', duration: 0.25, yoyo: true, repeat: 1 }, tSys);
+
+      const tImpr = c('improved');
+      KIT.sparks(tl, '#reset-beat', 540, 560, tImpr, { n: 16, color: '#c3a6ff', r: 240 });
+
+      // Second half: Receipt R2 enters right as "the improvement harness" is spoken
+      const tR = c('improvement') - 0.3;
+      tl.to('#reset-scrim', { opacity: 0.9, duration: 0.25 }, tR);
+      tl.to('#reset-world', { opacity: 0, duration: 0.2 }, tR + 0.15);
+
+      KIT.read(tl, {
+        cam: '#reset-cam', parent: '#reset-stage', hud: '#reset-hud', tagY: 340, id: 'mechanism', t: tR,
+        label: KIT.data('l14').receipt,
+        x: 40, y: 840, width: 1000, zoom: 1.6, fx: 80, fy: 860, follow: 0,
+        marks: [[c('improvement') - 0.05, c('it') + 0.1, [[c('harness', 1), 0.35], [c('mechanism'), 0.65]]]],
+        circles: [{ word: 'improves', t: c('improves') + 0.05 }]
+      });
+
+      // After receipt, restore desk and overhead improver cabinet with sparks
+      const tBack = c('it') + 0.25;
+      tl.set('#reset-cam', { x: 0, y: 0, scale: 1 }, tBack);
+      tl.set('#reset-stage', { opacity: 0 }, tBack);
+      tl.set('#reset-hud', { opacity: 0 }, tBack);
+      tl.set('#reset-scrim', { opacity: 0 }, tBack);
+      tl.set('#reset-world', { opacity: 1 }, tBack);
+      KIT.sparks(tl, '#reset-beat', 540, 800, tBack, { n: 18, color: '#7be3b0', r: 280 });
+
+      // Camera beats
+      tl.fromTo('#reset-beat', { scale: 1 }, { scale: 1.05, duration: D, ease: 'sine.inOut' }, 0);
+      KIT.beats(tl, '#reset-beat', [a('keeps'), a('break'), b('resets'), b('saves'), c('execution'), c('system'), c('improved'), c('improvement')], { amp: 0.02, shift: 12 });
+
+      window.__timelines["reset"] = tl;
+    })();
+  </script>
+</template>

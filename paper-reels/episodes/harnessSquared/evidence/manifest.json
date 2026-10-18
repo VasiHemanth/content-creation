@@ -1,0 +1,48 @@
+{
+ "observation": {
+  "img": "evidence/observation.png",
+  "w": 3492,
+  "h": 94,
+  "page": 5,
+  "rects": [
+   {
+    "x": 0.47794939305902406,
+    "y": 0.11634252945277139,
+    "w": 0.49150052120076376,
+    "h": 0.7673160672877999
+   }
+  ],
+  "text": "the current harness. Each decision is tied to a concrete observation rather than a presumed score",
+  "circles": {
+   "concrete observation": {
+    "x": 0.47794939305902406,
+    "y": 0.11634252945277139,
+    "w": 0.1992889266379563,
+    "h": 0.5990380056467334
+   }
+  }
+ },
+ "mechanism": {
+  "img": "evidence/mechanism.png",
+  "w": 3486,
+  "h": 99,
+  "page": 4,
+  "rects": [
+   {
+    "x": 0.16999024355694278,
+    "y": 0.15951986754966888,
+    "w": 0.5603495495089245,
+    "h": 0.7324933344800895
+   }
+  ],
+  "text": "improved, and the improvement harness is the mechanism that improves it. In Harness2, as shown",
+  "circles": {
+   "improves": {
+    "x": 0.6272448120953426,
+    "y": 0.18104089618990282,
+    "w": 0.08311951544715009,
+    "h": 0.7109723058398555
+   }
+  }
+ }
+}

@@ -1,0 +1,22 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2610.14224/paper-v1.pdf",
+ "note": "Receipts: real crops of arXiv 2610.14224v1. Every number readable in a crop must be in facts.json (numbers or evidence_incidental); qa checks it. Play with KIT.read, follow: 0, left-aligned highlight start, about 2 s hold.",
+ "items": [
+  {
+   "id": "observation",
+   "page": 5,
+   "context": [0, 0],
+   "scale": 7,
+   "circle": ["concrete observation"],
+   "find": ["concrete observation rather than a presumed score"]
+  },
+  {
+   "id": "mechanism",
+   "page": 4,
+   "context": [0, 0],
+   "scale": 7,
+   "circle": ["improves"],
+   "find": ["the improvement harness is the mechanism that improves it"]
+  }
+ ]
+}

@@ -107,6 +107,7 @@ Each scene is an HTML composition. GSAP animates it. HyperFrames (a headless Chr
 | `py/evidence.py` | Finds a passage in the paper PDF. Crops it. Records the highlight boxes. |
 | `py/tts_kokoro.py` | Makes the voice files with Kokoro. |
 | `py/tts_mlx.py` | Makes the voice files with Qwen3-TTS or Chatterbox (Apple MLX). |
+| `py/tts_fish.py` | Makes the voice files with Fish Audio S2-Pro (Apple MLX), cloned from one reference voice per run. |
 | `kit/` | GSAP and its plugins, fonts, the blueprint style sheet and the shared animation helpers (`kit.js`). |
 | `voices.json` | The voice presets. |
 | `README.md` | The guide for authors of scenes. |
@@ -144,10 +145,12 @@ Voice: Kokoro (`kokoro-onnx`) through the `.venv` and `npx hyperframes tts`.
 | `kokoro` | `heart` (default) and 13 more | `.venv`, `py/tts_kokoro.py` | Kokoro 82M (onnx) | Apache 2.0 |
 | `qwen3` | `ryan`, `aiden` | `.venv-qwen`, `py/tts_mlx.py` | Qwen3-TTS 1.7B CustomVoice, bf16 (4.2 GB) | Apache 2.0 |
 | `chatterbox` | `turbo` | `.venv-qwen`, `py/tts_mlx.py` | Chatterbox Turbo, fp16 (2.8 GB), and S3TokenizerV2 (0.5 GB) | MIT |
+| `fish` | `s2pro` | the `fish-tts-demo` environment, `py/tts_fish.py` | Fish Audio S2-Pro, 8-bit (6.3 GB) | Fish Audio Research License (research / non-commercial only) |
 
-- All providers operate on this computer. The `qwen3` and `chatterbox` providers use Apple MLX. They download their model weights one time, into `~/.cache/huggingface/`.
-- The output of an MLX voice model changes at random. Each preset or line has a `seed`. The same text and the same seed give the same voice file.
-- For `qwen3` and `chatterbox`, ffmpeg (`atempo`) applies the `speed` after synthesis. The pitch does not change.
+- All providers operate on this computer. The `qwen3`, `chatterbox` and `fish` providers use Apple MLX. The MLX models download their weights one time: `qwen3` and `chatterbox` into `~/.cache/huggingface/`, S2-Pro into the `fish-tts-demo` folder (`models/fish-audio-s2-pro-8bit`).
+- The output of an MLX voice model changes at random. Each preset or line has a `seed`. The same text and the same seed give the same voice file. S2-Pro is the extreme case: without a reference it casts a new voice on every run, so the `fish` provider requires `ref_audio` and `ref_text` (a clip in `hf/voices/` with its exact transcript) and every line of the run speaks in that one voice.
+- The S2-Pro weights are under the Fish Audio Research License: research / non-commercial only. Do not publish monetized videos with `s2pro`.
+- For `qwen3`, `chatterbox` and `fish`, ffmpeg (`atempo`) applies the `speed` after synthesis. The pitch does not change.
 - `audio/voice.json` keeps a hash of the inputs of each voice file. The `voice` step makes a new file only when the hash changes.
 - `hf.mjs <dir> audition` makes a sample for each preset and a page to compare them.
 - To add a new provider, add a branch in `hf/lib/voice.mjs`. The other steps use only the voice files.
@@ -456,7 +459,7 @@ Failure handling:
 - Canvas styles of one episode share `out/audio.m4a` and `out/filter.txt`. Do not render two styles in parallel.
 - Scenes for a new paper are hand-written. The producer agent writes them. This step is not automatic.
 - The validator cannot read numbers inside a picture. Use text passages for paper crops, not figures.
-- The `qwen3` and `chatterbox` voices operate only on Apple Silicon (MLX).
+- The `qwen3`, `chatterbox` and `fish` voices operate only on Apple Silicon (MLX). `fish` also needs the `fish-tts-demo` environment and a reference clip (`hf/voices/`); its weights are research-only.
 - No gate compares the speech recognition text with the script. A model voice can say a word unclearly.
   Example: Dream-RSI line `l08` with seed 7 sounded like "next stream". Seed 11 gave "next dream".
 - The STE checker does not contain the STE dictionary. It has no part-of-speech tagger. Thus its noun-cluster check is soft, and it can be wrong.

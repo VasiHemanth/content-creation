@@ -11,6 +11,9 @@ import { ffmpeg, mad, probe, sha256File } from '../lib/media.mjs';
 import { renderVideoSlide } from '../lib/video.mjs';
 import { fakePng, rm, tmp } from './helpers.mjs';
 
+// tests exercise the gate itself, so they switch it on whatever hf/ste.json says
+import { PROFILE as STE_PROFILE } from '../../hf/bin/ste.mjs';
+STE_PROFILE.enforce = true;
 const px = (file, x, y) => [...ffmpeg(['-i', file, '-frames:v', '1', '-vf', `format=rgb24,crop=1:1:${x}:${y}`, '-f', 'rawvideo', '-'])];
 
 test('IJG tables: quality 92 scales the standard table by 0.16 and clamps at 1', () => {

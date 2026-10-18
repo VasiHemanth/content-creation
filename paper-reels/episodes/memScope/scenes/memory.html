@@ -1,0 +1,111 @@
+<template id="memory-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #memory-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #memory-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    .cf { position: absolute; background: var(--panel); border: 4px solid var(--cyan); box-shadow: 12px 12px 0 var(--shadow); }
+    .cf .tab { position: absolute; left: -4px; top: -54px; padding: 8px 20px; font: 700 28px "Mono", monospace; color: var(--deep); background: var(--cyan); white-space: nowrap; }
+    .cf .cl { position: absolute; left: 26px; font: 600 30px/1 "Mono", monospace; color: var(--dim); white-space: pre; }
+    .cf .cl.bug { color: #ff8fc4; }
+    .drw { position: absolute; background: var(--deep); border: 5px solid var(--amber); box-shadow: 10px 10px 0 var(--shadow); }
+    .drw .hdl { position: absolute; left: 50%; bottom: 22px; width: 90px; height: 14px; margin-left: -45px; background: var(--amber); }
+    .nc { position: absolute; width: 64px; height: 84px; background: var(--amber); border: 3px solid var(--deep); }
+    .qc { position: absolute; width: 220px; height: 120px; background: var(--deep); border: 4px solid #ff8fc4; box-shadow: 8px 8px 0 var(--shadow);
+      font: 400 36px/120px "Marker", sans-serif; color: #ff8fc4; text-align: center; }
+    #memory-agent { left: 110px; top: 640px; font-size: 34px; color: var(--white); border-color: var(--white); }
+    #memory-q0 { left: 330px; top: 470px; }
+    #memory-q1 { left: 330px; top: 470px; border-color: var(--faint); color: var(--faint); }
+    #memory-q2 { left: 330px; top: 470px; border-color: var(--faint); color: var(--faint); }
+    #memory-drw { left: 650px; top: 430px; width: 290px; height: 160px; }
+    #memory-dlbl { left: 720px; top: 610px; font-size: 32px; }
+    #memory-file { left: 200px; top: 860px; width: 680px; height: 470px; }
+    #memory-save { left: 70px; top: 760px; font-size: 28px; }
+    #memory-find { left: 760px; top: 760px; font-size: 28px; color: var(--cyan); border-color: var(--cyan); }
+    #memory-arch { left: 0; top: 1350px; width: 1080px; text-align: center; }
+    #memory-arch span { display: inline-block; padding: 6px 30px; font: 400 70px/1.1 "Marker", sans-serif; color: var(--white); background: var(--deep); border: 6px solid var(--cyan); box-shadow: 10px 10px 0 var(--shadow); }
+  </style>
+  <div id="root" data-composition-id="memory" data-width="1080" data-height="1920">
+    <div id="memory-cam"><div id="memory-beat">
+      <svg class="ink sketch" id="memory-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <g id="memory-bot"></g>
+        <path id="memory-a1" class="ln amber thick" d="M300 620 C 300 760 380 830 450 860" />
+        <path id="memory-a2" class="ln amber thick" d="M640 860 C 720 800 780 720 795 600" />
+        <path id="memory-a1h" class="ln amber thick" d="M428 838 L452 862 L420 872" />
+        <path id="memory-a2h" class="ln amber thick" d="M772 622 L795 596 L812 628" />
+        <path id="memory-b1" class="ln cyan thick dash" d="M900 600 C 1000 760 960 900 890 960" />
+        <path id="memory-b2" class="ln cyan thick dash" d="M196 1000 C 100 900 110 720 200 600" />
+        <path id="memory-b2h" class="ln cyan thick" d="M178 624 L200 598 L222 626" />
+      </svg>
+      <div id="memory-q2" class="qc"></div>
+      <div id="memory-q1" class="qc"></div>
+      <div id="memory-q0" class="qc" data-bind="l03.q"></div>
+      <div id="memory-agent" class="tag" data-bind="l03.agent"></div>
+      <div id="memory-drw" class="drw"><div class="hdl"></div></div>
+      <div id="memory-cards"></div>
+      <div id="memory-dlbl" class="tag" data-bind="l03.notes"></div>
+      <div id="memory-file" class="cf"><div id="memory-tab" class="tab" data-bind="l01.file"></div></div>
+      <div id="memory-save" class="tag" data-bind="l04.save"></div>
+      <div id="memory-find" class="tag" data-bind="l04.find"></div>
+      <div id="memory-arch" class="abs"><span data-bind="l04.arch"></span></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'memory', a = (w, n) => KIT.cue('l03', w, n), b = (w, n) => KIT.cue('l04', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#memory-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // l03: the agent with a question card in hand
+      KIT.robot('#memory-bot', { id: 'memory-r', x: 230, y: 340, s: 0.9 });
+      tl.fromTo('#memory-bot', { x: -320, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'back.out(1.5)' }, 0.05);
+      tl.fromTo('#memory-q0', { x: -320, opacity: 0, rotation: -8 }, { x: 0, opacity: 1, rotation: -3, duration: 0.45, ease: 'back.out(1.5)' }, 0.12);
+      KIT.pop(tl, '#memory-agent', a('agent') - 0.05);
+      // "research questions": two more cards fan out behind the first
+      tl.fromTo('#memory-q1', { x: 0, y: 0, rotation: -3, opacity: 0 }, { x: 40, y: -50, rotation: 6, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, a('research'));
+      tl.fromTo('#memory-q2', { x: 0, y: 0, rotation: -3, opacity: 0 }, { x: 80, y: -96, rotation: 14, opacity: 1, duration: 0.3, ease: 'back.out(2)' }, a('questions'));
+      // the notes drawer, then notes fly into it on "saves" and "notes"
+      tl.fromTo('#memory-drw', { y: -200, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'back.out(1.6)' }, a('answers'));
+      const host = document.querySelector('#memory-cards'), slots = [[680, 362], [760, 352], [840, 366]];
+      const cardT = [a('saves'), a('notes'), a('notes') + 0.2];
+      slots.forEach(([x, y], k) => {
+        const el = document.createElement('div'); el.className = 'nc'; el.id = `memory-nc${k}`; el.style.left = `${x}px`; el.style.top = `${y}px`; host.appendChild(el);
+        tl.fromTo(el, { x: 400 - x, y: 520 - y, rotation: -30, opacity: 0, scale: 0.6 }, { x: 0, y: 0, rotation: (k - 1) * 6, opacity: 1, scale: 1, duration: 0.42, ease: 'power3.out' }, cardT[k] - 0.1);
+      });
+      KIT.slam(tl, '#memory-dlbl', a('notes'), { shakeTarget: '#memory-beat', amp: 8 });
+
+      // l04: the code between the agent and the drawer
+      const d1 = KIT.data('l01'), file = document.querySelector('#memory-file'), LH = 52, TOP = 34;
+      const lines = d1.code.map((s, k) => {
+        const el = document.createElement('div'); el.className = 'cl'; el.id = `memory-cl${k}`;
+        el.textContent = s; el.style.top = `${TOP + k * LH}px`; file.appendChild(el); return el;
+      });
+      tl.fromTo('#memory-file', { y: 260, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.4)' }, b('code') - 0.2);
+      tl.fromTo(lines, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.2, stagger: 0.04 }, b('code'));
+      // "saves": an arrow from the agent through the file to the drawer
+      KIT.draw(tl, '#memory-a1', b('saves') - 0.1, 0.3, { ease: 'power2.out' });
+      KIT.draw(tl, '#memory-a1h', b('saves') + 0.18, 0.1);
+      KIT.draw(tl, '#memory-a2', b('saves') + 0.15, 0.3, { ease: 'power2.out' });
+      KIT.draw(tl, '#memory-a2h', b('saves') + 0.42, 0.1);
+      KIT.pop(tl, '#memory-save', b('saves'));
+      tl.fromTo(lines.slice(0, 2), { color: '#6aa9d0' }, { color: '#ffb454', duration: 0.2 }, b('saves'));
+      // "finds": a dashed arrow back from the drawer through the file to the agent
+      KIT.draw(tl, '#memory-b1', b('finds') - 0.1, 0.3, { ease: 'power2.out' });
+      KIT.draw(tl, '#memory-b2', b('finds') + 0.15, 0.3, { ease: 'power2.out' });
+      KIT.draw(tl, '#memory-b2h', b('finds') + 0.42, 0.1);
+      KIT.pop(tl, '#memory-find', b('finds'));
+      tl.fromTo(lines.slice(2, 6), { color: '#6aa9d0' }, { color: '#a8dcf2', duration: 0.2 }, b('finds'));
+      // "memory architecture": the name stamps under the file
+      tl.fromTo('#memory-arch', { scale: 2.4, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: -2, duration: 0.2, ease: 'power4.in' }, b('memory') - 0.08);
+      KIT.shake(tl, '#memory-beat', b('memory') + 0.14, { amp: 12, dur: 0.3 });
+      tl.to('#memory-file', { borderColor: '#f2f8ff', duration: 0.2 }, b('architecture'));
+
+      // camera: drift right with the notes, then down to the file, then a punch on the name
+      tl.fromTo('#memory-cam', { scale: 1.12, x: 0, y: 300 }, { scale: 1.08, x: -30, y: 240, duration: b('We'), ease: 'sine.inOut' }, 0);
+      tl.to('#memory-cam', { scale: 1.08, x: 0, y: -150, duration: 0.6, ease: 'power3.inOut' }, b('code') - 0.3);
+      tl.to('#memory-cam', { scale: 1.12, y: -190, duration: 0.3, ease: 'power3.out' }, b('memory'));
+      KIT.beats(tl, '#memory-beat', [a('agent'), a('research'), a('saves'), b('saves'), b('finds')], { amp: 0.025, shift: 16 });
+
+      window.__timelines["memory"] = tl;
+    })();
+  </script>
+</template>

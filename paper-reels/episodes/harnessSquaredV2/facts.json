@@ -1,0 +1,44 @@
+{
+ "note": "Harness^2 (arXiv 2610.14224v1, 2026-10-09, preprint). Headline numbers on screen: 43 and 78 out of 100 (JobBench production case study, task 1 deliverable score, Figure 9, p. 12; base 43.1, composed 77.8, gain +34.7) and 11 points (WorkBuddy-Bench office tasks macro-average score gain for GLM-5 under OpenCode: Base 64.2 -> Harness2 75.7, +11.5 points, Table 1, p. 8; sec 3.2). All results are authors' measured evaluations; no baseline is stated that the paper does not give. Flops/compute caveat noted (Appendix F, p. 29).",
+ "paper": "llm-wiki/raw/assets/2610.14224/paper-v1-text.txt, PDF at llm-wiki/raw/assets/2610.14224/paper-v1.pdf",
+ "numbers": {
+  "43": "JobBench production case study base harness score (Figure 9, p. 12: 43.1 / 100)",
+  "78": "JobBench production case study composed harness score (Figure 9, p. 12: 77.8 / 100)",
+  "100": "Score scale out of 100 on JobBench (Figure 9, p. 12)",
+  "43.1": "Exact base score on JobBench task 1 (Figure 9, p. 12)",
+  "77.8": "Exact composed score on JobBench task 1 (Figure 9, p. 12)",
+  "34.7": "Score gain on JobBench task 1: +34.7 points (Figure 9, p. 12)",
+  "11": "WorkBuddy-Bench average score gain (+11.5 points) for GLM-5 under OpenCode (Table 1, p. 8; sec 3.2)",
+  "11.5": "Exact score gain on WorkBuddy-Bench for GLM-5 (Base 64.2 -> Harness2 75.7, Table 1, p. 8; sec 3.2)",
+  "64.2": "Base average score on WorkBuddy-Bench for GLM-5 under OpenCode (Table 1, p. 8)",
+  "75.7": "Harness2 average score on WorkBuddy-Bench for GLM-5 under OpenCode (Table 1, p. 8)",
+  "72.4": "Base average score on WorkBuddy-Bench for Gemini 3.5 Flash under OpenCode (Table 1, p. 8; sec 3.2)",
+  "8.4": "WorkBuddy-Bench average gain for Gemini 3.5 Flash under OpenCode at k=5 recursion (sec 4, p. 10)",
+  "80.8": "WorkBuddy-Bench score for Gemini 3.5 Flash with Harness2 at k=5 (72.4 + 8.4 = 80.8, sec 4, p. 10)",
+  "2610.14224": "arXiv preprint ID",
+  "2.2": "Compose subsection 2.2.1 (p. 4)",
+  "1": "Table 1 (p. 8) and Subsection 2.2.1 (p. 4)",
+  "2.1": "Definition 1: Recursive Agent Harnessing, Section 2.1 (p. 3)"
+ },
+ "evidence_incidental": {
+  "2": "In mechanism crop: 'Harness2' (p. 4, line 190)"
+ },
+ "claims": {
+  "l01": "Section 1, p. 1-2 & Section 2.1: Open-world agents accumulating uncoordinated changes to instructions and tools suffer from clutter and regressions across diverse subsequent tasks.",
+  "l02": "Section 1 & Section 2.1: Harness2 couples two improvement loops: task-level recursion (contrastive probing on the current task) and harnessing-level recursion (updating the continual improvement harness across tasks).",
+  "l03": "Section 4, p. 11, Figure 9, p. 12 & Appendix E.7, p. 27: JobBench case study: reconciling event schedule, roster, and budget files into interconnected deliverables.",
+  "l04": "Section 2.1, p. 3: Definition of execution harness: the prompts, tools, retrieval configurations, and guardrails surrounding the model (Definition 1, p. 3; Appendix D, p. 21).",
+  "l05": "Section 4, p. 11-12 & Figure 9: Base harness execution on JobBench task 1 missed cross-file discrepancies and scored 43.1 out of 100.",
+  "l06": "Section 1, p. 2 & Section 2.2, p. 4: In open-world deployment, the agent receives no ground-truth task feedback or ground-truth reward to verify task correctness.",
+  "l07": "Section 2.2.1, p. 4 & Appendix D, p. 22: Contrastive proposals generate candidate harnesses with complementary scopes: invariant (INV) for general work habits / guardrails, and domain (DOM) for task-specific rules.",
+  "l08": "Section 2.2.1, p. 5: Probing executes each candidate harness on the same task under matched model and environment configurations.",
+  "l09": "Section 2.2.1, p. 5: Composition examines behavioral contrasts across candidate trajectories, selectively merging supported edits into a successor harness.",
+  "l10": "Section 2.2.1, p. 5: 'Each decision is tied to a concrete observation rather than a presumed score gain.' Receipt 1.",
+  "l11": "Section 4, p. 11-12 & Figure 9: The composed successor harness re-executes, verifies outputs, and raises the score to 77.8 out of 100 (+34.7 gain).",
+  "l12": "Section 1, p. 2 & Section 2.1, p. 4: Continuously mutating active execution files without isolation leads to prompt bloat, tool interference, and failure on future diverse tasks.",
+  "l13": "Section 2.1, p. 4 & Section 2.3, p. 5-6: The execution harness is reset for the next task; the continual improvement harness updates its harness improvement library, retaining adopted harnesses and lessons.",
+  "l14": "Section 2.1, p. 4: 'the execution harness is the system being improved, and the improvement harness is the mechanism that improves it.' Receipt 2.",
+  "l15": "Section 3.2, p. 8 & Table 1: On WorkBuddy-Bench (office workflows across slides, sheets, docs), Harness2 raises GLM-5 macro-average score by 11.5 points (64.2 to 75.7) under OpenCode.",
+  "l16": "Appendix F (Limitations), p. 29: Extra executions and editor sessions for recursive proposals and probing increase inference compute and time. Resetting task-specific execution files preserves adaptability without degradation."
+ }
+}

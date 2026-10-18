@@ -1,0 +1,232 @@
+<template id="reset-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #reset-shk, #reset-rstage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #reset-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #reset-svg, #reset-svg2 { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #reset-hazard { left: 0; top: 0; font-size: 38px; }
+    #reset-tray { left: 0; top: 0; font-size: 34px; }
+    #reset-page { position: absolute; left: 720px; top: 880px; width: 210px; height: 270px; box-sizing: border-box; background: var(--paper); border: 6px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); }
+    #reset-next { position: absolute; left: 14px; top: 16px; font-size: 30px; padding: 4px 10px; }
+    .reset-pl { position: absolute; left: 22px; height: 14px; border-radius: 7px; background: #8aa4bd; }
+    #reset-btn { position: absolute; left: 140px; top: 410px; width: 220px; height: 220px; box-sizing: border-box; border-radius: 50%; background: var(--coral); border: 10px solid var(--white);
+      box-shadow: 0 16px 0 #8f2f2f, 14px 26px 0 var(--shadow); display: flex; align-items: center; justify-content: center; font: 400 54px/1 "Marker", sans-serif; color: var(--deep); opacity: 0; }
+    #reset-cab { position: absolute; left: 600px; top: 330px; width: 320px; height: 290px; box-sizing: border-box; background: #2b2150; border: 7px solid #c3a6ff; border-radius: 12px; box-shadow: 14px 14px 0 var(--shadow); opacity: 0; }
+    .reset-dr { position: absolute; left: 18px; width: 270px; height: 108px; box-sizing: border-box; background: #3b2d6e; border: 5px solid #c3a6ff; border-radius: 8px; }
+    .reset-dr::after { content: ""; position: absolute; left: 105px; top: 42px; width: 50px; height: 14px; border-radius: 7px; background: #c3a6ff; }
+    #reset-storage { left: 0; top: 0; font-size: 34px; color: #c3a6ff; border-color: #c3a6ff; }
+    #reset-lesson { position: absolute; left: 0; top: 0; width: 330px; height: 64px; box-sizing: border-box; background: #ffe2b0; border: 5px solid var(--amber); box-shadow: 0 0 34px rgba(255,180,84,.85);
+      display: flex; align-items: center; justify-content: center; font: 700 34px "Mono", monospace; color: var(--deep); opacity: 0; }
+    .reset-file { position: absolute; top: 1056px; width: 140px; height: 184px; box-sizing: border-box; background: #eefaf3; border: 6px solid var(--mint); box-shadow: 8px 8px 0 var(--shadow); opacity: 0; }
+    .reset-fl { position: absolute; left: 18px; height: 12px; border-radius: 6px; background: #8fc9ae; }
+    #reset-clean { left: 0; top: 0; font-size: 34px; color: var(--mint); border-color: var(--mint); }
+    #reset-inner { left: 140px; top: 1380px; font-size: 36px; } #reset-isub { left: 556px; top: 1380px; font-size: 36px; }
+    #reset-outer { left: 92px; top: 236px; font-size: 36px; color: #c3a6ff; border-color: #c3a6ff; }
+    #reset-osub { left: 0; top: 0; font-size: 38px; color: #c3a6ff; border-color: #c3a6ff; }
+    #reset-dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #061a30; opacity: 0; }
+    #reset-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="reset" data-width="1080" data-height="1920">
+    <div id="reset-shk">
+      <div id="reset-cam">
+        <svg id="reset-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="reset-page"><div id="reset-next" class="tag" data-bind="l12.next"></div></div>
+        <div id="reset-btn" data-bind="l13.button" data-layout-allow-overlap></div>
+        <div id="reset-cab"><div id="reset-d0" class="reset-dr" style="top:24px"></div><div id="reset-d1" class="reset-dr" style="top:150px"></div></div>
+        <div id="reset-f0" class="reset-file" style="left:200px"></div>
+        <div id="reset-f1" class="reset-file" style="left:370px"></div>
+        <div id="reset-f2" class="reset-file" style="left:540px"></div>
+        <svg id="reset-svg2" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="reset-lesson" data-bind="l13.lesson"></div>
+        <div id="reset-tray" class="tag cyan" data-bind="l12.tray"></div>
+        <div id="reset-clean" class="tag" data-bind="l13.clean"></div>
+        <div id="reset-storage" class="tag" data-bind="l13.storage"></div>
+        <div id="reset-inner" class="tag cyan" data-bind="l14.inner"></div>
+        <div id="reset-isub" class="tag cyan" data-bind="l14.innerSub"></div>
+        <div id="reset-outer" class="tag" data-bind="l14.outer"></div>
+        <div id="reset-osub" class="tag" data-bind="l14.outerSub"></div>
+      </div>
+    </div>
+    <div id="reset-hud" class="fill"><div id="reset-hazard" class="tag coral" data-bind="l12.hazard"></div></div>
+    <div id="reset-dim"></div>
+    <div id="reset-rstage"></div>
+    <div id="reset-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l12', w, n), aE = (w, n) => KIT.cueEnd('l12', w, n), b = (w, n) => KIT.cue('l13', w, n), c = (w, n) => KIT.cue('l14', w, n), cE = (w, n) => KIT.cueEnd('l14', w, n), D = KIT.sceneDur('reset');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('reset-svg'), svg2 = document.getElementById('reset-svg2'), E = (t, at, p) => KIT.svgEl(t, at, p || svg);
+      const pulse = (t, o = 0.16) => tl.fromTo('#reset-flash', { opacity: o }, { opacity: 0, duration: 0.45, ease: 'none', immediateRender: false }, t);
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+      const add = (host, css, cls) => { const d = document.createElement('div'); d.style.cssText = `position:absolute;${css}`; if (cls) d.className = cls; document.querySelector(host).appendChild(d); return d; };
+      const center = (sel, x, y) => gsap.set(sel, { left: x, top: y, xPercent: -50 });
+
+      // A receipt cut to the quoted words (same helper as the compose scene).
+      function quote(o) {
+        const ev = KIT.EP.evidence[o.id], host = document.querySelector(o.stage), pad = 0.003, sp = 0.003;
+        const cs = []; ev.rects.forEach((r) => { const cc = r.y + r.h / 2; if (!cs.some((v) => Math.abs(v - cc) < 0.2)) cs.push(cc); });
+        const nL = cs.length, band = (r) => Math.min(nL - 1, Math.floor((r.y + r.h / 2) * nL)) / nL;
+        const rowW = o.rows.map((row) => row.reduce((s, k) => s + ev.rects[k].w + 2 * pad, 0) + sp * (row.length - 1));
+        const Wp = o.w / Math.max(...rowW), Hp = (Wp * ev.h) / ev.w, bh = Hp / nL, gap = o.gap ?? 18;
+        const wrap = document.createElement('div'); wrap.id = `${o.pre}-q`; wrap.style.cssText = 'position:absolute;left:0;top:0;width:1080px;height:1920px'; host.appendChild(wrap);
+        const H = o.rows.length * bh + (o.rows.length - 1) * gap;
+        const bg = document.createElement('div'); bg.id = `${o.pre}-qbg`;
+        bg.style.cssText = `position:absolute;left:${o.x - 40}px;top:${o.y - 34}px;width:${o.w + 80}px;height:${Math.round(H + 68)}px;background:#fbfaf6;border:6px solid #ffb454;box-sizing:border-box;box-shadow:14px 14px 0 rgba(2,12,24,.62)`;
+        wrap.appendChild(bg);
+        const tag = document.createElement('div'); tag.className = 'receipt-tag'; tag.id = `${o.pre}-qtag`; tag.textContent = o.label;
+        tag.style.left = `${o.x - 40}px`; tag.style.top = `${o.y - 34 - 80}px`; wrap.appendChild(tag);
+        const pieces = {};
+        o.rows.forEach((row, ri) => {
+          let cx = o.x; const y = o.y + ri * (bh + gap);
+          row.forEach((k) => {
+            const r = ev.rects[k], w = (r.w + 2 * pad) * Wp, b0 = band(r);
+            const win = document.createElement('div'); win.id = `${o.pre}-qw${k}`; win.setAttribute('data-layout-allow-overflow', '');
+            win.style.cssText = `position:absolute;left:${cx.toFixed(1)}px;top:${y.toFixed(1)}px;width:${w.toFixed(1)}px;height:${bh.toFixed(1)}px;overflow:hidden`;
+            wrap.appendChild(win);
+            const p = KIT.paper(win, o.id, { width: Wp, x: -(r.x - pad) * Wp, y: -b0 * Hp });
+            p.el.style.boxShadow = 'none'; p.el.setAttribute('data-layout-allow-overflow', '');
+            pieces[k] = { p, x: cx, y, x0: r.x - pad, b0, r };
+            cx += w + sp * Wp;
+          });
+        });
+        o.marks.forEach(([k, t0, t1]) => tl.fromTo(pieces[k].p.hls[k], { scaleX: 0 }, { scaleX: 1, duration: Math.max(0.05, t1 - t0), ease: 'none' }, t0));
+        const NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg');
+        sv.setAttribute('class', 'ink'); sv.setAttribute('style', 'left:0;top:0;width:1080px;height:1920px'); sv.setAttribute('viewBox', '0 0 1080 1920'); wrap.appendChild(sv);
+        for (const ci of o.circles || []) {
+          const m = ev.circles[ci.word], pc = Object.values(pieces).find((q) => m.x >= q.r.x - 0.002 && m.x <= q.r.x + q.r.w);
+          const ccx = pc.x + (m.x + m.w / 2 - pc.x0) * Wp, ccy = pc.y + (m.y + m.h / 2 - pc.b0) * Hp, rx = (m.w / 2) * Wp + 22, ry = (m.h / 2) * Hp + 14, pts = [];
+          for (let i = 0; i <= 44; i++) { const an = -2.2 + (i / 40) * Math.PI * 2, f = 1 + 0.05 * Math.sin(i * 1.7); pts.push(`${(ccx + Math.cos(an) * rx * f).toFixed(1)} ${(ccy + Math.sin(an) * ry * f).toFixed(1)}`); }
+          const e = KIT.svgEl('path', { id: `${o.pre}-qc${ci.word.split(' ').join('')}`, d: `M${pts.join(' L')}`, fill: 'none', stroke: '#e8473f', 'stroke-width': 7, 'stroke-linecap': 'round' }, sv);
+          tl.fromTo(e, { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.35, ease: 'power2.inOut' }, ci.t);
+        }
+        tl.fromTo(wrap, { opacity: 0, y: 70, rotation: -2 }, { opacity: 1, y: 0, rotation: -1, duration: 0.28, ease: 'power3.out' }, o.t);
+        tl.to(wrap, { opacity: 0, duration: 0.1 }, o.out);
+        return pieces;
+      }
+
+      // ================= station 1 (l12): every past edit piles up; the pile falls on the next job =================
+      const TX0 = 160, TX1 = 720, TY = 1240, PIV = [TX1, TY];
+      E('rect', { id: 'reset-plate', x: TX0, y: TY, width: TX1 - TX0, height: 30, rx: 8, fill: '#3d78a6', stroke: '#f2f8ff', 'stroke-width': 6 });
+      E('path', { d: `M${TX0 + 40} ${TY + 30} V${TY + 60} M${TX1 - 40} ${TY + 30} V${TY + 60}`, class: 'ln', 'stroke-width': 8 });
+      center('#reset-tray', 440, 1294);
+      center('#reset-hazard', 540, 196);
+      [[0, 150], [40, 120], [80, 160], [120, 100], [160, 140]].forEach(([y, w]) => add('#reset-page', `top:${80 + y}px;width:${w}px`, 'reset-pl'));
+      const tower = E('g', { id: 'reset-tower' }, svg2);
+      const N = 8, LESSON = 4, strip = ['#ff6b6b', '#a8dcf2', '#ffb454', '#7be3b0'];
+      const cardC = (k) => [440 + k * 6, TY - 58 * (k + 1) + 28], cardR = (k) => (k % 2 ? 2 : -2) + k * 0.8;
+      const cards = [];
+      for (let k = 0; k < N; k++) {
+        const [cx, cy] = cardC(k), g = E('g', { id: `reset-c${k}` }, tower);
+        const ig = E('g', { transform: `rotate(${cardR(k)} ${cx} ${cy})` }, g);
+        E('rect', { x: cx - 165, y: cy - 28, width: 330, height: 56, rx: 6, fill: '#f4efe3', stroke: '#f2f8ff', 'stroke-width': 4 }, ig);
+        E('rect', { x: cx - 165, y: cy - 28, width: 26, height: 56, fill: strip[k % 4] }, ig);
+        E('path', { d: `M${cx - 120} ${cy - 6} h${150 + (k * 37) % 80} M${cx - 120} ${cy + 12} h${90 + (k * 53) % 90}`, stroke: '#3d78a6', 'stroke-width': 7, 'stroke-linecap': 'round' }, ig);
+        cards.push(g);
+      }
+      gsap.set(['#reset-hazard', '#reset-page'], { opacity: 0 });
+      // frame 0: the harness tray with its first edit already on it; the camera rises with the pile
+      tl.fromTo('#reset-cam', cam(1.45, 450, 1150), { ...cam(1.04, 470, 970), duration: aE('edit') + 0.2, ease: 'power1.inOut' }, 0);
+      const tK0 = a('keeps') - 0.25, tK1 = aE('edit') + 0.05;
+      cards.forEach((g, k) => {
+        const t = k === 0 ? 0 : tK0 + ((k - 1) * (tK1 - tK0)) / (N - 2);
+        if (k === 0) return;
+        tl.fromTo(g, { y: -700, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2, ease: 'power3.in' }, t);
+        tl.to(tower, { rotation: 1.2 * k, svgOrigin: `${PIV[0]} ${PIV[1]}`, duration: 0.18, ease: 'back.out(3)' }, t + 0.2);
+      });
+      KIT.pop(tl, '#reset-hazard', a('every'), { from: 0.5 });
+      // "future jobs break": the next job slides in; the pile falls on it
+      tl.fromTo('#reset-page', { opacity: 0, x: 400 }, { opacity: 1, x: 0, duration: 0.3, ease: 'power3.out' }, a('future') - 0.1);
+      tl.to('#reset-cam', { ...cam(1.0, 560, 960), duration: 0.5, ease: 'power2.inOut' }, a('future') - 0.1);
+      const tBr = a('break') - 0.25, ROT = 34;
+      tl.to(tower, { rotation: ROT, svgOrigin: `${PIV[0]} ${PIV[1]}`, duration: 0.3, ease: 'power2.in' }, tBr);
+      tl.to('#reset-page', { borderColor: '#ff6b6b', rotation: 10, scaleY: 0.82, y: 30, transformOrigin: '50% 100%', duration: 0.2, ease: 'power3.out' }, tBr + 0.3);
+      tl.to('#reset-next', { color: '#ff6b6b', borderColor: '#ff6b6b', duration: 0.1 }, tBr + 0.3);
+      KIT.shake(tl, '#reset-shk', tBr + 0.3, { amp: 20, dur: 0.4 });
+      KIT.sparks(tl, '#reset-cam', 820, 900, tBr + 0.3, { n: 14, r: 220, color: '#ff6b6b' });
+      KIT.glitch(tl, '#reset-hazard', tBr + 0.3, { amp: 14, dur: 0.35 });
+      pulse(tBr + 0.3, 0.24);
+
+      // ================= station 2 (l13): reset to clean files, keep only the lesson =================
+      tl.to('#reset-cam', { ...cam(0.92, 540, 880), duration: 0.6, ease: 'power3.inOut' }, b('Instead') - 0.1);
+      tl.to('#reset-hazard', { opacity: 0, y: -30, duration: 0.25 }, b('Instead'));
+      tl.to('#reset-tray', { opacity: 0, duration: 0.25 }, b('Instead'));
+      tl.fromTo('#reset-btn', { opacity: 0, y: 160, scale: 0.6 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(2)', immediateRender: false }, b('Instead') + 0.1);
+      const tP = b('resets');
+      tl.to('#reset-btn', { y: 14, scaleY: 0.9, boxShadow: '0 2px 0 #8f2f2f, 6px 10px 0 rgba(2,12,24,.62)', duration: 0.08, yoyo: true, repeat: 1, ease: 'power2.out' }, tP - 0.05);
+      pulse(tP + 0.05, 0.3);
+      KIT.shake(tl, '#reset-shk', tP + 0.05, { amp: 10, dur: 0.25 });
+      // everything on the tray falls away, except one card: the lesson
+      const rr = KIT.rng(23);
+      cards.forEach((g, k) => { if (k !== LESSON) tl.to(g, { y: 900, x: (rr() - 0.5) * 300, opacity: 0, duration: 0.55, ease: 'power2.in' }, tP + 0.08 + k * 0.04); });
+      tl.to('#reset-page', { y: 800, rotation: 40, opacity: 0, duration: 0.55, ease: 'power2.in' }, tP + 0.12);
+      // the lesson card leaves the pile where the fallen pile left it, and floats up
+      const rad = (ROT * Math.PI) / 180, [lx, ly] = cardC(LESSON), dx = lx - PIV[0], dy = ly - PIV[1];
+      const px = PIV[0] + dx * Math.cos(rad) - dy * Math.sin(rad), py = PIV[1] + dx * Math.sin(rad) + dy * Math.cos(rad);
+      const LX = px - 165, LY = py - 32, lesson = document.getElementById('reset-lesson');
+      lesson.style.left = `${LX.toFixed(1)}px`; lesson.style.top = `${LY.toFixed(1)}px`;
+      gsap.set(lesson, { rotation: ROT + cardR(LESSON) });
+      tl.set(cards[LESSON], { opacity: 0 }, tP + 0.1);
+      tl.fromTo('#reset-lesson', { opacity: 0 }, { opacity: 1, duration: 0.05, immediateRender: false }, tP + 0.1);
+      tl.to('#reset-lesson', { x: 440 - 165 - LX, y: 760 - LY, rotation: 0, scale: 1.12, duration: 0.6, ease: 'power3.out' }, tP + 0.2);
+      // "clean files": three clean files stand on the tray
+      ['#reset-f0', '#reset-f1', '#reset-f2'].forEach((s, k) => {
+        [[0, 90], [28, 70], [56, 96], [84, 60]].forEach(([y, w]) => add(s, `top:${28 + y}px;width:${w}px`, 'reset-fl'));
+        tl.fromTo(s, { opacity: 0, x: -500 }, { opacity: 1, x: 0, duration: 0.35, ease: 'back.out(1.4)', immediateRender: false }, b('clean') - 0.3 + k * 0.1);
+      });
+      gsap.set(['#reset-clean', '#reset-storage', '#reset-inner', '#reset-isub', '#reset-outer', '#reset-osub'], { opacity: 0 });
+      center('#reset-clean', 440, 978);
+      KIT.pop(tl, '#reset-clean', b('files') - 0.05, { from: 0.5 });
+      // "saves only the lesson": the cabinet slides in, a drawer opens, the lesson goes in, the drawer shuts
+      tl.fromTo('#reset-cab', { opacity: 0, x: 380 }, { opacity: 1, x: 0, duration: 0.35, ease: 'power3.out', immediateRender: false }, b('saves') - 0.25);
+      center('#reset-storage', 740, 250);
+      KIT.pop(tl, '#reset-storage', b('saves'), { from: 0.5 });
+      tl.to('#reset-cam', { ...cam(0.98, 620, 640), duration: 0.5, ease: 'power2.inOut' }, b('saves') - 0.1);
+      tl.to('#reset-d0', { x: -110, duration: 0.25, ease: 'power2.out' }, b('only'));
+      tl.to('#reset-lesson', { x: 600 + 18 - 110 + 135 - 165 - LX, y: 330 + 24 + 54 - 32 - LY, scale: 0.7, duration: 0.4, ease: 'power3.inOut' }, b('only') + 0.1);
+      tl.to('#reset-lesson', { opacity: 0, duration: 0.12 }, b('lesson') + 0.15);
+      tl.to('#reset-d0', { x: 0, duration: 0.2, ease: 'power3.in' }, b('lesson') + 0.15);
+      tl.to('#reset-cab', { boxShadow: '0 0 50px rgba(195,166,255,.9), 14px 14px 0 rgba(2,12,24,.62)', duration: 0.2, yoyo: true, repeat: 1 }, b('lesson') + 0.35);
+      KIT.sparks(tl, '#reset-cam', 760, 410, b('lesson') + 0.35, { n: 12, r: 200, color: '#c3a6ff' });
+
+      // ================= station 3 (l14): the execution harness inside the improvement harness =================
+      tl.to('#reset-cam', { ...cam(0.86, 540, 830), duration: 0.7, ease: 'power3.inOut' }, c('The') - 0.1);
+      tl.to('#reset-clean', { opacity: 0, duration: 0.25 }, c('execution') - 0.1);
+      const inner = E('rect', { id: 'reset-ibox', x: 130, y: 1010, width: 640, height: 360, rx: 26, fill: 'rgba(168,220,242,0.07)', 'fill-opacity': 0, stroke: '#a8dcf2', 'stroke-width': 9 }, svg);
+      const outer = E('rect', { id: 'reset-obox', x: 70, y: 214, width: 930, height: 1256, rx: 34, fill: 'rgba(195,166,255,0.05)', 'fill-opacity': 0, stroke: '#c3a6ff', 'stroke-width': 9 }, svg);
+      gsap.set([inner, outer], { drawSVG: '0%' });
+      tl.to(inner, { drawSVG: '100%', duration: 0.5, ease: 'power2.inOut' }, c('execution') - 0.05);
+      tl.to(inner, { attr: { 'fill-opacity': 1 }, duration: 0.3 }, c('execution') + 0.3);
+      KIT.rise(tl, '#reset-inner', c('harness') - 0.1, { x: -40, y: 0, dur: 0.3 });
+      KIT.rise(tl, '#reset-isub', c('being') - 0.1, { x: -40, y: 0, dur: 0.3 });
+      // "being improved": one file gets an edit
+      const pen = E('path', { id: 'reset-pen', d: 'M410 1110 h80', stroke: '#1d9a68', 'stroke-width': 12, 'stroke-linecap': 'round' }, svg2);
+      gsap.set(pen, { drawSVG: '0%' });
+      tl.to(pen, { drawSVG: '100%', duration: 0.3 }, c('improved') - 0.1);
+      tl.to('#reset-f1', { y: -24, duration: 0.15, yoyo: true, repeat: 1, ease: 'power2.out' }, c('improved') - 0.1);
+      // "and the improvement harness": the outer box closes around everything, then the paper says it
+      tl.to(['#reset-storage'], { opacity: 0, duration: 0.2 }, c('and'));
+      tl.to(outer, { drawSVG: '100%', duration: 0.45, ease: 'power2.inOut' }, c('and') - 0.1);
+      tl.to(outer, { attr: { 'fill-opacity': 1 }, duration: 0.3 }, c('and') + 0.2);
+      KIT.rise(tl, '#reset-outer', c('and') + 0.1, { x: -40, y: 0, dur: 0.3 });
+      const tIn = c('improvement') - 0.3, tOut = cE('it') + 0.06;
+      tl.fromTo('#reset-dim', { opacity: 0 }, { opacity: 0.72, duration: 0.2 }, tIn - 0.05);
+      quote({ pre: 'reset', stage: '#reset-rstage', id: 'mechanism', rows: [[0], [1]], x: 90, y: 700, w: 900, gap: 24,
+        label: KIT.data('l14').receipt, t: tIn, out: tOut,
+        marks: [[0, c('the', 2), cE('is', 1)], [1, c('the', 3), cE('it')]],
+        circles: [{ word: 'improves', t: c('improves') + 0.05 }] });
+      tl.to('#reset-dim', { opacity: 0, duration: 0.1 }, tOut);
+      // back on the board: the improvement harness feeds its lesson back into the execution harness
+      const loop = E('path', { id: 'reset-loop', d: 'M760 640 C 800 820, 560 860, 470 1000', fill: 'none', stroke: '#c3a6ff', 'stroke-width': 12, 'stroke-linecap': 'round' }, svg2);
+      const head = E('path', { id: 'reset-head', d: 'M440 966 L466 1006 L500 972', fill: 'none', stroke: '#c3a6ff', 'stroke-width': 12, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: 0 }, svg2);
+      gsap.set(loop, { drawSVG: '0%' });
+      tl.to(loop, { drawSVG: '100%', duration: 0.3, ease: 'power2.out' }, tOut + 0.02);
+      tl.fromTo(head, { opacity: 0 }, { opacity: 1, duration: 0.05, immediateRender: false }, tOut + 0.3);
+      center('#reset-osub', 640, 800);
+      KIT.pop(tl, '#reset-osub', tOut + 0.08, { from: 0.5 });
+      tl.to(inner, { attr: { 'stroke-width': 16 }, duration: 0.12, yoyo: true, repeat: 1 }, tOut + 0.32);
+      window.__timelines["reset"] = tl;
+    })();
+  </script>
+</template>

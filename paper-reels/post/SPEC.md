@@ -117,6 +117,20 @@ The profile is a measurable subset. It is not the standard: it fails any sentenc
 - Branding: the only on-screen identity is `hemanth_with_ai` (last slide). An "unofficial guide" label appears.
 - Slide 1 is readable as a grid cover: its key text sits inside the central 3:4 area.
 
+## Hook
+
+Slide 1 is the grid cover. The hook is the line a stranger reads there.
+
+From that line alone, the stranger can say what the post is about, in the subject's own words. The line states the change, the question the carousel answers, or the surprise.
+
+A bare name fails. "Rust" and "Polars" fail. A true line that hides the subject also fails. "The notebook stays Python" does not say the post is about AI infrastructure.
+
+A title that states the change passes. "Why AI infrastructure moves to Rust" is a hook. "Rust vs Python" is not.
+
+At most 12 words. True to the sources. The STE hard rules still apply, so an `-ing` form still fails. The first slide may be a question, and the soft rules do not apply there. Do not keep an `-ing` form by calling the line a title.
+
+The caveat can sit on the subline. It does not replace the subject on the cover.
+
 ## Look
 
 Blueprint, as the reels (`hf/kit/blueprint.css`, fonts, palette). Small text on a phone: body 38 px or more, headings 72 px or more, margin 70 px. Do not copy the layout or the artwork of any third-party image. No animation (static frames), but each slide is still a HyperFrames composition so the same fonts, `check` and snapshots apply.

@@ -1,0 +1,197 @@
+{
+  "item": "rust-under-python",
+  "kind": "post",
+  "name": "Rust under Python",
+  "format": "4x5",
+  "ste": {
+    "names": [
+      "streaming",
+      "tokenizers",
+      "tiktoken",
+      "pydantic-core",
+      "Polars",
+      "pandas",
+      "Ruff",
+      "uv",
+      "Qdrant",
+      "LanceDB",
+      "NumPy",
+      "PyTorch",
+      "CUDA",
+      "PyO3",
+      "GIL",
+      "Candle",
+      "Burn",
+      "PDS-H",
+      "Python",
+      "Rust",
+      "AI",
+      "Hugging Face",
+      "OpenAI",
+      "Red Hat",
+      "hemanth_with_ai",
+      "C++",
+      "CPU-bound",
+      "I/O",
+      "vCPUs"
+    ],
+    "terms": [
+      { "term": "took", "avoid": ["replaced"] },
+      { "term": "garbage collector", "avoid": ["GC"] },
+      { "term": "notebook", "avoid": ["Jupyter"] },
+      { "term": "vCPUs", "avoid": ["cores"] },
+      { "term": "free-threaded", "avoid": ["nogil"] },
+      { "term": "vector database", "avoid": ["vector store"] },
+      { "term": "package manager", "avoid": ["pip"] }
+    ],
+    "allow": [],
+    "examples": [
+      {
+        "slide": "s02",
+        "key": "x_wrong",
+        "why": "Rejected headline. It is the claim this post refuses, and replacing is an -ing form."
+      },
+      {
+        "slide": "s06",
+        "key": "x_wrong",
+        "why": "False claim that the numeric core moved."
+      }
+    ]
+  },
+  "slides": [
+    {
+      "id": "s01",
+      "kind": "image",
+      "alt": "Why AI infrastructure moves to Rust. You still write the model in Python.",
+      "data": {
+        "chip": "Unofficial guide",
+        "hook": "Why AI infrastructure moves to Rust.",
+        "sub": "You still write the model in Python.",
+        "next": "Next"
+      }
+    },
+    {
+      "id": "s02",
+      "kind": "image",
+      "alt": "The model, the notebook, and the script stay Python. A Rust core does the fast work in new tools.",
+      "data": {
+        "title": "Two layers.",
+        "you_label": "You write.",
+        "you": "The model, the notebook, and the script stay Python.",
+        "under_label": "Under the import.",
+        "under": "A Rust core does the fast work in new tools.",
+        "wrong_label": "Wrong claim",
+        "x_wrong": "Rust is replacing Python."
+      }
+    },
+    {
+      "id": "s03",
+      "kind": "image",
+      "alt": "You call each one from Python. Hugging Face tokenizers, tiktoken, pydantic-core, Polars, Ruff, and uv run in Rust.",
+      "data": {
+        "title": "Tools you already call.",
+        "lead": "You call each one from Python.",
+        "n1": "Hugging Face tokenizers",
+        "j1": "run in Rust.",
+        "n2": "tiktoken",
+        "j2": "is the OpenAI tokenizer in Rust.",
+        "n3": "pydantic-core",
+        "j3": "checks data in Rust.",
+        "n4": "Polars",
+        "j4": "runs table queries in Rust.",
+        "n5": "Ruff",
+        "j5": "checks Python code in Rust.",
+        "n6": "uv",
+        "j6": "is the package manager in Rust."
+      }
+    },
+    {
+      "id": "s04",
+      "kind": "image",
+      "alt": "pandas 2.2.3 took 365.71 seconds on PDS-H at scale factor 10. The polars streaming 1.30.0 run took 3.89 seconds. This is not every workload, and pandas took 94.0 times as long.",
+      "data": {
+        "title": "Factor 94.0",
+        "suite": "Seconds on one Polars suite.",
+        "scale": "PDS-H at scale factor 10.",
+        "pandas_label": "pandas 2.2.3",
+        "pandas_s": "365.71",
+        "polars_label": "polars streaming 1.30.0",
+        "polars_s": "3.89",
+        "_pandas": 365.71,
+        "_polars": 3.89,
+        "_max": 365.71,
+        "factor": "Pandas took 94.0 times as long.",
+        "machine": "The machine had 96 vCPUs and 192 GB.",
+        "larger": "Pandas did not run the larger scale.",
+        "notall": "This is not every workload."
+      }
+    },
+    {
+      "id": "s05",
+      "kind": "image",
+      "alt": "Rust has no garbage collector. In the default build, the GIL blocks each CPU-bound thread. Red Hat says a CUDA call releases the GIL.",
+      "data": {
+        "title": "Why the new tools use Rust.",
+        "rust1": "Rust has no garbage collector.",
+        "rust2": "The compiler checks memory safety.",
+        "gil": "In the default build, the GIL blocks each CPU-bound thread.",
+        "cuda": "Red Hat says a CUDA call releases the GIL.",
+        "cpu": "A CPU-bound thread does not run with another.",
+        "io": "One thread overlaps another on an I/O wait."
+      }
+    },
+    {
+      "id": "s06",
+      "kind": "image",
+      "alt": "NumPy array math runs as C code. PyTorch tensor code is C++ and CUDA. Rust took new tools, and it did not take this core.",
+      "data": {
+        "title": "This core did not move.",
+        "numpy": "NumPy array math runs as C code.",
+        "torch": "PyTorch tensor code is C++ and CUDA.",
+        "took": "Rust took new tools.",
+        "notake": "It did not take this core.",
+        "wrong_label": "Wrong claim",
+        "x_wrong": "Rust replaced NumPy and PyTorch."
+      }
+    },
+    {
+      "id": "s07",
+      "kind": "image",
+      "alt": "Qdrant is a vector database in Rust. LanceDB is Rust, with a Python client. Candle and Burn are optional Rust runtimes, and they do not replace PyTorch.",
+      "data": {
+        "title": "Sometimes Rust is the program.",
+        "qdrant": "Qdrant is a vector database in Rust.",
+        "qclient": "A Python client calls that database.",
+        "lance": "LanceDB is Rust, with a Python client.",
+        "candle": "Candle and Burn are optional Rust runtimes.",
+        "notorch": "They do not replace PyTorch."
+      }
+    },
+    {
+      "id": "s08",
+      "kind": "image",
+      "alt": "The default Python build still has the GIL, and free-threaded Python 3.14 is still optional. A vendor benchmark is not your workload. Do not rewrite the model in Rust.",
+      "data": {
+        "title": "Before you rewrite.",
+        "gil": "The default Python build still has the GIL.",
+        "free": "Free-threaded Python 3.14 is still optional.",
+        "vendor": "A vendor benchmark is not your workload.",
+        "norewrite": "Do not rewrite the model in Rust."
+      }
+    },
+    {
+      "id": "s09",
+      "kind": "image",
+      "alt": "Write the model in Python. Profile the slow CPU path, then rewrite that path with PyO3. If you own the tool, Rust can be the program.",
+      "data": {
+        "title": "Keep Python for the model.",
+        "write": "Write the model in Python.",
+        "profile": "Profile the slow CPU path.",
+        "pyo3": "Then rewrite that path with PyO3.",
+        "redhat": "Red Hat describes this path.",
+        "own": "If you own the tool, Rust can be the program.",
+        "handle": "hemanth_with_ai"
+      }
+    }
+  ]
+}

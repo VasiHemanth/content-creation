@@ -58,6 +58,9 @@ export function runQa(DIR) {
   for (const b of BANNED) check(!b.test(all), `storyboard copy has no ${b}`);
   check(sb.lines.every((l) => !/[—–]/.test(l.say + l.text)), 'no em or en dashes in say/text');
   check(sb.lines.every((l) => !/\d/.test(l.say)), 'no digits in say (numbers are spelled out)');
+  // line.tts (fish provider): the same words as say plus [direction] tags; the tags are never spoken
+  const untag = (s) => String(s).replace(/\[[^\]]*\]/g, ' ').replace(/<\|[^|]*\|>/g, ' ').toLowerCase().replace(/[^a-z0-9' ]+/g, ' ').split(/\s+/).filter(Boolean).join(' ');
+  for (const l of sb.lines.filter((x) => x.tts)) check(untag(l.tts) === untag(l.say), `${l.id}: tts without its [tags] says the same words as say`);
   const last = sb.lines.at(-1).data || {};
   const isPaper = /^\d{4}\.\d{4,5}$/.test(sb.item);   // topic items have a slug id and no arXiv credit
   check(last.handle === 'hemanth_with_ai' && (!isPaper || /arXiv \d/.test(last.credit || '')), `last line carries the handle${isPaper ? ' and an arXiv credit' : ''}`);

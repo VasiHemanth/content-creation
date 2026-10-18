@@ -1,0 +1,105 @@
+<template id="probe-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #probe-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 850px; }
+    #probe-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 850px; }
+
+    /* Top stamp / badge */
+    #probe-step { left: 360px; top: 220px; font-size: 72px; padding: 10px 48px; opacity: 0; }
+    #probe-setup { left: 340px; top: 340px; font-size: 32px; opacity: 0; }
+
+    /* Two parallel lanes */
+    .probe-lane { position: absolute; top: 440px; width: 440px; height: 860px; background: var(--panel);
+      border-radius: 16px; box-shadow: 12px 12px 0 var(--shadow); opacity: 0; }
+    #probe-lane-left { left: 80px; border: 4px solid var(--cyan); }
+    #probe-lane-right { left: 560px; border: 4px solid var(--amber); }
+
+    .probe-lane-head { position: absolute; left: 20px; top: 24px; width: 400px; text-align: center; }
+    #probe-v1 { font-size: 26px; }
+    #probe-v2 { font-size: 26px; }
+
+    /* Candidate file cards inside lanes */
+    .probe-file { position: absolute; width: 360px; height: 140px; background: var(--deep); border-radius: 8px; opacity: 0; }
+    #probe-f1 { left: 40px; top: 120px; border: 2px solid var(--cyan); }
+    #probe-f2 { left: 40px; top: 120px; border: 2px solid var(--amber); }
+
+    /* Lane divider */
+    #probe-divider { position: absolute; left: 538px; top: 440px; width: 4px; height: 860px;
+      background: repeating-linear-gradient(0deg, var(--white) 0 16px, transparent 16px 32px); opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="probe" data-width="1080" data-height="1920">
+    <div id="probe-cam">
+      <div id="probe-beat">
+        <!-- Top probe badge -->
+        <div id="probe-step" class="stamp mint" data-bind="l08.step"></div>
+        <div id="probe-setup" class="tag" data-bind="l08.setup"></div>
+
+        <div id="probe-divider"></div>
+
+        <!-- Left lane: work habits (invariant) -->
+        <div id="probe-lane-left" class="probe-lane">
+          <div class="probe-lane-head">
+            <div id="probe-v1" class="tag cyan" data-bind="l07.v1"></div>
+          </div>
+          <div id="probe-f1" class="probe-file"></div>
+        </div>
+
+        <!-- Right lane: job rules (domain) -->
+        <div id="probe-lane-right" class="probe-lane">
+          <div class="probe-lane-head">
+            <div id="probe-v2" class="tag amber" data-bind="l07.v2"></div>
+          </div>
+          <div id="probe-file2" class="probe-file" id="probe-f2"></div>
+        </div>
+
+        <svg class="ink sketch" id="probe-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <g id="probe-bot-l"></g>
+          <g id="probe-bot-r"></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'probe', a = (w, n) => KIT.cue('l07', w, n), b = (w, n) => KIT.cue('l08', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#probe-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // Two mini robots in SVG
+      const botL = KIT.robot('#probe-bot-l', { id: 'p-bot-l', x: 300, y: 860, s: 0.85 });
+      const botR = KIT.robot('#probe-bot-r', { id: 'p-bot-r', x: 780, y: 860, s: 0.85 });
+
+      // l07: "Harness2 creates two test versions"
+      const tTwo = a('two');
+      KIT.rise(tl, '#probe-lane-left', tTwo - 0.1, { x: -60, dur: 0.4 });
+      KIT.rise(tl, '#probe-lane-right', tTwo, { x: 60, dur: 0.4 });
+      tl.fromTo('#probe-divider', { opacity: 0 }, { opacity: 0.6, duration: 0.3 }, tTwo + 0.1);
+
+      // "one fixes work habits"
+      const tHabits = a('habits');
+      KIT.pop(tl, '#probe-v1', tHabits - 0.1, { from: 0.5 });
+      tl.to('#probe-lane-left', { boxShadow: '0 0 30px rgba(168, 220, 242, 0.4)', duration: 0.3 }, tHabits);
+
+      // "and one adds job rules"
+      const tRules = a('rules');
+      KIT.pop(tl, '#probe-v2', tRules - 0.1, { from: 0.5 });
+      tl.to('#probe-lane-right', { boxShadow: '0 0 30px rgba(255, 180, 84, 0.4)', duration: 0.3 }, tRules);
+
+      // l08: "It runs both candidates on the same job"
+      const tRuns = b('runs');
+      KIT.rise(tl, '#probe-f1', tRuns - 0.1, { y: 40 });
+      KIT.rise(tl, '#probe-file2', tRuns, { y: 40 });
+
+      // "we call this step a probe"
+      const tProbe = b('probe');
+      KIT.slam(tl, '#probe-step', tProbe - 0.15, { from: 2.5, amp: 18 });
+      KIT.pop(tl, '#probe-setup', tProbe + 0.15, { from: 0.5 });
+
+      // Camera motion & beats
+      tl.fromTo('#probe-cam', { scale: 1 }, { scale: 1.06, duration: D, ease: 'sine.inOut' }, 0);
+      KIT.beats(tl, '#probe-beat', [a('two'), a('habits'), a('rules'), b('runs'), b('candidates'), b('probe')], { amp: 0.02, shift: 12 });
+
+      window.__timelines["probe"] = tl;
+    })();
+  </script>
+</template>

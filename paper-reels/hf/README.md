@@ -157,14 +157,38 @@ Text in a full-width crop is too small to read on a phone, so receipts are read 
 | `kokoro` | `heart` (default, voice of the posted episodes), `bella`, `michael`, `emma`, ... (14) | `.venv` (`py/tts_kokoro.py`, onnx) | Kokoro 82M | Apache 2.0 |
 | `qwen3` | `ryan`, `aiden` | `.venv-qwen` (`py/tts_mlx.py`, Apple MLX) | `mlx-community/Qwen3-TTS-12Hz-1.7B-CustomVoice-bf16` (4.2 GB) | Apache 2.0 |
 | `chatterbox` | `turbo` | `.venv-qwen` (`py/tts_mlx.py`, Apple MLX) | `mlx-community/chatterbox-turbo-fp16` (2.8 GB) plus `S3TokenizerV2` (0.5 GB) | MIT |
+| `fish` | `s2pro` | `fish-tts-demo` environment (`py/tts_fish.py`, Apple MLX) | `fish-audio-s2-pro-8bit` (6.3 GB), in `fish-tts-demo/models/` | Fish Audio Research License (research / non-commercial) |
 
 - Create `.venv-qwen` with the two commands at the top of `requirements-mlx.txt`. The weights download from Hugging Face on first use, into `~/.cache/huggingface/`; after that, synthesis is offline. MLX runs on Apple Silicon only.
 - `qwen3` presets set a `speaker` and a style `instruct` ("a calm, clear documentary narrator ..."). `chatterbox` can clone a voice from a reference clip of 5 s or more (`ref_audio`); its output carries an inaudible watermark.
+- `fish` is Fish Audio S2-Pro and runs in the verified `fish-tts-demo` environment (`~/Documents/Developer/experiments/fish-tts-demo`): its own `.venv` and `models/fish-audio-s2-pro-8bit` (6.3 GB). `FISH_HOME`, `FISH_PYTHON` and `FISH_MODEL` point somewhere else. `ref_audio` paths are relative to `hf/`.
+- Every S2-Pro run casts a new random voice unless a reference is given, and this pipeline makes one wav per line, so a `fish` preset needs `ref_audio` + `ref_text` (the exact transcript). Clips live in `hf/voices/` (10-30 s, one voice); `s2pro` is cloned from the October 2026 experiment take. Per preset or per line, `tags` adds S2-Pro style cues (`"[warm, thoughtful narrator]"`): directions to the model, never spoken. `tts_fish.py` prefixes one `<|speaker:0|>` tag per paragraph, because the model truncates long tag-free text at about 47.5 s.
+- `fish` loads its 6.3 GB model once per `voice` run (1-2 minutes, peak RAM 14-26 GB). Run one generation at a time.
+- Licence: the S2-Pro weights are under the Fish Audio Research License (research / non-commercial). Do not publish monetized videos with `s2pro`; use another provider or a licensed Fish Audio model for that.
 - MLX sampling is random, so each take is seeded (`seed`, per preset or per line). The same seed and text give the same wav. If whisper mishears a line in `words`, try another seed for that line before you rewrite it (Dream-RSI `l08` read "next stream" with seed 7 and "next dream" with seed 11).
-- `speed` for `qwen3` and `chatterbox` is applied after synthesis with ffmpeg `atempo` (pitch stays). The pace differs a lot between speakers: on the same two audition lines `ryan` took 19.4 s and `aiden` 10.7 s. Dream-RSI uses `aiden` at 1.12, about 3.1 spoken words per second.
+- `speed` for `qwen3`, `chatterbox` and `fish` is applied after synthesis with ffmpeg `atempo` (pitch stays). The pace differs a lot between speakers: on the same two audition lines `ryan` took 19.4 s and `aiden` 10.7 s. Dream-RSI uses `aiden` at 1.12, about 3.1 spoken words per second.
 - `hf.mjs audition [preset ...] [--text="..."] [--speed=1.1]` writes one sample per preset and `out/hf/voices/index.html` to compare them. Listen before you pick: the Kokoro grades in `voices.json` are a guide only.
 
 To add a provider (for example a cloud TTS with an API key), add a branch in `lib/voice.mjs` `synth()` that writes `audio/<id>.wav`, and presets that use it. Everything downstream (word timing, captions, mixing, the validator) reads only the wavs.
+
+### Prompting Fish S2-Pro (`s2pro`)
+
+S2-Pro reads free-form direction tags in square brackets. Tags steer the delivery and are never spoken (checked with whisper: every script word anchors, no tag is heard). Source: the tested guide in `fish-tts-demo/TTS_HANDOFF_PROMPT.md`.
+
+- Put tags in the line's `tts` field, never in `say`: `say` stays tag-free because word timing and captions align against it. QA fails a `tts` whose words differ from `say`. Only the `fish` provider accepts `tts`.
+- **One tone tag at the start of a line**, matched to the beat: `[warm, curious narrator]` for the hook, `[thoughtful]` for the problem, `[confident]` for the idea, `[clear, steady]` for a mechanism step, `[excited]` once for the payoff, `[calm, honest]` for the caveat. Multi-word tags are fine. Do not change the tone on every line: a narrator who swings every 5 s sounds unstable.
+- **`[emphasis]` right before the one word** the line turns on (the number, the new term). At most one per line.
+- **`[short pause]` before a big number or a new term**, and `[pause]` before the payoff. These are the cheapest way to give the viewer a beat to read the screen.
+- No sound tags (`[laugh]`, `[sigh]`) in an explainer. Never an unmatched `[`.
+- Numbers and acronyms are already spelled out in `say`; keep the same words in `tts`.
+- Speed: S2-Pro reads about 2.3 words a second at 1.0. Use `"voice": { "preset": "s2pro", "speed": 1.2 }` (about 2.7 words a second); a line that introduces a term can set 1.1. `speed` runs through ffmpeg `atempo`, so the pitch stays.
+- The voice is locked by `ref_audio` in the preset. A line's own `seed` gives a different take of the same voice if whisper mishears it.
+- One model load per `voice` run (about 30 s), then about 5 s per line on the M5. Run it once for all lines, not line by line.
+
+Example line:
+
+    { "id": "l05", "say": "It keeps twenty five past tries in memory.", "text": "It keeps 25 past tries in memory.",
+      "tts": "[clear, steady] It keeps [emphasis] twenty five past tries [short pause] in memory." }
 
 ## Validation
 
@@ -181,5 +205,6 @@ To add a provider (for example a cloud TTS with an API key), add a branch in `li
     hf/lib/project.mjs   builds the HyperFrames project
     hf/lib/thumb.mjs     thumbnail
     hf/lib/hfcli.mjs     the pinned HyperFrames CLI version (0.8.137)
-    hf/py/               voice synthesis (tts_kokoro.py, tts_mlx.py), pdfium evidence crops
+    hf/py/               voice synthesis (tts_kokoro.py, tts_mlx.py, tts_fish.py), pdfium evidence crops
+    hf/voices/           reference clips that lock a cloned voice (fish provider) + their transcripts
     hf/kit/              GSAP and plugins (vendored, no network at render), fonts, blueprint.css, kit.js

@@ -10,6 +10,9 @@ import { buildManifest, manifestHash } from '../lib/manifest.mjs';
 import { CHECKS } from '../lib/qa.mjs';
 import { fakeJpeg, fakeMp4, fakePng, renderFake, rm, stubs, writePost } from './helpers.mjs';
 
+// tests exercise the gate itself, so they switch it on whatever hf/ste.json says
+import { PROFILE as STE_PROFILE } from '../../hf/bin/ste.mjs';
+STE_PROFILE.enforce = true;
 const status = (r, id) => r.report.checks.find((c) => c.id === id);
 const failed = (r) => r.report.checks.filter((c) => !c.ok).map((c) => c.id);
 const rewriteManifest = (fx) => fs.writeFileSync(fx.F.manifest, `${JSON.stringify(buildManifest(fx.dir), null, 2)}\n`);

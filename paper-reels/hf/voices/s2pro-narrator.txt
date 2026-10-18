@@ -1,0 +1,1 @@
+Soon, millions of agents built by different organizations will interact across digital environments. It's one of the largest funding calls ever aimed at how agents behave together. The focus: building sandboxes to study how millions of interacting agents behave as a group, before they're deployed everywhere.

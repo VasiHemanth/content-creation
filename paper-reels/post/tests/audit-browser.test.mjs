@@ -9,6 +9,9 @@ import { build } from '../lib/build.mjs';
 import { judgeAudit, measureSlides } from '../lib/audit.mjs';
 import { rm, tmp, writePost } from './helpers.mjs';
 
+// tests exercise the gate itself, so they switch it on whatever hf/ste.json says
+import { PROFILE as STE_PROFILE } from '../../hf/bin/ste.mjs';
+STE_PROFILE.enforce = true;
 const tpl = (id, inner, style = '') => `<template id="${id}-template">${style ? `\n  <style>${style}</style>` : ''}
   <div id="root" data-composition-id="${id}" data-width="1080" data-height="1350">
     <div class="pk-page">

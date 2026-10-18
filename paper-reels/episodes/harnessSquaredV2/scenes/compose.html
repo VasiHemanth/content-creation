@@ -1,0 +1,163 @@
+<template id="compose-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #compose-shk, #compose-rstage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #compose-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #compose-svg, #compose-svg2 { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #compose-ra { left: 180px; top: 344px; font-size: 34px; } #compose-rb { left: 180px; top: 554px; font-size: 34px; }
+    .compose-blk { position: absolute; width: 150px; height: 100px; box-sizing: border-box; border: 6px solid var(--white); border-radius: 14px; box-shadow: 8px 8px 0 var(--shadow); }
+    .compose-blk.a { background: #1b4f73; border-color: var(--cyan); } .compose-blk.b { background: #6b4a1e; border-color: var(--amber); }
+    .compose-bl { position: absolute; left: 20px; height: 12px; border-radius: 6px; background: rgba(242,248,255,.7); }
+    #compose-merge { position: absolute; left: 160px; top: 900px; width: 760px; height: 140px; box-sizing: border-box; border: 7px solid var(--mint); border-radius: 18px; background: rgba(123,227,176,.08); opacity: 0; }
+    #compose-filter { left: 0; top: 0; font-size: 34px; color: var(--mint); border-color: var(--mint); }
+    #compose-stamp { left: 0; top: 0; font-size: 104px; }
+    #compose-note { position: absolute; left: 580px; top: 1170px; width: 330px; height: 150px; box-sizing: border-box; background: var(--paper); border: 6px solid var(--mint); box-shadow: 10px 10px 0 var(--shadow); opacity: 0; }
+    #compose-obs { left: 590px; top: 1336px; font-size: 34px; color: var(--mint); border-color: var(--mint); }
+    #compose-dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #061a30; opacity: 0; }
+    #compose-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #d9ffe9; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="compose" data-width="1080" data-height="1920">
+    <div id="compose-shk">
+      <div id="compose-cam">
+        <svg id="compose-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="compose-merge"></div>
+        <div id="compose-a0" class="compose-blk a"></div><div id="compose-a1" class="compose-blk a"></div><div id="compose-a2" class="compose-blk a"></div><div id="compose-a3" class="compose-blk a"></div>
+        <div id="compose-b0" class="compose-blk b"></div><div id="compose-b1" class="compose-blk b"></div><div id="compose-b2" class="compose-blk b"></div><div id="compose-b3" class="compose-blk b"></div>
+        <div id="compose-note"></div>
+        <svg id="compose-svg2" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="compose-ra" class="tag cyan" data-bind="l09.runA"></div>
+        <div id="compose-rb" class="tag" data-bind="l09.runB"></div>
+        <div id="compose-filter" class="tag" data-bind="l09.filter"></div>
+        <div id="compose-obs" class="tag" data-bind="l10.obs"></div>
+        <div id="compose-stamp" class="stamp mint" data-bind="l09.action"></div>
+      </div>
+    </div>
+    <div id="compose-dim"></div>
+    <div id="compose-rstage"></div>
+    <div id="compose-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l09', w, n), b = (w, n) => KIT.cue('l10', w, n), bE = (w, n) => KIT.cueEnd('l10', w, n), D = KIT.sceneDur('compose');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('compose-svg'), svg2 = document.getElementById('compose-svg2'), E = (t, at, p) => KIT.svgEl(t, at, p || svg);
+      const pulse = (t, o = 0.16) => tl.fromTo('#compose-flash', { opacity: o }, { opacity: 0, duration: 0.45, ease: 'none', immediateRender: false }, t);
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+
+      // A receipt cut to the quoted words: each highlighted fragment is a window onto the real PDF crop, laid out as
+      // rows so the sentence reads at phone size. o: { pre, stage, id, rows, x, y, w, gap, label, t, out, marks, circles }
+      function quote(o) {
+        const ev = KIT.EP.evidence[o.id], host = document.querySelector(o.stage), pad = 0.003, sp = 0.003;
+        const cs = []; ev.rects.forEach((r) => { const c = r.y + r.h / 2; if (!cs.some((v) => Math.abs(v - c) < 0.2)) cs.push(c); });
+        const nL = cs.length, band = (r) => Math.min(nL - 1, Math.floor((r.y + r.h / 2) * nL)) / nL;
+        const rowW = o.rows.map((row) => row.reduce((s, k) => s + ev.rects[k].w + 2 * pad, 0) + sp * (row.length - 1));
+        const Wp = o.w / Math.max(...rowW), Hp = (Wp * ev.h) / ev.w, bh = Hp / nL, gap = o.gap ?? 18;
+        const wrap = document.createElement('div'); wrap.id = `${o.pre}-q`; wrap.style.cssText = 'position:absolute;left:0;top:0;width:1080px;height:1920px'; host.appendChild(wrap);
+        const H = o.rows.length * bh + (o.rows.length - 1) * gap;
+        const bg = document.createElement('div'); bg.id = `${o.pre}-qbg`;
+        bg.style.cssText = `position:absolute;left:${o.x - 40}px;top:${o.y - 34}px;width:${o.w + 80}px;height:${Math.round(H + 68)}px;background:#fbfaf6;border:6px solid #ffb454;box-sizing:border-box;box-shadow:14px 14px 0 rgba(2,12,24,.62)`;
+        wrap.appendChild(bg);
+        const tag = document.createElement('div'); tag.className = 'receipt-tag'; tag.id = `${o.pre}-qtag`; tag.textContent = o.label;
+        tag.style.left = `${o.x - 40}px`; tag.style.top = `${o.y - 34 - 80}px`; wrap.appendChild(tag);
+        const pieces = {};
+        o.rows.forEach((row, ri) => {
+          let cx = o.x; const y = o.y + ri * (bh + gap);
+          row.forEach((k) => {
+            const r = ev.rects[k], w = (r.w + 2 * pad) * Wp, b0 = band(r);
+            const win = document.createElement('div'); win.id = `${o.pre}-qw${k}`; win.setAttribute('data-layout-allow-overflow', '');
+            win.style.cssText = `position:absolute;left:${cx.toFixed(1)}px;top:${y.toFixed(1)}px;width:${w.toFixed(1)}px;height:${bh.toFixed(1)}px;overflow:hidden`;
+            wrap.appendChild(win);
+            const p = KIT.paper(win, o.id, { width: Wp, x: -(r.x - pad) * Wp, y: -b0 * Hp });
+            p.el.style.boxShadow = 'none'; p.el.setAttribute('data-layout-allow-overflow', '');
+            pieces[k] = { p, x: cx, y, x0: r.x - pad, b0, r };
+            cx += w + sp * Wp;
+          });
+        });
+        o.marks.forEach(([k, t0, t1]) => tl.fromTo(pieces[k].p.hls[k], { scaleX: 0 }, { scaleX: 1, duration: Math.max(0.05, t1 - t0), ease: 'none' }, t0));
+        const NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg');
+        sv.setAttribute('class', 'ink'); sv.setAttribute('style', 'left:0;top:0;width:1080px;height:1920px'); sv.setAttribute('viewBox', '0 0 1080 1920'); wrap.appendChild(sv);
+        for (const c of o.circles || []) {
+          const m = ev.circles[c.word], pc = Object.values(pieces).find((q) => m.x >= q.r.x - 0.002 && m.x <= q.r.x + q.r.w);
+          const ccx = pc.x + (m.x + m.w / 2 - pc.x0) * Wp, ccy = pc.y + (m.y + m.h / 2 - pc.b0) * Hp, rx = (m.w / 2) * Wp + 22, ry = (m.h / 2) * Hp + 18, pts = [];
+          for (let i = 0; i <= 44; i++) { const an = -2.2 + (i / 40) * Math.PI * 2, f = 1 + 0.05 * Math.sin(i * 1.7); pts.push(`${(ccx + Math.cos(an) * rx * f).toFixed(1)} ${(ccy + Math.sin(an) * ry * f).toFixed(1)}`); }
+          const e = KIT.svgEl('path', { id: `${o.pre}-qc${c.word.split(' ').join('')}`, d: `M${pts.join(' L')}`, fill: 'none', stroke: '#e8473f', 'stroke-width': 7, 'stroke-linecap': 'round' }, sv);
+          tl.fromTo(e, { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.35, ease: 'power2.inOut' }, c.t);
+        }
+        tl.fromTo(wrap, { opacity: 0, y: 70, rotation: -2 }, { opacity: 1, y: 0, rotation: -1, duration: 0.28, ease: 'power3.out' }, o.t);
+        tl.to(wrap, { opacity: 0, duration: 0.1 }, o.out);
+        return pieces;
+      }
+
+      // ---- two runs as ribbons of edit blocks; the merged ribbon below ----
+      const X = [180, 370, 560, 750], YA = 420, YB = 630, YM = 920;
+      const add = (host, css, cls) => { const d = document.createElement('div'); d.style.cssText = `position:absolute;${css}`; if (cls) d.className = cls; document.querySelector(host).appendChild(d); return d; };
+      const A = X.map((x, i) => { const s = `#compose-a${i}`; gsap.set(s, { left: x, top: YA }); [[0, 90], [26, 60], [52, 100]].forEach(([y, w]) => add(s, `top:${20 + y}px;width:${w - (i * 7) % 30}px`, 'compose-bl')); return s; });
+      const B = X.map((x, i) => { const s = `#compose-b${i}`; gsap.set(s, { left: x, top: YB }); [[0, 70], [26, 100], [52, 80]].forEach(([y, w]) => add(s, `top:${20 + y}px;width:${w - (i * 11) % 30}px`, 'compose-bl')); return s; });
+      // verdict per block: true = the run shows a clear change (tick), false = no clear change (dash)
+      const VA = [true, false, true, false], VB = [false, true, false, true];
+      const verdict = (x, y, ok, id) => ok
+        ? E('path', { id, d: `M${x + 112} ${y - 6} l16 16 l30 -36`, fill: 'none', stroke: '#7be3b0', 'stroke-width': 11, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, svg2)
+        : E('path', { id, d: `M${x + 118} ${y - 2} h36`, stroke: '#6aa9d0', 'stroke-width': 11, 'stroke-linecap': 'round' }, svg2);
+      const vA = X.map((x, i) => verdict(x, YA, VA[i], `compose-va${i}`)), vB = X.map((x, i) => verdict(x, YB, VB[i], `compose-vb${i}`));
+      gsap.set([...vA, ...vB], { opacity: 0 });
+      // the lens
+      const lens = E('g', { id: 'compose-lens', opacity: 0 }, svg2);
+      E('circle', { cx: 0, cy: 0, r: 160, fill: 'rgba(195,166,255,0.10)', stroke: '#c3a6ff', 'stroke-width': 12 }, lens);
+      E('path', { d: 'M112 112 L190 190', stroke: '#c3a6ff', 'stroke-width': 26, 'stroke-linecap': 'round' }, lens);
+
+      // frame 0: both runs side by side, close up on the first blocks
+      tl.fromTo('#compose-cam', cam(1.1, 500, 580, 760), { ...cam(1.06, 500, 580, 760), duration: 0.9, ease: 'sine.out' }, 0);
+      tl.fromTo([...A, ...B], { opacity: 0.5, x: -40 }, { opacity: 1, x: 0, duration: 0.25, stagger: 0.03, ease: 'power3.out' }, 0);
+      // "compares both runs": the lens slides along both ribbons; each column gets its verdict as the lens passes
+      const t0 = a('compares') - 0.1, t1 = a('combines') - 0.05;
+      tl.fromTo(lens, { opacity: 0, x: 200, y: 580 }, { opacity: 1, x: 200, y: 580, duration: 0.15, immediateRender: false }, t0);
+      tl.to(lens, { x: 810, duration: t1 - t0, ease: 'none' }, t0);
+      tl.to('#compose-cam', { ...cam(1.06, 580, 580, 760), duration: t1 - t0, ease: 'sine.inOut' }, t0);
+      X.forEach((x, i) => { const tp = t0 + ((x + 75 - 200) / (810 - 200)) * (t1 - t0); [vA[i], vB[i]].forEach((v) => tl.fromTo(v, { opacity: 0, scale: 0.3, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, duration: 0.18, ease: 'back.out(3)', immediateRender: false }, tp)); });
+      // "combines only the edits": blocks with a tick drop into the merged ribbon, the others fall away
+      const tC = a('combines');
+      tl.to(lens, { opacity: 0, duration: 0.2 }, tC);
+      tl.to('#compose-cam', { ...cam(0.95, 540, 760), duration: 0.55, ease: 'power3.inOut' }, tC - 0.05);
+      tl.fromTo('#compose-merge', { opacity: 0, scaleX: 0.6 }, { opacity: 1, scaleX: 1, duration: 0.3, ease: 'back.out(2)', immediateRender: false }, tC);
+      const keep = [[A[0], X[0], YA, vA[0]], [B[1], X[1], YB, vB[1]], [A[2], X[2], YA, vA[2]], [B[3], X[3], YB, vB[3]]];
+      keep.forEach(([s, x, y, v], k) => { tl.to(s, { y: YM - y, duration: 0.42, ease: 'back.out(1.3)' }, tC + 0.12 + k * 0.1); tl.to(v, { y: YM - y, duration: 0.42, ease: 'back.out(1.3)' }, tC + 0.12 + k * 0.1); });
+      const drop = [[A[1], vA[1]], [A[3], vA[3]], [B[0], vB[0]], [B[2], vB[2]]], rr = KIT.rng(5);
+      drop.forEach(([s, v], k) => { const t = a('only') + k * 0.07, rot = (rr() - 0.5) * 70; tl.to([s, v], { y: 1100, rotation: rot, opacity: 0, duration: 0.6, ease: 'power2.in' }, t); });
+      tl.to(['#compose-ra', '#compose-rb'], { opacity: 0, duration: 0.3 }, a('edits'));
+      gsap.set(['#compose-filter', '#compose-stamp', '#compose-obs'], { opacity: 0 });
+      gsap.set('#compose-filter', { left: 540, top: 1066, xPercent: -50 });
+      KIT.pop(tl, '#compose-filter', a('clearly') - 0.1, { from: 0.5 });
+      gsap.set('#compose-stamp', { left: 540, top: 200, xPercent: -50 });
+      tl.fromTo('#compose-stamp', { scale: 2.5, opacity: 0, rotation: -5, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, rotation: -5, duration: 0.2, ease: 'power4.in', immediateRender: false }, a('helped') - 0.1);
+      KIT.shake(tl, '#compose-shk', a('helped') + 0.1, { amp: 14, dur: 0.3 });
+      pulse(a('helped') + 0.1, 0.18);
+
+      // ---- l10: each kept edit is tied to what was seen in the runs ----
+      const tD = b('decision');
+      tl.to('#compose-cam', { ...cam(1.0, 540, 900), duration: 0.5, ease: 'power2.inOut' }, b('Each'));
+      tl.to('#compose-stamp', { opacity: 0, y: -40, duration: 0.3 }, b('Each'));
+      const thread = E('path', { id: 'compose-thread', d: 'M445 1030 C 450 1120, 560 1120, 600 1200', stroke: '#7be3b0', 'stroke-width': 7, 'stroke-dasharray': '12 10', fill: 'none' }, svg2);
+      KIT.draw(tl, thread, tD - 0.1, 0.3);
+      tl.fromTo('#compose-note', { opacity: 0, scale: 0.4, transformOrigin: '0% 0%' }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)', immediateRender: false }, tD + 0.1);
+      const eye = E('g', { id: 'compose-eye', opacity: 0 }, svg2);
+      E('path', { d: 'M610 1245 Q 660 1200 710 1245 Q 660 1290 610 1245 Z', fill: '#fbfaf6', stroke: '#123a62', 'stroke-width': 6 }, eye);
+      E('circle', { cx: 660, cy: 1245, r: 14, fill: '#123a62' }, eye);
+      [0, 1].forEach((k) => E('rect', { x: 740, y: 1220 + k * 34, width: [140, 100][k], height: 16, rx: 8, fill: '#8aa4bd' }, eye));
+      tl.fromTo(eye, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, tD + 0.3);
+      KIT.pop(tl, '#compose-obs', tD + 0.25, { from: 0.5 });
+      // the paper, cut to this sentence, over the dimmed scene; then back to the merged ribbon
+      const tIn = b('concrete') - 0.4, tOut = bE('gain') + 0.06;
+      tl.fromTo('#compose-dim', { opacity: 0 }, { opacity: 0.72, duration: 0.2 }, tIn - 0.05);
+      quote({ pre: 'compose', stage: '#compose-rstage', id: 'observation', rows: [[0], [1], [2, 3]], x: 90, y: 690, w: 900, gap: 22,
+        label: KIT.data('l10').receipt, t: tIn, out: tOut,
+        marks: [[0, tIn + 0.1, tIn + 0.4], [1, b('concrete'), bE('observation')], [2, b('rather'), bE('score')], [3, b('gain'), bE('gain')]],
+        circles: [{ word: 'concrete observation', t: bE('observation') - 0.1 }] });
+      tl.to('#compose-dim', { opacity: 0, duration: 0.1 }, tOut);
+      tl.to('#compose-merge', { borderColor: '#f2f8ff', duration: 0.1, yoyo: true, repeat: 1 }, tOut + 0.02);
+      KIT.sparks(tl, '#compose-cam', 660, 1245, tOut + 0.02, { n: 12, r: 200, color: '#7be3b0' });
+      tl.to('#compose-cam', { ...cam(1.06, 560, 1000), duration: D - tOut, ease: 'power2.out' }, tOut);
+      window.__timelines["compose"] = tl;
+    })();
+  </script>
+</template>

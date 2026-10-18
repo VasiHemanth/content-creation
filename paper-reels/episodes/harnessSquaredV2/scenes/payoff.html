@@ -1,0 +1,105 @@
+<template id="payoff-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #payoff-shk { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #payoff-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #payoff-svg, #payoff-svg2 { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #payoff-num { left: 340px; top: 676px; width: 400px; text-align: center; font: 400 140px/1 "Marker", sans-serif; color: var(--coral); text-shadow: 8px 8px 0 var(--shadow); }
+    #payoff-of { left: 640px; top: 744px; font: 700 44px "Mono", monospace; color: var(--white); }
+    #payoff-ghost { left: 0; top: 0; font: 700 34px "Mono", monospace; color: var(--coral); }
+    #payoff-tag { left: 0; top: 0; font-size: 34px; color: var(--mint); border-color: var(--mint); }
+    #payoff-gain { left: 0; top: 0; font: 400 76px/1 "Marker", sans-serif; color: var(--deep); background: var(--mint); padding: 6px 22px; box-shadow: 8px 8px 0 var(--shadow); }
+    .payoff-row { position: absolute; left: 190px; width: 700px; height: 92px; box-sizing: border-box; background: var(--paper); border: 5px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); }
+    #payoff-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #d9ffe9; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="payoff" data-width="1080" data-height="1920">
+    <div id="payoff-shk">
+      <div id="payoff-cam">
+        <svg id="payoff-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="payoff-r0" class="payoff-row" style="top:930px"></div>
+        <div id="payoff-r1" class="payoff-row" style="top:1040px"></div>
+        <div id="payoff-r2" class="payoff-row" style="top:1150px"></div>
+        <div id="payoff-r3" class="payoff-row" style="top:1260px"></div>
+        <svg id="payoff-svg2" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="payoff-num" class="abs" data-bind="l11.oldScore"></div>
+        <div id="payoff-of" class="abs">/ <span data-bind="l11.scale"></span></div>
+        <div id="payoff-ghost" class="abs" data-bind="l11.oldScore"></div>
+        <div id="payoff-tag" class="tag" data-bind="l11.tag"></div>
+        <div id="payoff-gain" class="abs" data-bind="l11.gain"></div>
+      </div>
+    </div>
+    <div id="payoff-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l11', w, n), D = KIT.sceneDur('payoff');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('payoff-svg'), svg2 = document.getElementById('payoff-svg2'), E = (t, at, p) => KIT.svgEl(t, at, p || svg);
+      const pulse = (t, o = 0.16) => tl.fromTo('#payoff-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+      const d = KIT.data('l11'), V0 = parseFloat(d.oldScore) / parseFloat(d.scale), V1 = parseFloat(d.score) / parseFloat(d.scale);
+
+      // ---- the same gauge as in the fail scene, now the main picture ----
+      const GX = 540, GY = 660, GR = 270, arcD = `M${GX - GR} ${GY} A ${GR} ${GR} 0 0 1 ${GX + GR} ${GY}`;
+      E('path', { d: arcD, fill: 'none', stroke: '#123a62', 'stroke-width': 44 });
+      E('path', { d: `M${GX - GR - 30} ${GY} A ${GR + 30} ${GR + 30} 0 0 1 ${GX + GR + 30} ${GY}`, class: 'ln', 'stroke-width': 5 });
+      for (let k = 0; k <= 10; k++) { const th = Math.PI + (Math.PI * k) / 10; E('path', { d: `M${(GX + (GR + 30) * Math.cos(th)).toFixed(1)} ${(GY + (GR + 30) * Math.sin(th)).toFixed(1)} L${(GX + (GR + 52) * Math.cos(th)).toFixed(1)} ${(GY + (GR + 52) * Math.sin(th)).toFixed(1)}`, class: 'ln', 'stroke-width': k % 5 ? 4 : 7 }); }
+      const fill = E('path', { id: 'payoff-fill', d: arcD, fill: 'none', stroke: '#ff6b6b', 'stroke-width': 44, 'stroke-linecap': 'butt' });
+      // the ghost of the old score: a coral marker that stays at 43 after the needle leaves
+      const th0 = Math.PI + Math.PI * V0;
+      const gx = GX + (GR + 64) * Math.cos(th0), gy = GY + (GR + 64) * Math.sin(th0);
+      E('path', { id: 'payoff-gtick', d: `M${(GX + (GR - 26) * Math.cos(th0)).toFixed(1)} ${(GY + (GR - 26) * Math.sin(th0)).toFixed(1)} L${(GX + (GR + 52) * Math.cos(th0)).toFixed(1)} ${(GY + (GR + 52) * Math.sin(th0)).toFixed(1)}`, stroke: '#ff6b6b', 'stroke-width': 9, 'stroke-linecap': 'round' });
+      gsap.set('#payoff-ghost', { left: gx - 60, top: gy - 50 });
+      const needle = E('g', { id: 'payoff-needle' });
+      E('path', { d: `M${GX} ${GY} L${GX - GR + 40} ${GY}`, stroke: '#f2f8ff', 'stroke-width': 12, 'stroke-linecap': 'round' }, needle);
+      E('circle', { cx: GX, cy: GY, r: 24, fill: '#f2f8ff' });
+      gsap.set(needle, { rotation: 180 * V0, svgOrigin: `${GX} ${GY}` });
+      gsap.set(fill, { drawSVG: `${(V0 * 100).toFixed(1)}%` });
+      gsap.set('#payoff-tag', { left: 540, top: 834, xPercent: -50, opacity: 0 });
+      gsap.set('#payoff-gain', { left: 236, top: 696, xPercent: -50, opacity: 0 });
+
+      // ---- the re-run: four outputs, each reopened and checked ----
+      const rowsSel = ['#payoff-r0', '#payoff-r1', '#payoff-r2', '#payoff-r3'];
+      const marks = rowsSel.map((s, k) => {
+        const y = 930 + k * 110;
+        E('path', { d: `M226 ${y + 22} h44 l14 14 v34 h-58 Z`, fill: '#a8dcf2', stroke: '#123a62', 'stroke-width': 4 }, svg2);
+        E('rect', { x: 310, y: y + 34, width: [300, 250, 340, 210][k], height: 20, rx: 10, fill: '#8aa4bd' }, svg2);
+        E('rect', { x: 776, y: y + 16, width: 60, height: 60, rx: 8, fill: '#fbfaf6', stroke: '#3d78a6', 'stroke-width': 5 }, svg2);
+        const m = E('path', { id: `payoff-ok${k}`, d: `M786 ${y + 46} l16 16 l34 -40`, fill: 'none', stroke: '#1d9a68', 'stroke-width': 11, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, svg2);
+        return m;
+      });
+      gsap.set(marks, { drawSVG: '0%' });
+
+      // frame 0: the gauge sits where the fail scene left it, at 43
+      tl.fromTo('#payoff-cam', cam(0.92, 540, 900), { ...cam(0.95, 540, 905), duration: 1.6, ease: 'sine.inOut' }, 0);
+      tl.fromTo(rowsSel, { x: -40, opacity: 0.4 }, { x: 0, opacity: 1, duration: 0.3, stagger: 0.07, ease: 'power2.out' }, 0.05);
+      // "checked every output": a tick lands on each output in turn
+      const tC = a('checked'), tO = a('output');
+      marks.forEach((m, k) => {
+        const t = tC + k * ((tO + 0.25 - tC) / 3);
+        tl.to(m, { drawSVG: '100%', duration: 0.16, ease: 'power2.out' }, t);
+        tl.to(rowsSel[k], { borderColor: '#7be3b0', duration: 0.1 }, t);
+        KIT.sparks(tl, '#payoff-cam', 806, 976 + k * 110, t + 0.1, { n: 6, r: 80, color: '#7be3b0' });
+      });
+      // "score jumped to seventy eight": dive to the gauge, one sweep from 43 to 78
+      tl.to('#payoff-cam', { ...cam(1.12, 540, 640), duration: 0.45, ease: 'power3.inOut' }, a('score') - 0.2);
+      tl.to([...rowsSel, svg2], { opacity: 0, y: 80, duration: 0.35, ease: 'power2.in' }, a('score') - 0.2);
+      const tJ = a('jumped') - 0.05, dur = Math.max(0.35, a('seventy') + 0.1 - tJ);
+      tl.to(needle, { rotation: 180 * V1, svgOrigin: `${GX} ${GY}`, duration: dur, ease: 'back.out(1.2)' }, tJ);
+      tl.to(fill, { drawSVG: `${(V1 * 100).toFixed(1)}%`, stroke: '#7be3b0', duration: dur, ease: 'power3.out' }, tJ);
+      const num = document.getElementById('payoff-num'), st = { v: parseFloat(d.oldScore) };
+      tl.to(st, { v: parseFloat(d.score), duration: dur, ease: 'power3.out', onUpdate() { num.textContent = st.v >= parseFloat(d.score) - 1e-9 ? d.score : String(Math.round(st.v)); } }, tJ);
+      tl.to(num, { color: '#7be3b0', scale: 1.15, transformOrigin: '50% 50%', duration: dur, ease: 'power3.out' }, tJ);
+      tl.to(num, { scale: 1, duration: 0.25 }, tJ + dur);
+      KIT.shake(tl, '#payoff-shk', tJ + dur, { amp: 18, dur: 0.35 });
+      pulse(tJ + dur, 0.24);
+      KIT.sparks(tl, '#payoff-cam', GX + (GR + 30) * Math.cos(Math.PI + Math.PI * V1), GY + (GR + 30) * Math.sin(Math.PI + Math.PI * V1), tJ + dur, { n: 14, r: 200, color: '#7be3b0' });
+      KIT.pop(tl, '#payoff-ghost', tJ + 0.15, { from: 0.5 });
+      KIT.pop(tl, '#payoff-gain', tJ + dur + 0.1, { from: 0.4 });
+      KIT.pop(tl, '#payoff-tag', a('hundred') - 0.1, { from: 0.5 });
+      tl.to('#payoff-cam', { ...cam(1.02, 540, 700), duration: D - a('hundred'), ease: 'sine.inOut' }, a('hundred'));
+      window.__timelines["payoff"] = tl;
+    })();
+  </script>
+</template>

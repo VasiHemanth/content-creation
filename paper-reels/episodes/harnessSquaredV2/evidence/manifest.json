@@ -1,0 +1,72 @@
+{
+ "observation": {
+  "img": "evidence/observation.png",
+  "w": 3492,
+  "h": 189,
+  "page": 5,
+  "rects": [
+   {
+    "x": 0.23083916326675644,
+    "y": 0.05826506526943913,
+    "w": 0.23944097451985336,
+    "h": 0.30000197401630535
+   },
+   {
+    "x": 0.47794939305902406,
+    "y": 0.05826506526943913,
+    "w": 0.1992889266379563,
+    "h": 0.30000197401630535
+   },
+   {
+    "x": 0.6847292173517016,
+    "y": 0.05826506526943913,
+    "w": 0.2847206969080863,
+    "h": 0.3842766781253613
+   },
+   {
+    "x": 0.02851820298616327,
+    "y": 0.5703609911817872,
+    "w": 0.0454804129232598,
+    "h": 0.3729869968725942
+   }
+  ],
+  "text": "the current harness. Each decision is tied to a concrete observation rather than a presumed score\r\ngain. The composed harness is then executed to produce 𝑒\r\n′\r\n, and the decisions and their evidence",
+  "circles": {
+   "concrete observation": {
+    "x": 0.47794939305902406,
+    "y": 0.05826506526943913,
+    "w": 0.1992889266379563,
+    "h": 0.30000197401630535
+   }
+  }
+ },
+ "mechanism": {
+  "img": "evidence/mechanism.png",
+  "w": 3486,
+  "h": 99,
+  "page": 4,
+  "rects": [
+   {
+    "x": 0.16999024355694278,
+    "y": 0.15951986754966888,
+    "w": 0.25708965744738754,
+    "h": 0.7324933344800895
+   },
+   {
+    "x": 0.43457331981662006,
+    "y": 0.15951986754966888,
+    "w": 0.3003662281005411,
+    "h": 0.7324933344800895
+   }
+  ],
+  "text": "improved, and the improvement harness is the mechanism that improves it. In Harness2, as shown",
+  "circles": {
+   "improves": {
+    "x": 0.6272448120953426,
+    "y": 0.18104089618990282,
+    "w": 0.08311951544715009,
+    "h": 0.7109723058398555
+   }
+  }
+ }
+}

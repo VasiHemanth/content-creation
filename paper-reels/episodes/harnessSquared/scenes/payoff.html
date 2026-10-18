@@ -1,0 +1,87 @@
+<template id="payoff-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #payoff-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #payoff-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+
+    /* Central memo card */
+    #payoff-memo { position: absolute; left: 240px; top: 380px; width: 600px; height: 680px; background: var(--white);
+      border: 4px solid var(--white); border-radius: 14px; box-shadow: 16px 16px 0 var(--shadow); }
+    .payoff-memo-header { position: absolute; left: 40px; top: 40px; width: 280px; height: 24px; background: var(--deep); border-radius: 4px; }
+    .payoff-memo-body { position: absolute; left: 40px; top: 90px; width: 520px; height: 530px;
+      background: repeating-linear-gradient(0deg, #d8e2ec 0 10px, transparent 10px 30px); border-radius: 6px; }
+
+    /* Old score */
+    #payoff-old { position: absolute; left: 420px; top: 560px; font-size: 80px; color: var(--coral); opacity: 0.6; text-decoration: line-through; }
+
+    /* Jumped green stamp */
+    #payoff-stamp { left: 330px; top: 620px; font-size: 140px; padding: 14px 60px; opacity: 0; }
+    #payoff-tag { left: 160px; top: 1110px; font-size: 38px; opacity: 0; }
+
+    /* Checkmarks container */
+    .payoff-check { position: absolute; width: 60px; height: 60px; opacity: 0; }
+    #payoff-ck1 { left: 140px; top: 280px; }
+    #payoff-ck2 { left: 510px; top: 250px; }
+    #payoff-ck3 { left: 880px; top: 280px; }
+  </style>
+  <div id="root" data-composition-id="payoff" data-width="1080" data-height="1920">
+    <div id="payoff-cam">
+      <div id="payoff-beat">
+        <!-- Input files checkmarks -->
+        <svg class="ink sketch payoff-check" id="payoff-ck1" viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="26" class="ln mint thick" />
+          <path d="M16 30 L26 40 L44 20" class="ln mint thick" />
+        </svg>
+        <svg class="ink sketch payoff-check" id="payoff-ck2" viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="26" class="ln mint thick" />
+          <path d="M16 30 L26 40 L44 20" class="ln mint thick" />
+        </svg>
+        <svg class="ink sketch payoff-check" id="payoff-ck3" viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="26" class="ln mint thick" />
+          <path d="M16 30 L26 40 L44 20" class="ln mint thick" />
+        </svg>
+
+        <div id="payoff-memo">
+          <div class="payoff-memo-header"></div>
+          <div class="payoff-memo-body"></div>
+        </div>
+
+        <div id="payoff-old" class="marker" data-bind="l11.oldScore" data-layout-allow-overlap></div>
+        <div id="payoff-stamp" class="stamp mint" data-bind="l11.score" data-layout-allow-overlap></div>
+        <div id="payoff-tag" class="tag mint" data-bind="l11.tag"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const S = 'payoff', a = (w, n) => KIT.cue('l11', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#payoff-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // Frame 0: Memo visible
+      tl.fromTo('#payoff-memo', { scale: 0.96 }, { scale: 1.0, duration: 0.4, ease: 'power2.out' }, 0);
+
+      // "checked every output"
+      const tCheck = a('checked');
+      KIT.pop(tl, '#payoff-ck1', tCheck, { from: 0.2 });
+      KIT.pop(tl, '#payoff-ck2', tCheck + 0.12, { from: 0.2 });
+      KIT.pop(tl, '#payoff-ck3', tCheck + 0.24, { from: 0.2 });
+
+      // "and the score jumped" -> old score crosses out, new stamp slams
+      const tJump = a('jumped');
+      tl.to('#payoff-old', { opacity: 0.2, scale: 0.8, duration: 0.2 }, tJump);
+
+      // "to seventy eight out of one hundred"
+      const tSev = a('seventy');
+      KIT.slam(tl, '#payoff-stamp', tSev - 0.15, { from: 3.2, amp: 26 });
+      KIT.sparks(tl, '#payoff-beat', 540, 720, tSev, { n: 18, color: '#7be3b0', r: 280 });
+      KIT.pop(tl, '#payoff-tag', tSev + 0.25, { from: 0.5 });
+
+      // Camera motion & beats
+      tl.fromTo('#payoff-cam', { scale: 1 }, { scale: 1.07, duration: D, ease: 'sine.inOut' }, 0);
+      KIT.beats(tl, '#payoff-beat', [a('checked'), a('output'), a('score'), a('jumped'), a('seventy'), a('eight')], { amp: 0.025, shift: 14 });
+
+      window.__timelines["payoff"] = tl;
+    })();
+  </script>
+</template>

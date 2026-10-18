@@ -1,0 +1,167 @@
+<template id="fail-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #fail-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #fail-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #fail-inner { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 760px; }
+    #fail-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #fail-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #fail-scrim { position: absolute; left: -1500px; top: -1500px; width: 4000px; height: 5000px; background: #061a30; opacity: 0; }
+    .cf { position: absolute; background: var(--panel); border: 4px solid var(--cyan); box-shadow: 12px 12px 0 var(--shadow); }
+    .cf .tab { position: absolute; left: -4px; top: -54px; padding: 8px 20px; font: 700 28px "Mono", monospace; color: var(--deep); background: var(--cyan); white-space: nowrap; }
+    .cf .cl { position: absolute; left: 26px; font: 600 30px/1 "Mono", monospace; color: var(--dim); white-space: pre; transform-origin: 0 50%; }
+    .cf .nl { position: absolute; left: 26px; height: 22px; background: var(--coral); }
+    .drw { position: absolute; background: var(--deep); border: 5px solid var(--amber); box-shadow: 10px 10px 0 var(--shadow); }
+    .drw .hdl { position: absolute; left: 50%; bottom: 22px; width: 90px; height: 14px; margin-left: -45px; background: var(--amber); }
+    #fail-card { position: absolute; left: 80px; top: 210px; width: 420px; height: 270px; background: var(--deep); border: 5px solid #ff8fc4; box-shadow: 10px 10px 0 var(--shadow); }
+    #fail-qlbl { left: 26px; top: 18px; font: 400 52px/1 "Marker", sans-serif; color: #ff8fc4; }
+    #fail-none { left: 26px; top: 96px; font-size: 30px; color: #ff8fc4; border-color: #ff8fc4; }
+    #fail-steps { left: 26px; top: 176px; font-size: 30px; color: #ff8fc4; border-color: #ff8fc4; }
+    #fail-wrong { left: 236px; top: 112px; font-size: 64px; padding: 0 22px; border-width: 6px; outline-width: 3px; outline-offset: -14px; }
+    #fail-drw { left: 640px; top: 260px; width: 290px; height: 160px; }
+    #fail-tray { position: absolute; left: 720px; top: 330px; width: 130px; height: 54px; border: 4px dashed var(--amber); background: rgba(7,29,53,.9); opacity: 0; }
+    #fail-file { left: 200px; top: 720px; width: 680px; height: 470px; }
+    #fail-old { left: 300px; top: 1250px; font-size: 32px; }
+    #fail-score { left: 80px; top: 500px; font-size: 28px; }
+    #fail-slip { position: absolute; left: 610px; top: 1230px; width: 320px; height: 200px; background: #d9dde3; box-shadow: 10px 10px 0 var(--shadow); transform: rotate(3deg); }
+    #fail-slip .t { position: absolute; left: 20px; top: 16px; font: 700 30px "Mono", monospace; color: var(--deep); white-space: nowrap; }
+    #fail-slip i { position: absolute; left: 22px; height: 12px; background: #8a95a3; }
+    #fail-which { left: 560px; top: 560px; font-size: 32px; }
+    #fail-nofind { left: 90px; top: 1196px; font-size: 32px; }
+    #fail-all { left: 0; top: 1290px; width: 1080px; text-align: center; }
+    #fail-all span { display: inline-block; padding: 6px 30px; font: 400 66px/1.1 "Marker", sans-serif; color: var(--coral); background: var(--deep); border: 6px solid var(--coral); box-shadow: 10px 10px 0 var(--shadow); }
+  </style>
+  <div id="root" data-composition-id="fail" data-width="1080" data-height="1920">
+    <div id="fail-cam">
+      <div id="fail-beat"><div id="fail-inner">
+        <svg class="ink" id="fail-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <path id="fail-s1" class="ln cyan thick dash" d="M500 420 C 560 540 560 640 520 715" />
+          <path id="fail-s2" class="ln cyan thick dash" d="M640 715 C 690 600 740 520 770 430" />
+          <path id="fail-wl" class="ln coral thick dash" d="M300 480 C 320 560 380 610 430 650" />
+        </svg>
+        <div id="fail-card">
+          <div id="fail-qlbl" class="abs" data-bind="l05.q"></div>
+          <div id="fail-none" class="tag" data-bind="l05.none"></div>
+          <div id="fail-steps" class="tag" data-bind="l05.steps"></div>
+          <div id="fail-wrong" class="stamp" data-bind="l05.fail"></div>
+        </div>
+        <div id="fail-drw" class="drw"><div class="hdl"></div></div>
+        <div id="fail-tray"></div>
+        <div id="fail-file" class="cf"><div id="fail-tab" class="tab" data-bind="l01.file"></div></div>
+        <div id="fail-score" class="tag coral" data-bind="l06.score"></div>
+        <div id="fail-old" class="tag coral" data-bind="l06.old"></div>
+        <div id="fail-slip"><div class="t" data-bind="l06.report"></div></div>
+        <div id="fail-which" class="tag coral" data-bind="l06.which"></div>
+        <div id="fail-nofind" class="tag coral" data-bind="l07.nofind"></div>
+        <div id="fail-all" class="abs"><span data-bind="l07.all"></span></div>
+        <svg class="ink" id="fail-top" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+          <g id="fail-mag" opacity="0"><circle cx="180" cy="1300" r="62" fill="rgba(255,107,107,.08)" stroke="#ff6b6b" stroke-width="10" /><path d="M224 1344 L290 1410" stroke="#ff6b6b" stroke-width="18" stroke-linecap="round" /></g>
+          <g id="fail-xh" opacity="0"><circle cx="540" cy="900" r="54" fill="none" stroke="#ff6b6b" stroke-width="6" /><path d="M540 830 L540 970 M470 900 L610 900" stroke="#ff6b6b" stroke-width="4" /></g>
+        </svg>
+      </div></div>
+      <div id="fail-scrim"></div>
+      <div id="fail-stage"></div>
+    </div>
+    <div id="fail-hud"></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'fail', a = (w, n) => KIT.cue('l05', w, n), b = (w, n) => KIT.cue('l06', w, n), c = (w, n) => KIT.cue('l07', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#fail-inner');
+      const tl = gsap.timeline({ paused: true });
+
+      // the board: the code file, the notes drawer, one question card
+      const d1 = KIT.data('l01'), file = document.querySelector('#fail-file'), LH = 52, TOP = 34;
+      const lines = d1.code.map((s, k) => {
+        const el = document.createElement('div'); el.className = 'cl'; el.id = `fail-cl${k}`;
+        el.textContent = s; el.style.top = `${TOP + k * LH}px`; file.appendChild(el); return el;
+      });
+      tl.fromTo('#fail-card', { scale: 0.7, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: -1.5, duration: 0.4, ease: 'back.out(1.6)' }, 0.02);
+      tl.fromTo('#fail-drw', { y: -120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }, 0.12);
+      tl.fromTo('#fail-file', { y: 140, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }, 0.2);
+
+      // l05 "One question fails": the stamp lands first
+      tl.fromTo('#fail-wrong', { scale: 2.6, opacity: 0, rotation: -14 }, { scale: 1, opacity: 1, rotation: -6, duration: 0.18, ease: 'power4.in' }, a('fails') - 0.1);
+      KIT.shake(tl, '#fail-beat', a('fails') + 0.08, { amp: 14, dur: 0.3 });
+      // "The memory gives the agent no notes": a dotted path from the card through the file to the drawer, an empty tray comes back
+      KIT.draw(tl, '#fail-s1', a('memory') - 0.1, 0.35);
+      tl.fromTo(lines.slice(2, 6), { color: '#6aa9d0' }, { color: '#a8dcf2', duration: 0.2 }, a('memory') + 0.2);
+      KIT.draw(tl, '#fail-s2', a('memory') + 0.25, 0.35);
+      tl.fromTo('#fail-drw', { borderColor: '#ffb454' }, { borderColor: '#f2f8ff', duration: 0.15, yoyo: true, repeat: 1 }, a('gives'));
+      tl.fromTo('#fail-tray', { opacity: 0, x: 0, y: 0 }, { opacity: 1, duration: 0.15 }, a('agent') - 0.2);
+      tl.to('#fail-tray', { x: -440, y: 40, duration: 0.5, ease: 'power2.inOut' }, a('agent') - 0.05);
+      tl.to('#fail-tray', { opacity: 0, duration: 0.2 }, a('notes') + 0.2);
+      KIT.pop(tl, '#fail-none', a('no'));
+      // "The run ends at zero steps"
+      KIT.pop(tl, '#fail-steps', a('zero') - 0.05);
+      KIT.shake(tl, '#fail-card', a('steps'), { amp: 8, dur: 0.25 });
+
+      // l06 "Older methods": a coral magnifier slides in; it sees only the score
+      tl.to(['#fail-s1', '#fail-s2'], { opacity: 0.25, duration: 0.3 }, b('Older') - 0.2);
+      tl.fromTo('#fail-mag', { x: -320, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'back.out(1.5)' }, b('Older') - 0.1);
+      KIT.rise(tl, '#fail-old', b('methods'), { y: 24 });
+      tl.to('#fail-mag', { x: 262, y: -938, scale: 1.1, duration: 0.5, ease: 'power3.inOut' }, b('only') - 0.25);
+      KIT.pop(tl, '#fail-score', b('score'));
+      // "or a short summary": a grey slip slides in, its lines darken
+      tl.fromTo('#fail-slip', { x: 420, opacity: 0, rotation: 12 }, { x: 0, opacity: 1, rotation: 3, duration: 0.4, ease: 'back.out(1.4)' }, b('short') - 0.15);
+      const slip = document.querySelector('#fail-slip'), bars = [];
+      [[70, 250], [96, 200], [122, 280], [148, 180], [174, 230]].forEach(([y, w], k) => {
+        const el = document.createElement('i'); el.id = `fail-sb${k}`; el.style.top = `${y}px`; el.style.width = `${w}px`; slip.appendChild(el); bars.push(el);
+      });
+      tl.to(bars, { background: '#5c6878', duration: 0.2, stagger: 0.05 }, b('summary'));
+
+      // receipt R1: "A score alone cannot ..."
+      const tR = b('A', 2) - 0.6;
+      tl.to('#fail-scrim', { opacity: 0.88, duration: 0.35 }, tR);
+      tl.to('#fail-inner', { opacity: 0, duration: 0.3 }, tR + 0.3);
+      const R = KIT.read(tl, { cam: '#fail-cam', parent: '#fail-stage', hud: '#fail-hud', tagY: 300, id: 'score', t: tR, label: KIT.data('l06').receipt,
+        x: 40, y: 860, width: 1000, zoom: 3.6, fx: 90, fy: 860, follow: 0,
+        marks: [[b('A', 2) - 0.05, KIT.cueEnd('l06', 'cannot') + 0.05]],
+        circles: [{ word: 'alone', t: b('alone') + 0.1 }] });
+      // show whole words only: clip the page to the highlighted span
+      { const m = KIT.EP.evidence.score.circles.alone, cx = (m.x + m.w / 2) * 1000; document.querySelector('#fail-stage-score-circle-alone').setAttribute('transform', `translate(${cx} 0) scale(0.72 1) translate(${-cx} 0)`); }
+      { const r0 = KIT.EP.evidence.score.rects[0], m = 0.2; R.el.style.boxShadow = 'none'; R.el.style.clipPath = `inset(-60px ${((1 - r0.x - r0.w) * 100 - m).toFixed(2)}% -60px ${(r0.x * 100 - m).toFixed(2)}%)`; }
+      // back to the board on "say which code failed"
+      const tBack = b('say') + 0.05;
+      tl.to('#fail-cam', { x: 0, y: 0, scale: 1, duration: 0.4, ease: 'power3.inOut' }, tBack);
+      tl.to('#fail-scrim', { opacity: 0, duration: 0.35 }, tBack);
+      tl.to(R.el, { y: 500, opacity: 0, duration: 0.35, ease: 'power2.in' }, tBack);
+      tl.to('#fail-stage-score-tag', { opacity: 0, duration: 0.25 }, tBack);
+      tl.to('#fail-inner', { opacity: 1, duration: 0.3 }, tBack + 0.05);
+      // "which code": a dashed line runs from the stamp toward the file and stops short
+      KIT.draw(tl, '#fail-wl', b('which') - 0.05, 0.35, { ease: 'power2.out' });
+      KIT.pop(tl, '#fail-which', b('code') - 0.05);
+      // "failed": every line blinks at once, none is singled out
+      tl.to(lines, { opacity: 0.2, duration: 0.12, yoyo: true, repeat: 3, ease: 'none' }, b('failed'));
+
+      // l07 "no way to find the bug": a crosshair hunts across the file and finds nothing to lock on
+      tl.to(['#fail-mag', '#fail-old', '#fail-score', '#fail-slip', '#fail-which', '#fail-wl'], { opacity: 0, duration: 0.25 }, c('With') - 0.1);
+      tl.fromTo('#fail-xh', { opacity: 0, x: -200, y: -120 }, { opacity: 1, x: -120, y: -60, duration: 0.25 }, c('no') - 0.1);
+      tl.to('#fail-xh', { keyframes: [{ x: 140, y: 40, duration: 0.3 }, { x: -60, y: 140, duration: 0.3 }, { x: 180, y: 200, duration: 0.3 }], ease: 'power2.inOut' }, c('no') + 0.15);
+      KIT.pop(tl, '#fail-nofind', c('find'));
+      // "they often rewrote large parts": most lines turn coral and wipe away, new coral lines rain in
+      const tW = c('rewrote');
+      tl.to('#fail-xh', { opacity: 0, duration: 0.15 }, tW - 0.1);
+      const gone = lines.slice(0, 6);
+      tl.to(gone, { color: '#ff6b6b', duration: 0.12 }, tW - 0.1);
+      tl.to(gone, { scaleX: 0, opacity: 0, duration: 0.18, stagger: 0.03, ease: 'power2.in' }, tW + 0.05);
+      tl.to('#fail-tab', { background: '#ff6b6b', duration: 0.2 }, tW);
+      tl.to('#fail-file', { borderColor: '#ff6b6b', duration: 0.2 }, tW);
+      const tA = c('large'), widths = [300, 420, 520, 360, 480, 300];
+      widths.forEach((w, k) => {
+        const el = document.createElement('div'); el.className = 'nl'; el.id = `fail-nl${k}`; el.style.top = `${TOP + 4 + k * LH}px`; el.style.width = `${w}px`; file.appendChild(el);
+        tl.fromTo(el, { y: -260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2, ease: 'power3.in' }, tA - 0.2 + k * 0.035);
+      });
+      tl.to('#fail-nofind', { opacity: 0, y: -30, duration: 0.2 }, tA - 0.15);
+      tl.fromTo('#fail-all', { scale: 2.4, opacity: 0, rotation: 6 }, { scale: 1, opacity: 1, rotation: 2, duration: 0.18, ease: 'power4.in' }, tA + 0.05);
+      KIT.shake(tl, '#fail-beat', tA + 0.22, { amp: 18, dur: 0.35 });
+
+      // camera: the inner board drifts; beats on the spoken hits
+      tl.fromTo('#fail-inner', { scale: 1, y: 0 }, { scale: 1.05, y: 20, duration: tR, ease: 'sine.inOut' }, 0);
+      tl.to('#fail-inner', { scale: 1.08, y: -40, duration: 0.5, ease: 'power3.inOut' }, c('With') - 0.3);
+      KIT.beats(tl, '#fail-beat', [a('question'), a('memory'), a('agent'), a('run'), b('Older'), b('only'), b('short'), b('which'), c('find'), c('rewrote')], { amp: 0.025, shift: 16 });
+
+      window.__timelines["fail"] = tl;
+    })();
+  </script>
+</template>

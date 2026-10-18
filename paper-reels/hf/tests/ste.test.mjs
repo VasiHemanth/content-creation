@@ -3,6 +3,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { checkLine, checkStoryboard, sentences } from '../bin/ste.mjs';
 
+// tests exercise the gate itself, so they switch it on whatever hf/ste.json says
+import { PROFILE as STE_PROFILE } from '../bin/ste.mjs';
+STE_PROFILE.enforce = true;
 const rules = (text, o) => checkLine(text, o).map((f) => `${f.rule}${f.hard ? '!' : ''}`);
 
 test('splits sentences after . ? ! but keeps a label with a colon', () => {

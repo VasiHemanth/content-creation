@@ -1,0 +1,508 @@
+{
+ "item": "2610.21170",
+ "name": "MemScope",
+ "format": "paper",
+ "renderer": "hyperframes",
+ "authors": [
+  "Miao Su",
+  "Yucan Guo",
+  "Zixuan Li",
+  "Long Bai",
+  "Zhongni Hou",
+  "Xiaolong Jin",
+  "Jiafeng Guo"
+ ],
+ "voice": {
+  "preset": "s2pro",
+  "speed": 1.25
+ },
+ "ste": {
+  "names": [
+   "MemScope",
+   "AI",
+   "Patch Agent"
+  ],
+  "terms": [
+   {
+    "term": "notes",
+    "avoid": [
+     "memories",
+     "experience",
+     "guidance"
+    ]
+   },
+   {
+    "term": "memory architecture",
+    "avoid": [
+     "memory system",
+     "memory code",
+     "provider",
+     "memory design"
+    ]
+   },
+   {
+    "term": "trace",
+    "avoid": [
+     "log",
+     "transcript",
+     "trajectory"
+    ]
+   },
+   {
+    "term": "patch",
+    "avoid": [
+     "fix-up",
+     "hotfix"
+    ]
+   },
+   {
+    "term": "agent",
+    "avoid": [
+     "bot",
+     "assistant"
+    ]
+   },
+   {
+    "term": "line",
+    "avoid": [
+     "guard",
+     "early return",
+     "rule"
+    ]
+   },
+   {
+    "term": "score",
+    "avoid": [
+     "grade",
+     "mark"
+    ]
+   },
+   {
+    "term": "summary",
+    "avoid": [
+     "report",
+     "digest"
+    ]
+   }
+  ],
+  "jargon": [
+   {
+    "term": "MemScope",
+    "line": "l02"
+   },
+   {
+    "term": "agent",
+    "line": "l03"
+   },
+   {
+    "term": "memory architecture",
+    "line": "l04"
+   },
+   {
+    "term": "Patch Agent",
+    "line": "l08"
+   },
+   {
+    "term": "patch",
+    "line": "l08"
+   },
+   {
+    "term": "trace",
+    "line": "l09"
+   }
+  ]
+ },
+ "scenes": {
+  "hook": {
+   "transition": "whip"
+  },
+  "memory": {
+   "transition": "zoom"
+  },
+  "fail": {
+   "transition": "whip"
+  },
+  "patch": {
+   "transition": "punch"
+  },
+  "result": {
+   "transition": "blur"
+  },
+  "close": {}
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "An A I's memory failed. Fix one line, or rewrite it all?",
+   "text": "An AI's memory failed. Fix one line, or rewrite it all?",
+   "tts": "[warm, curious narrator] An A I's memory failed. [emphasis] Fix one line, or rewrite it all?",
+   "data": {
+    "title": "Fix one line,",
+    "claim": "or rewrite it all?",
+    "file": "memory.py",
+    "code": [
+     "def save(note):",
+     "    store.add(note)",
+     "def search(question):",
+     "    if status == IN: return",
+     "    hits = store.find(question)",
+     "    return rank(hits)",
+     "def show(hits):",
+     "    return format(hits)"
+    ],
+    "_bug": 3,
+    "notes": "notes"
+   },
+   "sfx": [
+    {
+     "cue": "failed",
+     "kind": "thud"
+    },
+    {
+     "cue": "Fix",
+     "kind": "pop"
+    },
+    {
+     "cue": "rewrite",
+     "kind": "glitch"
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "scene": "hook",
+   "say": "MemScope edits only the broken part.",
+   "text": "MemScope edits only the broken part.",
+   "tts": "[warm, curious narrator] MemScope edits [emphasis] only the broken part.",
+   "data": {
+    "name": "MemScope",
+    "only": "edit only the broken part"
+   },
+   "sfx": [
+    {
+     "cue": "MemScope",
+     "kind": "type"
+    },
+    {
+     "cue": "only",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "memory",
+   "say": "An A I agent answers research questions, and saves notes.",
+   "text": "An AI agent answers research questions, and saves notes.",
+   "tts": "[thoughtful] An A I agent answers research [emphasis] questions, and saves notes.",
+   "data": {
+    "agent": "AI agent",
+    "q": "question",
+    "notes": "notes"
+   },
+   "sfx": [
+    {
+     "cue": "agent",
+     "kind": "pop"
+    },
+    {
+     "cue": "saves",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "notes",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "memory",
+   "say": "We call the code that saves and finds notes the memory architecture.",
+   "text": "We call the code that saves and finds notes the memory architecture.",
+   "tts": "[thoughtful] We call the code that saves and finds notes [short pause] the memory [emphasis] architecture.",
+   "data": {
+    "arch": "memory architecture",
+    "save": "saves",
+    "find": "finds"
+   },
+   "sfx": [
+    {
+     "cue": "saves",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "finds",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "architecture",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "fail",
+   "say": "One question fails. The memory gives the agent no notes. The run ends at zero steps.",
+   "text": "One question fails. The memory gives the agent no notes. The run ends at zero steps.",
+   "tts": "[thoughtful] One question fails. The memory gives the agent [emphasis] no notes. The run ends at zero steps.",
+   "data": {
+    "q": "question",
+    "fail": "failed",
+    "none": "no notes",
+    "steps": "0 steps"
+   },
+   "sfx": [
+    {
+     "cue": "fails",
+     "kind": "stamp"
+    },
+    {
+     "cue": "no",
+     "kind": "pop"
+    },
+    {
+     "cue": "zero",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "fail",
+   "say": "Older methods usually saw only a score, or a short summary. A score alone cannot say which code failed.",
+   "text": "Older methods usually saw only a score, or a short summary. A score alone cannot say which code failed.",
+   "tts": "[thoughtful] Older methods usually saw only a score, or a short summary. A score [emphasis] alone cannot say which code failed.",
+   "data": {
+    "old": "older methods",
+    "score": "score",
+    "report": "short summary",
+    "receipt": "FROM THE PAPER · method",
+    "which": "which code?"
+   },
+   "sfx": [
+    {
+     "cue": "Older",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "summary",
+     "kind": "pop"
+    },
+    {
+     "cue": "alone",
+     "kind": "click"
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "fail",
+   "say": "With no way to find the bug, they often rewrote large parts.",
+   "text": "With no way to find the bug, they often rewrote large parts.",
+   "tts": "[thoughtful] With no way to find the bug, they often rewrote [emphasis] large parts.",
+   "data": {
+    "nofind": "no way to find the bug",
+    "all": "large rewrite"
+   },
+   "sfx": [
+    {
+     "cue": "find",
+     "kind": "tick"
+    },
+    {
+     "cue": "rewrote",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "large",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "scene": "patch",
+   "say": "MemScope adds a Patch Agent. It writes patches: small code edits.",
+   "text": "MemScope adds a Patch Agent. It writes patches: small code edits.",
+   "tts": "[confident] MemScope adds a [short pause] Patch Agent. It writes patches: [emphasis] small code edits.",
+   "data": {
+    "pa": "Patch Agent",
+    "patch": "patch",
+    "small": "small code edit"
+   },
+   "sfx": [
+    {
+     "cue": "Patch",
+     "kind": "pop"
+    },
+    {
+     "cue": "small",
+     "kind": "click"
+    }
+   ]
+  },
+  {
+   "id": "l09",
+   "scene": "patch",
+   "say": "It reads the question's step-by-step record: the trace. This trace shows zero steps, and no notes.",
+   "text": "It reads the question's step-by-step record: the trace. This trace shows zero steps, and no notes.",
+   "tts": "[clear, steady] It reads the question's step-by-step record: [short pause] the trace. This trace shows [emphasis] zero steps, and no notes.",
+   "data": {
+    "trace": "trace",
+    "q": "question",
+    "steps": "0 steps",
+    "none": "no notes"
+   },
+   "sfx": [
+    {
+     "cue": "record",
+     "kind": "tick"
+    },
+    {
+     "cue": "trace",
+     "kind": "stamp"
+    },
+    {
+     "cue": "zero",
+     "kind": "pop"
+    }
+   ],
+   "voice": {
+    "seed": 11
+   }
+  },
+  {
+   "id": "l10",
+   "scene": "patch",
+   "say": "So the trace points to the search code. One line may stop the search too soon.",
+   "text": "So the trace points to the search code. One line may stop the search too soon.",
+   "tts": "[clear, steady] So the trace points to the search code. One [emphasis] line may stop the search too soon.",
+   "data": {
+    "code": "search code",
+    "line": "proposed cause",
+    "case": "recorded case, Table 6"
+   },
+   "sfx": [
+    {
+     "cue": "points",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "line",
+     "kind": "pop"
+    },
+    {
+     "cue": "stop",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "patch",
+   "say": "The Patch Agent's job: make one minimal, evidence-backed patch. It removes only that line.",
+   "text": "The Patch Agent's job: make one minimal, evidence-backed patch. It removes only that line.",
+   "tts": "[clear, steady] The Patch Agent's job: make one [emphasis] minimal, evidence-backed patch. It removes only that line.",
+   "data": {
+    "receipt": "FROM THE PAPER · Patch Agent prompt",
+    "removed": "one line removed"
+   },
+   "sfx": [
+    {
+     "cue": "Patch",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "minimal",
+     "kind": "tick"
+    },
+    {
+     "cue": "removes",
+     "kind": "click"
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "result",
+   "say": "The authors tested their Patch Agent with different inputs. With only a short summary: sixty three percent right.",
+   "text": "The authors tested their Patch Agent with different inputs. With only a short summary: 63% right.",
+   "tts": "[clear, steady] The authors tested their Patch Agent with different inputs. With [emphasis] only a short summary: sixty three percent right.",
+   "data": {
+    "scope": "GAIA: public research questions",
+    "head": "authors’ runs: their Patch Agent, different inputs",
+    "aLabel": "only short summary",
+    "aValue": "63%",
+    "metric": "share of test questions answered right"
+   },
+   "sfx": [
+    {
+     "cue": "tested",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "sixty",
+     "kind": "tick"
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "result",
+   "say": "With the trace plus the saved notes: eighty seven percent. Full MemScope: eighty three.",
+   "text": "With the trace plus the saved notes: 87%. Full MemScope: 83%.",
+   "tts": "[excited] With the trace plus the saved notes: [short pause] [emphasis] eighty seven percent. Full MemScope: eighty three.",
+   "data": {
+    "bLabel": "trace + saved notes",
+    "bValue": "87%",
+    "bNote": "best test setting: 87%",
+    "full": "full MemScope",
+    "fValue": "83%"
+   },
+   "sfx": [
+    {
+     "cue": "eighty",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "eighty",
+     "kind": "impact"
+    },
+    {
+     "cue": "Full",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l14",
+   "scene": "close",
+   "say": "One caveat: a small test, run by the authors. Read what happened first, then fix only what broke.",
+   "text": "One caveat: a small test, run by the authors. Read what happened first, then fix only what broke.",
+   "tts": "[calm, honest] One caveat: a [emphasis] small test, run by the authors. Read what happened first, then fix only what broke.",
+   "data": {
+    "caveat": "CAVEAT",
+    "small": "small test",
+    "own": "authors’ own runs",
+    "line1": "Read what happened first.",
+    "line2": "Fix only what broke.",
+    "handle": "hemanth_with_ai",
+    "credit": "MemScope · arXiv 2610.21170 · unofficial explainer"
+   },
+   "sfx": [
+    {
+     "cue": "caveat",
+     "kind": "stamp"
+    },
+    {
+     "cue": "fix",
+     "kind": "click"
+    }
+   ]
+  }
+ ]
+}

@@ -9,6 +9,9 @@ import { CHECKS, checkBrand, checkVideoSources, runQa } from '../lib/qa.mjs';
 import { describeData } from '../lib/data.mjs';
 import { rm, tmp, writePost } from './helpers.mjs';
 
+// tests exercise the gate itself, so they switch it on whatever hf/ste.json says
+import { PROFILE as STE_PROFILE } from '../../hf/bin/ste.mjs';
+STE_PROFILE.enforce = true;
 function cleanMeasure(_P, post) {
   return post.slides.map((s) => {
     const leaves = describeData(s.data, s.id).leaves.filter((l) => !l.draw);

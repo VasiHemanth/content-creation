@@ -5,15 +5,16 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const apiError = (e) => new Error(JSON.stringify(e.response?.data?.error || e.message));
 
 async function waitUntilReady(base, containerId, token, maxTries = 40, intervalMs = 5000) {
+  // IG exposes status_code; the Threads API exposes status and fails on unknown fields (code 100), so ask each API only for its own.
+  const onThreads = base.includes('graph.threads.net');
   for (let i = 0; i < maxTries; i++) {
     await sleep(intervalMs);
-    // IG exposes status_code; Threads exposes status. Ask for both.
     const { data } = await axios.get(`${base}/${containerId}`, {
-      params: { fields: 'status_code,status', access_token: token },
+      params: { fields: onThreads ? 'status,error_message' : 'status_code,status', access_token: token },
     });
     const s = data.status_code || data.status;
     if (s === 'FINISHED') return;
-    if (s === 'ERROR' || s === 'EXPIRED') throw new Error(`Container ${s}: ${data.status || ''}`);
+    if (s === 'ERROR' || s === 'EXPIRED') throw new Error(`Container ${s}: ${data.error_message || data.status || ''}`);
   }
   throw new Error('Timed out waiting for video processing');
 }

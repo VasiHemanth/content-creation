@@ -1,0 +1,40 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/2610.14224/paper-v1.pdf",
+ "note": "Receipts: real crops of arXiv 2610.14224v1, shown as clipped rows (one row per fragment) so only the quoted sentence is visible. Every number readable in a crop must be in facts.json (numbers or evidence_incidental); qa checks it.",
+ "items": [
+  {
+   "id": "observation",
+   "page": 5,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "concrete observation"
+   ],
+   "find": [
+    "Each decision is tied to a",
+    "concrete observation",
+    "rather than a presumed score",
+    "gain."
+   ]
+  },
+  {
+   "id": "mechanism",
+   "page": 4,
+   "context": [
+    0,
+    0
+   ],
+   "scale": 7,
+   "circle": [
+    "improves"
+   ],
+   "find": [
+    "the improvement harness is",
+    "the mechanism that improves it."
+   ]
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250" width="200" height="250" role="img" aria-label="Lens the mascot, check pose">
+  <ellipse cx="100" cy="236" rx="52" ry="7" fill="#000" opacity=".25"/>
+  <rect x="68" y="196" width="24" height="30" rx="10" fill="#ffb347" stroke="#0b1f3a" stroke-width="5"/>
+  <rect x="108" y="196" width="24" height="30" rx="10" fill="#ffb347" stroke="#0b1f3a" stroke-width="5"/>
+  <line x1="100" y1="88" x2="100" y2="64" stroke="#0b1f3a" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="100" cy="60" r="9" fill="#7ee2b8" stroke="#0b1f3a" stroke-width="5"/>
+  <rect x="48" y="84" width="104" height="120" rx="42" fill="#ffb347" stroke="#0b1f3a" stroke-width="6"/>
+  <rect x="60" y="98" width="80" height="66" rx="22" fill="#0b1f3a"/>
+  <circle cx="80" cy="120" r="7" fill="#7ee2b8"/>
+  <circle cx="118" cy="120" r="19" fill="#0b1f3a" stroke="#f4efe3" stroke-width="5"/>
+  <circle cx="118" cy="120" r="9" fill="#7ee2b8"/><circle cx="114" cy="116" r="3" fill="#fff"/>
+  <path d="M133 135 L146 150" stroke="#f4efe3" stroke-width="6" stroke-linecap="round"/>
+  <path d="M84 142 Q100 156 116 142" fill="none" stroke="#7ee2b8" stroke-width="5" stroke-linecap="round"/>
+  <rect x="78" y="172" width="44" height="22" rx="8" fill="#f4efe3" stroke="#0b1f3a" stroke-width="3"/>
+  <path d="M84 188 L92 180 L100 185 L108 176 L116 183" fill="none" stroke="#ff6b6b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M52 130 Q34 156 42 182" fill="none" stroke="#0b1f3a" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/><path d="M52 130 Q34 156 42 182" fill="none" stroke="#ffb347" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="42" cy="184" r="9" fill="#f4efe3" stroke="#0b1f3a" stroke-width="4"/><path d="M148 130 Q172 118 170 86" fill="none" stroke="#0b1f3a" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/><path d="M148 130 Q172 118 170 86" fill="none" stroke="#ffb347" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="170" cy="82" r="9" fill="#f4efe3" stroke="#0b1f3a" stroke-width="4"/><g transform="translate(150 20)"><circle cx="22" cy="22" r="20" fill="#7ee2b8" stroke="#0b1f3a" stroke-width="4"/><path d="M12 22 L20 30 L33 14" fill="none" stroke="#0b1f3a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>

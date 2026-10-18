@@ -1,0 +1,107 @@
+[
+  {
+    "url": "https://pypi.org/project/tokenizers/",
+    "supports": "The Python package is bindings over the Rust implementation. The speed line on that page is not on a slide. The caption quotes one sentence from this page.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://github.com/openai/tiktoken",
+    "supports": "The repo is Rust (Cargo.toml and src/lib.rs, with a PyO3 import under the python feature). The slide says tiktoken is the OpenAI tokenizer in Rust. The README speed line is not on a slide.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://pydantic.dev/docs/validation/latest/internals/architecture/",
+    "supports": "From V2, validation and serialization live in pydantic-core, which is Rust. Model definition stays in pydantic. The page that loaded from the docs.pydantic.dev architecture URL. The 5 to 20 multiplier is not on a slide.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://github.com/pola-rs/polars",
+    "supports": "Polars is a DataFrame query engine written in Rust, with a Python API. The slide says Polars runs table queries in Rust.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://pola.rs/posts/benchmarks",
+    "supports": "PDS-H scale factor 10 totals: pandas 2.2.3 at 365.71 seconds, polars streaming 1.30.0 at 3.89 seconds, printed factor 94.0. Machine: AWS c7a.24xlarge, 96 vCPUs and 192 GB. Pandas was not run at scale factor 100. Not re-run here.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://docs.astral.sh/ruff/",
+    "supports": "Ruff is a Python linter and formatter written in Rust. The 10-100x line and the chart are not on a slide.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://docs.astral.sh/uv/",
+    "supports": "uv is a Python package and project manager written in Rust. The 10-100x line is not on a slide.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://rust-lang.org/",
+    "supports": "Rust has no garbage collector. The type system and ownership model check memory safety at compile time. The homepage wording blazingly fast is not on a slide.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://developers.redhat.com/articles/2025/09/15/why-some-agentic-ai-developers-are-moving-code-python-rust",
+    "supports": "Louis Imershein, 15 Sep 2025. In the default build the GIL blocks CPU-bound threads. Threads overlap on an I/O wait. He writes that a CUDA call releases the GIL. The path he describes is profile, then a PyO3 extension. His timings are not on a slide.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://numpy.org/doc/stable/user/whatisnumpy.html",
+    "supports": "NumPy element-by-element array math runs as pre-compiled C code. The slide does not say NumPy has no Fortran, and it does not say NumPy moved to Rust.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://docs.pytorch.org/docs/stable/cpp_index.html",
+    "supports": "The PyTorch C++ frontend is a C++ library for CPU and GPU tensor computation.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://docs.pytorch.org/docs/stable/notes/cuda.html",
+    "supports": "torch.cuda runs CUDA operations. The slide line is that PyTorch tensor code is C++ and CUDA.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/blob/main/README.md",
+    "supports": "PyTorch is a Python package for tensor computation with GPU acceleration. The README says it is not a Python binding into a monolithic C++ framework. The slide does not call PyTorch a thin wrapper.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://github.com/qdrant/qdrant",
+    "supports": "Qdrant is written in Rust. A Python client calls it. Latency and size claims on the repo are not on a slide.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://docs.lancedb.com/faq/faq-oss",
+    "supports": "Lance and LanceDB are written in Rust, with a Python client. Marketing figures on the FAQ are not on a slide.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://huggingface.github.io/candle/",
+    "supports": "Candle is a minimalist ML framework for Rust. The slide calls it an optional runtime that does not replace PyTorch.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://github.com/tracel-ai/burn",
+    "supports": "Burn is a tensor library and a deep learning framework in Rust. The README version discussion is not on a slide. The slide says Burn does not replace PyTorch.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://docs.python.org/3.14/whatsnew/3.14.html",
+    "supports": "The free-threaded build is supported in Python 3.14 and is still optional. It is not the default. The single-thread penalty percentage is not on a slide.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://peps.python.org/pep-0779/",
+    "supports": "PEP 779 is Final for Python 3.14. Phase II: the free-threaded build is officially supported and still optional. Phase III, making it the default, is a later decision.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://docs.python.org/3.14/howto/free-threading-python.html",
+    "supports": "The default build is the GIL-enabled build. The free-threaded build is separate. The slide does not name the python3.14t binary.",
+    "accessed": "2026-10-17"
+  },
+  {
+    "url": "https://pyo3.rs/",
+    "supports": "PyO3 is Rust bindings for Python, including native extension modules. Guide banner v0.29.3 on this date. The last slide names PyO3 for a profiled CPU path.",
+    "accessed": "2026-10-17"
+  }
+]

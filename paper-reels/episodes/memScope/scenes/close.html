@@ -1,0 +1,90 @@
+<template id="close-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #close-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #close-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #close-cav { left: 0; top: 180px; width: 1080px; text-align: center; }
+    #close-cav span { display: inline-block; padding: 4px 34px; font: 400 92px/1.15 "Marker", sans-serif; color: var(--amber); background: var(--deep); border: 8px solid var(--amber); outline: 3px solid var(--amber); outline-offset: -20px; }
+    #close-small { left: 110px; top: 420px; font-size: 36px; color: var(--white); border-color: var(--white); }
+    #close-own { left: 110px; top: 500px; font-size: 36px; color: var(--white); border-color: var(--white); }
+    .mc { position: absolute; width: 22px; height: 22px; border: 2px solid var(--faint); background: rgba(168,220,242,.06); box-sizing: border-box; }
+    #close-l1 { left: 60px; top: 650px; width: 960px; text-align: center; white-space: normal; font-size: 92px; line-height: 1.05; }
+    #close-l2 { left: 60px; top: 870px; width: 960px; text-align: center; white-space: normal; font-size: 92px; line-height: 1.05; color: var(--amber); text-shadow: 6px 6px 0 var(--shadow); }
+    #close-l1 .char, #close-l1 .word, #close-l2 .char, #close-l2 .word { display: inline-block; }
+    #close-file { position: absolute; left: 250px; top: 1010px; width: 360px; height: 250px; background: var(--panel); border: 4px solid var(--cyan); box-shadow: 10px 10px 0 var(--shadow); }
+    #close-file i { position: absolute; left: 22px; height: 16px; background: var(--dim); }
+    #close-strip { position: absolute; left: 650px; top: 1060px; width: 180px; height: 150px; background: #0d1b2c; border-top: 3px solid var(--white); border-bottom: 3px solid var(--white); transform-origin: 0 50%; }
+    #close-strip i { position: absolute; top: 24px; width: 46px; height: 96px; border: 3px solid var(--white); box-sizing: border-box; }
+    #close-handle { left: 0; top: 1300px; width: 1080px; text-align: center; }
+    #close-handle span { display: inline-block; padding: 12px 32px; font: 700 50px "Mono", monospace; color: var(--amber); background: var(--deep); border: 4px solid var(--amber); box-shadow: 10px 10px 0 var(--shadow); }
+    #close-loopa { left: 0; top: 170px; width: 1080px; text-align: center; font-size: 132px; }
+    #close-loopb { left: 0; top: 340px; width: 1080px; text-align: center; font-size: 96px; color: var(--amber); text-shadow: 6px 6px 0 var(--shadow); }
+    #close-credit { left: 0; top: 1410px; width: 1080px; text-align: center; font-size: 26px; }
+  </style>
+  <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+    <div id="close-cam"><div id="close-beat">
+      <div id="close-cav" class="abs"><span data-bind="l14.caveat"></span></div>
+      <div id="close-small" class="tag" data-bind="l14.small"></div>
+      <div id="close-own" class="tag" data-bind="l14.own"></div>
+      <div id="close-grid"></div>
+      <div id="close-l1" class="hd" data-bind="l14.line1"></div>
+      <div id="close-l2" class="hd" data-bind="l14.line2"></div>
+      <div id="close-file"></div>
+      <div id="close-strip"></div>
+      <svg class="ink" id="close-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <path id="close-strike" class="ln heavy" style="stroke:#c3a6ff" d="M262 1112 L580 1112" />
+      </svg>
+      <div id="close-handle" class="abs"><span data-bind="l14.handle"></span></div>
+      <div id="close-credit" class="lbl" data-bind="l14.credit"></div>
+    </div></div>
+    <div id="close-loop" class="fill"><div id="close-loopa" class="hd" data-bind="l01.title"></div>
+    <div id="close-loopb" class="hd" data-bind="l01.claim"></div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'close', c = (w, n) => KIT.cue('l14', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#close-cam'); KIT.bind('#close-loop');
+      const tl = gsap.timeline({ paused: true });
+
+      // "One caveat: a small test, run by the authors themselves"
+      tl.fromTo('#close-cav', { scale: 2.4, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: -2, duration: 0.2, ease: 'power4.in' }, c('caveat') - 0.1);
+      KIT.shake(tl, '#close-beat', c('caveat') + 0.1, { amp: 12, dur: 0.28 });
+      KIT.pop(tl, '#close-small', c('small'));
+      const grid = document.querySelector('#close-grid'), mc = [];
+      for (let i = 0; i < 30; i++) {
+        const el = document.createElement('div'); el.className = 'mc'; el.id = `close-mc${i}`;
+        el.style.left = `${650 + (i % 6) * 28}px`; el.style.top = `${400 + Math.floor(i / 6) * 28}px`; grid.appendChild(el); mc.push(el);
+      }
+      tl.fromTo(mc, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.12, stagger: 0.01, ease: 'back.out(2)' }, c('test') - 0.15);
+      tl.to(mc[14], { background: '#ffb454', borderColor: '#ffb454', scale: 1.4, duration: 0.2, ease: 'back.out(3)' }, c('test') + 0.25);
+      KIT.pop(tl, '#close-own', c('authors'));
+
+      // "Read what happened first, then fix only what broke."
+      const s1 = SplitText.create('#close-l1', { type: 'words,chars' }), s2 = SplitText.create('#close-l2', { type: 'words,chars' });
+      [...s1.chars, ...s2.chars].forEach((ch) => ch.setAttribute('data-layout-allow-overlap', ''));
+      tl.fromTo(s1.chars, { scale: 2.4, opacity: 0, y: -30 }, { scale: 1, opacity: 1, y: 0, duration: 0.18, stagger: 0.02, ease: 'power4.in' }, c('Read') - 0.12);
+      // the file returns with its pink line, the trace unrolls beside it
+      const file = document.querySelector('#close-file');
+      [[30, 220], [62, 280], [94, 200], [126, 300], [158, 240], [190, 180]].forEach(([y, w], k) => {
+        const i = document.createElement('i'); i.id = `close-fl${k}`; i.style.top = `${y}px`; i.style.width = `${w}px`; if (k === 2) i.style.background = '#ff8fc4'; file.appendChild(i);
+      });
+      tl.fromTo('#close-file', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'back.out(1.5)' }, c('happened') - 0.1);
+      const strip = document.querySelector('#close-strip');
+      [10, 66, 122].forEach((x, k) => { const i = document.createElement('i'); i.id = `close-si${k}`; i.style.left = `${x}px`; strip.appendChild(i); });
+      tl.fromTo('#close-strip', { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.4, ease: 'power2.out' }, c('first') - 0.1);
+      tl.fromTo(s2.chars, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22, stagger: 0.018, ease: 'back.out(2)' }, c('then') - 0.1);
+      KIT.draw(tl, '#close-strike', c('fix'), 0.25, { ease: 'power2.out' });
+      KIT.shake(tl, '#close-file', c('fix') + 0.2, { amp: 8, dur: 0.2 });
+      KIT.rise(tl, '#close-handle', c('fix') + 0.1, { y: 40 });
+      KIT.fade(tl, '#close-credit', c('broke') + 0.1, { dur: 0.4 });
+
+      // camera: slow push; beats; the last frames fade to the bare sheet so the loop reads as one move
+      tl.fromTo('#close-cam', { scale: 1 }, { scale: 1.04, duration: D, ease: 'sine.inOut' }, 0);
+      KIT.beats(tl, '#close-beat', [c('small'), c('run'), c('Read'), c('first'), c('only')], { amp: 0.02, shift: 12 });
+      tl.to('#close-cam', { opacity: 0, duration: 0.25, ease: 'power1.in' }, D - 0.42);
+      tl.fromTo(['#close-loopa', '#close-loopb'], { opacity: 0 }, { opacity: 1, duration: 0.2, ease: 'power1.out' }, D - 0.3);
+
+      window.__timelines["close"] = tl;
+    })();
+  </script>
+</template>

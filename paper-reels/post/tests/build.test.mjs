@@ -9,6 +9,9 @@ import { PostError, readPost } from '../lib/postdir.mjs';
 import { POST_DIR, REELS_DIR } from '../lib/constants.mjs';
 import { rm, tmp, writePost } from './helpers.mjs';
 
+// tests exercise the gate itself, so they switch it on whatever hf/ste.json says
+import { PROFILE as STE_PROFILE } from '../../hf/bin/ste.mjs';
+STE_PROFILE.enforce = true;
 const classes = kitClasses();
 const data = { hook: 'Plain words', _bar: 0.4, rows: [{ label: 'Before', _pct: 1 }], _hl: 'words' };
 const tpl = (inner, { id = 's01', root = `<div id="root" data-composition-id="${id}" data-width="1080" data-height="1350">`, head = '' } = {}) => `<template id="${id}-template">${head}\n  ${root}\n${inner}\n  </div>\n</template>\n`;

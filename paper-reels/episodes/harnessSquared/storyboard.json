@@ -1,0 +1,484 @@
+{
+ "item": "2610.14224",
+ "name": "Harness2",
+ "format": "paper",
+ "renderer": "hyperframes",
+ "authors": [
+  "Ruiyao Xu",
+  "Yanfei Chen",
+  "Zhongying CuiZhu",
+  "Bhavana Dalvi Mishra",
+  "Yifei Ming",
+  "Han Yu",
+  "Rujun Han",
+  "Chen-Yu Lee",
+  "Tomas Pfister"
+ ],
+ "voice": {
+  "preset": "s2pro",
+  "speed": 1.42
+ },
+ "ste": {
+  "names": [
+   "Harness2",
+   "AI"
+  ],
+  "terms": [
+   {
+    "term": "harness",
+    "avoid": [
+     "scaffolding",
+     "wrapper",
+     "framework"
+    ]
+   },
+   {
+    "term": "agent",
+    "avoid": [
+     "bot",
+     "assistant"
+    ]
+   },
+   {
+    "term": "probe",
+    "avoid": [
+     "trial",
+     "test run",
+     "experiment"
+    ]
+   },
+   {
+    "term": "improvement harness",
+    "avoid": [
+     "meta-harness",
+     "improver",
+     "learner"
+    ]
+   },
+   {
+    "term": "lesson",
+    "avoid": [
+     "insight",
+     "reflection"
+    ]
+   },
+   {
+    "term": "score",
+    "avoid": [
+     "grade",
+     "mark"
+    ]
+   }
+  ],
+  "jargon": [
+   {
+    "term": "Harness2",
+    "line": "l02"
+   },
+   {
+    "term": "agent",
+    "line": "l03"
+   },
+   {
+    "term": "harness",
+    "line": "l04"
+   },
+   {
+    "term": "probe",
+    "line": "l08"
+   },
+   {
+    "term": "improvement harness",
+    "line": "l14"
+   }
+  ]
+ },
+ "scenes": {
+  "hook": {
+   "transition": "whip"
+  },
+  "task": {
+   "transition": "zoom"
+  },
+  "fail": {
+   "transition": "whip"
+  },
+  "probe": {
+   "transition": "zoom"
+  },
+  "compose": {
+   "transition": "punch"
+  },
+  "payoff": {
+   "transition": "whip"
+  },
+  "reset": {
+   "transition": "whip"
+  },
+  "data": {
+   "transition": "blur"
+  },
+  "close": {}
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "New skills can break an A I on its next job.",
+   "text": "New skills can break an AI on its next job.",
+   "tts": "[intrigue, warning] New skills can [emphasis] break an A I on its next job.",
+   "data": {
+    "title": "NEW SKILLS.",
+    "sub": "BREAK THE NEXT JOB?",
+    "alert": "break future jobs"
+   },
+   "sfx": [
+    {
+     "cue": "break",
+     "kind": "glitch"
+    },
+    {
+     "cue": "job",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "scene": "hook",
+   "say": "Harness Two, a new method, solves this with two loops of improvement.",
+   "text": "Harness2, a new method, solves this with two loops of improvement.",
+   "tts": "[clear, confident] Harness Two, a new method, solves this with [emphasis] two loops of improvement.",
+   "data": {
+    "method": "Harness^2",
+    "loop1": "task-level loop",
+    "loop2": "harnessing loop"
+   },
+   "sfx": [
+    {
+     "cue": "Harness",
+     "kind": "type"
+    },
+    {
+     "cue": "two",
+     "kind": "whoosh"
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "task",
+   "say": "Take one complex job: an A I agent reconciles a schedule, roster, and budget.",
+   "text": "Take one complex job: an AI agent reconciles a schedule, roster, and budget.",
+   "tts": "[grounded setup] Take one complex job: an A I agent reconciles a [emphasis] schedule, roster, and budget.",
+   "data": {
+    "job": "production deliverables memo",
+    "files": [
+     "schedule.xlsx",
+     "roster.csv",
+     "budget.json"
+    ]
+   },
+   "sfx": [
+    {
+     "cue": "job",
+     "kind": "pop"
+    },
+    {
+     "cue": "reconciles",
+     "kind": "whoosh"
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "task",
+   "say": "We call the instructions, files, and tools around the A I its harness.",
+   "text": "We call the instructions, files, and tools around the AI its harness.",
+   "tts": "[explanatory, steady] We call the instructions, files, and tools around the A I its [emphasis] harness.",
+   "data": {
+    "label": "execution harness",
+    "components": [
+     "instructions",
+     "files/",
+     "tools/"
+    ]
+   },
+   "sfx": [
+    {
+     "cue": "instructions",
+     "kind": "pop"
+    },
+    {
+     "cue": "harness",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "fail",
+   "say": "On this job, its first harness missed mismatched files, and scored forty three out of one hundred.",
+   "text": "On this job, its first harness missed mismatched files, and scored 43 out of 100.",
+   "tts": "[problem revealed] On this job, its first harness missed mismatched files, and scored [emphasis] forty three out of one hundred.",
+   "data": {
+    "score": "43",
+    "scale": "100",
+    "tag": "JobBench: 43.1 / 100",
+    "issue": "missed mismatched files"
+   },
+   "sfx": [
+    {
+     "cue": "missed",
+     "kind": "glitch"
+    },
+    {
+     "cue": "scored",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "fail",
+   "say": "In the real world, the A I has no answer key to check its own output.",
+   "text": "In the real world, the AI has no answer key to check its own output.",
+   "tts": "[analytical] In the real world, the A I has [emphasis] no answer key to check its own output.",
+   "data": {
+    "env": "open world",
+    "missing": "no answer key"
+   },
+   "sfx": [
+    {
+     "cue": "real",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "answer",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "probe",
+   "say": "Harness Two creates two test versions: one fixes work habits, and one adds job rules.",
+   "text": "Harness2 creates two test versions: one fixes work habits, and one adds job rules.",
+   "tts": "[structured, clear] Harness Two creates two test versions: one fixes [emphasis] work habits, and one adds job rules.",
+   "data": {
+    "v1": "work habits (invariant)",
+    "v2": "job rules (domain)"
+   },
+   "sfx": [
+    {
+     "cue": "two",
+     "kind": "pop"
+    },
+    {
+     "cue": "habits",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "scene": "probe",
+   "say": "It runs both candidates on the same job: we call this step a probe.",
+   "text": "It runs both candidates on the same job: we call this step a probe.",
+   "tts": "[engaging mechanism] It runs both candidates on the same job: we call this step a [emphasis] probe.",
+   "data": {
+    "step": "PROBE",
+    "setup": "matched conditions"
+   },
+   "sfx": [
+    {
+     "cue": "runs",
+     "kind": "tick"
+    },
+    {
+     "cue": "probe",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l09",
+   "scene": "compose",
+   "say": "Harness Two compares both runs, and combines only the edits that clearly helped.",
+   "text": "Harness2 compares both runs, and combines only the edits that clearly helped.",
+   "tts": "[precise] Harness Two compares both runs, and [emphasis] combines only the edits that clearly helped.",
+   "data": {
+    "action": "compose",
+    "filter": "evidence-backed edits"
+   },
+   "sfx": [
+    {
+     "cue": "compares",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "combines",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "compose",
+   "say": "Each decision is tied to a concrete observation rather than a presumed score gain.",
+   "text": "Each decision is tied to a concrete observation rather than a presumed score gain.",
+   "tts": "[authoritative, grounded] Each decision is tied to a [emphasis] concrete observation rather than a presumed score gain.",
+   "data": {
+    "receipt": "FROM THE PAPER · Compose (sec 2.2.1)",
+    "id": "observation"
+   },
+   "sfx": [
+    {
+     "cue": "decision",
+     "kind": "chime"
+    },
+    {
+     "cue": "concrete",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "payoff",
+   "say": "The re-run checked every output, and the score jumped to seventy eight out of one hundred.",
+   "text": "The re-run checked every output, and the score jumped to 78 out of 100.",
+   "tts": "[exciting payoff] The re-run checked every output, and the score jumped to [emphasis] seventy eight out of one hundred.",
+   "data": {
+    "score": "78",
+    "oldScore": "43",
+    "scale": "100",
+    "tag": "JobBench: 43.1 -> 77.8 (+34.7)"
+   },
+   "sfx": [
+    {
+     "cue": "checked",
+     "kind": "pop"
+    },
+    {
+     "cue": "jumped",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "reset",
+   "say": "If an agent keeps every past edit, future jobs break.",
+   "text": "If an agent keeps every past edit, future jobs break.",
+   "tts": "[cautious turn] If an agent keeps every past edit, [emphasis] future jobs break.",
+   "data": {
+    "hazard": "cumulative clutter & regressions"
+   },
+   "sfx": [
+    {
+     "cue": "keeps",
+     "kind": "pop"
+    },
+    {
+     "cue": "break",
+     "kind": "glitch"
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "reset",
+   "say": "Instead, Harness Two resets the A I agent to clean files, and saves only the lesson.",
+   "text": "Instead, Harness2 resets the AI agent to clean files, and saves only the lesson.",
+   "tts": "[relief, elegant solution] Instead, Harness Two resets the A I agent to clean files, and [emphasis] saves only the lesson.",
+   "data": {
+    "action": "reset worker files",
+    "storage": "lesson -> improvement harness"
+   },
+   "sfx": [
+    {
+     "cue": "resets",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "saves",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l14",
+   "scene": "reset",
+   "say": "The execution harness is the system being improved, and the improvement harness is the mechanism that improves it.",
+   "text": "The execution harness is the system being improved, and the improvement harness is the mechanism that improves it.",
+   "tts": "[calm, profound definition] The execution harness is the system being improved, and the improvement harness is the [emphasis] mechanism that improves it.",
+   "data": {
+    "receipt": "FROM THE PAPER · Recursive Harnessing (sec 2.1)",
+    "id": "mechanism"
+   },
+   "sfx": [
+    {
+     "cue": "execution",
+     "kind": "chime"
+    },
+    {
+     "cue": "mechanism",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l15",
+   "scene": "data",
+   "say": "Across office tasks, the method gained eleven points on average.",
+   "text": "Across office tasks, the method gained eleven points on average.",
+   "tts": "[impressive proof] Across office tasks, the method gained [emphasis] eleven points on average.",
+   "data": {
+    "benchmark": "WorkBuddy-Bench",
+    "base": "64.2",
+    "result": "75.7",
+    "gain": "+11.5",
+    "model": "GLM-5 (OpenCode)",
+    "tag": "WorkBuddy-Bench: +11.5 points (Table 1)"
+   },
+   "sfx": [
+    {
+     "cue": "office",
+     "kind": "pop"
+    },
+    {
+     "cue": "gained",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l16",
+   "scene": "close",
+   "say": "One caveat: extra test probes take more computing time. But resetting after each task keeps the A I from breaking on its next job.",
+   "text": "One caveat: extra test probes take more computing time. But resetting after each task keeps the AI from breaking on its next job.",
+   "tts": "[objective caveat] One caveat: extra test probes take more computing time. [warm, firm takeaway] But resetting after each task keeps the A I from breaking on its next job.",
+   "data": {
+    "caveat": "extra test probes take more computing time",
+    "takeaway": "resetting after each task preserves adaptability",
+    "handle": "hemanth_with_ai",
+    "credit": "Harness^2 · arXiv 2610.14224 · unofficial explainer"
+   },
+   "sfx": [
+    {
+     "cue": "caveat",
+     "kind": "tick"
+    },
+    {
+     "cue": "resetting",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "breaking",
+     "kind": "impact"
+    }
+   ]
+  }
+ ]
+}

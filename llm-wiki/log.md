@@ -398,3 +398,38 @@ Database item created (kind topic). Source records and the wiki page are still t
 
 ## [2026-10-17] ingest | Rust under Python
 Topic item `rust-under-python`. Source records for the tools, the Polars PDS-H post (factor 94.0, pandas 365.71 s, polars streaming 3.89 s, 96 vCPUs, pandas not run at scale factor 100), Rust, the Red Hat GIL and PyO3 path, NumPy as C, PyTorch as C++ and CUDA, Qdrant, LanceDB, Candle, Burn, and free-threaded Python 3.14 still optional. Topic page `wiki/topics/rust-under-python.md`. Records also keep the pages that stay off the carousel: ty speeds, the March 2026 Astral agreement (not closed on those pages), the Rust Foundation $600,000 (not a model-language claim), DuckDB as C++, and safetensors (a Rust crate, not a stated Rust core). No publication.
+
+## [2026-10-17] render | rust-under-python post 4x5
+9 slides, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/posts/rust-under-python, manifest 82c2149bd889
+
+## [2026-10-17] render | rust-under-python post 4x5
+9 slides, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/posts/rust-under-python, manifest 76e0b75de7d3
+
+## [2026-10-17] approve | rust-under-python
+- post for instagram_post: "post this on youtube, instagram as posts also on threads keep captions minimum cause post itself explains"
+
+## [2026-10-17] publish | rust-under-python
+- instagram_post
+
+## [2026-10-17] add | 2610.14224 Harness^2: Recursive Agent Harnessing for an Open World
+Database item created. Dossier still to write: wiki/papers/2610.14224.md
+
+## [2026-10-17] add | 2610.14224 Harness^2: Recursive Agent Harnessing for an Open World
+Database item created. Dossier still to write: wiki/papers/2610.14224.md
+
+## [2026-10-17] render | 2610.14224 9x16
+81.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/harnessSquared/out/hf/final.mp4
+
+## [2026-10-17] render | 2610.14224 9x16
+81.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/harnessSquared/out/hf/final.mp4
+
+## [2026-10-18] render | 2610.14224 9x16
+81.0s, /Users/hemanthvasi/Documents/Developer/content-creation/paper-reels/episodes/harnessSquaredV2/out/hf/final.mp4
+
+## [2026-10-18] approve | 2610.14224
+- reel for youtube,instagram,threads: "Upload harnesssquaredv2 to YouTube Instagram and threads"
+
+## [2026-10-18] publish | 2610.14224
+- youtube
+- instagram
+- threads

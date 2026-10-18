@@ -1,0 +1,129 @@
+<template id="close-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #close-shk, #close-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #close-svg, #close-svg2 { left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-cells { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-cells .cell { border: 4px solid var(--cyan); background: rgba(168,220,242,.14); border-radius: 8px; }
+    #close-caveat { left: 0; top: 0; font-size: 34px; }
+    #close-time { left: 0; top: 0; font-size: 36px; }
+    #close-take { left: 150px; top: 1318px; width: 780px; box-sizing: border-box; white-space: normal; text-align: center; font-size: 34px; line-height: 1.25; color: var(--mint); border-color: var(--mint); }
+    .close-page { position: absolute; top: 1030px; width: 150px; height: 190px; box-sizing: border-box; background: var(--paper); border: 5px solid var(--white); box-shadow: 8px 8px 0 var(--shadow); opacity: 0; }
+    .close-pl { position: absolute; left: 18px; height: 12px; border-radius: 6px; background: #8aa4bd; }
+    #close-pnext { position: absolute; left: 0; top: 0; width: 210px; height: 260px; box-sizing: border-box; background: var(--paper); border: 6px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); opacity: 0; }
+    #close-ntag { position: absolute; left: 14px; top: 16px; font-size: 30px; padding: 4px 10px; color: var(--mint); border-color: var(--mint); }
+    #close-end { position: absolute; left: 90px; top: 640px; width: 900px; height: 440px; box-sizing: border-box; background: var(--panel); border: 6px solid var(--amber);
+      box-shadow: 18px 18px 0 var(--shadow); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; }
+    #close-handle { font: 700 76px "Mono", monospace; color: var(--amber); margin-bottom: 30px; }
+    #close-credit { font: 600 32px/1.3 "Mono", monospace; color: var(--cyan); text-align: center; max-width: 760px; }
+    #close-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #d9ffe9; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+    <div id="close-shk">
+      <div id="close-cam">
+        <svg id="close-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="close-cells"></div>
+        <div id="close-p0" class="close-page"></div>
+        <div id="close-p1" class="close-page"></div>
+        <div id="close-p2" class="close-page"></div>
+        <div id="close-pnext"><div id="close-ntag" class="tag" data-bind="l16.next" data-layout-allow-overlap></div></div>
+        <svg id="close-svg2" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="close-time" class="tag coral" data-bind="l16.time"></div>
+        <div id="close-take" class="tag" data-bind="l16.takeaway" data-layout-allow-overlap></div>
+      </div>
+    </div>
+    <div id="close-hud">
+      <div id="close-caveat" class="tag coral" data-bind="l16.caveat"></div>
+      <div id="close-end"><div id="close-handle" data-bind="l16.handle"></div><div id="close-credit" data-bind="l16.credit"></div></div>
+    </div>
+    <div id="close-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l16', w, n), aE = (w, n) => KIT.cueEnd('l16', w, n), D = KIT.sceneDur('close');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('close-svg'), svg2 = document.getElementById('close-svg2'), E = (t, at, p) => KIT.svgEl(t, at, p || svg);
+      const pulse = (t, o = 0.14) => tl.fromTo('#close-flash', { opacity: o }, { opacity: 0, duration: 0.5, ease: 'none', immediateRender: false }, t);
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+      const add = (host, css, cls) => { const d = document.createElement('div'); d.style.cssText = `position:absolute;${css}`; if (cls) d.className = cls; document.querySelector(host).appendChild(d); return d; };
+      const center = (sel, x, y) => gsap.set(sel, { left: x, top: y, xPercent: -50 });
+
+      // ---- first sentence: probes cost time. A stopwatch, its time arc, and the probes multiplying ----
+      const SW = { x: 540, y: 600, r: 160 };
+      const watch = E('g', { id: 'close-watch' });
+      E('rect', { x: SW.x - 30, y: SW.y - SW.r - 46, width: 60, height: 40, rx: 8, fill: '#f2f8ff' }, watch);
+      const arc = E('circle', { id: 'close-arc', cx: SW.x, cy: SW.y, r: SW.r + 34, fill: 'none', stroke: '#ff6b6b', 'stroke-width': 22, transform: `rotate(-90 ${SW.x} ${SW.y})` }, watch);
+      E('circle', { cx: SW.x, cy: SW.y, r: SW.r, fill: '#0a2340', stroke: '#f2f8ff', 'stroke-width': 12 }, watch);
+      for (let k = 0; k < 12; k++) { const t = (k / 12) * Math.PI * 2; E('path', { d: `M${(SW.x + (SW.r - 34) * Math.cos(t)).toFixed(1)} ${(SW.y + (SW.r - 34) * Math.sin(t)).toFixed(1)} L${(SW.x + (SW.r - 14) * Math.cos(t)).toFixed(1)} ${(SW.y + (SW.r - 14) * Math.sin(t)).toFixed(1)}`, stroke: '#6aa9d0', 'stroke-width': 7 }, watch); }
+      const hand = E('path', { id: 'close-hand', d: `M${SW.x} ${SW.y} V${SW.y - SW.r + 40}`, stroke: '#ffb454', 'stroke-width': 12, 'stroke-linecap': 'round' }, watch);
+      E('circle', { cx: SW.x, cy: SW.y, r: 16, fill: '#ffb454' }, watch);
+      gsap.set(arc, { drawSVG: '0%' });
+      center('#close-caveat', 540, 186);
+      center('#close-time', 540, 296);
+      gsap.set(['#close-caveat', '#close-time', '#close-take'], { opacity: 0 });
+
+      // frame 0: the stopwatch, ticking slowly
+      tl.fromTo('#close-cam', cam(1.06, 500, 760), { ...cam(1.0, 560, 800), duration: a('But') - 0.1, ease: 'sine.inOut' }, 0);
+      tl.fromTo(hand, { rotation: 0, svgOrigin: `${SW.x} ${SW.y}` }, { rotation: 60, svgOrigin: `${SW.x} ${SW.y}`, duration: a('probes'), ease: 'none' }, 0);
+      tl.to(hand, { rotation: 60 + 360 * 3, svgOrigin: `${SW.x} ${SW.y}`, duration: a('time') - a('probes'), ease: 'power1.in' }, a('probes'));
+      KIT.rise(tl, '#close-caveat', a('caveat') - 0.1, { y: -24, dur: 0.3 });
+      pulse(a('caveat'), 0.1);
+      // "extra test probes": one probe becomes many
+      KIT.multiply(tl, '#close-cells', a('extra') - 0.05, { n: 18, cols: 6, cell: 76, gap: 18, x: 540, y: 1080, dur: aE('probes') - a('extra') + 0.1, seed: 9 });
+      // "more computing time": the coral arc fills round the watch
+      tl.to(arc, { drawSVG: '88%', duration: a('time') - a('more') + 0.1, ease: 'power1.inOut' }, a('more') - 0.05);
+      KIT.pop(tl, '#close-time', a('computing'), { from: 0.5 });
+      KIT.shake(tl, '#close-watch', a('time') - 0.05, { amp: 8, dur: 0.25 });
+
+      // ---- second sentence: reset after each task, and the next job does not break ----
+      const tB = a('But');
+      tl.to(['#close-cells', '#close-time'], { opacity: 0, y: 60, duration: 0.3, ease: 'power2.in' }, tB - 0.05);
+      tl.to(watch, { scale: 0.42, x: -330, y: -170, svgOrigin: `${SW.x} ${SW.y}`, opacity: 0.5, duration: 0.45, ease: 'power3.inOut' }, tB - 0.05);
+      tl.to('#close-caveat', { opacity: 0.45, duration: 0.3 }, tB);
+      const belt = E('path', { id: 'close-belt', d: 'M110 1240 H930', class: 'ln', 'stroke-width': 10 }, svg);
+      const rollers = [180, 360, 540, 720, 880].map((x) => E('circle', { cx: x, cy: 1264, r: 16, fill: '#0a2340', stroke: '#6aa9d0', 'stroke-width': 5 }, svg));
+      gsap.set([belt, ...rollers], { opacity: 0 });
+      tl.fromTo([belt, ...rollers], { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, tB);
+      const bot = E('g', { id: 'close-botg', opacity: 0 }, svg);
+      const R = KIT.robot(bot, { id: 'close-r', x: 540, y: 640, s: 1.15 });
+      const ring = E('circle', { id: 'close-ring', cx: 540, cy: 800, r: 210, fill: 'none', stroke: '#a8dcf2', 'stroke-width': 8, opacity: 0 }, svg);
+      tl.fromTo(bot, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.35, ease: 'back.out(2)', immediateRender: false }, tB + 0.05);
+      tl.to('#close-cam', { ...cam(1.0, 540, 860), duration: 0.5, ease: 'power3.inOut' }, tB);
+      // "resetting after each task": three pages pass on the belt; after each, the agent resets (a ring pulses)
+      const pages = ['#close-p0', '#close-p1', '#close-p2'];
+      pages.forEach((s) => [[0, 100], [28, 80], [56, 110], [84, 70]].forEach(([y, w]) => add(s, `top:${30 + y}px;width:${w}px`, 'close-pl')));
+      const tR = a('resetting'), step = (a('keeps') - tR) / 3;
+      pages.forEach((s, k) => {
+        const t = tR - 0.1 + k * step;
+        gsap.set(s, { left: 465 });
+        tl.fromTo(s, { opacity: 0, x: 465 }, { opacity: 1, x: 0, duration: step * 0.55, ease: 'power2.out', immediateRender: false }, t);
+        const ok = E('path', { id: `close-ok${k}`, d: 'M500 1110 l20 20 l40 -46', fill: 'none', stroke: '#1d9a68', 'stroke-width': 12, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, svg2);
+        gsap.set(ok, { drawSVG: '0%' });
+        tl.to(ok, { drawSVG: '100%', duration: 0.12 }, t + step * 0.55);
+        tl.to(s, { x: -365, opacity: 0, duration: step * 0.4, ease: 'power2.in' }, t + step * 0.6);
+        tl.to(ok, { opacity: 0, x: -360, duration: step * 0.4, ease: 'power2.in' }, t + step * 0.6);
+        tl.fromTo(ring, { opacity: 0.9, scale: 0.8, svgOrigin: '540 800' }, { opacity: 0, scale: 1.25, svgOrigin: '540 800', duration: 0.4, ease: 'power2.out', immediateRender: false }, t + step * 0.62);
+      });
+      // "keeps the AI from breaking on its next job": calm eyes, the next job lands and passes
+      tl.to(R.eyes, { attr: { fill: '#7be3b0' }, duration: 0.2 }, a('keeps'));
+      tl.to(R.ant, { attr: { fill: '#7be3b0' }, duration: 0.2 }, a('keeps'));
+      KIT.rise(tl, '#close-take', a('breaking') - 0.1, { y: 30, dur: 0.35 });
+      gsap.set('#close-pnext', { left: 435, top: 975 });
+      tl.fromTo('#close-pnext', { opacity: 0, x: 500, rotation: 8 }, { opacity: 1, x: 0, rotation: -2, duration: 0.35, ease: 'power3.out', immediateRender: false }, a('next') - 0.25);
+      const big = E('path', { id: 'close-big', d: 'M470 1115 l34 34 l70 -80', fill: 'none', stroke: '#1d9a68', 'stroke-width': 18, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, svg2);
+      gsap.set(big, { drawSVG: '0%' });
+      tl.to(big, { drawSVG: '100%', duration: 0.2, ease: 'power2.out' }, a('job') + 0.05);
+      tl.to(bot, { y: -30, duration: 0.15, yoyo: true, repeat: 1, ease: 'power2.out' }, a('job') + 0.1);
+      KIT.sparks(tl, '#close-cam', 540, 1080, a('job') + 0.15, { n: 12, r: 200, color: '#7be3b0' });
+      pulse(a('job') + 0.15, 0.16);
+      // end card
+      const tEnd = aE('job') + 0.35;
+      tl.fromTo('#close-end', { opacity: 0, y: 120 }, { opacity: 1, y: 0, duration: 0.4, ease: 'back.out(1.6)', immediateRender: false }, tEnd);
+      tl.to(['#close-cam', '#close-caveat'], { opacity: 0.25, duration: 0.3 }, tEnd);
+      tl.to('#close-cam', { ...cam(0.94, 540, 860), duration: D - tEnd, ease: 'sine.out' }, tEnd);
+      window.__timelines["close"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,127 @@
+<template id="probe-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #probe-shk { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #probe-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #probe-svg, #probe-svg2 { left: 0; top: 0; width: 1080px; height: 1920px; }
+    .probe-card { position: absolute; left: 390px; top: 470px; width: 300px; height: 230px; box-sizing: border-box; background: var(--panel); border: 7px solid var(--white); box-shadow: 12px 12px 0 var(--shadow); }
+    .probe-cl { position: absolute; left: 0; bottom: 14px; width: 100%; text-align: center; font: 700 32px "Mono", monospace; color: var(--white); }
+    #probe-l1 { left: 0; top: 0; font-size: 36px; } #probe-l2 { left: 0; top: 0; font-size: 36px; }
+    .probe-job { position: absolute; top: 980px; width: 210px; height: 250px; box-sizing: border-box; background: var(--paper); border: 6px solid var(--white); box-shadow: 10px 10px 0 var(--shadow); }
+    .probe-jl { position: absolute; left: 22px; height: 16px; border-radius: 8px; background: #8aa4bd; }
+    #probe-same { left: 0; top: 0; font-size: 36px; }
+    #probe-stamp { left: 0; top: 0; font-size: 120px; }
+    #probe-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="probe" data-width="1080" data-height="1920">
+    <div id="probe-shk">
+      <div id="probe-cam">
+        <svg id="probe-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="probe-ca" class="probe-card"><div class="probe-cl" data-bind="l07.base" data-layout-allow-overlap></div></div>
+        <div id="probe-cb" class="probe-card"><div class="probe-cl" data-bind="l07.base" data-layout-allow-overlap></div></div>
+        <div id="probe-j0" class="probe-job"></div>
+        <div id="probe-j1" class="probe-job"></div>
+        <div id="probe-j2" class="probe-job"></div>
+        <svg id="probe-svg2" class="ink" viewBox="0 0 1080 1920"></svg>
+        <div id="probe-l1" class="tag cyan" data-bind="l07.v1"></div>
+        <div id="probe-l2" class="tag" data-bind="l07.v2"></div>
+        <div id="probe-same" class="tag" data-bind="l08.job"></div>
+        <div id="probe-stamp" class="stamp amber" data-bind="l08.step"></div>
+      </div>
+    </div>
+    <div id="probe-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l07', w, n), b = (w, n) => KIT.cue('l08', w, n), D = KIT.sceneDur('probe');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('probe-svg'), svg2 = document.getElementById('probe-svg2'), E = (t, at, p) => KIT.svgEl(t, at, p || svg);
+      const pulse = (t, o = 0.16) => tl.fromTo('#probe-flash', { opacity: o }, { opacity: 0, duration: 0.45, ease: 'none', immediateRender: false }, t);
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+      const add = (host, css) => { const d = document.createElement('div'); d.style.cssText = `position:absolute;${css}`; document.querySelector(host).appendChild(d); return d; };
+      // each harness card shows its three parts as small blocks (instructions, files, tools)
+      ['#probe-ca', '#probe-cb'].forEach((h) => { [['#a8dcf2', 30], ['#ffb454', 112], ['#f2f8ff', 194]].forEach(([c, x]) => add(h, `left:${x}px;top:34px;width:62px;height:96px;border-radius:8px;background:${c}`)); });
+      // three copies of one job page (the middle one drops first, then two copies slide into the lanes)
+      ['#probe-j0', '#probe-j1', '#probe-j2'].forEach((h) => { [[150, 0], [110, 40], [160, 80], [90, 120], [140, 160]].forEach(([w, y]) => { add(h, `top:${40 + y}px;width:${w}px`).className = 'probe-jl'; }); });
+      gsap.set('#probe-j0', { left: 435 }); gsap.set('#probe-j1', { left: 185 }); gsap.set('#probe-j2', { left: 685 });
+
+      // ---- lanes (drawn on "runs") and the stopwatch ----
+      const lanes = [290, 790].map((x, i) => E('path', { id: `probe-lane${i}`, d: `M${x} 790 V1370`, stroke: i ? '#ffb454' : '#a8dcf2', 'stroke-width': 10, 'stroke-dasharray': '26 16', fill: 'none' }));
+      const SW = { x: 540, y: 300 };
+      const watch = E('g', { id: 'probe-watch', opacity: 0 }, svg);
+      E('rect', { x: SW.x - 22, y: SW.y - 132, width: 44, height: 30, rx: 6, fill: '#f2f8ff' }, watch);
+      E('circle', { cx: SW.x, cy: SW.y, r: 104, fill: '#0a2340', stroke: '#f2f8ff', 'stroke-width': 10 }, watch);
+      for (let k = 0; k < 12; k++) { const t = (k / 12) * Math.PI * 2; E('path', { d: `M${(SW.x + 80 * Math.cos(t)).toFixed(1)} ${(SW.y + 80 * Math.sin(t)).toFixed(1)} L${(SW.x + 92 * Math.cos(t)).toFixed(1)} ${(SW.y + 92 * Math.sin(t)).toFixed(1)}`, stroke: '#6aa9d0', 'stroke-width': 5 }, watch); }
+      const hand = E('path', { id: 'probe-hand', d: `M${SW.x} ${SW.y} V${SW.y - 74}`, stroke: '#ffb454', 'stroke-width': 9, 'stroke-linecap': 'round' }, watch);
+      E('circle', { cx: SW.x, cy: SW.y, r: 12, fill: '#ffb454' }, watch);
+
+      // ---- badges: a checklist with a clock (work habits), a rule book with straps (job rules) ----
+      const habit = E('g', { id: 'probe-habit', opacity: 0 }, svg2);
+      E('rect', { x: 372, y: 420, width: 110, height: 130, rx: 10, fill: '#f4efe3', stroke: '#a8dcf2', 'stroke-width': 7 }, habit);
+      [450, 482, 514].forEach((y) => { E('path', { d: `M388 ${y} l10 10 l18 -20`, stroke: '#1d9a68', 'stroke-width': 7, fill: 'none', 'stroke-linecap': 'round' }, habit); E('path', { d: `M428 ${y + 2} H466`, stroke: '#3d78a6', 'stroke-width': 7, 'stroke-linecap': 'round' }, habit); });
+      E('circle', { cx: 480, cy: 420, r: 30, fill: '#0a2340', stroke: '#a8dcf2', 'stroke-width': 6 }, habit);
+      E('path', { d: 'M480 402 V420 L494 428', stroke: '#a8dcf2', 'stroke-width': 6, fill: 'none', 'stroke-linecap': 'round' }, habit);
+      const rules = E('g', { id: 'probe-rules', opacity: 0 }, svg2);
+      E('rect', { x: 880, y: 418, width: 120, height: 150, rx: 8, fill: '#ffb454', stroke: '#f2f8ff', 'stroke-width': 7 }, rules);
+      E('rect', { x: 880, y: 418, width: 26, height: 150, fill: '#c97a1e' }, rules);
+      E('path', { d: 'M920 460 H984 M920 486 H970 M920 512 H980', stroke: '#071d35', 'stroke-width': 7, 'stroke-linecap': 'round' }, rules);
+      E('path', { d: 'M866 538 H1014 M866 452 H1014', stroke: '#6aa9d0', 'stroke-width': 10 }, rules);
+      gsap.set(lanes, { drawSVG: '0%' });
+
+      // frame 0: one harness, close up
+      tl.fromTo('#probe-cam', cam(1.3, 540, 585, 800), { ...cam(1.24, 540, 590, 800), duration: 1.2, ease: 'sine.out' }, 0);
+      tl.to('#probe-ca', { scale: 1.06, transformOrigin: '50% 50%', duration: 0.15, yoyo: true, repeat: 1 }, a('Harness'));
+      // "two test versions": the harness splits into two copies
+      const tSp = a('two', 1);
+      tl.to('#probe-ca', { x: -250, borderColor: '#a8dcf2', duration: 0.5, ease: 'power3.inOut' }, tSp - 0.2);
+      tl.to('#probe-cb', { x: 250, borderColor: '#ffb454', duration: 0.5, ease: 'power3.inOut' }, tSp - 0.2);
+      tl.to('#probe-cam', { ...cam(1.0, 540, 640, 820), duration: 0.6, ease: 'power3.inOut' }, tSp - 0.2);
+      KIT.sparks(tl, '#probe-cam', 540, 585, tSp + 0.05, { n: 10, r: 200 });
+      pulse(tSp + 0.05, 0.12);
+      // "work habits": the checklist and clock clip onto copy A; "job rules": the rule book straps onto copy B
+      gsap.set(['#probe-l1', '#probe-l2', '#probe-same', '#probe-stamp'], { opacity: 0 });
+      gsap.set('#probe-l1', { left: 290, top: 724, xPercent: -50 }); gsap.set('#probe-l2', { left: 790, top: 724, xPercent: -50 });
+      tl.fromTo(habit, { opacity: 0, x: -200, y: -200, rotation: -30, svgOrigin: '430 480' }, { opacity: 1, x: 10, y: 0, rotation: -8, svgOrigin: '430 480', duration: 0.35, ease: 'back.out(1.8)' }, a('work') - 0.15);
+      KIT.pop(tl, '#probe-l1', a('habits') - 0.1);
+      // the camera visits each copy as it gets its badge, then pulls back for the run
+      tl.to('#probe-cam', { ...cam(1.08, 540, 600, 820), duration: 0.5, ease: 'power3.inOut' }, a('fixes') - 0.1);
+      tl.to('#probe-ca', { scale: 1.15, transformOrigin: '50% 20%', boxShadow: '0 0 60px rgba(168,220,242,.8)', duration: 0.3, ease: 'back.out(2)' }, a('fixes'));
+      tl.to('#probe-ca', { scale: 1, boxShadow: '12px 12px 0 rgba(2,12,24,.62)', duration: 0.3 }, a('and') - 0.1);
+      pulse(a('habits'), 0.14);
+      tl.to('#probe-cb', { scale: 1.15, transformOrigin: '50% 20%', boxShadow: '0 0 60px rgba(255,180,84,.8)', duration: 0.3, ease: 'back.out(2)' }, a('adds'));
+      tl.to('#probe-cb', { scale: 1, boxShadow: '12px 12px 0 rgba(2,12,24,.62)', duration: 0.3 }, b('It'));
+      pulse(a('rules'), 0.14);
+      tl.to('#probe-cam', { ...cam(1.0, 540, 640, 820), duration: 0.45, ease: 'power3.inOut' }, b('It') - 0.1);
+      tl.to('#probe-ca', { rotation: -3, transformOrigin: '50% 100%', duration: 0.08, yoyo: true, repeat: 3 }, a('habits'));
+      tl.fromTo(rules, { opacity: 0, x: 200, y: -260, rotation: 30, svgOrigin: '940 490' }, { opacity: 1, x: -50, y: 0, rotation: 6, svgOrigin: '940 490', duration: 0.35, ease: 'back.out(1.8)' }, a('job') - 0.15);
+      KIT.pop(tl, '#probe-l2', a('rules') - 0.05);
+      tl.to('#probe-cb', { rotation: 3, transformOrigin: '50% 100%', duration: 0.08, yoyo: true, repeat: 3 }, a('rules') + 0.1);
+
+      // ---- l08: the stopwatch starts; both copies run the same job ----
+      const tRun = b('runs');
+      tl.fromTo(watch, { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: 0.3, ease: 'back.out(2)', immediateRender: false }, tRun - 0.2);
+      tl.fromTo(hand, { rotation: 0, svgOrigin: `${SW.x} ${SW.y}` }, { rotation: 360 * 2.5, svgOrigin: `${SW.x} ${SW.y}`, duration: D - tRun, ease: 'none', immediateRender: false }, tRun);
+      lanes.forEach((l) => tl.to(l, { drawSVG: '100%', duration: 0.4, ease: 'power2.out' }, b('both')));
+      // the job page drops in, then splits into two identical copies, one per lane
+      tl.fromTo('#probe-j0', { opacity: 0, y: -500 }, { opacity: 1, y: 0, duration: 0.35, ease: 'bounce.out' }, b('candidates') - 0.1);
+      tl.fromTo(['#probe-j1', '#probe-j2'], { opacity: 0, x: (i) => (i ? -250 : 250) }, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' }, b('same') - 0.25);
+      tl.to('#probe-j0', { opacity: 0, scale: 0.8, duration: 0.2 }, b('same') - 0.2);
+      tl.to('#probe-cam', { ...cam(1.05, 540, 1000, 900), duration: 0.6, ease: 'power3.inOut' }, b('on') - 0.1);
+      const eq = E('path', { id: 'probe-eq', d: 'M500 1090 H580 M500 1124 H580', stroke: '#ffb454', 'stroke-width': 12, 'stroke-linecap': 'round' }, svg2);
+      gsap.set(eq, { drawSVG: '0%' });
+      tl.to(eq, { drawSVG: '100%', duration: 0.25 }, b('same') + 0.1);
+      gsap.set('#probe-same', { left: 540, top: 1262, xPercent: -50 });
+      KIT.pop(tl, '#probe-same', b('job') - 0.05);
+      // work runs down both lanes at the same pace
+      for (let k = 0; k < 4; k++) [290, 790].forEach((x, i) => KIT.travel(tl, '#probe-cam', b('both') + 0.3 + k * 0.62, [x, 800], [x, 1360], { dur: 0.55, cls: 'packet' }));
+      // "probe": back up to the stopwatch; the name stamps on it
+      tl.to('#probe-cam', { ...cam(0.98, 540, 700, 820), duration: 0.45, ease: 'power3.inOut' }, b('step') - 0.3);
+      gsap.set('#probe-stamp', { left: 540, top: 230, xPercent: -50 });
+      tl.fromTo('#probe-stamp', { scale: 2.6, opacity: 0, rotation: -7, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, rotation: -7, duration: 0.2, ease: 'power4.in' }, b('probe') - 0.12);
+      KIT.shake(tl, '#probe-shk', b('probe') + 0.08, { amp: 16, dur: 0.32 });
+      pulse(b('probe') + 0.08, 0.22);
+      window.__timelines["probe"] = tl;
+    })();
+  </script>
+</template>

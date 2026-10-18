@@ -1,0 +1,35 @@
+{
+ "note": "MemScope (arXiv 2610.21170v1, 2026-10-15, preprint). Headline numbers on screen: 63% and 87%, GAIA diagnostic ablation (Table 5, sec 4.4), the authors' own runs, one number per setting, no spread reported; backbone model not stated for Table 5. 87% is the Trace + Memory Inspection variant, not the full MemScope system (Patch History variant: 83.33%). The protagonist case (Table 6, App. B.1) comes from the Trace-only variant; its cause is 'proposed' and its outcome is not reported. Code and memory state both vary across compared runs (Fig 3 caption). Round 2: the hook no longer states the cause as fact; the protagonist case is told as the paper records it (zero-step run, no notes reached the agent); 87% is labelled as one test setting (the best of the six in Table 5) and the full MemScope 83% is spoken.",
+ "paper": "llm-wiki/raw/assets/2610.21170/paper-v1-text.txt, PDF at llm-wiki/raw/assets/2610.21170/paper-v1.pdf",
+ "numbers": {
+  "0": "Zero steps in the recorded GAIA case: trajectory_length=0, zero-length traces, \"two zero-step failures\" (Table 6, p. 9; App. B.1, p. 18). On screen as \"0 steps\".",
+  "6": "Table 6 (p. 9), the recorded GAIA repair case; tag 'recorded case, Table 6'.",
+  "63": "GAIA diagnostic ablation, Summary-only row: 63.33% task accuracy (Table 5, p. 8; sec 4.4). Patch Agent received only grouped failure reports.",
+  "83": "Full MemScope (with Patch History) on the GAIA diagnostic ablation: 83.33% (Table 5, sec 4.4). Spoken as \"Full MemScope: eighty three\".",
+  "87": "GAIA diagnostic ablation, Trace + Memory Inspection row: 86.67% task accuracy (Table 5, p. 8; sec 4.4). Patch Agent read raw traces and could inspect the memory store. Not the full MemScope score.",
+  "63.33": "Exact value behind 63% (Table 5, p. 8).",
+  "86.67": "Exact value behind 87% (Table 5, p. 8).",
+  "83.33": "MemScope with Patch History on the same ablation (Table 5, sec 4.4); caption only.",
+  "4.4": "Section number (sec 4.4); also the median code-change ratio (4.4%) across the archived provider transitions; separately, the median transition touches one function (sec 4.4, p. 9; abstract). Post text only.",
+  "2610.21170": "arXiv id in the closing credit"
+ },
+ "evidence_incidental": {
+  "1": "R1 crop (p. 5, line 'provider code through the read-only tools in Table 1 ...'): the table number 'Table 1'; also 'Listing 1' above R2 if the crop shows it."
+ },
+ "claims": {
+  "l01": "Hook. Sec 1 and App. B.1: a recorded GAIA failure in the memory architecture (missing guidance, zero-step runs). \"Fix one line, or rewrite it all?\" is a question: MemScope makes localized edits (sec 3.3); prior architecture-level methods \"propose complete executable architectures\" (Fig 1 caption) and are \"often leading to large-scale rewrites\" (abstract). No cause is stated as fact.",
+  "l02": "Sec 1, Fig 1: MemScope applies 'a localized, in-place edit to the existing provider'; 'only the highlighted code region is modified'.",
+  "l03": "Sec 4.1 and sec 3: the Agent Executor (Flash-Searcher) performs GAIA/xBench web research tasks and stores distilled memory items (Eq. 3-4).",
+  "l04": "Sec 1: the memory architecture is 'the executable logic for storage, retrieval, and presentation' / 'the code that determines what is stored, how it is retrieved'.",
+  "l05": "Table 6 / App. B.1: Trace-only inspects trajectory_length=0 and empty memory_guidance_steps; B.1 \"two zero-step failures\". \"The memory gives the agent no notes\" = empty memory guidance (\"missing guidance\", B.1). \"Fails\": the case is one of the recorded GAIA failures. No search outcome or answer is claimed.",
+  "l06": "\"Usually\" mirrors the abstract's \"typically\". Abstract: recent self-evolving approaches use \"execution feedback, typically represented as evaluation scores or compressed summaries\". Sec 3.3 (p. 5): \"A score alone cannot distinguish absent experience, filtering/ranking errors, and ineffective guidance formatting\". Receipt R1.",
+  "l07": "Abstract: \"Without a precise failure location, existing approaches lack a clear code-level target for modification ... often leading to large-scale rewrites of an otherwise capable memory architecture.\" No rewrite baseline row is implied.",
+  "l08": "Sec 3.3: the Patch Agent produces 'a localized code update' with exact old-to-new replacements; prompts 'prohibit broad rewrites'.",
+  "l09": "Sec 3.3, Table 1: the Patch Agent inspects raw execution traces. Table 6 / App. B.1: zero-length traces (trajectory_length=0) and empty memory_guidance_steps: zero steps, no notes.",
+  "l10": "App. B.1 (p. 18): \"a specific retrieval-code change\"; Trace-only \"identifies an early return under MemoryStatus.IN as the proposed cause of missing guidance\". Table 6: \"Early-return guard under MemoryStatus.IN may suppress guidance\". \"May\" keeps the hedge, and the on-screen tag reads \"proposed cause\" (B.1); \"search code\" = retrieval code; \"stop the search too soon\" = early return.",
+  "l11": "App. A.1, Listing 1 (p. 15): \"Your job is to make one minimal, evidence-backed patch to the CURRENT provider.\" Receipt R2. Table 6 / B.1: \"Remove the early-return guard\" / \"removes that guard\". The outcome of this case is not reported and not claimed.",
+  "l12": "Sec 4.4 / Table 5: the authors vary the diagnostic inputs of the Patch Agent on the same GAIA tasks. Summary-only (\"receives candidate reports\", Evidence = Summary): 63.33%. This is the authors' own ablation, not an older method.",
+  "l13": "Table 5, sec 4.4: Trace + Memory Inspection (raw trace plus the memory store): 86.67%, \"the highest GAIA diagnostic accuracy\" of the six settings. Full MemScope (adds Patch History): 83.33%. On screen 87% is labelled as one test setting and 83% as full MemScope.",
+  "l14": "Small test: sec 4.4 calls the 86.67 vs 83.33 gap \"the one-task difference\" (about 30 tasks); one number per setting, no spread reported. Authors' own runs. Closing line summarizes the method; no new claim."
+ }
+}

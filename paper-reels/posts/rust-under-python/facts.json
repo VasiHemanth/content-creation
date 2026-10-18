@@ -1,0 +1,18 @@
+{
+  "note": "Every printed number is from Polars' own PDS-H table (Ritchie Vink, 1 Jun 2025, https://pola.rs/posts/benchmarks), except 3.14, which is the Python version. Nobody re-ran the suite. 94.0 is their printed factor, not 365.71 / 3.89. Draw-only keys _pandas, _polars, and _max are bar lengths and are not printed. The facts gate splits a version at the second dot, so 2.2.3 is also stored as 2.2 and 3, and 1.30.0 as 1.30 and 0. Those fragments are the version text, not extra measurements.",
+  "numbers": {
+    "94.0": "Polars' printed factor for pandas 2.2.3 against polars streaming 1.30.0 on PDS-H at scale factor 10. Ritchie Vink, Polars, 1 Jun 2025, https://pola.rs/posts/benchmarks. Not every workload. Not 365.71 / 3.89.",
+    "10": "PDS-H scale factor of the pandas row in that same post. Pandas was not run at the larger scale (100).",
+    "2.2.3": "pandas version printed on the bar label, from the scale factor 10 row of that post.",
+    "2.2": "The facts gate reads the printed version 2.2.3 as 2.2 and 3. This key is the first part of that pandas version, not a separate figure. Same post.",
+    "3": "The facts gate reads the printed version 2.2.3 as 2.2 and 3. This key is the last component of pandas 2.2.3, not a separate count. Same post.",
+    "365.71": "pandas 2.2.3 total_time in seconds on PDS-H at scale factor 10, from that post. Not re-run here.",
+    "1.30.0": "Polars version printed on the streaming bar label, from the scale factor 10 row of that post.",
+    "1.30": "The facts gate reads the printed version 1.30.0 as 1.30 and 0. This key is the first part of that Polars version, not a separate figure. Same post.",
+    "0": "The facts gate reads the printed version 1.30.0 as 1.30 and 0. This key is the last component of 1.30.0, not a measured zero. Same post.",
+    "3.89": "polars streaming 1.30.0 total_time in seconds on PDS-H at scale factor 10, from that post. Not re-run here.",
+    "96": "vCPU count of the AWS c7a.24xlarge named in that post (96 vCPUs / 192 GB memory). Not cores.",
+    "192": "GB of memory on that same AWS c7a.24xlarge.",
+    "3.14": "Python version in which the free-threaded build is officially supported and still optional. https://docs.python.org/3.14/whatsnew/3.14.html and PEP 779 (https://peps.python.org/pep-0779/). Not the default build."
+  }
+}

@@ -1,0 +1,95 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #hook-beat { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 800px; }
+    #hook-title { left: 0; top: 170px; width: 1080px; text-align: center; font-size: 132px; }
+    #hook-claim { left: 0; top: 340px; width: 1080px; text-align: center; font-size: 96px; color: var(--amber); text-shadow: 6px 6px 0 var(--shadow); }
+    .cf { position: absolute; background: var(--panel); border: 4px solid var(--cyan); box-shadow: 12px 12px 0 var(--shadow); }
+    .cf .tab { position: absolute; left: -4px; top: -54px; padding: 8px 20px; font: 700 28px "Mono", monospace; color: var(--deep); background: var(--cyan); white-space: nowrap; }
+    .cf .cl { position: absolute; left: 26px; font: 600 30px/1 "Mono", monospace; color: var(--dim); white-space: pre; }
+    .cf .cl.bug { color: #ff8fc4; }
+    .drw { position: absolute; background: var(--deep); border: 5px solid var(--amber); box-shadow: 10px 10px 0 var(--shadow); }
+    .drw .nc { position: absolute; width: 70px; height: 92px; background: var(--amber); border: 3px solid var(--deep); }
+    .drw .hdl { position: absolute; left: 50%; bottom: 22px; width: 90px; height: 14px; margin-left: -45px; background: var(--amber); }
+    #hook-file { left: 200px; top: 590px; width: 680px; height: 470px; }
+    #hook-drw { left: 370px; top: 1190px; width: 340px; height: 150px; }
+    #hook-dlbl { left: 470px; top: 1360px; font-size: 30px; }
+    #hook-name { left: 0; top: 1186px; width: 1080px; text-align: center; font-size: 96px; color: #c3a6ff; text-shadow: 6px 6px 0 var(--shadow); }
+    #hook-only { left: 260px; top: 1320px; font-size: 34px; color: #c3a6ff; border-color: #c3a6ff; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-cam"><div id="hook-beat">
+      <div id="hook-title" class="hd" data-bind="l01.title"></div>
+      <div id="hook-claim" class="hd" data-bind="l01.claim"></div>
+      <div id="hook-file" class="cf"><div id="hook-tab" class="tab" data-bind="l01.file"></div></div>
+      <svg class="ink" id="hook-svg" style="left:0;top:0;width:1080px;height:1920px" viewBox="0 0 1080 1920">
+        <rect id="hook-box" x="0" y="0" width="10" height="10" rx="8" fill="none" stroke="#c3a6ff" stroke-width="6" />
+        <path id="hook-x" d="M820 610 L860 650 M860 610 L820 650" stroke="#ff6b6b" stroke-width="10" stroke-linecap="round" fill="none" />
+      </svg>
+      <div id="hook-drw" class="drw">
+        <div class="nc" id="hook-nc0" style="left:40px;top:-60px"></div>
+        <div class="nc" id="hook-nc1" style="left:130px;top:-70px"></div>
+        <div class="nc" id="hook-nc2" style="left:220px;top:-56px"></div>
+        <div class="hdl"></div>
+      </div>
+      <div id="hook-dlbl" class="tag" data-bind="l01.notes"></div>
+      <div id="hook-name" class="hd" data-bind="l02.name"></div>
+      <div id="hook-only" class="tag" data-bind="l02.only"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const S = 'hook', a = (w, n) => KIT.cue('l01', w, n), b = (w, n) => KIT.cue('l02', w, n), D = KIT.sceneDur(S);
+      KIT.bind('#hook-cam');
+      const tl = gsap.timeline({ paused: true });
+
+      // the code file, built from the storyboard; one pink line will be the one to fix
+      const d1 = KIT.data('l01'), file = document.querySelector('#hook-file'), LH = 52, TOP = 34;
+      const lines = d1.code.map((s, k) => {
+        const el = document.createElement('div'); el.className = 'cl' + (k === d1._bug ? ' bug' : ''); el.id = `hook-cl${k}`;
+        el.textContent = s; el.style.top = `${TOP + k * LH}px`; file.appendChild(el); return el;
+      });
+      const bug = lines[d1._bug], others = lines.filter((e) => e !== bug);
+      const by = 590 + TOP + d1._bug * LH;
+      const box = document.querySelector('#hook-box');
+      box.setAttribute('x', 214); box.setAttribute('y', by - 12); box.setAttribute('width', 600); box.setAttribute('height', 56);
+
+      // 0.0 s: the question is already up; a small settle only
+      tl.fromTo('#hook-title', { scale: 1.06 }, { scale: 1, duration: 0.5, ease: 'power3.out' }, 0);
+      tl.fromTo('#hook-claim', { y: 8 }, { y: 0, duration: 0.5, ease: 'power3.out' }, 0);
+
+      // "memory failed": the notes drawer comes back empty-handed, the file turns coral and shakes
+      const tF = a('failed');
+      tl.to(['#hook-nc0', '#hook-nc1', '#hook-nc2'], { y: 70, opacity: 0.35, duration: 0.2, ease: 'power3.in', stagger: 0.04 }, a('memory'));
+      tl.fromTo('#hook-file', { borderColor: '#a8dcf2' }, { borderColor: '#ff6b6b', duration: 0.12 }, tF - 0.05);
+      tl.fromTo('#hook-x', { opacity: 0, scale: 2, svgOrigin: '840 630' }, { opacity: 1, scale: 1, duration: 0.18, ease: 'power4.in' }, tF - 0.05);
+      KIT.shake(tl, '#hook-beat', tF + 0.1, { amp: 12, dur: 0.28 });
+      tl.fromTo('#hook-file', { backgroundColor: '#0a2340' }, { backgroundColor: '#5a2433', duration: 0.12, yoyo: true, repeat: 1 }, a('memory') - 0.1);
+      tl.to('#hook-file', { backgroundColor: '#5a2433', duration: 0.1, yoyo: true, repeat: 1 }, tF - 0.05);
+
+      // "Fix one line": the box draws round one line and it pulses; "rewrite it all": every line flickers
+      KIT.draw(tl, '#hook-box', a('Fix') - 0.05, 0.3, { ease: 'power2.out' });
+      tl.fromTo(bug, { scale: 1, transformOrigin: '0 50%' }, { scale: 1.14, duration: 0.16, yoyo: true, repeat: 3, ease: 'sine.inOut' }, a('one'));
+      tl.fromTo('#hook-title', { color: '#f2f8ff' }, { color: '#c3a6ff', duration: 0.2 }, a('Fix'));
+      lines.forEach((el, k) => KIT.glitch(tl, el, a('rewrite') + k * 0.02, { amp: 10 }));
+      tl.fromTo('#hook-claim', { scale: 1 }, { scale: 1.08, duration: 0.2, yoyo: true, repeat: 1 }, a('rewrite'));
+      KIT.shake(tl, '#hook-file', a('all'), { amp: 10, dur: 0.25 });
+
+      // l02: the method's name, small; the rest of the file dims, the one line stays lit
+      tl.to(['#hook-drw', '#hook-dlbl'], { y: 140, opacity: 0, duration: 0.3, ease: 'power2.in' }, b('MemScope') - 0.3);
+      tl.to('#hook-x', { opacity: 0, duration: 0.2 }, b('MemScope') - 0.3);
+      tl.to('#hook-file', { borderColor: '#a8dcf2', duration: 0.3 }, b('MemScope'));
+      KIT.typeOn(tl, '#hook-name', b('MemScope') - 0.05, 26);
+      tl.to(others, { opacity: 0.22, duration: 0.3 }, b('only'));
+      tl.to(bug, { color: '#ffd6ea', textShadow: '0 0 22px rgba(255,143,196,.9)', duration: 0.3 }, b('broken'));
+      KIT.rise(tl, '#hook-only', b('only') + 0.1, { y: 20 });
+
+      // camera: slow push toward the file, beats on the spoken hits
+      tl.fromTo('#hook-cam', { scale: 1 }, { scale: 1.06, duration: D, ease: 'sine.inOut' }, 0);
+      KIT.beats(tl, '#hook-beat', [a('memory'), a('Fix'), a('rewrite'), b('MemScope'), b('broken')], { amp: 0.03, shift: 18 });
+
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

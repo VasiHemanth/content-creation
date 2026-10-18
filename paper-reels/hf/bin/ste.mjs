@@ -91,7 +91,8 @@ export function checkLine(text, { names = [], terms = [], free = false, profile 
   for (const t of terms) for (const a of t.avoid || []) {
     if (new RegExp(`\\b${esc(lower(a))}\\b`).test(body)) add('term', true, `"${a}" is a second name for "${t.term}"`, `use "${t.term}"`);
   }
-  return out;
+  // profile.enforce === false: the grammar and length rules become advice. "term" stays hard (one name per concept).
+  return profile.enforce === false ? out.map((f) => (f.rule === 'term' ? f : { ...f, hard: false })) : out;
 }
 
 /** Where each technical term enters (paper-reels/formats/explain.md). `jargon` is [{ term, line }]: the line that
