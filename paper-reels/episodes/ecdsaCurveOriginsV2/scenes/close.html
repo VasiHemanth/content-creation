@@ -1,0 +1,62 @@
+<template id="close-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #close-shk, #close-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #close-svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #close-open { left: 0; top: 190px; width: 1080px; text-align: center; font-size: 130px; opacity: 0; }
+    .close-q { position: absolute; left: 120px; width: 760px; height: 150px; box-sizing: border-box; background: var(--panel); border: 6px solid var(--cyan); box-shadow: 12px 12px 0 var(--shadow);
+      display: flex; align-items: center; padding-left: 40px; font: 700 50px "Mono", monospace; color: var(--white); opacity: 0; white-space: nowrap; }
+    #close-q3 { border-color: var(--amber); color: var(--amber); }
+    #close-loop { left: 0; top: 1250px; width: 1080px; text-align: center; font-size: 110px; color: var(--amber); text-shadow: 8px 8px 0 var(--shadow); opacity: 0; }
+    #close-end { position: absolute; left: 90px; top: 560px; width: 900px; height: 420px; box-sizing: border-box; background: var(--panel); border: 6px solid var(--amber);
+      box-shadow: 18px 18px 0 var(--shadow); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; }
+    #close-handle { font: 700 76px "Mono", monospace; color: var(--amber); margin-bottom: 30px; }
+    #close-credit { font: 600 30px/1.3 "Mono", monospace; color: var(--cyan); text-align: center; max-width: 760px; }
+  </style>
+  <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+    <div id="close-shk"><div id="close-cam">
+      <svg id="close-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="close-open" class="hd" data-bind="l13.open"></div>
+      <div id="close-q1" class="close-q" style="top:420px" data-bind="l13.q1"></div>
+      <div id="close-q2" class="close-q" style="top:620px" data-bind="l13.q2"></div>
+      <div id="close-q3" class="close-q" style="top:820px" data-bind="l13.q3"></div>
+    </div></div>
+    <div id="close-hud">
+      <div id="close-loop" class="hd" data-bind="l13.loop" data-layout-allow-overlap></div>
+      <div id="close-end"><div id="close-handle" data-bind="l13.handle"></div><div id="close-credit" data-bind="l13.credit"></div></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l13', w, n), aE = (w, n) => KIT.cueEnd('l13', w, n), D = KIT.sceneDur('close');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('close-svg'), E = (t, at, p) => { const e = KIT.svgEl(t, at, p || svg); if (at['stroke-width']) e.style.strokeWidth = at['stroke-width']; return e; };
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+      // a small clock that returns for the loop line, placed below the cards and clear of the text
+      const clk = E('g', { id: 'close-clock', opacity: 0 });
+      E('circle', { cx: 540, cy: 1110, r: 80, fill: '#0a2340', stroke: '#f2f8ff', 'stroke-width': 9 }, clk);
+      const hand = E('path', { id: 'close-hand', d: 'M540 1110 V1050', stroke: '#ffb454', 'stroke-width': 10, 'stroke-linecap': 'round' }, clk);
+
+      tl.fromTo('#close-cam', cam(1.06, 540, 600), { ...cam(1.0, 540, 760), duration: 1.8, ease: 'power2.out' }, 0);
+      KIT.rise(tl, '#close-open', a('Still'));
+      KIT.rise(tl, '#close-q1', a('one'), { x: -80, y: 0, dur: 0.35 });
+      KIT.rise(tl, '#close-q2', a('base'), { x: -80, y: 0, dur: 0.35 });
+      KIT.rise(tl, '#close-q3', a('skipped'), { x: -80, y: 0, dur: 0.35 });
+      tl.to('#close-q3', { scale: 1.05, duration: 0.15, yoyo: true, repeat: 1 }, a('usable'));
+      tl.to('#close-cam', { ...cam(1.08, 540, 860), duration: 0.4, ease: 'power3.out' }, a('skipped'));
+      // the loop line: back to the hook
+      tl.to('#close-cam', { ...cam(1.0, 540, 860), duration: 0.35, ease: 'power3.inOut' }, a('answer') - 0.2);
+      tl.fromTo(clk, { opacity: 0, scale: 0.4, svgOrigin: '540 1110' }, { opacity: 1, scale: 1, svgOrigin: '540 1110', duration: 0.3, ease: 'back.out(2)', immediateRender: false }, a('answer'));
+      tl.fromTo(hand, { rotation: 0, svgOrigin: '540 1110' }, { rotation: 720, svgOrigin: '540 1110', duration: 1.4, ease: 'power2.out', immediateRender: false }, a('answer'));
+      KIT.slam(tl, '#close-loop', a('clock'), { from: 2, amp: 12, shakeTarget: '#close-shk' });
+      // end card after the last spoken word; the caption of the last line keeps its own band below
+      const tEnd = aE('clock') + 0.25;
+      tl.to(['#close-cam'], { opacity: 0, duration: 0.3 }, tEnd);
+      tl.to('#close-loop', { opacity: 0, duration: 0.3 }, tEnd);
+      tl.fromTo('#close-end', { opacity: 0, y: 120 }, { opacity: 1, y: 0, duration: 0.4, ease: 'back.out(1.6)', immediateRender: false }, tEnd);
+      window.__timelines["close"] = tl;
+    })();
+  </script>
+</template>

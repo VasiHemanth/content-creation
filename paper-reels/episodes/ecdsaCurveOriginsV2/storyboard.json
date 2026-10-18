@@ -1,0 +1,443 @@
+{
+ "item": "ecdsa-curve-origins",
+ "name": "ECDSA seeds",
+ "format": "paper",
+ "renderer": "hyperframes",
+ "authors": [
+  "John Wood",
+  "Henry de Valence",
+  "Ava Howell",
+  "Zack Voase",
+  "Lucy Sweet",
+  "Amir Omidi",
+  "Paul Crowley",
+  "Iain McGinniss",
+  "Nicholas Carlini",
+  "Steve Weis"
+ ],
+ "voice": {
+  "preset": "heart",
+  "speed": 1.2
+ },
+ "ste": {
+  "names": [
+   "Claude",
+   "Anthropic",
+   "NIST",
+   "NSA",
+   "lrand48",
+   "P-256",
+   "Unix"
+  ],
+  "terms": [
+   {
+    "term": "seed",
+    "avoid": [
+     "seed value",
+     "starting number",
+     "parameter"
+    ]
+   },
+   {
+    "term": "state",
+    "avoid": [
+     "internal value",
+     "secret number",
+     "memory"
+    ]
+   },
+   {
+    "term": "draw",
+    "avoid": [
+     "candidate",
+     "iteration",
+     "output number"
+    ]
+   },
+   {
+    "term": "backdoor",
+    "avoid": [
+     "trapdoor",
+     "weakness"
+    ]
+   }
+  ],
+  "jargon": [
+   {
+    "term": "backdoor",
+    "line": "l01"
+   },
+   {
+    "term": "elliptic curves",
+    "line": "l03"
+   },
+   {
+    "term": "seed",
+    "line": "l04"
+   },
+   {
+    "term": "lrand48",
+    "line": "l06"
+   },
+   {
+    "term": "state",
+    "line": "l07"
+   },
+   {
+    "term": "lattice reduction",
+    "line": "l08"
+   },
+   {
+    "term": "draw",
+    "line": "l10"
+   }
+  ]
+ },
+ "scenes": {
+  "hook": {
+   "transition": "whip"
+  },
+  "seed": {
+   "transition": "zoom"
+  },
+  "guess": {
+   "transition": "whip"
+  },
+  "rewind": {
+   "transition": "zoom"
+  },
+  "p256": {
+   "transition": "punch"
+  },
+  "proof": {
+   "transition": "whip"
+  },
+  "close": {
+   "transition": "blur"
+  }
+ },
+ "lines": [
+  {
+   "id": "l01",
+   "scene": "hook",
+   "say": "For years, people feared a backdoor, a secret way in, in a top crypto standard.",
+   "text": "For years, people feared a backdoor, a secret way in, in a top crypto standard.",
+   "data": {
+    "title": "BACKDOOR?",
+    "sub": "IN A CRYPTO STANDARD",
+    "tag": "secret way in"
+   },
+   "sfx": [
+    {
+     "cue": "backdoor",
+     "kind": "glitch"
+    },
+    {
+     "cue": "standard",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "scene": "hook",
+   "say": "The answer was an old computer clock.",
+   "text": "The answer was an old computer clock.",
+   "data": {
+    "answer": "IT WAS A CLOCK.",
+    "year": "1997"
+   },
+   "sfx": [
+    {
+     "cue": "clock",
+     "kind": "riser",
+     "offset": -1.1
+    },
+    {
+     "cue": "clock",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "scene": "seed",
+   "say": "Elliptic curves are math shapes that protect digital signatures. In two thousand, nist published a set of standard curves.",
+   "text": "Elliptic curves are math shapes that protect digital signatures. In 2000, NIST published a set of standard curves.",
+   "data": {
+    "curves": "elliptic curves",
+    "use": "digital signatures",
+    "std": "NIST · FIPS 186-2 · 2000"
+   },
+   "sfx": [
+    {
+     "cue": "Elliptic",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "published",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "scene": "seed",
+   "say": "Each curve grows from one random number, its seed. The N S A gave the seeds, with no source.",
+   "text": "Each curve grows from one random number, its seed. The NSA gave the seeds, with no source.",
+   "data": {
+    "seed": "seed",
+    "hex": [
+     "C49D3608",
+     "86E70493",
+     "6A6678E1",
+     "139D26B7",
+     "819F7E90"
+    ],
+    "curve": "P-256",
+    "from": "from the NSA",
+    "none": "no source"
+   },
+   "sfx": [
+    {
+     "cue": "seed",
+     "kind": "pop"
+    },
+    {
+     "cue": "source",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "scene": "seed",
+   "say": "A chosen seed could hide a weak curve. A rumour named a joke phrase. Nobody found it.",
+   "text": "A chosen seed could hide a weak curve. A rumour named a joke phrase. Nobody found it.",
+   "data": {
+    "weak": "weak curve?",
+    "joke": "\"Bob and Jerry rule\"",
+    "zero": "not found"
+   },
+   "sfx": [
+    {
+     "cue": "weak",
+     "kind": "glitch"
+    },
+    {
+     "cue": "joke",
+     "kind": "pop"
+    },
+    {
+     "cue": "Nobody",
+     "kind": "thud"
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "scene": "guess",
+   "say": "Anthropic asked Claude. It guessed that nineteen nineties code made each seed with a C function, L rand forty eight.",
+   "text": "Anthropic asked Claude. It guessed that 1990s code made each seed with a C function, lrand48.",
+   "data": {
+    "agent": "Claude",
+    "era": "1990s C",
+    "code": [
+     "srand48(time(0));",
+     "x = lrand48();"
+    ],
+    "fn": "lrand48"
+   },
+   "sfx": [
+    {
+     "cue": "Claude",
+     "kind": "pop"
+    },
+    {
+     "cue": "guessed",
+     "kind": "type"
+    },
+    {
+     "cue": "forty",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "scene": "guess",
+   "say": "L rand forty eight hides one number inside, its state. The state decides every output.",
+   "text": "lrand48 hides one number inside, its state. The state decides every output.",
+   "data": {
+    "state": "state",
+    "outs": "outputs"
+   },
+   "sfx": [
+    {
+     "cue": "state",
+     "kind": "chime"
+    },
+    {
+     "cue": "every",
+     "kind": "tick"
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "scene": "rewind",
+   "say": "Each seed shows only part of each output. A math method, lattice reduction, still rebuilt the state.",
+   "text": "Each seed shows only part of each output. A math method, lattice reduction, still rebuilt the state.",
+   "data": {
+    "part": "only part shows",
+    "seen": "seen",
+    "hidden": "hidden",
+    "lll": "lattice reduction",
+    "found": "state rebuilt"
+   },
+   "sfx": [
+    {
+     "cue": "part",
+     "kind": "pop"
+    },
+    {
+     "cue": "lattice",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "rebuilt",
+     "kind": "chime"
+    }
+   ]
+  },
+  {
+   "id": "l09",
+   "scene": "rewind",
+   "say": "Then Claude ran the generator backwards to its start. Each start was a clock time, from May nineteen ninety seven to April nineteen ninety eight.",
+   "text": "Then Claude ran the generator backwards to its start. Each start was a clock time, from May 1997 to April 1998.",
+   "data": {
+    "back": "run it backwards",
+    "start": "start = clock time",
+    "from": "May 1997",
+    "to": "Apr 1998",
+    "_dots": [
+     0.02,
+     0.05,
+     0.25,
+     0.3,
+     0.6,
+     0.97
+    ]
+   },
+   "sfx": [
+    {
+     "cue": "backwards",
+     "kind": "whoosh"
+    },
+    {
+     "cue": "clock",
+     "kind": "tick"
+    },
+    {
+     "cue": "April",
+     "kind": "pop"
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "p256",
+   "say": "The P two fifty six seed is draw one thousand eight hundred forty two, from a clock set on August sixteenth, nineteen ninety seven.",
+   "text": "The P-256 seed is draw 1,842, from a clock set on August 16, 1997.",
+   "data": {
+    "curve": "P-256",
+    "drawLbl": "draw #",
+    "draw": "1,842",
+    "time": "1997-08-16 01:52:34 UTC",
+    "hexAll": "C49D360886E704936A6678E1139D26B7819F7E90",
+    "_n": 1842
+   },
+   "sfx": [
+    {
+     "cue": "draw",
+     "kind": "tick"
+    },
+    {
+     "cue": "forty",
+     "kind": "impact"
+    },
+    {
+     "cue": "August",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "proof",
+   "say": "Each rebuilt state gives back all one hundred sixty bits of its seed. That does not happen by chance.",
+   "text": "Each rebuilt state gives back all 160 bits of its seed. That does not happen by chance.",
+   "data": {
+    "bits": "160 bits",
+    "count": "10 seeds",
+    "receipt": "FROM THE POST · How it was found",
+    "id": "bits"
+   },
+   "sfx": [
+    {
+     "cue": "sixty",
+     "kind": "pop"
+    },
+    {
+     "cue": "chance",
+     "kind": "stamp"
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "proof",
+   "say": "So a hidden backdoor is now much less plausible.",
+   "text": "So a hidden backdoor is now much less plausible.",
+   "data": {
+    "verdict": "much less plausible",
+    "word": "backdoor"
+   },
+   "sfx": [
+    {
+     "cue": "much",
+     "kind": "impact"
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "close",
+   "say": "Still open: one seed, most base points, and why the makers skipped draw eight seventy six, also a usable curve. The answer was a clock.",
+   "text": "Still open: one seed, most base points, and why the makers skipped draw 876, also a usable curve. The answer was a clock.",
+   "data": {
+    "open": "STILL OPEN",
+    "q1": "the B-163 seed",
+    "q2": "most base points",
+    "q3": "why skip draw 876?",
+    "handle": "hemanth_with_ai",
+    "credit": "Anthropic research · Oct 16, 2026 · unofficial explainer",
+    "loop": "IT WAS A CLOCK."
+   },
+   "sfx": [
+    {
+     "cue": "open",
+     "kind": "tick"
+    },
+    {
+     "cue": "skipped",
+     "kind": "pop"
+    },
+    {
+     "cue": "clock",
+     "kind": "chime"
+    }
+   ]
+  }
+ ]
+}

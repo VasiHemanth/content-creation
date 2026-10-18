@@ -1,0 +1,84 @@
+<template id="hook-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #hook-shk, #hook-hud { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #hook-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #hook-svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #hook-title { left: 0; top: 190px; width: 1080px; text-align: center; font-size: 150px; text-shadow: 9px 9px 0 var(--shadow); }
+    #hook-sub { left: 0; top: 360px; width: 1080px; text-align: center; font: 400 66px/1 "Marker", sans-serif; color: var(--amber); white-space: nowrap; text-shadow: 6px 6px 0 var(--shadow); }
+    #hook-tag { left: 610px; top: 1010px; font-size: 34px; opacity: 0; }
+    #hook-answer { left: 0; top: 210px; width: 1080px; text-align: center; font-size: 104px; color: var(--amber); text-shadow: 9px 9px 0 var(--shadow); opacity: 0; }
+    #hook-year { left: 430px; top: 1230px; width: 220px; text-align: center; font-size: 52px; opacity: 0; }
+    #hook-flash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #ffe2b0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+    <div id="hook-shk"><div id="hook-cam">
+      <svg id="hook-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="hook-tag" class="tag coral" data-bind="l01.tag"></div>
+      <div id="hook-year" class="tag" data-bind="l02.year"></div>
+    </div></div>
+    <div id="hook-hud">
+      <div id="hook-title" class="hd" data-bind="l01.title" data-layout-allow-overlap></div>
+      <div id="hook-sub" class="abs" data-bind="l01.sub" data-layout-allow-overlap></div>
+      <div id="hook-answer" class="hd" data-bind="l02.answer" data-layout-allow-overlap></div>
+    </div>
+    <div id="hook-flash"></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l01', w, n), b = (w, n) => KIT.cue('l02', w, n), D = KIT.sceneDur('hook');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('hook-svg'), E = (t, at, p) => { const e = KIT.svgEl(t, at, p || svg); if (at['stroke-width']) e.style.strokeWidth = at['stroke-width']; return e; };
+      const pulse = (t, o = 0.18) => tl.fromTo('#hook-flash', { opacity: o }, { opacity: 0, duration: 0.45, ease: 'none', immediateRender: false }, t);
+      // padlock: the crypto standard
+      const lock = E('g', { id: 'hook-lock' });
+      const shackle = E('path', { id: 'hook-shackle', d: 'M400 760 V640 a140 140 0 0 1 280 0 V760', class: 'ln cyan', 'stroke-width': 34 }, lock);
+      E('rect', { x: 330, y: 740, width: 420, height: 380, rx: 36, fill: '#0a2340', stroke: '#f2f8ff', 'stroke-width': 10 }, lock);
+      E('circle', { cx: 540, cy: 890, r: 38, fill: '#ffb454' }, lock);
+      E('path', { d: 'M540 910 L540 990', stroke: '#ffb454', 'stroke-width': 26, 'stroke-linecap': 'round' }, lock);
+      // the feared back door in the side of the lock
+      const door = E('rect', { id: 'hook-door', x: 660, y: 960, width: 70, height: 130, fill: '#071d35', stroke: '#ff6b6b', 'stroke-width': 7, opacity: 0 }, lock);
+      // the clock that replaces it
+      const clk = E('g', { id: 'hook-clock', opacity: 0 });
+      E('rect', { x: 505, y: 580, width: 70, height: 46, rx: 8, fill: '#f2f8ff' }, clk);
+      E('circle', { cx: 540, cy: 860, r: 230, fill: '#0a2340', stroke: '#f2f8ff', 'stroke-width': 14 }, clk);
+      for (let k = 0; k < 12; k++) { const t = k / 12 * Math.PI * 2; E('path', { d: `M${(540 + 190 * Math.cos(t)).toFixed(1)} ${(860 + 190 * Math.sin(t)).toFixed(1)} L${(540 + 214 * Math.cos(t)).toFixed(1)} ${(860 + 214 * Math.sin(t)).toFixed(1)}`, stroke: '#6aa9d0', 'stroke-width': 8 }, clk); }
+      const hand = E('path', { id: 'hook-hand', d: 'M540 860 V690', stroke: '#ffb454', 'stroke-width': 14, 'stroke-linecap': 'round' }, clk);
+      const hand2 = E('path', { id: 'hook-hand2', d: 'M540 860 H650', stroke: '#a8dcf2', 'stroke-width': 10, 'stroke-linecap': 'round' }, clk);
+      E('circle', { cx: 540, cy: 860, r: 16, fill: '#ffb454' }, clk);
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+
+      // frame 0: the claim in big type over the lock
+      tl.fromTo('#hook-cam', cam(1.1, 540, 900), { ...cam(1.0, 540, 880), duration: 2.4, ease: 'power2.out' }, 0);
+      tl.fromTo('#hook-title', { scale: 1.08, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.5, ease: 'power3.out' }, 0);
+      tl.fromTo(shackle, { y: -40 }, { y: 0, duration: 0.35, ease: 'back.out(3)' }, 0.5);
+      // "people feared": the lock trembles
+      KIT.shake(tl, '#hook-lock', a('feared'), { amp: 8, dur: 0.4 });
+      // "backdoor": a door cracks open in the lock
+      const tB = a('backdoor');
+      tl.fromTo(door, { opacity: 0, scaleX: 0, svgOrigin: '660 1025' }, { opacity: 1, scaleX: 1, svgOrigin: '660 1025', duration: 0.3, ease: 'power2.out' }, tB);
+      tl.to(door, { attr: { fill: '#ff6b6b' }, duration: 0.15 }, tB + 0.3);
+      KIT.glitch(tl, '#hook-title', tB, { amp: 16, dur: 0.4 });
+      pulse(tB + 0.05, 0.2);
+      KIT.pop(tl, '#hook-tag', a('secret'));
+      tl.to('#hook-cam', { ...cam(1.18, 640, 980), duration: 0.5, ease: 'power3.inOut' }, a('secret'));
+      // "standard": hit
+      KIT.shake(tl, '#hook-shk', a('standard'), { amp: 14, dur: 0.3 });
+      tl.to('#hook-cam', { ...cam(1.0, 540, 880), duration: 0.4, ease: 'power3.inOut' }, a('standard') + 0.2);
+
+      // l02 "answer": the claim leaves; "clock": the lock turns into a clock
+      tl.to(['#hook-title', '#hook-sub'], { y: -60, opacity: 0, duration: 0.25, ease: 'power2.in' }, b('answer') - 0.1);
+      tl.to(['#hook-tag'], { opacity: 0, duration: 0.2 }, b('answer'));
+      tl.to(lock, { opacity: 0, scale: 0.6, svgOrigin: '540 880', duration: 0.3, ease: 'power2.in' }, b('old'));
+      tl.fromTo(clk, { opacity: 0, scale: 0.4, svgOrigin: '540 860' }, { opacity: 1, scale: 1, svgOrigin: '540 860', duration: 0.4, ease: 'back.out(2)', immediateRender: false }, b('computer'));
+      tl.fromTo(hand, { rotation: -200, svgOrigin: '540 860' }, { rotation: 0, svgOrigin: '540 860', duration: 0.8, ease: 'power3.out', immediateRender: false }, b('computer'));
+      tl.fromTo(hand2, { rotation: -720, svgOrigin: '540 860' }, { rotation: 30, svgOrigin: '540 860', duration: D - b('computer'), ease: 'power1.out', immediateRender: false }, b('computer'));
+      KIT.slam(tl, '#hook-answer', b('clock'), { from: 2.2, amp: 14, shakeTarget: '#hook-shk' });
+      KIT.sparks(tl, '#hook-cam', 540, 860, b('clock') + 0.2, { n: 12, r: 300 });
+      pulse(b('clock') + 0.2, 0.16);
+      KIT.rise(tl, '#hook-year', b('clock') + 0.3, { y: 30 });
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

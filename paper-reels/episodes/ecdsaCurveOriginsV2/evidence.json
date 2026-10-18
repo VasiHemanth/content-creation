@@ -1,0 +1,8 @@
+{
+ "pdf": "../../../llm-wiki/raw/assets/ecdsa-curve-origins/article.pdf",
+ "note": "Receipt: a crop of the Anthropic post (printed from the page HTML on 2026-10-18, cookie banner removed). Every number readable in a crop must be in facts.json.",
+ "items": [
+  { "id": "bits", "page": 3, "context": [0, 0], "scale": 7, "circle": ["160 bits"],
+    "find": ["regenerates all 160 bits of its seed,", "which does not happen by chance."] }
+ ]
+}

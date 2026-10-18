@@ -1,0 +1,60 @@
+<template id="p256-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #p256-shk { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #p256-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #p256-svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #p256-name { left: 0; top: 170px; width: 1080px; text-align: center; font-size: 150px; color: var(--amber); text-shadow: 9px 9px 0 var(--shadow); opacity: 0; }
+    #p256-row { position: absolute; left: 0; top: 820px; width: 1080px; text-align: center; font: 700 96px "Mono", monospace; color: var(--white); opacity: 0; white-space: nowrap; }
+    #p256-row span { display: inline-block; }
+    #p256-hex { position: absolute; left: 90px; top: 990px; width: 900px; text-align: center; font: 700 37px "Mono", monospace; color: var(--mint); white-space: nowrap; }
+    #p256-time { left: 150px; top: 1150px; width: 780px; text-align: center; font-size: 44px; padding: 18px 0; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="p256" data-width="1080" data-height="1920">
+    <div id="p256-shk"><div id="p256-cam">
+      <svg id="p256-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="p256-name" class="hd" data-bind="l10.curve"></div>
+      <div id="p256-row"><span id="p256-lbl" data-bind="l10.drawLbl"></span><span id="p256-n" data-to="" data-bind="l10.draw"></span></div>
+      <div id="p256-hex" data-bind="l10.hexAll"></div>
+      <div id="p256-time" class="abs plate" data-bind="l10.time"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l10', w, n), aE = (w, n) => KIT.cueEnd('l10', w, n), D = KIT.sceneDur('p256');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('p256-svg'), E = (t, at, p) => { const e = KIT.svgEl(t, at, p || svg); if (at['stroke-width']) e.style.strokeWidth = at['stroke-width']; return e; };
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+      // the clock, above the counter (no overlap with any text)
+      const W = { x: 540, y: 560, r: 150 }, clk = E('g', { id: 'p256-clock', opacity: 0 });
+      E('rect', { x: W.x - 28, y: W.y - W.r - 42, width: 56, height: 36, rx: 8, fill: '#f2f8ff' }, clk);
+      E('circle', { cx: W.x, cy: W.y, r: W.r, fill: '#0a2340', stroke: '#f2f8ff', 'stroke-width': 12 }, clk);
+      for (let k = 0; k < 12; k++) { const t = k / 12 * Math.PI * 2; E('path', { d: `M${(W.x + (W.r - 34) * Math.cos(t)).toFixed(1)} ${(W.y + (W.r - 34) * Math.sin(t)).toFixed(1)} L${(W.x + (W.r - 14) * Math.cos(t)).toFixed(1)} ${(W.y + (W.r - 14) * Math.sin(t)).toFixed(1)}`, stroke: '#6aa9d0', 'stroke-width': 7 }, clk); }
+      const hand = E('path', { id: 'p256-hand', d: `M${W.x} ${W.y} V${W.y - W.r + 36}`, stroke: '#ffb454', 'stroke-width': 12, 'stroke-linecap': 'round' }, clk);
+      E('circle', { cx: W.x, cy: W.y, r: 12, fill: '#ffb454' }, clk);
+      const n = parseFloat(KIT.data('l10')._n);
+      // hex digits that churn while the counter runs, then lock to the real seed
+      const hexEl = document.getElementById('p256-hex'), real = hexEl.textContent, sp = SplitText.create(hexEl, { type: 'chars' });
+
+      tl.fromTo('#p256-cam', cam(1.1, 540, 700), { ...cam(1.0, 540, 820), duration: 2.0, ease: 'power2.out' }, 0);
+      KIT.slam(tl, '#p256-name', a('P') - 0.05, { from: 2.2, amp: 12, shakeTarget: '#p256-shk' });
+      tl.fromTo(clk, { opacity: 0, scale: 0.5, svgOrigin: `${W.x} ${W.y}` }, { opacity: 1, scale: 1, svgOrigin: `${W.x} ${W.y}`, duration: 0.4, ease: 'back.out(2)', immediateRender: false }, a('seed'));
+      // the counter starts on "draw" and lands on its last spoken word ("two"), not after it
+      const t0 = a('draw'), t1 = aE('two', 1);
+      KIT.fade(tl, '#p256-row', t0 - 0.1, { dur: 0.15 });
+      const nEl = document.getElementById('p256-n'), fin = nEl.textContent, st = { v: 0 };
+      nEl.textContent = '0';
+      tl.to(st, { v: n, duration: Math.max(0.6, t1 - t0), ease: 'power2.out', onUpdate() { nEl.textContent = st.v >= n - 0.5 ? fin : Math.round(st.v).toLocaleString('en-US'); } }, t0);
+      tl.fromTo(hand, { rotation: 0, svgOrigin: `${W.x} ${W.y}` }, { rotation: 360 * 6, svgOrigin: `${W.x} ${W.y}`, duration: t1 - t0, ease: 'power2.out', immediateRender: false }, t0);
+      tl.fromTo(sp.chars, { opacity: 0.35, y: 0 }, { opacity: 0.35, duration: 0.01 }, 0);
+      sp.chars.forEach((ch, k) => tl.to(ch, { opacity: 1, duration: 0.05 }, t1 - 0.3 + k * 0.008));
+      tl.to('#p256-n', { scale: 1.25, color: '#ffb454', duration: 0.15, yoyo: true, repeat: 1, transformOrigin: '50% 50%' }, t1);
+      KIT.sparks(tl, '#p256-cam', 700, 880, t1, { n: 12, r: 260, color: '#7be3b0' });
+      tl.to('#p256-cam', { ...cam(1.04, 540, 900), duration: 0.4, ease: 'power3.out' }, t1);
+      KIT.slam(tl, '#p256-time', a('August') - 0.1, { from: 1.6, amp: 8, shakeTarget: '#p256-shk' });
+      tl.to('#p256-cam', { ...cam(1.0, 540, 880), duration: Math.max(0.4, D - a('August')), ease: 'sine.out' }, a('August'));
+      window.__timelines["p256"] = tl;
+    })();
+  </script>
+</template>

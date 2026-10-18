@@ -1,0 +1,98 @@
+<template id="rewind-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #rewind-shk { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #rewind-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #rewind-svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #rewind-bits { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    .rewind-b { position: absolute; width: 50px; height: 62px; box-sizing: border-box; border: 4px solid var(--dim); background: var(--panel); opacity: 0; }
+    .rewind-b.on { border-color: var(--mint); background: rgba(123,227,176,.85); }
+    #rewind-part { left: 0; top: 200px; width: 1080px; text-align: center; font-size: 84px; opacity: 0; }
+    #rewind-seen { left: 130px; top: 680px; font-size: 30px; opacity: 0; }
+    #rewind-hidden { left: 560px; top: 680px; font-size: 30px; opacity: 0; }
+    #rewind-lll { left: 0; top: 1240px; width: 1080px; text-align: center; font-size: 82px; color: var(--cyan); opacity: 0; }
+    #rewind-found { left: 300px; top: 1360px; font-size: 36px; opacity: 0; color: var(--mint); border-color: var(--mint); }
+    #rewind-back { left: 0; top: 200px; width: 1080px; text-align: center; font-size: 104px; opacity: 0; }
+    #rewind-start { left: 250px; top: 760px; font-size: 38px; opacity: 0; }
+    #rewind-from { left: 110px; top: 1150px; font-size: 40px; opacity: 0; }
+    #rewind-to { left: 700px; top: 1150px; font-size: 40px; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="rewind" data-width="1080" data-height="1920">
+    <div id="rewind-shk"><div id="rewind-cam">
+      <svg id="rewind-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="rewind-bits"></div>
+      <div id="rewind-part" class="hd" data-bind="l08.part"></div>
+      <div id="rewind-seen" class="tag" style="color:var(--mint);border-color:var(--mint)" data-bind="l08.seen"></div>
+      <div id="rewind-hidden" class="tag cyan" data-bind="l08.hidden"></div>
+      <div id="rewind-lll" class="hd" data-bind="l08.lll"></div>
+      <div id="rewind-found" class="tag" data-bind="l08.found"></div>
+      <div id="rewind-back" class="hd" data-bind="l09.back"></div>
+      <div id="rewind-start" class="tag" data-bind="l09.start"></div>
+      <div id="rewind-from" class="lbl white" data-bind="l09.from"></div>
+      <div id="rewind-to" class="lbl white" data-bind="l09.to"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l08', w, n), b = (w, n) => KIT.cue('l09', w, n), D = KIT.sceneDur('rewind');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('rewind-svg'), E = (t, at, p) => { const e = KIT.svgEl(t, at, p || svg); if (at['stroke-width']) e.style.strokeWidth = at['stroke-width']; return e; };
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+      // four outputs as rows of bits: the first few show in the seed, the rest stay hidden
+      const host = document.getElementById('rewind-bits'), rows = [], hidden = [];
+      for (let r = 0; r < 4; r++) { const row = [];
+        for (let i = 0; i < 14; i++) { const d = document.createElement('div'); d.id = `rewind-b${r}-${i}`; d.className = 'rewind-b' + (i < 3 ? ' on' : '');
+          d.style.left = `${130 + i * 60}px`; d.style.top = `${380 + r * 74}px`; host.appendChild(d); row.push(d); if (i >= 3) hidden.push(d); }
+        rows.push(row); }
+      // a skewed lattice that straightens: lattice reduction
+      const dots = [];
+      for (let i = -3; i <= 3; i++) for (let j = -2; j <= 2; j++) dots.push({ el: E('circle', { cx: 540 + i * 110 + j * 70, cy: 960 + j * 70, r: 10, fill: '#a8dcf2', opacity: 0, id: `rewind-d${i + 3}-${j + 2}` }), i, j });
+      const v1 = E('path', { id: 'rewind-v1', d: 'M540 960 L720 1030', class: 'ln amber', 'stroke-width': 8 }), v2 = E('path', { id: 'rewind-v2', d: 'M540 960 L650 960', class: 'ln coral', 'stroke-width': 8 });
+      gsap.set([v1, v2], { drawSVG: '0%' });
+      // l09: a chain of states, stepped backwards to the start
+      const chain = [];
+      for (let k = 0; k < 6; k++) { const x = 900 - k * 150; chain.push(E('circle', { id: `rewind-c${k}`, cx: x, cy: 560, r: 46, fill: '#0a2340', stroke: '#a8dcf2', 'stroke-width': 6, opacity: 0 })); }
+      const larrs = []; for (let k = 1; k < 6; k++) { const x = 900 - k * 150; larrs.push(E('path', { id: `rewind-a${k}`, d: `M${x + 104} 560 L${x + 52} 560 M${x + 66} 546 L${x + 52} 560 L${x + 66} 574`, class: 'ln amber', 'stroke-width': 6 })); }
+      gsap.set(larrs, { drawSVG: '0%' });
+      const axis = E('path', { id: 'rewind-axis', d: 'M140 1080 L940 1080', class: 'ln', 'stroke-width': 8 }); gsap.set(axis, { drawSVG: '0%' });
+      const dotsT = (KIT.data('l09')._dots || []).map((f, k) => E('circle', { id: `rewind-t${k}`, cx: 160 + f * 760, cy: 1080, r: 24, fill: '#ff6b6b', stroke: '#f2f8ff', 'stroke-width': 4, opacity: 0 }));
+
+      // l08
+      tl.fromTo('#rewind-cam', cam(1.08, 540, 560), { ...cam(1.0, 540, 760), duration: 2.0, ease: 'power2.inOut' }, 0);
+      KIT.rise(tl, '#rewind-part', a('seed'));
+      rows.forEach((row, r) => tl.fromTo(row, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2, stagger: 0.02 }, a('shows') + r * 0.1));
+      KIT.pop(tl, '#rewind-seen', a('part'));
+      tl.fromTo(rows.map((r) => r.slice(0, 3)).flat(), { scale: 1 }, { scale: 1.15, duration: 0.15, yoyo: true, repeat: 1 }, a('part'));
+      KIT.pop(tl, '#rewind-hidden', a('each', 1));
+      tl.to('#rewind-cam', { ...cam(1.0, 540, 900), duration: 0.45, ease: 'power3.inOut' }, a('math'));
+      dots.forEach((d, k) => tl.fromTo(d.el, { opacity: 0 }, { opacity: 1, duration: 0.12 }, a('math') + k * 0.01));
+      KIT.rise(tl, '#rewind-lll', a('lattice'));
+      dots.forEach((d) => tl.to(d.el, { attr: { cx: 540 + d.i * 110 }, duration: 0.7, ease: 'power3.inOut' }, a('reduction')));
+      KIT.draw(tl, v1, a('reduction'), 0.3); KIT.draw(tl, v2, a('reduction') + 0.5, 0.3);
+      tl.to(v1, { attr: { d: 'M540 960 L540 1030' }, duration: 0.7, ease: 'power3.inOut' }, a('reduction'));
+      tl.to(hidden, { borderColor: '#ffb454', backgroundColor: 'rgba(255,180,84,.85)', duration: 0.05, stagger: 0.012 }, a('rebuilt'));
+      KIT.pop(tl, '#rewind-found', a('state'));
+      tl.to('#rewind-cam', { ...cam(1.03, 540, 900), duration: 0.4, ease: 'power3.out' }, a('rebuilt'));
+      // l09
+      const t9 = b('Then');
+      tl.to([...rows.flat(), '#rewind-part', '#rewind-seen', '#rewind-hidden', '#rewind-lll', '#rewind-found', v1, v2, ...dots.map((d) => d.el)], { opacity: 0, duration: 0.25 }, t9 - 0.15);
+      tl.to('#rewind-cam', { ...cam(1.0, 540, 760), duration: 0.4, ease: 'power3.inOut' }, t9);
+      KIT.rise(tl, '#rewind-back', b('ran'));
+      chain.forEach((c, k) => tl.fromTo(c, { opacity: 0 }, { opacity: 1, duration: 0.15 }, b('ran') + k * 0.05));
+      const tBk = b('backwards'), tSt = b('start');
+      chain.forEach((c, k) => tl.to(c, { attr: { fill: '#7be3b0' }, duration: 0.1 }, tBk + (tSt - tBk) * k / 6));
+      larrs.forEach((p, k) => tl.to(p, { drawSVG: '100%', duration: 0.12 }, tBk + (tSt - tBk) * (k + 1) / 6));
+      tl.to('#rewind-cam', { ...cam(1.0, 520, 700), duration: 0.5, ease: 'power3.inOut' }, tBk);
+      tl.to(chain[5], { attr: { fill: '#ffb454' }, duration: 0.1 }, b('Each'));
+      KIT.pop(tl, '#rewind-start', b('clock'));
+      tl.to('#rewind-cam', { ...cam(1.0, 540, 860), duration: 0.45, ease: 'power3.inOut' }, b('clock'));
+      tl.to(axis, { drawSVG: '100%', duration: 0.5, ease: 'power2.out' }, b('time'));
+      KIT.rise(tl, '#rewind-from', b('May'), { y: 30 });
+      KIT.rise(tl, '#rewind-to', b('April'), { y: 30 });
+      const tD = b('May'), tE = b('April');
+      dotsT.forEach((d, k) => tl.fromTo(d, { opacity: 0, scale: 0.2, svgOrigin: `${d.getAttribute('cx')} 1080` }, { opacity: 1, scale: 1, svgOrigin: `${d.getAttribute('cx')} 1080`, duration: 0.25, ease: 'back.out(3)', immediateRender: false }, tD + (tE - tD + 0.6) * k / dotsT.length));
+      window.__timelines["rewind"] = tl;
+    })();
+  </script>
+</template>

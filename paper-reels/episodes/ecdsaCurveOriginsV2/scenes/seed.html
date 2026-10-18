@@ -1,0 +1,95 @@
+<template id="seed-template">
+  <style>
+    #root { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    #seed-shk { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #seed-cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+    #seed-svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    #seed-name { left: 0; top: 180px; width: 1080px; text-align: center; font-size: 104px; opacity: 0; }
+    #seed-use { left: 300px; top: 690px; font-size: 32px; opacity: 0; }
+    #seed-std { left: 160px; top: 800px; width: 760px; text-align: center; font: 700 40px "Mono", monospace; padding: 22px 0; opacity: 0; }
+    #seed-hexbox { position: absolute; left: 110px; top: 1080px; width: 860px; height: 230px; box-sizing: border-box; background: var(--paper); border: 6px solid var(--white); box-shadow: 12px 12px 0 var(--shadow); opacity: 0; }
+    #seed-hexlbl { left: 110px; top: 1010px; font-size: 34px; opacity: 0; }
+    .seed-hx { position: absolute; font: 700 50px "Mono", monospace; color: var(--ink); }
+    #seed-from { left: 110px; top: 1350px; font-size: 32px; opacity: 0; }
+    #seed-none { left: 560px; top: 1330px; font-size: 64px; padding: 2px 22px; opacity: 0; }
+    #seed-weak { left: 660px; top: 300px; font-size: 34px; opacity: 0; }
+    #seed-joke { position: absolute; left: 140px; top: 760px; width: 800px; height: 170px; box-sizing: border-box; background: var(--paper); border: 6px solid var(--amber); box-shadow: 12px 12px 0 var(--shadow);
+      display: flex; align-items: center; justify-content: center; font: 400 64px "Marker", sans-serif; color: var(--ink); opacity: 0; }
+    #seed-zero { left: 330px; top: 960px; font-size: 56px; padding: 2px 22px; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="seed" data-width="1080" data-height="1920">
+    <div id="seed-shk"><div id="seed-cam">
+      <svg id="seed-svg" class="ink" viewBox="0 0 1080 1920"></svg>
+      <div id="seed-name" class="hd" data-bind="l03.curves"></div>
+      <div id="seed-use" class="tag cyan" data-bind="l03.use"></div>
+      <div id="seed-std" class="abs plate" data-bind="l03.std"></div>
+      <div id="seed-hexlbl" class="tag" data-bind="l04.seed"></div>
+      <div id="seed-hexbox">
+        <div id="seed-h0" class="seed-hx" style="left:40px;top:40px" data-bind="l04.hex.0"></div>
+        <div id="seed-h1" class="seed-hx" style="left:310px;top:40px" data-bind="l04.hex.1"></div>
+        <div id="seed-h2" class="seed-hx" style="left:580px;top:40px" data-bind="l04.hex.2"></div>
+        <div id="seed-h3" class="seed-hx" style="left:175px;top:130px" data-bind="l04.hex.3"></div>
+        <div id="seed-h4" class="seed-hx" style="left:445px;top:130px" data-bind="l04.hex.4"></div>
+      </div>
+      <div id="seed-from" class="tag cyan" data-bind="l04.from"></div>
+      <div id="seed-none" class="stamp" data-bind="l04.none"></div>
+      <div id="seed-weak" class="tag coral" data-bind="l05.weak"></div>
+      <div id="seed-joke" data-bind="l05.joke"></div>
+      <div id="seed-zero" class="stamp" data-bind="l05.zero"></div>
+    </div></div>
+  </div>
+  <script>
+    (function () {
+      const a = (w, n) => KIT.cue('l03', w, n), b = (w, n) => KIT.cue('l04', w, n), c = (w, n) => KIT.cue('l05', w, n), D = KIT.sceneDur('seed');
+      KIT.bind('#root');
+      const tl = gsap.timeline({ paused: true });
+      const svg = document.getElementById('seed-svg'), E = (t, at, p) => { const e = KIT.svgEl(t, at, p || svg); if (at['stroke-width']) e.style.strokeWidth = at['stroke-width']; return e; };
+      const cam = (s, px, py, sy = 860) => ({ x: 540 - s * px, y: sy - s * py, scale: s });
+      // y^2 = x^3 - 3x + 1.4, drawn as an oval and a branch
+      const pathFor = (cx, cy, s) => { const segs = []; let cur = null;
+        for (let i = 0; i <= 400; i++) { const x = -2.3 + 4.6 * i / 400, v = x ** 3 - 3 * x + 1.4; if (v >= 0) { if (!cur) segs.push(cur = []); cur.push([x, Math.sqrt(v)]); } else cur = null; }
+        return segs.map((p) => { const top = p.slice().reverse().map(([x, y]) => `${(cx + x * s).toFixed(1)} ${(cy - y * s).toFixed(1)}`), bot = p.map(([x, y]) => `${(cx + x * s).toFixed(1)} ${(cy + y * s).toFixed(1)}`);
+          return 'M' + top.concat(bot).join(' L'); }).join(' '); };
+      const curve = E('path', { id: 'seed-curve', d: pathFor(520, 560, 85), class: 'ln cyan', 'stroke-width': 9 });
+      gsap.set(curve, { drawSVG: '0%' });
+      // a pen that signs, for "digital signatures"
+      const sig = E('path', { id: 'seed-sig', d: 'M160 640 c40 -60 60 40 100 -10 s40 -40 70 10', class: 'ln amber', 'stroke-width': 7 });
+      gsap.set(sig, { drawSVG: '0%' });
+      const arrow = E('path', { id: 'seed-arrow', d: 'M540 1070 C 540 900, 700 820, 640 640', class: 'ln amber dash', 'stroke-width': 8 });
+      const X = E('path', { id: 'seed-x', d: 'M170 750 L910 950 M910 750 L170 950', class: 'ln coral', 'stroke-width': 16 });
+      gsap.set(X, { drawSVG: '0%' });
+
+      // l03
+      tl.fromTo('#seed-cam', cam(1.12, 520, 560), { ...cam(1.0, 540, 860), duration: 2.0, ease: 'power2.inOut' }, 0);
+      KIT.rise(tl, '#seed-name', a('Elliptic'));
+      tl.to(curve, { drawSVG: '100%', duration: 1.1, ease: 'power2.inOut' }, a('Elliptic'));
+      tl.to(curve, { strokeWidth: 14, duration: 0.2, yoyo: true, repeat: 1 }, a('shapes'));
+      KIT.pop(tl, '#seed-use', a('protect'));
+      tl.to(sig, { drawSVG: '100%', duration: 0.6, ease: 'power2.out' }, a('signatures'));
+      KIT.slam(tl, '#seed-std', a('published'), { from: 1.8, amp: 10, shakeTarget: '#seed-shk' });
+      tl.to('#seed-cam', { ...cam(1.05, 540, 820), duration: 0.4, ease: 'power3.out' }, a('standard'));
+      // l04: the seed grows the curve
+      tl.to(['#seed-std', '#seed-use'], { opacity: 0, y: -30, duration: 0.25 }, b('Each') - 0.1);
+      tl.to(sig, { opacity: 0, duration: 0.2 }, b('Each'));
+      tl.to('#seed-cam', { ...cam(1.0, 540, 860), duration: 0.5, ease: 'power3.inOut' }, b('Each'));
+      KIT.rise(tl, '#seed-hexbox', b('random'), { y: 80, dur: 0.4 });
+      ['#seed-h0', '#seed-h1', '#seed-h2', '#seed-h3', '#seed-h4'].forEach((s, k) => tl.fromTo(s, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.15 }, b('random') + 0.25 + k * 0.12));
+      KIT.pop(tl, '#seed-hexlbl', b('seed'));
+      KIT.draw(tl, arrow, b('seed'), 0.5);
+      tl.to(curve, { stroke: '#ffb454', duration: 0.3 }, b('seed') + 0.4);
+      KIT.rise(tl, '#seed-from', b('gave'), { y: 30 });
+      KIT.slam(tl, '#seed-none', b('source'), { from: 2, amp: 10, shakeTarget: '#seed-shk' });
+      // l05: a weak curve? a rumour, not found
+      tl.to(arrow, { opacity: 0, duration: 0.2 }, c('chosen'));
+      tl.to(curve, { stroke: '#ff6b6b', duration: 0.15 }, c('weak'));
+      KIT.glitch(tl, '#seed-curve', c('weak'), { amp: 14, dur: 0.4 });
+      KIT.pop(tl, '#seed-weak', c('weak'));
+      KIT.shake(tl, '#seed-shk', c('rumour'), { amp: 6, dur: 0.25 });
+      tl.to(['#seed-hexbox', '#seed-hexlbl', '#seed-from', '#seed-none'], { opacity: 0, duration: 0.3 }, c('rumour'));
+      KIT.rise(tl, '#seed-joke', c('joke') - 0.15, { y: 60, dur: 0.4 });
+      tl.to(X, { drawSVG: '100%', duration: 0.3, ease: 'power2.out' }, c('Nobody'));
+      KIT.slam(tl, '#seed-zero', c('found'), { from: 2, amp: 12, shakeTarget: '#seed-shk' });
+      window.__timelines["seed"] = tl;
+    })();
+  </script>
+</template>
