@@ -1,0 +1,68 @@
+<template>
+<style>
+@font-face{font-family:"Fredoka";font-weight:700;src:url("assets/fonts/fredoka-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:600;src:url("assets/fonts/fredoka-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:500;src:url("assets/fonts/fredoka-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Bagel Fat One";font-weight:400;src:url("assets/fonts/bagel-fat-one-latin-400-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:visible;pointer-events:none}
+.cw{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font:700 56px/1 Fredoka,sans-serif;color:#1a1a2e;padding-bottom:3px}
+</style>
+<div id="root" data-composition-id="captions" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root");
+  var FS = 56, TH = 90, GAP = 18, Y = 1690, MAXW = 940;
+  var mctx = document.createElement("canvas").getContext("2d");
+  function wdt(t) { mctx.font = "700 " + FS + "px Fredoka"; return Math.ceil(mctx.measureText(t).width) + 44; }
+  /* groups: <=4 words, break at sentence ends / clause pauses */
+  var groups = [], cur = [];
+  TIMING.words.forEach(function (w, i) {
+    cur.push(w);
+    var end = /[.?!:]$/.test(w.text), comma = /,$/.test(w.text), nx = TIMING.words[i + 1];
+    var gap = nx ? nx.start - w.end : 9;
+    if (cur.length >= 4 || end || (comma && cur.length >= 2) || gap > .35) { groups.push(cur); cur = []; }
+  });
+  if (cur.length) groups.push(cur);
+  var items = [];
+  sceneReady("captions", function () { return document.fonts.load("700 56px Fredoka", "Aa").then(function () {
+    groups.forEach(function (g, gi) {
+      var ws = g.map(function (w) { return wdt(w.text); }), tot = ws.reduce(function (a, b) { return a + b; }, 0) + GAP * (g.length - 1);
+      var x = (1080 - tot) / 2, grp = divEl("position:absolute;left:0;top:0;width:1080px;height:1920px;visibility:hidden", root);
+      var rows = [];
+      g.forEach(function (w, k) {
+        var r = rngOf("cap" + gi + "_" + k), rot = (r() - .5) * 6;
+        var img = bake({ key: "cap" + ws[k] + "_" + (rot > 0 ? 1 : 0) + (k % 3), w: ws[k], h: TH, S: 2, seed: seedOf("cap" + ws[k] + (k % 3)), shape: '<path d="' + cutRect(ws[k], TH, 20, rngOf("cc" + ws[k] + (k % 3)), 1.6) + '" fill="#f6e8c8"/>', cut: 2 });
+        var p = piece({ x: x, y: Y - TH / 2, w: ws[k], h: TH, img: img, lift: .25, blur: 4, parent: grp, ox: "50%", oy: "100%" });
+        var t = divEl("", p.mv, "cw"); t.textContent = w.text;
+        gsap.set(p.mv, { rotation: rot });
+        rows.push({ p: p, w: w, rot: rot, t: t });
+        x += ws[k] + GAP;
+      });
+      items.push({ grp: grp, rows: rows, s: g[0].start, e: g[g.length - 1].end });
+    });
+    return bakeAll().then(function () {
+      var tl = gsap.timeline({ paused: true });
+      items.forEach(function (G) {
+        var t0 = Math.max(0.1, G.s - .06);
+        tl.set(G.grp, { visibility: "visible" }, t0);
+        G.rows.forEach(function (R, k) {
+          var ts = Math.max(0.1, R.w.start - .06);
+          var d = .3;
+          tl.fromTo(R.p.mv, { scaleY: .05, scaleX: .85, y: 24, opacity: 0, rotation: R.rot }, { scaleY: 1, scaleX: 1, y: 0, opacity: 1, rotation: R.rot, duration: d, ease: PE.stepped(PE.spring(6.5, 1.2), d) }, ts);
+          // the spoken word lifts and turns coral, then settles
+          tl.to(R.p.mv, { y: -14, scale: 1.08, duration: .12, ease: "power2.out" }, ts + d);
+          tl.set(R.t, { color: "#e8505b" }, ts + d);
+          tl.set(R.p.sh, { "--h": .9 }, ts + d);
+          var te = Math.min(G.e, R.w.end + .04);
+          tl.to(R.p.mv, { y: 0, scale: 1, duration: .16, ease: PE.paper }, te);
+          tl.set(R.t, { color: "#1a1a2e" }, te);
+          tl.set(R.p.sh, { "--h": .25 }, te);
+        });
+        tl.set(G.grp, { visibility: "hidden" }, Math.min(G.e + .3, (items[items.indexOf(G) + 1] ? items[items.indexOf(G) + 1].s - .09 : 999)));
+      });
+      window.__timelines["captions"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

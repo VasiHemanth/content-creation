@@ -1,0 +1,45 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#1a1410}
+#w4{position:absolute;left:0;top:0;width:1080px;height:1920px}
+#card{opacity:0;position:absolute;left:600px;top:1010px;width:390px;height:390px;background:#efe3c6;box-shadow:6px 9px 18px rgba(0,0,0,.45);border:4px solid #1a1410;filter:url(#rough4)}
+#slip{opacity:0;position:absolute;left:150px;top:1450px;width:780px;height:112px;background:#efe3c6;border:4px solid #c8402a;box-shadow:5px 7px 14px rgba(0,0,0,.4);font:800 74px/98px "Shippori Mincho",serif;color:#1a1410;text-align:center;filter:url(#rough4)}
+</style>
+<div id="root" data-composition-id="S4" data-width="1080" data-height="1920">
+ <div id="w4"><canvas id="s4c" width="1080" height="1920" style="position:absolute;left:0;top:0"></canvas><canvas id="s4g" width="1080" height="1920" style="position:absolute;left:0;top:0"></canvas>
+  <div id="card"><canvas id="s4k" width="382" height="382" style="position:absolute;left:0;top:0"></canvas></div>
+  <svg id="s4a" width="1080" height="1920" viewBox="0 0 1080 1920" style="position:absolute;left:0;top:0;overflow:visible"><path id="arr" d="M470 820 C560 760 700 840 720 1000" fill="none" stroke="#c8402a" stroke-width="15" stroke-linecap="round" filter="url(#rough4)"/><path id="arh" d="M684 966 L722 1016 L752 962" fill="none" stroke="#c8402a" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" filter="url(#rough4)"/></svg>
+  <div id="slip">guess the noise</div></div>
+</div>
+<script>
+(function () {
+  var SC = TIMING.scenes.S4, root = document.getElementById("root");
+  Print.sceneReady("S4", function () {
+    Print.roughDefs(root, "rough4", "0.05", 4, 11);
+    var L = function (g) { return g - SC.start; }, W = TIMING.lines[4].words;
+    var eng = Print.engine(document.getElementById("s4c")), gc = document.getElementById("s4g").getContext("2d"), kc = document.getElementById("s4k").getContext("2d");
+    var q = function (v, n) { return Math.round(v / n) * n; }, tG = L(W[12].start) - .1;           // "guess the noise"
+    var arr = document.getElementById("arr"), arh = document.getElementById("arh"), AL = arr.getTotalLength();
+    arr.setAttribute("stroke-dasharray", AL); arr.setAttribute("stroke-dashoffset", AL); arh.setAttribute("stroke-dasharray", 140); arh.setAttribute("stroke-dashoffset", 140);
+    function render(t) {
+      var th = t < .5 ? q(1 - Print.E.slow(t / .5) * .45, 1 / 20) : .55;                         // dissolve from static to a noisy picture
+      eng.draw({ mode: "fwd", thr: th, bank: Math.floor(t * 12) % 4 });
+      // the model's guess: a faint second layer of indigo speckle drifting over the picture
+      var a = Print.clamp((t - tG) / .6, 0, 1) * .5, dx = (t * 26) % 100, dy = (t * -17) % 100;
+      gc.clearRect(0, 0, 1080, 1920); if (a > 0) { gc.globalAlpha = a; gc.drawImage(Print.guess, -100 + dx, -100 - dy * -1, 1280, 2120); gc.globalAlpha = 1; }
+      kc.clearRect(0, 0, 382, 382); kc.fillStyle = "#efe3c6"; kc.fillRect(0, 0, 382, 382); kc.drawImage(Print.guess, 160 + dx * 2, 300 - dy, 382, 382, 0, 0, 382, 382);
+    }
+    render(0);
+    var tl = gsap.timeline({ paused: true });
+    tl.fromTo("#w4", { scale: 1, transformOrigin: "540px 900px" }, { scale: 1.03, duration: SC.dur, ease: "none" }, 0);
+    tl.fromTo("#card", { scale: .2, opacity: 0, rotation: -9, transformOrigin: "50% 50%" }, { scale: 1, opacity: 1, rotation: 3, duration: .6, ease: Print.E.thud }, tG + .55);
+    tl.to(arr, { attr: { "stroke-dashoffset": 0 }, duration: .6, ease: "power2.inOut" }, tG + .1);
+    tl.to(arh, { attr: { "stroke-dashoffset": 0 }, duration: .25, ease: "power2.out" }, tG + .66);
+    tl.fromTo("#slip", { opacity: 0, y: 26, scaleX: .6 }, { opacity: 1, y: 0, scaleX: 1, duration: .4, ease: Print.E.thud }, L(W[12].start) + .15);
+        var an = { p: 0 }; tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { render(tl.time()); } }, 0);
+    window.__timelines["S4"] = tl;
+  });
+})();
+</script>
+</template>

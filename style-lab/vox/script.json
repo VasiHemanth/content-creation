@@ -1,0 +1,59 @@
+{
+ "tail": 1.5,
+ "lines": [
+  {
+   "id": "l1",
+   "text": "Neural networks are not new. The first one was built in 1958.",
+   "gap_before": 1.45,
+   "sent_gap": 0.15
+  },
+  {
+   "id": "l2",
+   "text": "For more than fifty years they mostly did not work. Three things were missing.",
+   "gap_before": 0.25,
+   "sent_gap": 0.15
+  },
+  {
+   "id": "l3",
+   "text": "One. Data. In 2009, researchers released ImageNet, more than a million labeled photos.",
+   "gap_before": 0.25,
+   "sent_gap": 0.15
+  },
+  {
+   "id": "l4",
+   "text": "Two. Compute. In 2012, a network called AlexNet trained on just two graphics chips, and won the ImageNet contest by a wide margin.",
+   "gap_before": 0.25,
+   "sent_gap": 0.15
+  },
+  {
+   "id": "l5",
+   "text": "Its error rate was 15 percent. The runner up was at 26.",
+   "gap_before": 0.25,
+   "sent_gap": 0.15
+  },
+  {
+   "id": "l6",
+   "text": "Three. A design that scales. In 2017, a paper introduced the transformer.",
+   "gap_before": 0.25,
+   "sent_gap": 0.15
+  },
+  {
+   "id": "l7",
+   "text": "It lets a model read a whole text at once, so adding more chips and more data keeps paying off.",
+   "gap_before": 0.25,
+   "sent_gap": 0.15
+  },
+  {
+   "id": "l8",
+   "text": "In 2020, GPT-3 had 175 billion parameters.",
+   "gap_before": 0.25,
+   "sent_gap": 0.15
+  },
+  {
+   "id": "l9",
+   "text": "Same old idea. Data, compute, and a design that scales. That is why it works now.",
+   "gap_before": 0.25,
+   "sent_gap": 0.15
+  }
+ ]
+}

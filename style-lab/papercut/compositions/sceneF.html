@@ -1,0 +1,63 @@
+<template>
+<style>
+@font-face{font-family:"Fredoka";font-weight:700;src:url("assets/fonts/fredoka-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:600;src:url("assets/fonts/fredoka-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:500;src:url("assets/fonts/fredoka-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Bagel Fat One";font-weight:400;src:url("assets/fonts/bagel-fat-one-latin-400-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#1d2a5b;font-family:"Fredoka",sans-serif}
+.mt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 140px/1 Fredoka,sans-serif;color:#f6e8c8;padding-bottom:8px}
+</style>
+<div id="root" data-composition-id="sceneF" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.F, W = TIMING.lines[7].words;
+  var L = function (g) { return g - SC.start; }, PS = Stage, MIX = "#f59a52";
+  sceneReady("sceneF", function () { return PS.fontsReady().then(function () {
+    var H = PS.build(root, { id: "F", starSeed: 21, tags: false, shelves: false });
+    var par = H.tagL, TW = 270, TH = 236, TX = 540 - TW / 2, TY = 900;
+    // the cat: cut-paper silhouette that folds up out of the tag
+    var cr = rngOf("cat"), j = function () { return (cr() - .5) * 3; };
+    var cat = '<path d="' + PS.geo.blob(180, 290, 108, 96, cr, 12) + '" fill="' + PAL.ink + '"/><circle cx="180" cy="140" r="82" fill="' + PAL.ink + '"/>' +
+      '<path d="M112 92 L104 8 L170 56Z M248 92 L256 8 L190 56Z" fill="' + PAL.ink + '"/>' +
+      '<path d="M285 340 C372 345 372 235 330 205" stroke="' + PAL.ink + '" stroke-width="34" stroke-linecap="round" fill="none"/>';
+    var eyes = '<path d="M140 138 Q154 122 168 138 Q154 150 140 138Z M192 138 Q206 122 220 138 Q206 150 192 138Z" fill="' + PAL.saffron + '"/><path d="M174 160 L186 160 L180 170Z" fill="' + PAL.coral + '"/>' +
+      '<path d="M120 164 L60 156 M120 174 L62 184 M240 164 L300 156 M240 174 L298 184" stroke="' + PAL.cream + '" stroke-opacity=".6" stroke-width="2.5" stroke-linecap="round"/>';
+    var cimg = bake({ w: 400, h: 400, S: 2, seed: 7878, cut: 2.4, grain: .3, shape: cat, overlay: eyes });
+    var catp = piece({ x: 540 - 200, y: TY - 385, w: 400, h: 400, img: cimg, lift: 1, blur: 16, parent: par, ox: "50%", oy: "96%" });
+    var timg = bake({ w: TW, h: TH, S: 2, seed: 4040, shape: '<path d="' + cutRect(TW, TH, 30, rngOf("itF"), 2) + '" fill="' + PAL.coral + '"/>' });
+    var itp = piece({ x: TX, y: TY, w: TW, h: TH, img: timg, lift: .6, blur: 12, parent: par, ox: "50%", oy: "100%" });
+    var coat = bake({ w: TW, h: TH, S: 2, seed: 4041, cut: 2.4, shape: '<path d="' + cutRect(TW, TH, 30, rngOf("itF"), 2) + '" fill="' + MIX + '"/>' });
+    itp.mv.appendChild(coat); var itt = divEl("", itp.mv, "mt"); itt.textContent = "it";
+    var shImg = bake({ w: 520, h: 34, S: 2, seed: 4343, cut: 2, shape: '<path d="' + cutRect(520, 34, 10, rngOf("fsh"), 1.2) + '" fill="' + PAL.cream + '"/>' });
+    var shelf = piece({ x: 540 - 260, y: TY + TH - 6, w: 520, h: 34, img: shImg, lift: .45, blur: 8, parent: par });
+    var lw = Math.ceil(PS.measure("animal", 50, 700)) + 50;
+    var limg = bake({ w: lw, h: 82, S: 2, seed: 5151, shape: '<path d="' + cutRect(lw, 82, 16, rngOf("lab"), 1.4) + '" fill="' + PAL.cream + '"/>' });
+    var lab = piece({ x: 540 - lw / 2, y: TY + TH + 52, w: lw, h: 82, img: limg, lift: .5, blur: 8, parent: par, ox: "50%", oy: "0%" });
+    var lt = divEl("", lab.mv, "mt"); lt.style.fontSize = "50px"; lt.style.color = "#1a1a2e"; lt.textContent = "animal";
+    return bakeAll().then(function () {
+      var tl = gsap.timeline({ paused: true });
+      var lay = H.layers.map(function (l) { return { el: l.el, d: l.d }; });
+      var key = function (t, s, P, e) { return { t: t, s: s, x: s * (P.x - 540), y: s * (P.y - 960), ease: e }; };
+      cameraTween(tl, lay, [key(0, 1.0, { x: 540, y: 960 }), key(L(W[8].end) + .2, 1.14, { x: 540, y: 880 }, "sine.inOut"), key(SC.dur, 1.16, { x: 540, y: 880 }, "none")], 540, 960);
+      tl.set(coat, { clipPath: "inset(0 0 100% 0)" }, 0);
+      tl.set(catp.sh, { visibility: "hidden" }, 0);
+      var tc = snap12(L(W[3].start));
+      var pc = { p: 0 }; tl.to(pc, { p: 1, duration: .8, ease: PE.stepped("power1.inOut", .8), onUpdate: function () { coat.style.clipPath = "inset(0 0 " + (100 - pc.p * 100) + "% 0)"; } }, tc);
+      tl.to(itp.mv, { y: -20, duration: .15, ease: PE.stepped("power2.out", .15) }, tc).to(itp.mv, { y: 0, duration: .3, ease: PE.stepped(PE.card, .3) }, tc + .15);
+      // the cat folds up: anticipation back, then a hinged swing with overshoot
+      var tk = snap12(L(W[6].start) - .05);
+      tl.set(catp.sh, { visibility: "visible" }, tk);
+      tl.fromTo(catp.mv, { transformPerspective: 700, rotationX: 88, scaleY: .9 }, { transformPerspective: 700, rotationX: 0, scaleY: 1, duration: .95, ease: PE.stepped(PE.hinge, .95) }, tk);
+      tl.fromTo(catp.sh, { "--h": 0 }, { "--h": 1, duration: .95, ease: "none" }, tk);
+      tl.to(catp.mv, { rotation: 2.2, duration: .3, ease: "sine.inOut" }, tk + 1.0).to(catp.mv, { rotation: 0, duration: .5, ease: "sine.inOut" }, tk + 1.3);
+      var tl2 = snap12(L(W[8].start));
+      tl.fromTo(lab.mv, { scaleY: .05, opacity: 0 }, { scaleY: 1, opacity: 1, duration: .45, ease: PE.stepped(PE.spring(6, 1.2), .45) }, tl2);
+      tl.set(lab.sh, { visibility: "hidden" }, 0).set(lab.sh, { visibility: "visible" }, tl2);
+      var an = { p: 0 };
+      tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { var st = Math.floor(tl.time() * 12), n = st * 7; gsap.set(catp.mv.firstChild ? catp.mv : catp.mv, {}); } }, 0);
+      window.__timelines["sceneF"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

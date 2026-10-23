@@ -1,0 +1,52 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:visible;pointer-events:none}
+.cap{position:absolute;white-space:nowrap;font:400 66px/1 Anton,sans-serif;color:#f4f1ea;text-transform:uppercase;letter-spacing:1px}
+.hl{position:absolute;background:#ffd400}
+</style>
+<div id="root" data-composition-id="captions" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), FS = 66, Y = 1620, BH = 310;
+  V.ready("captions", function () { return V.fontsReady().then(function () {
+    V.div("position:absolute;left:0;top:" + Y + "px;width:1080px;height:" + BH + "px;background:#0b0b0b", root);
+    V.div("position:absolute;left:0;top:" + (Y - 6) + "px;width:1080px;height:6px;background:#ffd400", root);
+    var m = document.createElement("canvas").getContext("2d"); m.font = "400 " + FS + "px Anton"; 
+    var sp = m.measureText(" ").width + 8, wdt = function (t) { return m.measureText(t.toUpperCase()).width + 1; };
+    var groups = [], cur = [], curW = 0;
+    TIMING.words.forEach(function (w, i) {
+      var ww = wdt(w.text); 
+      if (cur.length && (curW + sp + ww > 960 || cur.length >= 5)) { groups.push(cur); cur = []; curW = 0; }
+      cur.push(w); curW += (cur.length > 1 ? sp : 0) + ww;
+      if (/[.?!]$/.test(w.text)) { groups.push(cur); cur = []; curW = 0; }
+    });
+    if (cur.length) groups.push(cur);
+    var items = [];
+    groups.forEach(function (g, gi) {
+      var tot = g.reduce(function (a, w) { return a + wdt(w.text); }, 0) + sp * (g.length - 1), x = (1080 - tot) / 2, r = rngOf("cap" + gi);
+      var gel = V.div("position:absolute;left:0;top:0;width:1080px;height:1920px;visibility:hidden", root), rows = [];
+      g.forEach(function (w, k) {
+        var ww = wdt(w.text);
+        var hl = V.div("position:absolute;left:" + (x - 9) + "px;top:" + (Y + 40) + "px;width:" + (ww + 18) + "px;height:" + (FS + 22) + "px;background:#ffd400;opacity:0;transform:rotate(" + ((r() - .5) * 3).toFixed(2) + "deg);clip-path:polygon(0 " + (r() * 8) + "px,100% " + (r() * 8) + "px,98% 100%,2% " + (100 - r() * 6) + "%)", gel);
+        var t = V.div("left:" + x + "px;top:" + (Y + 50) + "px;opacity:0;", gel, "cap"); t.textContent = w.text.toUpperCase();
+        rows.push({ w: w, t: t, hl: hl }); x += ww + sp;
+      });
+      items.push({ gel: gel, rows: rows, s: g[0].start, e: g[g.length - 1].end });
+    });
+    var tl = gsap.timeline({ paused: true });
+    items.forEach(function (G, gi) {
+      var nxt = items[gi + 1], hide = Math.min(G.e + .35, nxt ? nxt.s - .02 : 999);
+      tl.set(G.gel, { visibility: "visible" }, Math.max(0, G.s - .03));
+      G.rows.forEach(function (R, k) {
+        var ts = Math.max(0, R.w.start - .03), te = k < G.rows.length - 1 ? G.rows[k + 1].w.start - .03 : Math.min(G.e + .1, hide);
+        tl.set(R.t, { opacity: 1, color: "#0b0b0b" }, ts).set(R.hl, { opacity: 1 }, ts);
+        tl.set(R.t, { color: "#f4f1ea" }, te).set(R.hl, { opacity: 0 }, te);
+      });
+      tl.set(G.gel, { visibility: "hidden" }, hide);
+    });
+    window.__timelines["captions"] = tl;
+  }); });
+})();
+</script>
+</template>

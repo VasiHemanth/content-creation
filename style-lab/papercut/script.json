@@ -1,0 +1,50 @@
+{
+ "tail": 3.6,
+ "lines": [
+  {
+   "id": "l1",
+   "text": "Read this sentence. The animal did not cross the street, because it was too tired.",
+   "gap_before": 0.6
+  },
+  {
+   "id": "l2",
+   "text": "What does the word it mean? You know it means the animal. A language model has to work that out too.",
+   "gap_before": 0.7
+  },
+  {
+   "id": "l3",
+   "text": "So every word gets three paper tags. A question. A label. And a value.",
+   "gap_before": 0.7
+  },
+  {
+   "id": "l4",
+   "text": "The word it holds up its question: which earlier word am I about?",
+   "gap_before": 0.8
+  },
+  {
+   "id": "l5",
+   "text": "Every other word shows its label. The better a label matches the question, the thicker the paper strip that links them.",
+   "gap_before": 0.7
+  },
+  {
+   "id": "l6",
+   "text": "Animal gets a thick strip. Street gets a thin one.",
+   "gap_before": 0.6
+  },
+  {
+   "id": "l7",
+   "text": "Now the model copies each word's value, in proportion to its strip, and blends them together.",
+   "gap_before": 0.7
+  },
+  {
+   "id": "l8",
+   "text": "The word it now carries the meaning of animal.",
+   "gap_before": 0.8
+  },
+  {
+   "id": "l9",
+   "text": "Do this for every word, many times over, and that is attention.",
+   "gap_before": 1.2
+  }
+ ]
+}

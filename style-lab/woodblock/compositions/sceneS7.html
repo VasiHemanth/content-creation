@@ -1,0 +1,49 @@
+<template>
+<style>
+@font-face{font-family:"Shippori Mincho";font-weight:400;src:url("assets/fonts/shippori-mincho-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-latin-800-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-japanese-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-japanese-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#1a1410}
+#push{position:absolute;left:0;top:0;width:1080px;height:1920px}
+#sheetw{position:absolute;left:0;top:0;width:1080px;height:1920px;filter:drop-shadow(14px 20px 22px rgba(0,0,0,.55))}
+#hanko{position:absolute;left:900px;top:1480px;width:96px;height:96px;background:#c8402a;color:#efe3c6;font:800 64px/96px "Shippori Mincho",serif;text-align:center;filter:url(#rough7);opacity:0}
+#hcol{position:absolute;left:896px;top:266px;font:700 38px/1 "Shippori Mincho",serif;color:#1a1410;writing-mode:vertical-rl;text-orientation:mixed;white-space:nowrap;letter-spacing:1px;filter:url(#rough7);clip-path:inset(0 0 100% 0)}
+</style>
+<div id="root" data-composition-id="S7" data-width="1080" data-height="1920"><div id="push"><canvas id="s7b" width="1080" height="1920" style="position:absolute;left:0;top:0"></canvas>
+ <div id="sheetw"><canvas id="s7c" width="1080" height="1920" style="position:absolute;left:0;top:0"></canvas><div id="hcol">@hemanth_with_ai</div><div id="hanko">波</div></div></div></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.S7, root = document.getElementById("root");
+  Print.sceneReady("S7", function () {
+    Print.roughDefs(root, "rough7", "0.07", 4, 19);
+    // the wood block the print was pulled from
+    var bg = document.getElementById("s7b").getContext("2d"); bg.drawImage(Print.makeWood(1080, 1920, 5, false), 0, 0);
+    var vg = bg.createRadialGradient(540, 960, 400, 540, 960, 1250); vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(10,6,2,.5)"); bg.fillStyle = vg; bg.fillRect(0, 0, 1080, 1920);
+    var sheet = Print.finalCanvas(), cg = document.getElementById("s7c").getContext("2d");
+    var peel = { d: 0 };
+    function draw() { cg.clearRect(0, 0, 1080, 1920); Print.drawPeel(cg, sheet, 1080, 1920, Math.round(peel.d / 6) * 6, 1); }
+    draw();
+    var tl = gsap.timeline({ paused: true });
+    var S = .88;
+    tl.set("#sheetw", { scale: S, transformOrigin: "540px 960px" }, 0);
+    // the sheet is lifted from the block by its top corner, hangs there, then is laid flat
+    tl.fromTo(peel, { d: 0 }, { d: 640, duration: .9, ease: "power2.out", onUpdate: draw }, .3);
+    tl.fromTo("#sheetw", { scale: S }, { scale: S + .03, duration: .9, ease: "power2.out", transformOrigin: "540px 960px" }, .3);
+    tl.to(peel, { d: 660, duration: .5, ease: "sine.inOut", onUpdate: draw }, 1.2);
+    tl.to(peel, { d: 0, duration: .85, ease: "power3.inOut", onUpdate: draw }, 1.7);
+    tl.to("#sheetw", { scale: S, duration: .85, ease: "power3.inOut", transformOrigin: "540px 960px" }, 1.7);
+    // hanko seal: soft thud with slight ink bleed
+    var th = 2.75;
+    tl.fromTo("#hanko", { scale: 1.6, opacity: 0, rotation: -7 }, { scale: 1, opacity: 1, rotation: -3, duration: .18, ease: "power4.in" }, th);
+    tl.fromTo("#hanko", { boxShadow: "0 0 28px 16px rgba(200,64,42,.55)" }, { boxShadow: "0 0 3px 2px rgba(200,64,42,.9)", duration: .7, ease: "power2.out" }, th + .1);
+    // cartouche: @hemanth_with_ai brushed in
+    tl.to("#hcol", { clipPath: "inset(0 0 0% 0)", duration: .75, ease: "power1.inOut" }, 3.2);
+    // hold with a slow 3 percent push-in
+    tl.fromTo("#push", { scale: 1, transformOrigin: "540px 960px" }, { scale: 1.03, duration: 1.5, ease: "none" }, SC.dur - 1.5);
+    window.__timelines["S7"] = tl;
+  });
+})();
+</script>
+</template>

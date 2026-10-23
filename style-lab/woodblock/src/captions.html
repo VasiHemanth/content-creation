@@ -1,0 +1,44 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:visible;pointer-events:none}
+.slip{position:absolute;height:104px;background:#efe3c6;border:4px solid #1a1410;box-shadow:5px 7px 12px rgba(0,0,0,.38);filter:url(#roughc)}
+.cw{position:absolute;white-space:nowrap;font:700 56px/1 "Shippori Mincho",serif;color:#1a1410}
+</style>
+<div id="root" data-composition-id="captions" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), FS = 56, Y = 1644;
+  Print.sceneReady("captions", function () { return document.fonts.load("700 56px 'Shippori Mincho'", "Aa").then(function () {
+    Print.roughDefs(root, "roughc", "0.04", 3, 29);
+    var m = document.createElement("canvas").getContext("2d"); m.font = "700 " + FS + "px 'Shippori Mincho'";
+    var sp = m.measureText(" ").width + 6, wdt = function (t) { return m.measureText(t).width + 1; };
+    var groups = [], cur = [], curW = 0;
+    TIMING.words.forEach(function (w) {
+      var ww = wdt(w.text);
+      if (cur.length && (curW + sp + ww > 900 || cur.length >= 5)) { groups.push(cur); cur = []; curW = 0; }
+      cur.push(w); curW += (cur.length > 1 ? sp : 0) + ww;
+      if (/[.?!]$/.test(w.text) || /,$/.test(w.text) && cur.length >= 3) { groups.push(cur); cur = []; curW = 0; }
+    });
+    if (cur.length) groups.push(cur);
+    var items = groups.map(function (g, gi) {
+      var tot = g.reduce(function (a, w) { return a + wdt(w.text); }, 0) + sp * (g.length - 1), x0 = (1080 - tot) / 2, gel = Print.div("position:absolute;left:0;top:0;width:1080px;height:1920px;visibility:hidden", root), r = rngOf("slip" + gi);
+      var slip = Print.div("left:" + (x0 - 34) + "px;top:" + Y + "px;width:" + (tot + 68) + "px;transform:rotate(" + ((r() - .5) * 1.6).toFixed(2) + "deg)", gel, "slip"), x = x0;
+      var rows = g.map(function (w) { var t = Print.div("left:" + x + "px;top:" + (Y + 24) + "px;opacity:0", gel, "cw"); t.textContent = w.text; x += wdt(w.text) + sp; return { w: w, t: t }; });
+      return { gel: gel, rows: rows, s: g[0].start, e: g[g.length - 1].end };
+    });
+    var tl = gsap.timeline({ paused: true });
+    items.forEach(function (G, gi) {
+      var nxt = items[gi + 1], hide = Math.min(G.e + .4, nxt ? nxt.s - .08 : 999);
+      tl.set(G.gel, { visibility: "visible" }, Math.max(0, G.s - .04));
+      G.rows.forEach(function (R, k) {
+        var ts = Math.max(0, R.w.start - .04), te = k < G.rows.length - 1 ? G.rows[k + 1].w.start - .04 : Math.min(G.e + .12, hide);
+        tl.set(R.t, { opacity: 1, color: "#c8402a" }, ts).set(R.t, { color: "#1a1410" }, te);
+      });
+      tl.set(G.gel, { visibility: "hidden" }, hide);
+    });
+    window.__timelines["captions"] = tl;
+  }); });
+})();
+</script>
+</template>

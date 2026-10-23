@@ -1,0 +1,734 @@
+{
+ "voice": "af_heart",
+ "speed": 0.92,
+ "duration": 51.823,
+ "lines": [
+  {
+   "id": "l1",
+   "text": "Read this sentence. The animal did not cross the street, because it was too tired.",
+   "start": 0.6,
+   "end": 5.469,
+   "words": [
+    {
+     "text": "Read",
+     "start": 0.6,
+     "end": 0.847
+    },
+    {
+     "text": "this",
+     "start": 0.847,
+     "end": 1.094
+    },
+    {
+     "text": "sentence.",
+     "start": 1.094,
+     "end": 1.811
+    },
+    {
+     "text": "The",
+     "start": 2.071,
+     "end": 2.262
+    },
+    {
+     "text": "animal",
+     "start": 2.262,
+     "end": 2.733
+    },
+    {
+     "text": "did",
+     "start": 2.733,
+     "end": 2.923
+    },
+    {
+     "text": "not",
+     "start": 2.923,
+     "end": 3.114
+    },
+    {
+     "text": "cross",
+     "start": 3.114,
+     "end": 3.372
+    },
+    {
+     "text": "the",
+     "start": 3.372,
+     "end": 3.562
+    },
+    {
+     "text": "street,",
+     "start": 3.562,
+     "end": 3.966
+    },
+    {
+     "text": "because",
+     "start": 3.966,
+     "end": 4.471
+    },
+    {
+     "text": "it",
+     "start": 4.471,
+     "end": 4.628
+    },
+    {
+     "text": "was",
+     "start": 4.628,
+     "end": 4.818
+    },
+    {
+     "text": "too",
+     "start": 4.818,
+     "end": 5.009
+    },
+    {
+     "text": "tired.",
+     "start": 5.009,
+     "end": 5.469
+    }
+   ]
+  },
+  {
+   "id": "l2",
+   "text": "What does the word it mean? You know it means the animal. A language model has to work that out too.",
+   "start": 6.169,
+   "end": 12.034,
+   "words": [
+    {
+     "text": "What",
+     "start": 6.169,
+     "end": 6.383
+    },
+    {
+     "text": "does",
+     "start": 6.383,
+     "end": 6.597
+    },
+    {
+     "text": "the",
+     "start": 6.597,
+     "end": 6.78
+    },
+    {
+     "text": "word",
+     "start": 6.78,
+     "end": 6.994
+    },
+    {
+     "text": "it",
+     "start": 6.994,
+     "end": 7.144
+    },
+    {
+     "text": "mean?",
+     "start": 7.144,
+     "end": 7.465
+    },
+    {
+     "text": "You",
+     "start": 7.725,
+     "end": 7.906
+    },
+    {
+     "text": "know",
+     "start": 7.906,
+     "end": 8.118
+    },
+    {
+     "text": "it",
+     "start": 8.118,
+     "end": 8.266
+    },
+    {
+     "text": "means",
+     "start": 8.266,
+     "end": 8.51
+    },
+    {
+     "text": "the",
+     "start": 8.51,
+     "end": 8.69
+    },
+    {
+     "text": "animal.",
+     "start": 8.69,
+     "end": 9.242
+    },
+    {
+     "text": "A",
+     "start": 9.502,
+     "end": 9.638
+    },
+    {
+     "text": "language",
+     "start": 9.638,
+     "end": 10.231
+    },
+    {
+     "text": "model",
+     "start": 10.231,
+     "end": 10.613
+    },
+    {
+     "text": "has",
+     "start": 10.613,
+     "end": 10.823
+    },
+    {
+     "text": "to",
+     "start": 10.823,
+     "end": 10.996
+    },
+    {
+     "text": "work",
+     "start": 10.996,
+     "end": 11.243
+    },
+    {
+     "text": "that",
+     "start": 11.243,
+     "end": 11.491
+    },
+    {
+     "text": "out",
+     "start": 11.491,
+     "end": 11.701
+    },
+    {
+     "text": "too.",
+     "start": 11.701,
+     "end": 12.034
+    }
+   ]
+  },
+  {
+   "id": "l3",
+   "text": "So every word gets three paper tags. A question. A label. And a value.",
+   "start": 12.734,
+   "end": 18.16,
+   "words": [
+    {
+     "text": "So",
+     "start": 12.734,
+     "end": 12.909
+    },
+    {
+     "text": "every",
+     "start": 12.909,
+     "end": 13.397
+    },
+    {
+     "text": "word",
+     "start": 13.397,
+     "end": 13.647
+    },
+    {
+     "text": "gets",
+     "start": 13.647,
+     "end": 13.898
+    },
+    {
+     "text": "three",
+     "start": 13.898,
+     "end": 14.185
+    },
+    {
+     "text": "paper",
+     "start": 14.185,
+     "end": 14.573
+    },
+    {
+     "text": "tags.",
+     "start": 14.573,
+     "end": 14.949
+    },
+    {
+     "text": "A",
+     "start": 15.209,
+     "end": 15.362
+    },
+    {
+     "text": "question.",
+     "start": 15.362,
+     "end": 16.059
+    },
+    {
+     "text": "A",
+     "start": 16.319,
+     "end": 16.467
+    },
+    {
+     "text": "label.",
+     "start": 16.467,
+     "end": 17.018
+    },
+    {
+     "text": "And",
+     "start": 17.278,
+     "end": 17.495
+    },
+    {
+     "text": "a",
+     "start": 17.495,
+     "end": 17.636
+    },
+    {
+     "text": "value.",
+     "start": 17.636,
+     "end": 18.16
+    }
+   ]
+  },
+  {
+   "id": "l4",
+   "text": "The word it holds up its question: which earlier word am I about?",
+   "start": 18.96,
+   "end": 22.675,
+   "words": [
+    {
+     "text": "The",
+     "start": 18.96,
+     "end": 19.177
+    },
+    {
+     "text": "word",
+     "start": 19.177,
+     "end": 19.433
+    },
+    {
+     "text": "it",
+     "start": 19.433,
+     "end": 19.611
+    },
+    {
+     "text": "holds",
+     "start": 19.611,
+     "end": 19.905
+    },
+    {
+     "text": "up",
+     "start": 19.905,
+     "end": 20.084
+    },
+    {
+     "text": "its",
+     "start": 20.084,
+     "end": 20.301
+    },
+    {
+     "text": "question:",
+     "start": 20.301,
+     "end": 20.811
+    },
+    {
+     "text": "which",
+     "start": 20.811,
+     "end": 21.105
+    },
+    {
+     "text": "earlier",
+     "start": 21.105,
+     "end": 21.577
+    },
+    {
+     "text": "word",
+     "start": 21.577,
+     "end": 21.833
+    },
+    {
+     "text": "am",
+     "start": 21.833,
+     "end": 22.011
+    },
+    {
+     "text": "I",
+     "start": 22.011,
+     "end": 22.152
+    },
+    {
+     "text": "about?",
+     "start": 22.152,
+     "end": 22.675
+    }
+   ]
+  },
+  {
+   "id": "l5",
+   "text": "Every other word shows its label. The better a label matches the question, the thicker the paper strip that links them.",
+   "start": 23.375,
+   "end": 30.058,
+   "words": [
+    {
+     "text": "Every",
+     "start": 23.375,
+     "end": 23.787
+    },
+    {
+     "text": "other",
+     "start": 23.787,
+     "end": 24.115
+    },
+    {
+     "text": "word",
+     "start": 24.115,
+     "end": 24.327
+    },
+    {
+     "text": "shows",
+     "start": 24.327,
+     "end": 24.57
+    },
+    {
+     "text": "its",
+     "start": 24.57,
+     "end": 24.749
+    },
+    {
+     "text": "label.",
+     "start": 24.749,
+     "end": 25.183
+    },
+    {
+     "text": "The",
+     "start": 25.443,
+     "end": 25.642
+    },
+    {
+     "text": "better",
+     "start": 25.642,
+     "end": 26.039
+    },
+    {
+     "text": "a",
+     "start": 26.039,
+     "end": 26.167
+    },
+    {
+     "text": "label",
+     "start": 26.167,
+     "end": 26.53
+    },
+    {
+     "text": "matches",
+     "start": 26.53,
+     "end": 26.962
+    },
+    {
+     "text": "the",
+     "start": 26.962,
+     "end": 27.161
+    },
+    {
+     "text": "question,",
+     "start": 27.161,
+     "end": 27.745
+    },
+    {
+     "text": "the",
+     "start": 27.745,
+     "end": 27.943
+    },
+    {
+     "text": "thicker",
+     "start": 27.943,
+     "end": 28.376
+    },
+    {
+     "text": "the",
+     "start": 28.376,
+     "end": 28.574
+    },
+    {
+     "text": "paper",
+     "start": 28.574,
+     "end": 28.937
+    },
+    {
+     "text": "strip",
+     "start": 28.937,
+     "end": 29.205
+    },
+    {
+     "text": "that",
+     "start": 29.205,
+     "end": 29.439
+    },
+    {
+     "text": "links",
+     "start": 29.439,
+     "end": 29.708
+    },
+    {
+     "text": "them.",
+     "start": 29.708,
+     "end": 30.058
+    }
+   ]
+  },
+  {
+   "id": "l6",
+   "text": "Animal gets a thick strip. Street gets a thin one.",
+   "start": 30.658,
+   "end": 33.939,
+   "words": [
+    {
+     "text": "Animal",
+     "start": 30.658,
+     "end": 31.171
+    },
+    {
+     "text": "gets",
+     "start": 31.171,
+     "end": 31.414
+    },
+    {
+     "text": "a",
+     "start": 31.414,
+     "end": 31.549
+    },
+    {
+     "text": "thick",
+     "start": 31.549,
+     "end": 31.829
+    },
+    {
+     "text": "strip.",
+     "start": 31.829,
+     "end": 32.231
+    },
+    {
+     "text": "Street",
+     "start": 32.491,
+     "end": 32.828
+    },
+    {
+     "text": "gets",
+     "start": 32.828,
+     "end": 33.086
+    },
+    {
+     "text": "a",
+     "start": 33.086,
+     "end": 33.228
+    },
+    {
+     "text": "thin",
+     "start": 33.228,
+     "end": 33.487
+    },
+    {
+     "text": "one.",
+     "start": 33.487,
+     "end": 33.939
+    }
+   ]
+  },
+  {
+   "id": "l7",
+   "text": "Now the model copies each word's value, in proportion to its strip, and blends them together.",
+   "start": 34.639,
+   "end": 40.207,
+   "words": [
+    {
+     "text": "Now",
+     "start": 34.639,
+     "end": 34.857
+    },
+    {
+     "text": "the",
+     "start": 34.857,
+     "end": 35.074
+    },
+    {
+     "text": "model",
+     "start": 35.074,
+     "end": 35.469
+    },
+    {
+     "text": "copies",
+     "start": 35.469,
+     "end": 35.904
+    },
+    {
+     "text": "each",
+     "start": 35.904,
+     "end": 36.159
+    },
+    {
+     "text": "word's",
+     "start": 36.159,
+     "end": 36.453
+    },
+    {
+     "text": "value,",
+     "start": 36.453,
+     "end": 36.976
+    },
+    {
+     "text": "in",
+     "start": 36.976,
+     "end": 37.155
+    },
+    {
+     "text": "proportion",
+     "start": 37.155,
+     "end": 37.844
+    },
+    {
+     "text": "to",
+     "start": 37.844,
+     "end": 38.023
+    },
+    {
+     "text": "its",
+     "start": 38.023,
+     "end": 38.24
+    },
+    {
+     "text": "strip,",
+     "start": 38.24,
+     "end": 38.662
+    },
+    {
+     "text": "and",
+     "start": 38.662,
+     "end": 38.879
+    },
+    {
+     "text": "blends",
+     "start": 38.879,
+     "end": 39.211
+    },
+    {
+     "text": "them",
+     "start": 39.211,
+     "end": 39.466
+    },
+    {
+     "text": "together.",
+     "start": 39.466,
+     "end": 40.207
+    }
+   ]
+  },
+  {
+   "id": "l8",
+   "text": "The word it now carries the meaning of animal.",
+   "start": 41.007,
+   "end": 43.33,
+   "words": [
+    {
+     "text": "The",
+     "start": 41.007,
+     "end": 41.182
+    },
+    {
+     "text": "word",
+     "start": 41.182,
+     "end": 41.389
+    },
+    {
+     "text": "it",
+     "start": 41.389,
+     "end": 41.533
+    },
+    {
+     "text": "now",
+     "start": 41.533,
+     "end": 41.709
+    },
+    {
+     "text": "carries",
+     "start": 41.709,
+     "end": 42.091
+    },
+    {
+     "text": "the",
+     "start": 42.091,
+     "end": 42.267
+    },
+    {
+     "text": "meaning",
+     "start": 42.267,
+     "end": 42.649
+    },
+    {
+     "text": "of",
+     "start": 42.649,
+     "end": 42.793
+    },
+    {
+     "text": "animal.",
+     "start": 42.793,
+     "end": 43.33
+    }
+   ]
+  },
+  {
+   "id": "l9",
+   "text": "Do this for every word, many times over, and that is attention.",
+   "start": 44.53,
+   "end": 48.223,
+   "words": [
+    {
+     "text": "Do",
+     "start": 44.53,
+     "end": 44.687
+    },
+    {
+     "text": "this",
+     "start": 44.687,
+     "end": 44.912
+    },
+    {
+     "text": "for",
+     "start": 44.912,
+     "end": 45.103
+    },
+    {
+     "text": "every",
+     "start": 45.103,
+     "end": 45.54
+    },
+    {
+     "text": "word,",
+     "start": 45.54,
+     "end": 45.877
+    },
+    {
+     "text": "many",
+     "start": 45.877,
+     "end": 46.191
+    },
+    {
+     "text": "times",
+     "start": 46.191,
+     "end": 46.539
+    },
+    {
+     "text": "over,",
+     "start": 46.539,
+     "end": 46.966
+    },
+    {
+     "text": "and",
+     "start": 46.966,
+     "end": 47.157
+    },
+    {
+     "text": "that",
+     "start": 47.157,
+     "end": 47.381
+    },
+    {
+     "text": "is",
+     "start": 47.381,
+     "end": 47.538
+    },
+    {
+     "text": "attention.",
+     "start": 47.538,
+     "end": 48.223
+    }
+   ]
+  }
+ ]
+}

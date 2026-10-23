@@ -1,0 +1,81 @@
+<template>
+<style>
+@font-face{font-family:"Fredoka";font-weight:700;src:url("assets/fonts/fredoka-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:600;src:url("assets/fonts/fredoka-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:500;src:url("assets/fonts/fredoka-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Bagel Fat One";font-weight:400;src:url("assets/fonts/bagel-fat-one-latin-400-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#1d2a5b;font-family:"Fredoka",sans-serif}
+</style>
+<div id="root" data-composition-id="sceneB" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.B, W = TIMING.lines[2].words;
+  var L = function (g) { return g - SC.start; }, PS = Stage;
+  sceneReady("sceneB", function () { return PS.fontsReady().then(function () {
+    var H = PS.build(root, { id: "B", starSeed: 5 });
+    var it = H.tags[PS.IT], par = H.strips;
+    // --- the pocket on "it": dark slot + cardboard lip that drops down ---
+    var pw = it.w + 120, ph = 170, px = it.cx - pw / 2, py = it.y + it.h + 30;
+    var pimg = bake({ w: pw, h: ph, S: 2, seed: 2121, cut: 2.2, shape: '<path d="' + cutRect(pw, ph, 20, rngOf("pocket"), 1.5) + '" fill="#141b3d"/>' });
+    var pocket = piece({ x: px, y: py, w: pw, h: ph, img: pimg, lift: .2, blur: 6, parent: H.tagL, ox: "50%", oy: "0%" });
+    var ridges = ""; for (var i = 0; i < 6; i++) ridges += '<path d="M' + (14 + i * (pw - 28) / 5) + ' 6 L' + (14 + i * (pw - 28) / 5) + ' 40" stroke="#1a1a2e" stroke-opacity=".16" stroke-width="3"/>';
+    var fimg = bake({ w: pw, h: 46, S: 2, seed: 2222, cut: 2.2, shape: '<path d="' + cutRect(pw, 46, 14, rngOf("lip"), 1.4) + '" fill="' + PAL.cream + '"/>', overlay: ridges });
+    var lip = piece({ x: px, y: py - 4, w: pw, h: 46, img: fimg, lift: .5, blur: 6, parent: H.strips, ox: "50%", oy: "0%" });
+    // --- the three tags that come out of "it" ---
+    var q = PS.mkBubble(par, { id: "B-q", x: it.cx - 110, y: py + 56, w: 200, h: 92, glyph: true, rot: -4 });
+    var lab = PS.mkLabel(par, { id: "B-l", x: it.cx + 115, y: py + 72, w: 150, h: 96, glyph: "tc", rot: 3 });
+    var val = PS.mkTicket(par, { id: "B-v", x: it.cx + 285, y: py + 54, w: 150, h: 90, rot: -3 });
+    // --- the cascade: small versions on every word ---
+    var minis = [];
+    for (var wi = 0; wi < 12; wi++) {
+      if (wi === PS.IT) continue;
+      var T = H.tags[wi], by = T.y + T.h + 44, trio = [];
+      var r = rngOf("mini" + wi), v = wi % 3;
+      var mb = PS.mkBubble(par, { id: "mb" + v, x: T.cx - 112, y: by - 10, w: 72, h: 38, rot: -5 + r() * 4, lift: .3 });
+      var ml = PS.mkLabel(par, { id: "ml" + v, x: T.cx - 28, y: by - 4, w: 62, h: 42, rot: 4 - r() * 3, lift: .3, glyph: "tc" });
+      var mv = PS.mkTicket(par, { id: "mv" + v, x: T.cx + 44, y: by - 8, w: 66, h: 42, rot: -3 + r() * 5, lift: .3 });
+      minis.push({ wi: wi, trio: [mb, ml, mv] });
+    }
+    return bakeAll().then(function () {
+      var tl = gsap.timeline({ paused: true });
+      var lay = H.layers.map(function (l) { return { el: l.el, d: l.d }; });
+      var key = function (t, s, P, e) { return { t: t, s: s, x: s * (P.x - 540), y: s * (P.y - 960), ease: e }; };
+      var tc = L(W[13].start) - .35;
+      cameraTween(tl, lay, [key(0, 1.5, { x: 640, y: 1040 }), key(tc - .2, 1.55, { x: 650, y: 1060 }, "sine.inOut"), key(tc + 1.25, 1.0, { x: 540, y: 960 }, "power3.inOut"), key(SC.dur, 1.0, { x: 540, y: 960 }, "none")], 540, 960);
+      // everything else already stands on its shelf; the "it" tag hops when the line says tags
+      var hop = function (t, h) { tl.to(it.mv, { y: -h, duration: .15, ease: PE.stepped("power2.out", .15) }, t).to(it.mv, { y: 0, duration: .25, ease: PE.stepped(PE.card, .25) }, t + .15); };
+      var t3 = snap12(L(W[4].start) - .05);
+      hop(t3, 24);
+      // pocket opens: dark slot grows, the cardboard lip swings down (anticipation, then a heavy settle)
+      tl.set([pocket.sh, lip.sh], { visibility: "hidden" }, 0);
+      tl.set([pocket.sh, lip.sh], { visibility: "visible" }, t3 + .2);
+      tl.fromTo(pocket.mv, { scaleY: .02 }, { scaleY: 1, duration: .5, ease: PE.stepped(PE.paper, .5) }, t3 + .2);
+      tl.fromTo(lip.mv, { transformPerspective: 500, rotationX: 100 }, { transformPerspective: 500, rotationX: 0, duration: .55, ease: PE.stepped(PE.hinge, .55) }, t3 + .2);
+      var out = function (P, t, dx) {
+        tl.set(P.sh, { visibility: "hidden" }, 0).set(P.sh, { visibility: "visible" }, t);
+        tl.fromTo(P.mv, { y: -90, x: -dx, scale: .2, opacity: 0, transformOrigin: "50% 0%" }, { y: 0, x: 0, scale: 1, opacity: 1, duration: .6, ease: PE.stepped(PE.spring(5.5, 1.3), .6) }, t);
+        tl.fromTo(P.sh, { "--h": 0 }, { "--h": .75, duration: .6, ease: "none" }, t);
+      };
+      out(q, snap12(L(W[8].start) - .02), -150);
+      out(lab, snap12(L(W[10].start) - .02), 0);
+      out(val, snap12(L(W[13].start) - .02), 150);
+      // fast stop-motion cascade over every other word
+      var cs = snap12(L(W[13].start) + .15);
+      minis.forEach(function (M, i) {
+        var t0 = snap12(cs + i * .1);
+        M.trio.forEach(function (P, k) {
+          var tt = t0 + k * (1 / 12);
+          tl.set(P.sh, { visibility: "hidden" }, 0).set(P.sh, { visibility: "visible" }, tt);
+          tl.fromTo(P.mv, { y: -26, scale: .2, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: .3, ease: PE.stepped(PE.card, .3) }, tt);
+        });
+        var T = H.tags[M.wi];
+        tl.to(T.mv, { y: -12, duration: .12, ease: PE.stepped("power2.out", .12) }, t0).to(T.mv, { y: 0, duration: .2, ease: PE.stepped(PE.card, .2) }, t0 + .12);
+      });
+      var an = { p: 0 };
+      tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { PS.boil(H, tl.time()); } }, 0);
+      window.__timelines["sceneB"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

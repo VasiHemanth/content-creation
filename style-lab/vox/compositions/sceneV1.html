@@ -1,0 +1,52 @@
+<template>
+<style>
+@font-face{font-family:"Anton";font-weight:400;src:url("assets/fonts/anton-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Archivo Black";font-weight:400;src:url("assets/fonts/archivo-black-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:500;src:url("assets/fonts/inter-tight-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:700;src:url("assets/fonts/inter-tight-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:800;src:url("assets/fonts/inter-tight-latin-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#0b0b0b}
+</style>
+<div id="root" data-composition-id="sceneV1" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.V1, L = function (g) { return g - SC.start; };
+  V.ready("V1", function () { return V.fontsReady().then(function () {
+    var root = document.getElementById("root"), C = V.C, cam = V.div("position:absolute;left:0;top:0;width:1080px;height:1920px", root), tl = gsap.timeline({ paused: true });
+    var whip = function (el, t, dx, dy) { return V.ghostTitle(tl, el, { dx: dx || -420, dy: dy || 0, copies: 3, dur: .2 }, t); };
+
+    // ---- beat 1: cold open ----
+    var b1 = V.beat(cam, tl, 0, L(1.45), C.k, 1, 180);
+    var sz = V.fit("1958", 900, "Anton", 540), t58 = V.text(b1, "1958", { y: 360, size: sz, color: C.y });
+    var gh = []; for (var i = 0; i < 4; i++) { var g = t58.cloneNode(true); b1.insertBefore(g, t58); gh.push(g); }
+    tl.fromTo(t58, { scale: 1.22, y: -40, opacity: 1 }, { scale: 1, y: 0, duration: .2, ease: V.E.hit }, 0);
+    gh.forEach(function (g, i) { tl.fromTo(g, { scale: 1.22 + i * .05, y: -40 - i * 36, opacity: .42 - i * .09 }, { scale: 1.08, y: -16, opacity: 0, duration: .1, ease: "none" }, 0); });
+    V.shake(tl, cam, .18, 6, "v1a");
+    var pill = V.div("position:absolute;left:650px;top:230px;width:380px;height:92px;border:5px solid " + C.y + ";display:flex;align-items:center;justify-content:center;font:800 54px/1 'Inter Tight',sans-serif;color:" + C.w, b1);
+    V.count(tl, pill, .3, 1.05, 1958, 2020, function (v) { return v >= 2019.5 ? "NOW" : String(Math.round(v)); }, "power2.in");
+    var sp1 = V.spine(b1, { x0: 80, x1: 1000, baseY: 1370, topY: 1200, color: C.y, w: 7, tickColor: C.w });
+    sp1.reveal(tl, .35, 1.1, 0, .13, "power1.in");
+    // ---- beat 2: the statement ----
+    var b2 = V.beat(cam, tl, L(1.45), L(3.21), C.y, 2, 120);
+    var lines = ["NEURAL", "NETWORKS", "ARE", "NOT NEW."], ts = [1.45, 1.83, 2.28, 2.56], size = 230, ys = [300, 520, 740, 960];
+    var w4 = V.tw("NOT NEW.", size) + 10, H4 = V.hilite(b2, (1080 - w4) / 2, ys[3] + 22, w4, size * .78, C.p, "hl1", -1.5);
+    var els = lines.map(function (s, i) { return V.text(b2, s, { y: ys[i], size: size, color: C.k }); });
+    els.forEach(function (e, i) { whip(e, L(ts[i]), i % 2 ? 420 : -420); });
+    V.hiliteWipe(tl, H4, L(2.56), .22);
+    var sc = V.scribble(b2, (1080 - w4) / 2 + w4 * .42, ys[3] + size * .93, w4 * .55, C.k, "sc1", 14); V.draw(tl, sc, L(2.78), .35, "power1.inOut");
+    // ---- beat 3: the first one ----
+    var b3 = V.beat(cam, tl, L(3.21), null, C.w, 3, 40);
+    var t1 = V.text(b3, "THE FIRST ONE", { y: 240, size: V.fit("THE FIRST ONE", 940, "Anton", 190), color: C.k }); whip(t1, L(3.21), 420);
+    var net = V.cutout(b3, { x: 270, y: 470, w: 540, h: 440, draw: V.art.neuron, cell: 11, sx: 10, sy: 10 });
+    tl.fromTo(net, { scale: .5, opacity: 0, rotation: -9 }, { scale: 1, opacity: 1, rotation: -2, duration: .26, ease: V.E.snap }, L(3.52));
+    var t2 = V.text(b3, "BUILT IN", { y: 900, size: 130, color: C.k }); whip(t2, L(4.71), -420);
+    var big = V.text(b3, "1958", { y: 1060, size: V.fit("1958", 980, "Anton", 400), color: C.b });
+    V.slamIn(tl, big, L(5.38), -1.5, 1.6); V.shake(tl, cam, L(5.38) + .15, 6, "v1b");
+    var sp3 = V.spine(b3, { x0: 80, x1: 1000, baseY: 1490, topY: 1300, color: C.k, w: 7 }); sp3.reveal(tl, 0, .01, .13, .13);
+
+    V.push(tl, cam, SC.dur, 1.06);
+    window.__timelines["sceneV1"] = tl;
+  }); });
+})();
+</script>
+</template>

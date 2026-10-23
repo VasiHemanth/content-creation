@@ -1,0 +1,55 @@
+<template>
+<style>
+@font-face{font-family:"Anton";font-weight:400;src:url("assets/fonts/anton-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Archivo Black";font-weight:400;src:url("assets/fonts/archivo-black-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:500;src:url("assets/fonts/inter-tight-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:700;src:url("assets/fonts/inter-tight-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:800;src:url("assets/fonts/inter-tight-latin-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#0b0b0b}
+</style>
+<div id="root" data-composition-id="sceneV3" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.V3, L = function (g) { return g - SC.start; };
+  V.ready("V3", function () { return V.fontsReady().then(function () {
+    var root = document.getElementById("root"), C = V.C, cam = V.div("position:absolute;left:0;top:0;width:1080px;height:1920px", root), tl = gsap.timeline({ paused: true });
+    var whip = function (el, t, dx, dy) { return V.ghostTitle(tl, el, { dx: dx || -420, dy: dy || 0, copies: 3, dur: .2 }, t); };
+
+    var tt = function (g) { return L(g); };
+    // beat A: slab 1 DATA
+    var a = V.beat(cam, tl, 0, tt(11.95), C.k, 7, 0);
+    var slab = V.div("position:absolute;left:50px;top:360px;width:980px;height:800px;background:" + C.y + ";box-shadow:16px 16px 0 " + C.w, a);
+    var disc = V.div("position:absolute;left:90px;top:400px;width:240px;height:240px;border-radius:50%;background:" + C.k + ";color:" + C.y + ";display:flex;align-items:center;justify-content:center;font:400 190px/1 Anton", slab); disc.textContent = "1"; disc.style.left = "40px"; disc.style.top = "40px";
+    var dsz = V.fit("DATA", 900, "Anton", 460), dt = V.text(slab, "DATA", { x: 0, y: 330, w: 980, size: dsz, color: C.k });
+    V.slamIn(tl, slab, tt(10.54), -1, 1.5); V.shake(tl, cam, tt(10.54) + .2, 6, "v3a");
+    tl.set(dt, { opacity: 0 }, 0).set(dt, { opacity: 1 }, tt(11.2)); V.shake(tl, cam, tt(11.2), 6, "v3b");
+    // beat B: 2009
+    var b = V.beat(cam, tl, tt(11.95), tt(13.95), C.b, 8, 120);
+    var yr = V.text(b, "2009", { y: 330, size: V.fit("2009", 900, "Anton", 520), color: C.w }); V.count(tl, yr, tt(12.0), .45, 0, 2009, null, "power3.out"); V.flash(tl, b, tt(12.45), C.y);
+    tl.fromTo(yr, { scale: 1.12 }, { scale: 1, duration: .15, ease: V.E.hit }, tt(12.45));
+    var r1 = V.text(b, "RESEARCHERS", { y: 960, size: V.fit("RESEARCHERS", 940, "Anton", 190), color: C.y }); whip(r1, tt(12.56), -420);
+    var r2 = V.text(b, "RELEASED", { y: 1170, size: 190, color: C.w }); whip(r2, tt(13.31), 420);
+    // beat C: the wall of images
+    var c = V.beat(cam, tl, tt(13.95), null, C.k, 9, 0);
+    var icons = ["cat", "car", "cup", "plane"], imgs = icons.map(function (n) { var cv = V.halftone(240, 240, V.art[n], { cell: 9, color: C.k }); return cv.toDataURL("image/png"); });
+    var wall = V.div("position:absolute;left:25px;top:0;width:1030px;height:6400px;transform-origin:515px 960px", c), tilesL = [];
+    for (var rI = 0; rI < 25; rI++) for (var cI = 0; cI < 4; cI++) {
+      var k = (rI * 3 + cI * 5 + (rI >> 1)) % 4, tile = V.div("position:absolute;left:" + (cI * 260) + "px;top:" + (rI * 260) + "px;width:250px;height:250px;background:" + ((rI + cI) % 2 ? C.y : C.w) + ";overflow:hidden", wall);
+      var im = document.createElement("img"); im.src = imgs[k]; im.style.cssText = "position:absolute;left:0;top:0;width:250px;height:250px;transform:scale(1.02)"; tile.appendChild(im);
+      var lab = V.div("position:absolute;left:0;bottom:0;width:250px;height:40px;background:" + C.k + ";color:" + C.w + ";font:700 26px/40px 'Inter Tight';text-align:center;opacity:0", tile); lab.textContent = ["CAT", "CAR", "CUP", "PLANE"][k]; tilesL.push(lab);
+    }
+    tl.fromTo(wall, { y: 0 }, { y: -3900, duration: tt(16.1) - tt(13.95), ease: "power2.in" }, tt(13.95));
+    tl.fromTo(wall, { scale: 2.3 }, { scale: 1, duration: .8, ease: "power3.inOut" }, tt(16.1));
+    tl.set(tilesL, { opacity: 1 }, tt(16.11));
+    var cnt = V.div("position:absolute;left:90px;top:760px;width:900px;height:260px;background:" + C.y + ";border:8px solid " + C.k + ";box-shadow:14px 14px 0 " + C.k + ";display:flex;align-items:center;justify-content:center;font:400 190px/1 Anton;color:" + C.k + ";opacity:0", c);
+    tl.set(cnt, { opacity: 1 }, tt(14.83)); V.count(tl, cnt, tt(14.83), .8, 0, 1000000, function (v) { var n = Math.round(v), s = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); return n >= 1000000 ? "1,000,000+" : s; }, "power3.in");
+    tl.fromTo(cnt, { scale: 1 }, { scale: 1.1, duration: .1, ease: "power2.out" }, tt(15.65)).to(cnt, { scale: 1, duration: .15 }, tt(15.75));
+    var tag = V.div("position:absolute;left:60px;top:250px;background:" + C.p + ";color:" + C.w + ";padding:14px 30px;font:400 100px/1 Anton;box-shadow:10px 10px 0 " + C.k + ";transform:rotate(-2deg)", c); tag.textContent = "IMAGENET";
+    V.slamIn(tl, tag, tt(13.95), -2, 1.5);
+
+    V.push(tl, cam, SC.dur, 1.05);
+    window.__timelines["sceneV3"] = tl;
+  }); });
+})();
+</script>
+</template>

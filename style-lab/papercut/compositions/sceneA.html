@@ -1,0 +1,87 @@
+<template>
+<style>
+@font-face{font-family:"Fredoka";font-weight:700;src:url("assets/fonts/fredoka-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:600;src:url("assets/fonts/fredoka-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:500;src:url("assets/fonts/fredoka-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Bagel Fat One";font-weight:400;src:url("assets/fonts/bagel-fat-one-latin-400-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#1d2a5b;font-family:"Fredoka",sans-serif}
+</style>
+<div id="root" data-composition-id="sceneA" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.A, W1 = TIMING.lines[0].words, W2 = TIMING.lines[1].words;
+  var L = function (g) { return g - SC.start; };
+  var PS = Stage;
+  sceneReady("sceneA", function () { return PS.fontsReady().then(function () {
+    var H = PS.build(root, { id: "A", starSeed: 3 });
+    var it = H.tags[PS.IT], animal = H.tags[PS.ANIMAL];
+    // question mark (saffron), sits just above "it"
+    var qd = '<path d="M-26 -22 C-26 -64 26 -64 26 -26 C26 6 0 6 0 36" stroke="' + PAL.saffron + '" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="0" cy="68" r="12" fill="' + PAL.saffron + '"/>';
+    var qimg = bake({ w: 90, h: 130, S: 2, seed: 1717, cut: 2, shape: '<g transform="translate(45 50)">' + qd + "</g>" });
+    var q = piece({ x: it.cx - 45, y: it.y - 128, w: 90, h: 130, img: qimg, lift: .6, parent: H.tagL, ox: "50%", oy: "100%" });
+    // gear + "language model" tag
+    var gr = rngOf("gear"), gimg = bake({ w: 170, h: 170, S: 2, seed: 2323, cut: 2.2, shape: '<path d="' + PS.geo.gear(85, 85, 80, 62, 10, gr) + '" fill="' + PAL.cream + '"/>', overlay: '<circle cx="85" cy="85" r="26" fill="' + PAL.blue + '"/><circle cx="85" cy="85" r="9" fill="' + PAL.deep + '"/>' });
+    var gear = piece({ x: 540 - 85, y: 258, w: 170, h: 170, img: gimg, lift: .8, parent: H.tagL });
+    var lw = Math.ceil(PS.measure("language model", 38, 600)) + 48;
+    var limg = bake({ w: lw, h: 66, S: 2, seed: 3131, cut: 2, shape: '<path d="' + cutRect(lw, 66, 14, rngOf("lm"), 1.4) + '" fill="' + PAL.cream + '"/>' });
+    var lm = piece({ x: 540 - lw / 2, y: 410, w: lw, h: 66, img: limg, lift: .5, parent: H.tagL });
+    var lt = divEl("position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:600 38px/1 Fredoka,sans-serif;color:#1a1a2e;padding-bottom:3px", lm.mv); lt.textContent = "language model";
+    // arrow it -> animal (saffron paper ribbon with a head)
+    var ar = PS.ribbon(H.strips, { id: "A-arrow", a: { x: it.cx - 30, y: it.y - 4 }, b: { x: animal.cx + 20, y: animal.y + animal.h + 14 }, bend: -90, w: 20, fill: PAL.saffron, lift: .5 });
+    var hd = bake({ w: 70, h: 70, S: 2, seed: 4545, cut: 1.8, shape: '<path d="M8 62 L35 6 L62 62 L35 48Z" fill="' + PAL.saffron + '"/>' });
+    var head = piece({ x: 0, y: 0, w: 70, h: 70, img: hd, lift: .5, parent: H.strips });
+    return bakeAll().then(function () {
+      var rib = ar.mount(); // mounted into the tag layer
+      var tl = gsap.timeline({ paused: true });
+      var lay = H.layers.map(function (l) { return { el: l.el, d: l.d }; });
+      // ---- camera: low and close, then pulls back through the layers ----
+      var sc0 = 1.28, P0 = { x: 500, y: 900 }, P1 = { x: 540, y: 900 };
+      var key = function (t, s, P, e) { return { t: t, s: s, x: s * (P.x - 540), y: s * (P.y - 960), ease: e }; };
+      cameraTween(tl, lay, [key(0, sc0, P0), key(L(W1[3].start) - .2, 1.22, { x: 520, y: 920 }, "power1.inOut"), key(L(W1[14].end) + .6, 1.12, { x: 540, y: 930 }, "power2.inOut"), key(L(W2[5].end), 1.04, P1, "power2.inOut"), key(SC.dur, 1.0, { x: 540, y: 960 }, "sine.inOut")], 540, 960);
+      // ---- tags pop up in turn: stop-motion bounce from behind their shelf ----
+      var order = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+      order.forEach(function (wi, k) {
+        var T = H.tags[wi], t0 = snap12(k < 6 ? 0 : (k - 5) * .1), d = .42;
+        tl.fromTo(T.mv, { scaleY: k < 6 ? .7 : .04, scaleX: k < 6 ? .94 : .8, y: k < 6 ? 12 : 38, opacity: k < 6 ? 1 : 0, rotation: T.rot }, { scaleY: 1, scaleX: 1, y: 0, opacity: 1, rotation: T.rot, duration: d, ease: PE.stepped(PE.spring(6, 1.15), d) }, t0);
+        tl.set(T.sh, { "--h": .1 }, t0).to(T.sh, { "--h": .3, duration: d, ease: "none" }, t0);
+      });
+      // shelves slide in too
+      H.shelves.forEach(function (sp, i) { tl.fromTo(sp.mv, { scaleX: 1, opacity: 1 }, { scaleX: 1, opacity: 1, duration: .1 }, 0); });
+      // ---- the sentence is read: each word hops as it is spoken ----
+      function hop(wi, t, hgt, rot) {
+        var T = H.tags[wi], d = .36, base = T.rot;
+        tl.to(T.mv, { y: -hgt, rotation: base + (rot || 0), duration: d * .42, ease: PE.stepped(function (p) { return 1 - (1 - p) * (1 - p); }, d * .42) }, t);
+        tl.to(T.mv, { y: 0, rotation: base, duration: d * .6, ease: PE.stepped(PE.card, d * .6) }, t + d * .42);
+        tl.to(T.sh, { "--h": .95, duration: d * .4, ease: "none" }, t).to(T.sh, { "--h": .3, duration: d * .6, ease: "none" }, t + d * .42);
+      }
+      for (var i = 0; i < 12; i++) hop(i, snap12(L(W1[3 + i].start)), i === 8 ? 30 : 16, i === 8 ? 6 : 0);
+      // ---- "What does the word it mean?" : it hops, a paper question mark pops up ----
+      hop(8, snap12(L(W2[4].start)), 26, -5);
+      tl.fromTo(q.mv, { scaleY: .05, scaleX: .6, opacity: 0 }, { scaleY: 1, scaleX: 1, opacity: 1, duration: .5, ease: PE.stepped(PE.spring(5.5, 1.3), .5) }, snap12(L(W2[4].start) + .1));
+      tl.fromTo(q.sh, { "--h": 0 }, { "--h": .9, duration: .5, ease: "none" }, snap12(L(W2[4].start) + .1));
+      tl.to(q.mv, { rotation: 5, duration: .25, ease: "sine.inOut" }, snap12(L(W2[5].start) + .2));
+      tl.to(q.mv, { opacity: 0, scaleY: .05, duration: .3, ease: PE.stepped(function (p) { return p; }, .3) }, snap12(L(W2[9].start) - .1));
+      // ---- "You know it means the animal": saffron arrow unrolls it -> animal ----
+      var rs = snap12(L(W2[8].start)), pr = { p: 0 };
+      tl.to(pr, { p: 1.06, duration: .7, ease: PE.strip, onUpdate: function () { ar.apply(pr.p); } }, rs);
+      var pt = PS.quadAt(ar.a, ar.c, ar.b, 1), ang = PS.quadTan({ x: 0, y: 0 }, { x: ar.c.x - ar.a.x, y: ar.c.y - ar.a.y }, { x: ar.b.x - ar.a.x, y: ar.b.y - ar.a.y }, 1);
+      gsap.set(head.sh, { x: pt.x - 35, y: pt.y - 35 }); gsap.set(head.mv, { rotation: ang * 57.3 + 90 });
+      tl.fromTo(head.mv, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: .3, ease: PE.stepped(PE.card, .3) }, rs + .6);
+      hop(1, snap12(L(W2[11].start)), 30, 4);
+      tl.to([ar.box, head.sh], { opacity: 0, duration: .01 }, snap12(L(W2[20].end)));
+      // ---- "A language model has to work that out too": a paper gear turns ----
+      var gt = snap12(L(W2[13].start) - .15);
+      tl.fromTo(gear.mv, { scale: 0, opacity: 0, rotation: 0 }, { scale: 1, opacity: 1, duration: .5, ease: PE.stepped(PE.spring(5.5, 1.2), .5) }, gt);
+      tl.to(gear.mv, { rotation: 300, duration: SC.dur - gt, ease: PE.stepped("none", SC.dur - gt) }, gt);
+      tl.fromTo(lm.mv, { scaleX: .1, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .4, ease: PE.stepped(PE.paper, .4) }, gt + .15);
+      tl.fromTo(gear.sh, { "--h": 0 }, { "--h": .9, duration: .5, ease: "none" }, gt);
+      tl.fromTo(head.sh, { visibility: "visible" }, { visibility: "visible", duration: .01 }, 0);
+      // ---- idle: 12 fps boil on every tag + slow valance sway ----
+      var an = { p: 0 };
+      tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { PS.boil(H, tl.time()); } }, 0);
+      window.__timelines["sceneA"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

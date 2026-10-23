@@ -1,0 +1,135 @@
+<template>
+<style>
+@font-face{font-family:"Shippori Mincho";font-weight:400;src:url("assets/fonts/shippori-mincho-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-latin-800-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-japanese-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-japanese-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#efe3c6}
+#w1{position:absolute;left:0;top:0;width:1080px;height:1920px}
+</style>
+<div id="root" data-composition-id="S1" data-width="1080" data-height="1920"><div id="w1"><canvas id="s1b" width="1080" height="1920" style="position:absolute;left:0;top:0"></canvas><canvas id="s1o" width="1080" height="1920" style="position:absolute;left:0;top:0"></canvas></div></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.S1;
+  var BX = 90, BY = 430, BW = 900, BH = 1040, SX = 40, SY = 360, K = .9;
+  Print.sceneReady("S1", function () {
+    var bg = document.getElementById("s1b").getContext("2d"), og = document.getElementById("s1o").getContext("2d");
+    var P = Print, C = P.C, clamp = P.clamp;
+    var wood = P.makeWood(BW, BH, 3, false), cutW = P.makeWood(BW, BH, 8, true);
+    var wd = wood.getContext("2d").getImageData(0, 0, BW, BH), cd = cutW.getContext("2d").getImageData(0, 0, BW, BH);
+    var w32 = new Uint32Array(wd.data.buffer), c32 = new Uint32Array(cd.data.buffer);
+    // raised lines = the key block drawing (cropped and scaled onto the block)
+    var lc = document.createElement("canvas"); lc.width = BW; lc.height = BH; var lg = lc.getContext("2d", { willReadFrequently: true });
+    lg.drawImage(P.keyCanvas, SX, SY, BW / K, BH / K, 0, 0, BW, BH);
+    var ld = lg.getImageData(0, 0, BW, BH).data, line = new Uint8Array(BW * BH), x, y, i;
+    for (i = 0; i < BW * BH; i++) line[i] = ld[i * 4 + 3] > 60 ? 1 : 0;
+    var ln2 = new Uint8Array(line); for (y = 1; y < BH - 1; y++) for (x = 1; x < BW - 1; x++) { i = y * BW + x; if (line[i - 1] || line[i + 1] || line[i - BW] || line[i + BW]) ln2[i] = 1; }
+    // reveal-time map: the first cut follows the crest; then boustrophedon sweeps clear everything else
+    var crest = P.crest.map(function (p) { return [(p[0] - SX) * K, (p[1] - SY) * K]; }).filter(function (p) { return p[0] > 8 && p[0] < BW - 8 && p[1] > 8 && p[1] < BH - 8; });
+    var rc = document.createElement("canvas"); rc.width = BW; rc.height = BH; var rg = rc.getContext("2d", { willReadFrequently: true }); rg.lineCap = "round"; rg.lineWidth = 40;
+    for (i = 1; i < crest.length; i++) { rg.strokeStyle = "rgb(" + Math.round(i / (crest.length - 1) * 250 + 3) + ",0,0)"; rg.beginPath(); rg.moveTo(crest[i - 1][0], crest[i - 1][1]); rg.lineTo(crest[i][0], crest[i][1]); rg.stroke(); }
+    var rd = rg.getImageData(0, 0, BW, BH).data, R = new Float32Array(BW * BH), NB = 20, BANDH = BH / NB;
+    for (y = 0; y < BH; y++) for (x = 0; x < BW; x++) { i = y * BW + x; if (rd[i * 4 + 3] > 200) R[i] = .02 + .28 * (rd[i * 4] / 255); else { var b = Math.floor(y / BANDH), f = (b % 2 ? 1 - x / BW : x / BW); R[i] = .31 + .69 * (b + f) / NB; } }
+    var inkc = P.rgb(C.key), ink32 = (255 << 24) | (inkc[2] << 16) | (inkc[1] << 8) | inkc[0];
+    var img = bg.createImageData(BW, BH), o32 = new Uint32Array(img.data.buffer), blockC = document.createElement("canvas"); blockC.width = BW; blockC.height = BH; var bcg = blockC.getContext("2d");
+    var gr = P.grain;
+    // timeline of the carving / printing sequence
+    var T = { gIn: 2.9, c0: 3.5, cr: 4.3, c1: 5.4, ink0: 5.4, ink1: 5.85, paper0: 5.85, paper1: 6.2, rub0: 6.2, rub1: 6.9, peel0: 6.95, peel1: 7.65 };
+    var tau = function (t) { return t < T.c0 ? 0 : t < T.cr ? .3 * (t - T.c0) / (T.cr - T.c0) : t < T.c1 ? .3 + .7 * Math.min(1, (t - T.cr) / (T.c1 - T.cr)) : 1; };
+    var tq = function (t) { return Math.round(t * 12) / 12; };                       // the gouge works on a 12 fps rhythm
+    function inkY(t) { return clamp((t - T.ink0) / (T.ink1 - T.ink0), 0, 1); }
+    function drawBlock(t) {
+      var ta = tau(tq(t)), iy = inkY(t) * BH, edgeA = .005;
+      for (var yy = 0; yy < BH; yy++) { var inked = yy < iy; for (var xx = 0; xx < BW; xx++) {
+        var k = yy * BW + xx, v;
+        if (line[k] || ln2[k] && false) { v = w32[k]; if (inked && line[k]) { var gg = gr[((yy + 200) % 1920) * 1080 + xx % 1080]; v = gg < 70 && ((xx * 7 + yy * 13) % 5 === 0) ? v : ink32; } }
+        else if (R[k] <= ta) { v = c32[k]; if (R[k] > ta - edgeA) { var rr = (v & 255) * .55, gg2 = ((v >> 8) & 255) * .5, bb = ((v >> 16) & 255) * .45; v = (255 << 24) | (bb << 16) | (gg2 << 8) | rr; } }
+        else v = w32[k];
+        o32[k] = v;
+      } }
+      bcg.putImageData(img, 0, 0);
+    }
+    // current gouge tip: crest first, then the sweeps
+    function tip(t) {
+      var ta = tau(tq(t));
+      if (t < T.c0) { var u = clamp((t - T.gIn) / (T.c0 - T.gIn), 0, 1), s = P.E.slow(u), c0 = crest[0]; return { x: 560 + (BX + c0[0] - 560) * s, y: 1655 + (BY + c0[1] - 1655) * s, cutting: false, rest: u === 0 }; }
+      if (ta < .3) { var q = ta / .3 * (crest.length - 1), a = Math.floor(q), p = crest[Math.min(a, crest.length - 1)]; return { x: BX + p[0], y: BY + p[1], cutting: true }; }
+      if (ta < 1) { var qq = (ta - .3) / .7 * NB, b = Math.min(NB - 1, Math.floor(qq)), f = qq - b; return { x: BX + BW * (b % 2 ? 1 - f : f), y: BY + (b + .5) * BANDH, cutting: true }; }
+      return null;
+    }
+    function drawGouge(g, p, ang, alpha) {
+      g.save(); g.translate(p.x, p.y); g.rotate(ang); g.globalAlpha = alpha == null ? 1 : alpha;
+      g.shadowColor = "rgba(20,10,0,.45)"; g.shadowBlur = 14; g.shadowOffsetX = 8; g.shadowOffsetY = 12;
+      g.fillStyle = C.pale; g.beginPath(); g.moveTo(0, 0); g.lineTo(26, -9); g.lineTo(150, -13); g.lineTo(150, 13); g.lineTo(26, 9); g.closePath(); g.fill();             // blade
+      g.shadowColor = "transparent"; g.strokeStyle = C.key; g.lineWidth = 2.4; g.stroke();
+      g.fillStyle = C.ind; g.fillRect(150, -15, 26, 30); g.strokeRect(150, -15, 26, 30);                                                                    // ferrule
+      g.fillStyle = C.ochre; g.beginPath(); g.moveTo(176, -20); g.lineTo(430, -30); g.quadraticCurveTo(452, 0, 430, 30); g.lineTo(176, 20); g.closePath(); g.fill(); g.stroke();   // handle
+      g.fillStyle = "rgba(26,20,16,.35)"; for (var k = 0; k < 9; k++) g.fillRect(190 + k * 26, -22 + k * 1.1, 5, 44 - k * 2.2);
+      g.restore();
+    }
+    var chips = []; (function () { var r = rngOf("chips"), n = 140; for (var j = 0; j < n; j++) chips.push({ e: T.c0 + (T.c1 - T.c0) * j / n, vx: (r() - .35) * 360, vy: -(120 + r() * 360), sp: (r() - .5) * 20, sz: 3.5 + r() * 7, c: r() < .5 ? C.paper : C.ochre, life: .55 + r() * .4 }); })();
+    function drawChips(g, t) {
+      chips.forEach(function (c) { var d = t - c.e; if (d < 0 || d > c.life) return; var tp = tip(c.e); if (!tp) return; var px = tp.x + c.vx * d, py = tp.y + c.vy * d + 1100 * d * d; g.save(); g.translate(px, py); g.rotate(c.sp * d); g.fillStyle = c.c; g.strokeStyle = C.key; g.lineWidth = 1.2; g.beginPath(); g.moveTo(-c.sz, 0); g.lineTo(0, -c.sz * .6); g.lineTo(c.sz, 0); g.lineTo(0, c.sz * .45); g.closePath(); g.fill(); g.stroke(); g.restore(); });
+    }
+    // baren: a disc rubbing back and forth; coverage grows along its path
+    var rubPts = (function () { var pts = [], n = 80; for (var k = 0; k < n; k++) { var u = k / (n - 1); pts.push([BX + 100 + (BW - 200) * (.5 + .5 * Math.sin(u * 9.4)), BY + 140 + (BH - 280) * u + 30 * Math.sin(u * 40)]); } return pts; })();
+    var mask = document.createElement("canvas"); mask.width = BW; mask.height = BH; var mg = mask.getContext("2d");
+    var imp = document.createElement("canvas"); imp.width = BW; imp.height = BH; var ig = imp.getContext("2d");
+    var sheet = document.createElement("canvas"); sheet.width = BW + 40; sheet.height = BH + 40; var sg = sheet.getContext("2d");
+    function drawSheet(rub) {
+      sg.clearRect(0, 0, BW + 40, BH + 40); sg.drawImage(P.paper, 100, 300, BW + 40, BH + 40, 0, 0, BW + 40, BH + 40);
+      mg.clearRect(0, 0, BW, BH); mg.fillStyle = "#000"; var n = Math.floor(rub * (rubPts.length - 1)); for (var k = 0; k <= n; k++) { mg.beginPath(); mg.arc(rubPts[k][0] - BX, rubPts[k][1] - BY, 74, 0, 6.2832); mg.fill(); }
+      ig.clearRect(0, 0, BW, BH); ig.drawImage(lc, 0, 0); ig.globalCompositeOperation = "destination-in"; ig.drawImage(mask, 0, 0); ig.globalCompositeOperation = "source-over";
+      sg.globalAlpha = .92; sg.drawImage(imp, 20, 20); sg.globalAlpha = 1;
+    }
+    var bench = document.createElement("canvas"); bench.width = 1080; bench.height = 1920; var bn = bench.getContext("2d"); bn.drawImage(P.makeWood(1080, 1920, 9, false), 0, 0); bn.fillStyle = "rgba(10,6,2,.62)"; bn.fillRect(0, 0, 1080, 1920);
+    var vgb = bn.createRadialGradient(540, 900, 300, 540, 960, 1200); vgb.addColorStop(0, "rgba(0,0,0,0)"); vgb.addColorStop(1, "rgba(0,0,0,.55)"); bn.fillStyle = vgb; bn.fillRect(0, 0, 1080, 1920);
+    // props on the bench: an ink dish and a hanko stamp
+    bn.save(); bn.shadowColor = "rgba(0,0,0,.6)"; bn.shadowBlur = 20; bn.shadowOffsetX = 8; bn.shadowOffsetY = 12; bn.fillStyle = C.pale; bn.beginPath(); bn.ellipse(190, 1650, 100, 62, 0, 0, 6.2832); bn.fill(); bn.shadowColor = "transparent"; bn.fillStyle = C.key; bn.beginPath(); bn.ellipse(190, 1646, 80, 46, 0, 0, 6.2832); bn.fill(); bn.fillStyle = "rgba(255,255,255,.16)"; bn.beginPath(); bn.ellipse(168, 1632, 34, 11, -.2, 0, 6.2832); bn.fill(); bn.restore();
+    bn.save(); bn.shadowColor = "rgba(0,0,0,.6)"; bn.shadowBlur = 14; bn.shadowOffsetX = 6; bn.shadowOffsetY = 9; bn.fillStyle = C.ochre; bn.fillRect(340, 1620, 70, 90); bn.shadowColor = "transparent"; bn.fillStyle = C.verm; bn.fillRect(334, 1700, 82, 26); bn.restore();
+    var tl = gsap.timeline({ paused: true }), last = "";
+    function render(t) {
+      og.clearRect(0, 0, 1080, 1920);
+      var key = [tq(t), t >= T.paper0 ? Math.round(t * 30) : 0].join("|");
+      // table: washi, vignette, printed border
+      bg.drawImage(bench, 0, 0);
+      var peeling = t >= T.peel0, laid = t >= T.paper0 && t < T.peel0;
+      // block: body shadow, side, face
+      bg.save(); bg.shadowColor = "rgba(30,18,6,.55)"; bg.shadowBlur = 36; bg.shadowOffsetX = 12; bg.shadowOffsetY = 26; bg.fillStyle = "#3a2a14"; bg.fillRect(BX, BY + 22, BW, BH + 4); bg.restore();
+      bg.fillStyle = "#4a3416"; bg.fillRect(BX, BY + BH - 4, BW, 34); var sidegr = bg.createLinearGradient(0, BY + BH, 0, BY + BH + 34); sidegr.addColorStop(0, "rgba(255,230,170,.18)"); sidegr.addColorStop(1, "rgba(0,0,0,.45)"); bg.fillStyle = sidegr; bg.fillRect(BX, BY + BH - 4, BW, 34);
+      drawBlock(t); bg.drawImage(blockC, BX, BY);
+      var bev = bg.createLinearGradient(BX, BY, BX + 40, BY + 40); bg.strokeStyle = "rgba(255,236,190,.5)"; bg.lineWidth = 3; bg.beginPath(); bg.moveTo(BX + 1, BY + BH); bg.lineTo(BX + 1, BY + 1); bg.lineTo(BX + BW, BY + 1); bg.stroke();
+      bg.strokeStyle = "rgba(0,0,0,.5)"; bg.beginPath(); bg.moveTo(BX + BW - 1, BY); bg.lineTo(BX + BW - 1, BY + BH - 1); bg.lineTo(BX, BY + BH - 1); bg.stroke();
+      // roller
+      if (t >= T.c1 - .15 && t < T.paper0) {
+        var u = inkY(t), ry = BY + u * BH, rx = BX - 40; og.save(); og.shadowColor = "rgba(0,0,0,.5)"; og.shadowBlur = 18; og.shadowOffsetY = 14; og.shadowOffsetX = 8;
+        og.fillStyle = C.key; og.beginPath(); og.roundRect ? og.roundRect(rx, ry - 38, BW + 80, 76, 36) : og.rect(rx, ry - 38, BW + 80, 76); og.fill(); og.shadowColor = "transparent";
+        og.fillStyle = "rgba(255,255,255,.14)"; og.fillRect(rx + 30, ry - 26, BW + 20, 12); og.strokeStyle = C.ochre; og.lineWidth = 12; og.beginPath(); og.moveTo(rx + BW + 80, ry); og.lineTo(rx + BW + 150, ry - 6); og.stroke();
+        og.fillStyle = C.ochre; og.fillRect(rx + BW + 150, ry - 24, 130, 40); og.restore();
+      }
+      // paper laid, baren rub, peel
+      if (t >= T.paper0) {
+        var pu = clamp((t - T.paper0) / (T.paper1 - T.paper0), 0, 1), drop = 1 - P.E.thud(pu), rub = clamp((t - T.rub0) / (T.rub1 - T.rub0), 0, 1);
+        drawSheet(rub);
+        var peel = clamp((t - T.peel0) / (T.peel1 - T.peel0), 0, 1), d = Math.round(P.E.slow(peel) * 760 / 8) * 8;
+        og.save(); og.translate(BX - 20, BY - 20 - drop * 150); og.rotate(.006 * (1 - pu * .7)); og.shadowColor = "rgba(20,12,4," + (.25 + drop * .3) + ")"; og.shadowBlur = 20 + drop * 30; og.shadowOffsetX = 6 + drop * 14; og.shadowOffsetY = 10 + drop * 24;
+        if (d > 0) P.drawPeel(og, sheet, BW + 40, BH + 40, d, 1); else og.drawImage(sheet, 0, 0); og.restore();
+        if (t >= T.rub0 && t < T.rub1 + .15) { var rp = rubPts[Math.min(rubPts.length - 1, Math.floor(rub * (rubPts.length - 1)))]; og.save(); og.translate(rp[0], rp[1] - 10); og.shadowColor = "rgba(0,0,0,.5)"; og.shadowBlur = 16; og.shadowOffsetX = 8; og.shadowOffsetY = 12; og.fillStyle = C.key; og.beginPath(); og.arc(0, 0, 58, 0, 6.2832); og.fill(); og.shadowColor = "transparent"; og.strokeStyle = C.ochre; og.lineWidth = 5; og.beginPath(); og.arc(0, 0, 52, 0, 6.2832); og.stroke(); og.lineWidth = 2; for (var q = 1; q < 4; q++) { og.beginPath(); og.arc(0, 0, 12 * q, 0, 6.2832); og.stroke(); } og.restore(); }
+      }
+      if (t < T.c0 + .3) { var sx = -400 + (t / 3.6) * 1900; var sg2 = og.createLinearGradient(sx, 0, sx + 380, 380); sg2.addColorStop(0, 'rgba(255,236,190,0)'); sg2.addColorStop(.5, 'rgba(255,236,190,.17)'); sg2.addColorStop(1, 'rgba(255,236,190,0)'); og.save(); og.beginPath(); og.rect(BX, BY, BW, BH); og.clip(); og.fillStyle = sg2; og.fillRect(BX, BY, BW, BH); og.restore(); }
+      // gouge + chips
+      var tp = tip(t);
+      if (t < T.c0) { var tt2 = tip(t); drawGouge(og, { x: tt2.x, y: tt2.y }, tt2.rest ? -.18 : -.18 - .4 * P.E.slow(clamp((t - T.gIn) / (T.c0 - T.gIn), 0, 1)), 1); }
+      else if (tp && t < T.c1 + .25) drawGouge(og, { x: tp.x, y: tp.y }, -.55 + (tp.cutting ? .08 * Math.sin(t * 40) : 0), 1);
+      else if (t < T.c1 + .4) { var ex = clamp((t - T.c1 - .25) / .15, 0, 1); drawGouge(og, { x: BX + BW * (NB % 2 ? 1 : 0) + ex * 700, y: BY + BH - BANDH / 2 - ex * 160 }, -.55, 1); }
+      drawChips(og, t);
+    }
+    render(0);
+    tl.fromTo("#w1", { scale: 1, transformOrigin: "540px 960px" }, { scale: 1.05, duration: SC.dur, ease: "none" }, 0);
+    var an = { p: 0 }; tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { render(tl.time()); } }, 0);
+    window.__timelines["S1"] = tl;
+  });
+})();
+</script>
+</template>

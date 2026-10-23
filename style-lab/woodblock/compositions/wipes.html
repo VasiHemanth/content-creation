@@ -1,0 +1,33 @@
+<template>
+<style>
+@font-face{font-family:"Shippori Mincho";font-weight:400;src:url("assets/fonts/shippori-mincho-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-latin-800-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-japanese-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-japanese-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:visible;pointer-events:none}
+#slab{position:absolute;left:0;top:0;width:2400px;height:1920px;visibility:hidden}
+</style>
+<div id="root" data-composition-id="wipes" data-width="1080" data-height="1920"><canvas id="slab" width="2400" height="1920"></canvas></div>
+<script>
+(function () {
+  // wood-block cut: a slab of printed wood sweeps across, its edges stepping along the grain rows
+  Print.sceneReady("wipes", function () {
+    var cv = document.getElementById("slab"), g = cv.getContext("2d"), W = 2400, H = 1920, im = g.createImageData(W, H), d = im.data, gr = Print.grain, g2 = Print.grain2;
+    var k = Print.rgb(Print.C.key), b = Print.rgb(Print.C.prus), o = Print.rgb(Print.C.ochre), r = rngOf("slab"), rows = Math.ceil(H / 14), le = [], re = [], a = 0, c = 0, y, x;
+    for (y = 0; y < rows; y++) { a += (r() - .5) * 46; a *= .86; c += (r() - .5) * 46; c *= .86; le.push(a); re.push(c); }
+    for (y = 0; y < H; y++) { var ri = Math.floor(y / 14), L = 30 + le[ri], Rr = W - 30 + re[ri]; for (x = 0; x < W; x++) { var i = (y * W + x) * 4; if (x < L || x > Rr) { d[i + 3] = 0; continue; }
+      var gg = gr[y * 1080 % (1920 * 1080) + (x % 1080)] / 255, g3 = g2[y * 1080 + (x % 1080)] / 255, t = Print.clamp((gg - .3) * 1.8, 0, 1), edge = Math.min(x - L, Rr - x) < 5 ? .5 : 0;
+      d[i] = k[0] * (1 - t) + b[0] * t + edge * 80 + (g3 > .7 ? o[0] * .12 : 0); d[i + 1] = k[1] * (1 - t) + b[1] * t + edge * 70; d[i + 2] = k[2] * (1 - t) + b[2] * t + edge * 50; d[i + 3] = 255; } }
+    g.putImageData(im, 0, 0);
+    var tl = gsap.timeline({ paused: true }), DUR = .8;
+    [8.0, 27.0, 44.4].forEach(function (s, k2) {
+      tl.set("#slab", { visibility: "visible" }, s - DUR / 2 - .01);
+      tl.fromTo("#slab", { x: -W - 20 }, { x: 1080 + 20, duration: DUR, ease: "power2.inOut" }, s - DUR / 2);
+      tl.set("#slab", { visibility: "hidden" }, s + DUR / 2 + .02);
+    });
+    window.__timelines["wipes"] = tl;
+  });
+})();
+</script>
+</template>

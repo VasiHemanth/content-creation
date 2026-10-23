@@ -1,0 +1,30 @@
+<template>
+<style>
+@font-face{font-family:"Shippori Mincho";font-weight:400;src:url("assets/fonts/shippori-mincho-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-latin-800-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-japanese-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-japanese-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#1a1410}
+#w2{position:absolute;left:0;top:0;width:1080px;height:1920px}
+</style>
+<div id="root" data-composition-id="S2" data-width="1080" data-height="1920"><div id="w2"><canvas id="s2c" width="1080" height="1920" style="position:absolute;left:0;top:0"></canvas></div></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.S2;
+  Print.sceneReady("S2", function () {
+    var eng = Print.engine(document.getElementById("s2c")), q = function (v, n) { return Math.round(v / n) * n; };
+    function render(t) {
+      // "It starts with pure static": the ink dissolves into static through the dither threshold
+      var u = Print.clamp((t - (TIMING.words.filter(function (w) { return w.text === "It" && w.line === "l3"; })[0].start - SC.start - .2)) / 1.45, 0, 1), thr = q(Print.E.slow(u), 1 / 18);
+      eng.draw({ mode: "fwd", thr: thr, bank: thr > 0 ? Math.floor(t * 12) % 4 : 0 });
+    }
+    render(0);
+    var tl = gsap.timeline({ paused: true });
+    tl.fromTo("#w2", { scale: 1, transformOrigin: "540px 900px" }, { scale: 1.05, duration: SC.dur, ease: "none" }, 0);
+    var an = { p: 0 }; tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { render(tl.time()); } }, 0);
+    window.__timelines["S2"] = tl;
+  });
+})();
+</script>
+</template>

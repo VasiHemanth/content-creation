@@ -1,0 +1,146 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#1d2a5b;font-family:"Fredoka",sans-serif}
+.mt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 42px/1 Fredoka,sans-serif;color:#1a1a2e;padding-bottom:3px}
+</style>
+<div id="root" data-composition-id="sceneE" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.E, W = TIMING.lines[6].words;
+  var L = function (g) { return g - SC.start; }, PS = Stage;
+  var MIX = "#f59a52";
+  sceneReady("sceneE", function () { return PS.fontsReady().then(function () {
+    var H = PS.build(root, { id: "E", starSeed: 14, tags: false, shelves: false });
+    var par = H.strips, TH = 70, tags = {}, strips = {}, tickets = {}, drops = [];
+    var MX = 520, MY = 912;                                   // the mouth of the jar
+    var colL = [0, 1, 2, 3, 4, 5], colR = [6, 7, 9, 10, 11];
+    function mkTag(wi, x, y, w) {
+      var r = rngOf("etag" + wi);
+      var img = bake({ w: w, h: TH, S: 2, seed: seedOf("et" + wi), shape: '<path d="' + cutRect(w, TH, 14, r, 1.4) + '" fill="' + PAL.cream + '"/>' });
+      var p = piece({ x: x, y: y, w: w, h: TH, img: img, lift: .3, blur: 5, parent: H.tagL, ox: "50%", oy: "100%" });
+      var t = divEl("", p.mv, "mt"); t.textContent = PS.WORDS[wi]; gsap.set(p.mv, { rotation: (r() - .5) * 4 });
+      var jt = p.mv; return { sh: p.sh, mv: p.mv, x: x, y: y, w: w, cx: x + w / 2, cy: y + TH / 2, wi: wi, jt: jt, rot: 0 };
+    }
+    colL.forEach(function (wi, i) { var w = Math.ceil(PS.measure(PS.WORDS[wi], 42, 700)) + 36, y = 300 + i * 96; tags[wi] = mkTag(wi, 322 - w, y, w); });
+    colR.forEach(function (wi, i) { var w = Math.ceil(PS.measure(PS.WORDS[wi], 42, 700)) + 36, y = 348 + i * 96; tags[wi] = mkTag(wi, 758, y, w); });
+    // value tickets and strips
+    Object.keys(tags).forEach(function (k) {
+      var T = tags[k], left = colL.indexOf(+k) >= 0, ex = left ? T.x + T.w : T.x;
+      tickets[k] = PS.mkTicket(par, { id: "E-t" + k, x: ex + (left ? -6 : -52), y: T.cy - 20, w: 58, h: 38, rot: left ? 6 : -6, lift: .35 });
+      var a = { x: ex + (left ? 50 : -50), y: T.cy }, bnd = (left ? 1 : -1) * (k == PS.ANIMAL ? 0 : 24);
+      strips[k] = PS.ribbon(par, { id: "E-s" + k, a: a, b: { x: MX + (left ? -26 : 26) * Math.min(1, PS.SCORE[k] * 4), y: MY - 6 }, bend: k == PS.ANIMAL ? -30 : bnd * 2, w: PS.SCORE[k] * PS.FULL, fill: PAL.coral, lift: .3, cap: false });
+    });
+    // blender jar: interior, liquid, paddle, drops, frame (window), base, spout
+    var jar = divEl("position:absolute;left:0;top:0;width:1080px;height:1920px;z-index:700", H.tagL.parentNode);
+    H.jarL = jar; H.layers.push({ el: jar, d: 1.0 });
+    var JX = 385, JY = 900, JW = 240, JH = 385;
+    var jin = bake({ w: JW - 36, h: JH - 70, S: 2, seed: 3030, cut: 1.5, edge: false, shape: '<rect width="' + (JW - 36) + '" height="' + (JH - 70) + '" rx="22" fill="#141b3d"/>' });
+    var interior = piece({ x: JX + 18, y: JY + 44, w: JW - 36, h: JH - 70, img: jin, lift: 0, parent: jar }); interior.sh.style.filter = "none";
+    var LQ = JH - 70 - 14;
+    var liqImg = bake({ w: JW - 44, h: LQ, S: 2, seed: 3131, cut: 1.2, edge: false, shape: '<rect width="' + (JW - 44) + '" height="' + LQ + '" rx="16" fill="' + MIX + '"/>' });
+    var liquid = piece({ x: JX + 22, y: JY + 44 + (JH - 70) - LQ - 8, w: JW - 44, h: LQ, img: liqImg, lift: 0, parent: jar, ox: "50%", oy: "100%" }); liquid.sh.style.filter = "none";
+    var dropWrap = divEl("position:absolute;left:0;top:0;width:1080px;height:1920px", jar);
+    var padImg = bake({ w: 150, h: 20, S: 2, seed: 3232, cut: 1.6, shape: '<path d="' + cutRect(150, 20, 8, rngOf("pad"), 1) + '" fill="' + PAL.cream + '"/>' });
+    var paddle = piece({ x: MX - 75, y: JY + 150, w: 150, h: 20, img: padImg, lift: .2, blur: 3, parent: jar });
+    var shaftImg = bake({ w: 14, h: 120, S: 2, seed: 3233, cut: 1.2, shape: '<rect width="14" height="120" fill="' + PAL.cream + '"/>' });
+    var shaft = piece({ x: MX - 7, y: JY + 40, w: 14, h: 130, img: shaftImg, lift: .2, blur: 3, parent: jar });
+    var ticksO = ""; for (var tq = 0; tq < 5; tq++) ticksO += '<path d="M' + (JW - 22) + " " + (80 + tq * 40) + ' l-' + (tq % 2 ? 12 : 22) + ' 0" stroke="#1a1a2e" stroke-opacity=".35" stroke-width="3"/>';
+    // frame: tapered body with a window cut out (even-odd)
+    var out = "M12 30 L" + (JW - 12) + " 30 L" + JW + " " + (JH - 30) + " Q" + JW + " " + JH + " " + (JW - 30) + " " + JH + " L30 " + JH + " Q0 " + JH + " 0 " + (JH - 30) + "Z";
+    var win = "M24 44 L" + (JW - 24) + " 44 L" + (JW - 20) + " " + (JH - 26) + " L20 " + (JH - 26) + "Z";
+    var fimg = bake({ w: JW, h: JH, S: 2, seed: 3333, cut: 2.2, shape: '<path d="' + out + win + '" fill-rule="evenodd" fill="' + PAL.cream + '"/>',
+      overlay: ticksO + '<path d="M30 ' + (JH - 70) + ' L' + (JW - 30) + " " + (JH - 70) + '" stroke="#1a1a2e" stroke-opacity=".18" stroke-width="2"/>' });
+    var frame = piece({ x: JX, y: JY, w: JW, h: JH, img: fimg, lift: .9, blur: 12, parent: jar });
+    // handle (cream ring) and measuring ticks make it read as a blender jar, not a window
+    var hImg = bake({ w: 90, h: 210, S: 2, seed: 3737, cut: 2, shape: '<path fill-rule="evenodd" d="M70 0 Q0 0 0 60 L0 150 Q0 210 70 210 L70 168 Q38 168 38 140 L38 70 Q38 42 70 42Z" fill="' + PAL.cream + '"/>' });
+    var handle = piece({ x: JX - 62, y: JY + 70, w: 90, h: 210, img: hImg, lift: .7, blur: 8, parent: jar });
+    var lidImg = bake({ w: JW + 34, h: 40, S: 2, seed: 3434, cut: 2, shape: '<path d="' + cutRect(JW + 34, 40, 12, rngOf("lid"), 1.2) + '" fill="' + PAL.blue + '"/>' });
+    var lid = piece({ x: JX - 17, y: JY + 4, w: JW + 34, h: 40, img: lidImg, lift: .6, blur: 8, parent: jar });
+    var baseImg = bake({ w: JW + 50, h: 60, S: 2, seed: 3535, cut: 2, shape: '<path d="' + cutRect(JW + 50, 60, 16, rngOf("base"), 1.2) + '" fill="' + PAL.blue + '"/>', overlay: '<circle cx="' + (JW / 2 + 25) + '" cy="30" r="12" fill="' + PAL.coral + '"/>' });
+    var base = piece({ x: JX - 25, y: JY + JH - 6, w: JW + 50, h: 60, img: baseImg, lift: .8, blur: 10, parent: jar });
+    var spImg = bake({ w: 70, h: 34, S: 2, seed: 3636, cut: 1.6, shape: '<path d="M0 0 L70 6 L52 34 L0 24Z" fill="' + PAL.cream + '"/>' });
+    var spout = piece({ x: JX + JW - 8, y: JY + JH - 56, w: 70, h: 34, img: spImg, lift: .5, parent: jar });
+    // stream onto "it" + the "it" tag + its coat of mixed colour
+    var itW = 134, itH = 118, itX = 659 - itW / 2, itY = 1388;
+    var iimg = bake({ w: itW, h: itH, S: 2, seed: 4040, shape: '<path d="' + cutRect(itW, itH, 18, rngOf("itE"), 1.6) + '" fill="' + PAL.coral + '"/>' });
+    var itp = piece({ x: itX, y: itY, w: itW, h: itH, img: iimg, lift: .5, blur: 8, parent: par, ox: "50%", oy: "100%" });
+    var coatImg = bake({ w: itW, h: itH, S: 2, seed: 4041, cut: 2.4, shape: '<path d="' + cutRect(itW, itH, 18, rngOf("itE"), 1.6) + '" fill="' + MIX + '"/>' });
+    coatImg.style.clipPath = "inset(0 0 100% 0)"; itp.mv.appendChild(coatImg);
+    var itt = divEl("", itp.mv, "mt"); itt.textContent = "it"; itt.style.cssText += ";font-size:70px;color:#f6e8c8";
+    var stImg = bake({ w: 26, h: 190, S: 2, seed: 4242, cut: 1.6, shape: '<path d="M2 0 L24 0 L22 190 L4 190Z" fill="' + MIX + '"/>' });
+    var stream = piece({ x: 646, y: JY + JH - 48, w: 26, h: 190, img: stImg, lift: .1, blur: 0, parent: par });
+    stream.sh.style.left = (JX + JW + 34 - 13) + "px";
+    var shelfImg = bake({ w: 300, h: 26, S: 2, seed: 4343, cut: 2, shape: '<path d="' + cutRect(300, 26, 8, rngOf("eshelf"), 1.2) + '" fill="' + PAL.cream + '"/>' });
+    var eshelf = piece({ x: 659 - 150, y: itY + itH - 4, w: 300, h: 26, img: shelfImg, lift: .4, blur: 6, parent: par });
+    // drops
+    var dimg = function () { return bake({ key: "drop", w: 22, h: 30, S: 3, seed: 5050, cut: 1, shape: '<path d="M11 0 C16 10 22 16 22 21 A11 11 0 0 1 0 21 C0 16 6 10 11 0Z" fill="' + PAL.saffron + '"/>' }); };
+    var order = [PS.ANIMAL, 0, 2, 3, 4, 5, 6, 7, 9, 10, 11], rr = rngOf("drops");
+    var allDrops = [];
+    order.forEach(function (wi) {
+      var n = wi == PS.ANIMAL ? 12 : wi == PS.STREET ? 3 : 1;
+      for (var q = 0; q < n; q++) { var img = dimg(); img.style.cssText += ";left:-11px;top:-15px;width:22px;height:30px"; dropWrap.appendChild(img); allDrops.push({ wi: wi, el: img, k: q, n: n, jx: (rr() - .5) * 10 }); }
+    });
+    return bakeAll().then(function () {
+      var R = {}; Object.keys(strips).forEach(function (k) { R[k] = strips[k].mount(); });
+      var tl = gsap.timeline({ paused: true });
+      var lay = H.layers.map(function (l) { return { el: l.el, d: l.d }; });
+      var key = function (t, s, P, e) { return { t: t, s: s, x: s * (P.x - 540), y: s * (P.y - 960), ease: e }; };
+      var tp = L(W[14].start);
+      cameraTween(tl, lay, [key(0, 1.0, { x: 540, y: 960 }), key(L(W[7].start), 1.08, { x: 540, y: 1000 }, "sine.inOut"), key(tp - .3, 1.2, { x: 600, y: 1180 }, "power2.inOut"), key(SC.dur, 1.28, { x: 640, y: 1250 }, "sine.inOut")], 540, 960);
+      var hop = function (T, t, h) { tl.to(T.mv, { y: -h, duration: .15, ease: PE.stepped("power2.out", .15) }, t).to(T.mv, { y: 0, duration: .26, ease: PE.stepped(PE.card, .26) }, t + .15); };
+      // entrance: tags pop, strips unroll
+      Object.keys(tags).forEach(function (k, i) { var T = tags[k], t0 = .4 + i * .05; tl.fromTo(T.mv, { scaleY: .05, opacity: 0, y: 20 }, { scaleY: 1, opacity: 1, y: 0, duration: .4, ease: PE.stepped(PE.spring(6, 1.2), .4) }, snap12(t0)); });
+      tl.fromTo([frame.mv, lid.mv, base.mv, itp.mv, handle.mv], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .5, ease: PE.stepped(PE.card, .5) }, .5);
+      var ts = snap12(L(W[3].start)), tv = snap12(L(W[6].start) - .1);
+      Object.keys(tickets).forEach(function (k, i) {
+        var t = snap12(tv + i * .07), P = tickets[k];
+        tl.set(P.sh, { visibility: "hidden" }, 0).set(P.sh, { visibility: "visible" }, t);
+        tl.fromTo(P.mv, { scale: .1, opacity: 0 }, { scale: 1, opacity: 1, duration: .35, ease: PE.stepped(PE.spring(5.5, 1.3), .35) }, t);
+        hop(tags[k], t, 12);
+      });
+      Object.keys(strips).forEach(function (k, i) {
+        var t = snap12(ts + i * .08), pr = { p: 0 };
+        tl.set(strips[k].box, { visibility: "hidden" }, 0);
+        tl.to(pr, { p: 1, duration: .6, ease: PE.stepped(PE.paper, .6), onUpdate: (function (rr2, q) { return function () { rr2.apply(q.p); }; })(R[k], pr) }, t);
+      });
+      // ---- drops, paddle, liquid, pour: all pure functions of time ----
+      var d0 = L(W[7].start), d1 = L(W[11].end) + .5, FL = .38, total = allDrops.length, fall = 150;
+      var byWord = {}; allDrops.forEach(function (d) { (byWord[d.wi] = byWord[d.wi] || []).push(d); });
+      var sched = []; allDrops.forEach(function (d, i) { d.t0 = d0 + (d1 - d0) * ((d.k + .5) / d.n * .6 + order.indexOf(d.wi) / order.length * .4); d.dur = 1.05; });
+      allDrops.sort(function (a, b) { return a.t0 - b.t0; });
+      var pour0 = L(W[14].start) + .1;
+      function levelAt(tq) { var c = 0; allDrops.forEach(function (d) { if (tq > d.t0 + d.dur + FL) c++; }); return c / total; }
+      function render(t) {
+        var tq = Math.floor(t * 12 + 1e-6) / 12;
+        allDrops.forEach(function (d) {
+          var u = (tq - d.t0) / d.dur, a = strips[d.wi], on = u >= 0 && u < 1 + FL / d.dur;
+          if (!on) { d.el.style.opacity = 0; return; }
+          var x, y, rot;
+          if (u < 1) { var e = u * u * (3 - 2 * u), pt = PS.quadAt(a.a, a.c, a.b, e); x = pt.x + d.jx * Math.sin(u * 3); y = pt.y - 6; rot = Math.sin(u * 8 + d.k) * 14; }
+          else { var f = (u - 1) * d.dur / FL; x = a.b.x; y = a.b.y + 30 + (fall) * f * f; rot = 0; }
+          d.el.style.opacity = 1; gsap.set(d.el, { x: x, y: y, rotation: rot, scale: .85 + (d.wi == PS.ANIMAL ? .15 : 0) });
+        });
+        var lv = levelAt(tq), mixed = tq > L(W[12].start) ? Math.min(1, (tq - L(W[12].start)) / 1.2) : 0;
+        gsap.set(liquid.mv, { scaleY: .05 + lv * .95 * Math.min(1, 1) });
+        liquid.mv.style.opacity = lv > 0 ? 1 : 0;
+        if (tq >= L(W[12].start)) {                              // "blends": the paddle spins; seen edge-on it narrows and widens
+          gsap.set(paddle.mv, { scaleX: Math.max(.08, Math.abs(Math.cos(tq * 11))), rotation: Math.sin(tq * 11) * 5 });
+        } else gsap.set(paddle.mv, { scaleX: .6 });
+        var pv = Math.max(0, Math.min(1, (tq - pour0) / .5)), coat = Math.max(0, Math.min(1, (tq - pour0 - .35) / 1.1));
+        stream.sh.style.visibility = pv > 0 ? "visible" : "hidden";
+        stream.mv.style.clipPath = "inset(0 0 " + (100 - pv * 100) + "% 0)";
+        coatImg.style.clipPath = "inset(0 0 " + (100 - coat * 100) + "% 0)";
+        if (tq > pour0 + 1.2) stream.mv.style.clipPath = "inset(" + Math.min(100, (tq - pour0 - 1.2) / .35 * 100) + "% 0 0 0)";
+      }
+      var an = { p: 0 };
+      tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { render(tl.time()); PS.boil(H, tl.time(), Object.keys(tags).map(function (k) { return { jt: tags[k].jt, wi: +k }; })); } }, 0);
+      // paddle and shaft wobble in the jar; spout pops when the pour starts
+      tl.fromTo(spout.mv, { scale: .2, opacity: 0 }, { scale: 1, opacity: 1, duration: .3, ease: PE.stepped(PE.card, .3) }, snap12(pour0 - .2));
+      hop(itp, snap12(pour0 + 1.3), 22);
+      window.__timelines["sceneE"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

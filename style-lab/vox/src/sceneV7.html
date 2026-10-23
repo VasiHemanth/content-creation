@@ -1,0 +1,56 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#0b0b0b}
+</style>
+<div id="root" data-composition-id="sceneV7" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.V7, L = function (g) { return g - SC.start; };
+  V.ready("V7", function () { return V.fontsReady().then(function () {
+    var root = document.getElementById("root"), C = V.C, cam = V.div("position:absolute;left:0;top:0;width:1080px;height:1920px", root), tl = gsap.timeline({ paused: true });
+    var whip = function (el, t, dx, dy) { return V.ghostTitle(tl, el, { dx: dx || -420, dy: dy || 0, copies: 3, dur: .2 }, t); };
+
+    var tt = function (g) { return L(g); };
+    var a = V.beat(cam, tl, 0, tt(40.0), C.b, 21, 0);
+    var blk = V.halftone(220, 120, V.art.block, { cell: 8, color: C.k }).toDataURL("image/png");
+    var lanes = V.svg("svg", { width: 1080, height: 1920, viewBox: "0 0 1080 1920", style: "position:absolute;left:0;top:0;overflow:visible" }, a);
+    var laneLines = [0, 1, 2, 3].map(function (k) { var o = { path: V.svg("path", { d: "M" + (170 + k * 250) + " 500 L" + (170 + k * 250) + " 1290", stroke: C.w, "stroke-width": 5, "stroke-dasharray": "18 14", fill: "none", "stroke-opacity": .8 }, lanes) }; return o; });
+    tl.set(laneLines.map(function (o) { return o.path; }), { opacity: 0 }, 0).set(laneLines.map(function (o) { return o.path; }), { opacity: 1 }, tt(39.1));
+    var ttl = V.text(a, "TRANSFORMER", { y: 220, size: V.fit("TRANSFORMER", 940, "Anton", 170), color: C.w }); whip(ttl, tt(37.61), -420);
+    var blocks = [];
+    for (var i = 0; i < 12; i++) {
+      var bd = V.div("position:absolute;left:0;top:0;width:220px;height:120px;background:" + C.y + " url(" + blk + ");background-size:220px 120px;border:6px solid " + C.w + ";box-shadow:10px 10px 0 " + C.k + ";box-sizing:content-box", a);
+      var k = i % 4, r = Math.floor(i / 4), tx = 60 + k * 250 - 6, ty = 560 + r * 190, sx = 430 - 6, sy = 1170 - i * 56;
+      tl.fromTo(bd, { x: sx, y: sy - 60, opacity: 0, rotation: (i % 2 ? 2 : -2) }, { x: sx, y: sy, opacity: 1, rotation: (i % 2 ? 1 : -1), duration: .18, ease: V.E.hit }, tt(37.8) + i * .08);
+      tl.to(bd, { x: tx, y: ty, rotation: 0, duration: .32, ease: V.E.snap }, tt(38.76) + (k * .05) + r * .03);
+      blocks.push(bd);
+    }
+    var an = V.hilite(a, 120, 1300, 830, 120, C.y, "hl7", 1);
+    var ann = V.text(a, "AT ONCE", { y: 1300, size: 110, color: C.k, font: "Anton" }); whip(ann, tt(39.5), 420); V.hiliteWipe(tl, an, tt(39.5), .2);
+    var cm = V.circleMark(lanes, 540, 900, 500, 400, C.p, "cm7", 12); V.draw(tl, cm, tt(39.3), .35, "power2.out");
+    // beat C: more chips, more data
+    var c = V.beat(cam, tl, tt(40.0), tt(42.17), C.y, 22, 0);
+    var m1 = V.text(c, "MORE CHIPS", { y: 190, size: V.fit("MORE CHIPS", 940, "Anton", 190), color: C.k }); whip(m1, tt(40.3), -420);
+    for (var j = 0; j < 6; j++) {
+      var cp = V.cutout(c, { x: 90 + (j % 3) * 320, y: 420 + Math.floor(j / 3) * 270, w: 240, h: 240, draw: V.art.chip, cell: 8, sx: 9, sy: 9 });
+      tl.set(cp, { opacity: 0 }, 0); tl.fromTo(cp, { scale: .3, opacity: 0, rotation: (j % 2 ? 8 : -8) }, { scale: 1, opacity: 1, rotation: (j % 2 ? 2 : -2), duration: .2, ease: V.E.snap }, tt(40.7) + j * .1);
+    }
+    var m2 = V.text(c, "MORE DATA", { y: 990, size: V.fit("MORE DATA", 940, "Anton", 190), color: C.k }); whip(m2, tt(41.52), 420);
+    ["cat", "car", "cup", "plane"].forEach(function (n, q) {
+      var dt = V.cutout(c, { x: 70 + q * 240, y: 1250, w: 200, h: 200, draw: V.art[n], cell: 8, sx: 8, sy: 8 });
+      tl.fromTo(dt, { scale: .3, opacity: 0 }, { scale: 1, opacity: 1, duration: .2, ease: V.E.snap }, tt(41.6) + q * .08);
+    });
+    // beat D: keeps paying off
+    var d = V.beat(cam, tl, tt(42.17), null, C.k, 23, 150);
+    var k1 = V.text(d, "KEEPS", { y: 260, size: 300, color: C.w }); whip(k1, tt(42.19), -420);
+    var k2 = V.text(d, "PAYING OFF", { y: 580, size: V.fit("PAYING OFF", 960, "Anton", 300), color: C.y }); V.slamIn(tl, k2, tt(42.47), 0, 1.6); V.shake(tl, cam, tt(42.47) + .17, 6, "v7d");
+    var dv = V.svg("svg", { width: 1080, height: 1920, viewBox: "0 0 1080 1920", style: "position:absolute;left:0;top:0;overflow:visible" }, d);
+    var ra = V.arrow(dv, 160, 1450, 900, 980, C.p, "ra7", 20); V.draw(tl, ra, tt(42.5), .4, "power2.out"); V.flash(tl, d, tt(42.85), C.y);
+
+    V.push(tl, cam, SC.dur, 1.06);
+    window.__timelines["sceneV7"] = tl;
+  }); });
+})();
+</script>
+</template>

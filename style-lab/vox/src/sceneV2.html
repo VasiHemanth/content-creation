@@ -1,0 +1,48 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#0b0b0b}
+</style>
+<div id="root" data-composition-id="sceneV2" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.V2, L = function (g) { return g - SC.start; };
+  V.ready("V2", function () { return V.fontsReady().then(function () {
+    var root = document.getElementById("root"), C = V.C, cam = V.div("position:absolute;left:0;top:0;width:1080px;height:1920px", root), tl = gsap.timeline({ paused: true });
+    var whip = function (el, t, dx, dy) { return V.ghostTitle(tl, el, { dx: dx || -420, dy: dy || 0, copies: 3, dur: .2 }, t); };
+
+    var tt = function (g) { return L(g); };
+    // beat A: more than fifty years, the line crawls
+    var a = V.beat(cam, tl, 0, tt(7.7), C.k, 4, 150);
+    var h = V.hilite(a, 70, 580, 940, 190, C.y, "hl2", -1);
+    var e1 = V.text(a, "MORE THAN", { y: 290, size: 200, color: C.w }); whip(e1, tt(6.18), -420);
+    var e2 = V.text(a, "FIFTY YEARS", { y: 570, size: V.fit("FIFTY YEARS", 900, "Anton", 200), color: C.k }); whip(e2, tt(6.93), 420); V.hiliteWipe(tl, h, tt(6.93), .22);
+    var lg = V.svg("svg", { width: 1080, height: 1920, viewBox: "0 0 1080 1920", style: "position:absolute;left:0;top:0;overflow:visible" }, a);
+    V.svg("path", { d: "M0 1130 L1080 1130", stroke: C.y, "stroke-width": 8 }, lg);
+    var tk = V.svg("g", {}, lg); for (var i = -12; i < 40; i++) V.svg("path", { d: "M" + (i * 36) + " 1146 l0 " + (i % 5 ? 20 : 40), stroke: C.w, "stroke-opacity": .7, "stroke-width": 4 }, tk);
+    tl.fromTo(tk, { x: 0 }, { x: -360, duration: SC.dur, ease: "none" }, 0);
+    V.svg("circle", { cx: 880, cy: 1130, r: 18, fill: C.y, stroke: C.k, "stroke-width": 4 }, lg);
+    // beat B: mostly did not work
+    var b = V.beat(cam, tl, tt(7.7), tt(8.95), C.w, 5, 170);
+    var m1 = V.text(b, "MOSTLY", { y: 330, size: 210, color: C.k }); whip(m1, tt(7.78), -420);
+    var m2 = V.text(b, "DID NOT", { y: 560, size: 210, color: C.k }); whip(m2, tt(8.17), 420);
+    var m3 = V.text(b, "WORK.", { y: 790, size: 260, color: C.k }); whip(m3, tt(8.57), -420);
+    var x1 = V.svg("svg", { width: 1080, height: 1920, viewBox: "0 0 1080 1920", style: "position:absolute;left:0;top:0;overflow:visible" }, b);
+    var xr = rngOf("x2"), xa = { path: V.svg("path", { d: V.wobble(250, 760, 830, 1090, xr, 14, 6), stroke: C.p, "stroke-width": 26, fill: "none", "stroke-linecap": "round" }, x1) }, xb = { path: V.svg("path", { d: V.wobble(820, 770, 260, 1100, xr, 14, 6), stroke: C.p, "stroke-width": 26, fill: "none", "stroke-linecap": "round" }, x1) };
+    [xa, xb].forEach(function (o) { o.len = o.path.getTotalLength(); o.path.setAttribute("stroke-dasharray", o.len); o.path.setAttribute("stroke-dashoffset", o.len); });
+    V.draw(tl, xa, tt(8.75), .18, "power2.out"); V.draw(tl, xb, tt(8.9), .18, "power2.out");
+    // beat C: three things were missing
+    var c = V.beat(cam, tl, tt(8.95), null, C.b, 6, 150);
+    var h1 = V.text(c, "THREE THINGS", { y: 250, size: V.fit("THREE THINGS", 940, "Anton", 210), color: C.w }); whip(h1, tt(9.06), -420);
+    var h2 = V.text(c, "WERE MISSING", { y: 470, size: V.fit("WERE MISSING", 940, "Anton", 210), color: C.y }); whip(h2, tt(9.55), 420);
+    [0, 1, 2].forEach(function (k) {
+      var bx = V.div("position:absolute;left:" + (70 + k * 320) + "px;top:900px;width:280px;height:340px;border:8px dashed " + C.w + ";display:flex;align-items:center;justify-content:center;font:400 220px/1 Anton;color:" + C.y, c); bx.textContent = "?";
+      tl.fromTo(bx, { scale: .3, opacity: 0, rotation: (k - 1) * 12 }, { scale: 1, opacity: 1, rotation: (k - 1) * 2, duration: .22, ease: V.E.snap }, tt(9.06 + k * .3));
+    });
+
+    V.push(tl, cam, SC.dur, 1.07);
+    window.__timelines["sceneV2"] = tl;
+  }); });
+})();
+</script>
+</template>

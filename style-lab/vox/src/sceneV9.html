@@ -1,0 +1,44 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#0b0b0b}
+</style>
+<div id="root" data-composition-id="sceneV9" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.V9, L = function (g) { return g - SC.start; };
+  V.ready("V9", function () { return V.fontsReady().then(function () {
+    var root = document.getElementById("root"), C = V.C, cam = V.div("position:absolute;left:0;top:0;width:1080px;height:1920px", root), tl = gsap.timeline({ paused: true });
+    var whip = function (el, t, dx, dy) { return V.ghostTitle(tl, el, { dx: dx || -420, dy: dy || 0, copies: 3, dur: .2 }, t); };
+
+    var tt = function (g) { return L(g); };
+    var a = V.beat(cam, tl, 0, tt(50.12), C.y, 26, 0);
+    var s1 = V.text(a, "SAME", { y: 270, size: 400, color: C.k }); whip(s1, tt(48.95), -420);
+    var s2 = V.text(a, "OLD", { y: 650, size: 400, color: C.k }); whip(s2, tt(49.31), 420);
+    var s3 = V.text(a, "IDEA.", { y: 1030, size: V.fit("IDEA.", 900, "Anton", 400), color: C.k }); V.slamIn(tl, s3, tt(49.52), 0, 1.5); V.shake(tl, cam, tt(49.52) + .17, 6, "v9a");
+    var b = V.beat(cam, tl, tt(50.12), tt(52.85), C.k, 27, 0);
+    var sp = V.spine(b, { x0: 70, x1: 1010, baseY: 1380, topY: 440, color: C.y, w: 16, tickColor: C.w, tickW: 4 });
+    sp.reveal(tl, tt(49.95), .1, 0, 0, "none");
+    var seg = [[tt(50.0), tt(50.16), 0, sp.lenAt(2009)], [tt(50.16), tt(50.62), sp.lenAt(2009), sp.lenAt(2012)], [tt(50.62), tt(51.6), sp.lenAt(2012), sp.lenAt(2017)], [tt(51.6), tt(52.2), sp.lenAt(2017), 1]];
+    sp.reveal(tl, tt(49.0), tt(50.0) - tt(49.0), 0, 0, "none");
+    seg.forEach(function (s, i) { tl.to(sp.path, { attr: { "stroke-dashoffset": sp.len * (1 - s[3]) }, duration: Math.max(.05, s[1] - s[0]), ease: i === 0 ? "power3.out" : "none" }, s[0]); });
+    var pins = [[2009, "DATA", C.p, 50.16, C.w], [2012, "COMPUTE", C.b, 50.62, C.w], [2017, "DESIGN", C.w, 51.6, C.k]];
+    pins.forEach(function (p, i) {
+      var g = sp.pin(p[0], p[1], p[2], { up: 80 + i * 130, ink: p[4] });
+      tl.fromTo(g, { opacity: 0 }, { opacity: 1, duration: .01 }, tt(p[3]));
+      tl.fromTo(g, { scale: 1.5, transformOrigin: sp.xOf(p[0]) + "px " + sp.yOf(p[0]) + "px" }, { scale: 1, duration: .2, ease: V.E.hit }, tt(p[3]));
+    });
+    var hl = V.text(b, "FLAT. THEN STEEP.", { y: 250, size: V.fit("FLAT. THEN STEEP.", 940, "Anton", 150), color: C.w }); whip(hl, tt(50.4), -420);
+    var c = V.beat(cam, tl, tt(52.85), null, C.y, 28, 150);
+    var f1 = V.text(c, "SAME IDEA.", { y: 330, size: V.fit("SAME IDEA.", 960, "Anton", 330), color: C.k }); V.slamIn(tl, f1, tt(52.9), 0, 1.6); V.shake(tl, cam, tt(52.9) + .17, 6, "v9b");
+    var hn = V.hilite(c, 40, 690, 1000, 470, C.p, "hl9", -1.5);
+    var f2 = V.text(c, "NEW", { y: 700, size: 200, color: C.w }); var f3 = V.text(c, "INGREDIENTS.", { y: 910, size: V.fit("INGREDIENTS.", 900, "Anton", 260), color: C.w });
+    V.hiliteWipe(tl, hn, tt(53.45), .22); V.slamIn(tl, f2, tt(53.45), 0, 1.5); V.slamIn(tl, f3, tt(53.6), 0, 1.5); V.shake(tl, cam, tt(53.62) + .17, 6, "v9c");
+    var hd = V.text(c, "@hemanth_with_ai", { y: 1230, size: 64, font: "'Inter Tight'", weight: 800, color: C.k }); tl.set(hd, { opacity: 0 }, 0).set(hd, { opacity: 1 }, tt(54.3));
+
+    V.push(tl, cam, SC.dur, 1.05);
+    window.__timelines["sceneV9"] = tl;
+  }); });
+})();
+</script>
+</template>

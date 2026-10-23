@@ -1,0 +1,111 @@
+<template>
+<style>
+@font-face{font-family:"Fredoka";font-weight:700;src:url("assets/fonts/fredoka-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:600;src:url("assets/fonts/fredoka-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:500;src:url("assets/fonts/fredoka-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Bagel Fat One";font-weight:400;src:url("assets/fonts/bagel-fat-one-latin-400-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#1d2a5b;font-family:"Fredoka",sans-serif}
+</style>
+<div id="root" data-composition-id="sceneD" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.D, W5 = TIMING.lines[4].words, W6 = TIMING.lines[5].words;
+  var L = function (g) { return g - SC.start; }, PS = Stage;
+  sceneReady("sceneD", function () { return PS.fontsReady().then(function () {
+    var H = PS.build(root, { id: "D", starSeed: 11 });
+    var it = H.tags[PS.IT], par = H.strips;
+    // question flag on "it"
+    var qf = PS.mkBubble(par, { id: "D-q", x: it.x + it.w - 30, y: it.y - 112, w: 112, h: 58, glyph: true, rot: 3, lift: .5 });
+    // labels (teal luggage tags) above every other word
+    var labs = {}, order = [], strips = {};
+    for (var wi = 0; wi < 12; wi++) {
+      if (wi === PS.IT) continue;
+      var T = H.tags[wi], lx = T.cx - 50, ly = T.y - 60;
+      if (wi === 11) { lx = T.x + T.w + 8; ly = T.y + 20; }
+      labs[wi] = PS.mkLabel(par, { id: "D-l" + wi, x: lx, y: ly, w: 100, h: 56, glyph: PS.GLYPH[wi], rot: (rngOf("lr" + wi)() - .5) * 8, lift: .35 });
+    }
+    // strips: thickness = share of attention
+    var START = function (T, up) { return up ? { x: it.cx + (T.cx < it.cx ? -18 : 18), y: it.y + 8 } : { x: it.cx, y: it.y + it.h - 8 }; };
+    for (wi = 0; wi < 12; wi++) {
+      if (wi === PS.IT) continue;
+      T = H.tags[wi]; var a, b, bend = 0, r = rngOf("bend" + wi), w = PS.SCORE[wi] * PS.FULL;
+      if (T.row < 2) { a = START(T, true); b = { x: T.cx, y: T.y + T.h + (wi === PS.ANIMAL ? 26 : -8) }; bend = wi === PS.ANIMAL ? 0 : (r() < .5 ? -1 : 1) * (50 + r() * 70); }
+      else if (T.row === 2) {
+        if (wi === 7) { a = { x: it.x + 6, y: it.cy }; b = { x: T.x + T.w - 6, y: T.cy }; bend = 18; }
+        else if (wi === 9) { a = { x: it.x + it.w - 6, y: it.cy }; b = { x: T.x + 6, y: T.cy }; bend = -18; }
+        else { a = { x: it.cx + 18, y: it.y + it.h - 8 }; b = { x: T.cx, y: T.y + T.h - 8 }; bend = 120; }
+      } else { a = START(T, false); b = { x: T.cx, y: T.y + 8 }; bend = 40; }
+      strips[wi] = PS.ribbon(par, { id: "D-s" + wi, a: a, b: b, bend: bend, w: w, fill: PAL.coral, lift: wi === PS.ANIMAL ? .6 : .3 });
+    }
+    // ruler: one full strip
+    var RX = 150, RY = 1418, RW = 780, RH = 78, inner = RW - 20;
+    var ticks = ""; for (var k = 0; k <= 40; k++) ticks += '<path d="M' + (10 + k * inner / 40) + " " + (RH - 4) + " l0 " + (k % 5 === 0 ? -14 : -8) + '" stroke="' + PAL.cream + '" stroke-opacity=".85" stroke-width="2"/>';
+    var rimg = bake({ w: RW, h: RH, S: 2, seed: 6161, cut: 2, shape: '<path d="' + cutRect(RW, RH, 10, rngOf("ruler"), 1.4) + '" fill="' + PAL.ink + '"/>', overlay: ticks });
+    var ruler = piece({ x: RX, y: RY, w: RW, h: RH, img: rimg, lift: .6, blur: 8, parent: par, ox: "0%", oy: "50%" });
+    var tw = Math.ceil(PS.measure("one whole strip", 34, 600)) + 44;
+    var timg = bake({ w: tw, h: 58, S: 2, seed: 6262, cut: 1.8, shape: '<path d="' + cutRect(tw, 58, 12, rngOf("rt"), 1.2) + '" fill="' + PAL.cream + '"/>' });
+    var rtag = piece({ x: RX + RW - tw, y: RY + RH + 12, w: tw, h: 58, img: timg, lift: .4, blur: 6, parent: par });
+    var rtt = divEl("position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:600 34px/1 Fredoka,sans-serif;color:#1a1a2e;padding-bottom:3px", rtag.mv); rtt.textContent = "one whole strip";
+    var segOrder = [0, 2, 3, 4, 5, 7, 9, 10, 11, 6, PS.ANIMAL], segs = {}, sx = RX + 10;
+    segOrder.forEach(function (wi) {
+      var sw = Math.max(3, PS.SCORE[wi] * inner), simg = bake({ w: sw, h: RH - 20, S: 2, seed: seedOf("seg" + wi), cut: 1, edge: false, shape: '<rect width="' + sw + '" height="' + (RH - 20) + '" fill="' + PAL.coral + '"/>' });
+      var sp = piece({ x: sx, y: RY + 10, w: sw, h: RH - 20, img: simg, lift: 0, blur: 0, parent: par, ox: "0%", oy: "50%" });
+      sp.sh.style.filter = "none"; segs[wi] = sp; sx += sw;
+    });
+    return bakeAll().then(function () {
+      var R = {}; Object.keys(strips).forEach(function (k) { R[k] = strips[k].mount(); });
+      var tl = gsap.timeline({ paused: true });
+      var lay = H.layers.map(function (l) { return { el: l.el, d: l.d }; });
+      var key = function (t, s, P, e) { return { t: t, s: s, x: s * (P.x - 540), y: s * (P.y - 960), ease: e }; };
+      cameraTween(tl, lay, [key(0, 1.0, { x: 540, y: 960 }), key(SC.dur * .5, 1.04, { x: 540, y: 990 }, "sine.inOut"), key(SC.dur, 1.0, { x: 540, y: 960 }, "sine.inOut")], 540, 960);
+      var hop = function (T, t, h) { tl.to(T.mv, { y: -h, duration: .15, ease: PE.stepped("power2.out", .15) }, t).to(T.mv, { y: 0, duration: .26, ease: PE.stepped(PE.card, .26) }, t + .15); };
+      var lhop = function (P, t, h) { tl.to(P.mv, { y: -h, scale: 1.25, duration: .15, ease: PE.stepped("power2.out", .15) }, t).to(P.mv, { y: 0, scale: 1, duration: .3, ease: PE.stepped(PE.card, .3) }, t + .15); };
+      // question flag stands on "it" from the start
+      tl.fromTo(qf.mv, { scale: .05, opacity: 0 }, { scale: 1, opacity: 1, duration: .5, ease: PE.stepped(PE.spring(5.5, 1.2), .5) }, .55);
+      // "Every other word shows its label"
+      var t0 = L(W5[1].start) - .05, tN = L(W5[5].end);
+      var ow = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11];
+      ow.forEach(function (wi, i) {
+        var tt = snap12(t0 + (tN - t0) * i / ow.length), P = labs[wi];
+        tl.set(P.sh, { visibility: "hidden" }, 0).set(P.sh, { visibility: "visible" }, tt);
+        tl.fromTo(P.mv, { scale: .1, y: 30, opacity: 0, transformOrigin: "50% 100%" }, { scale: 1, y: 0, opacity: 1, duration: .45, ease: PE.stepped(PE.spring(5.5, 1.3), .45) }, tt);
+        tl.fromTo(P.sh, { "--h": 0 }, { "--h": .5, duration: .45, ease: "none" }, tt);
+        hop(H.tags[wi], tt, 10);
+      });
+      // "The better a label matches the question..." : the question's mark pulses, the matching label lights up
+      tl.to(qf.mv, { scale: 1.25, rotation: -6, duration: .2, ease: "power2.out" }, snap12(L(W5[10].start))).to(qf.mv, { scale: 1, rotation: 0, duration: .4, ease: PE.paper }, snap12(L(W5[10].start)) + .2);
+      // ruler + strips: thin ones first, in a stagger, each tearing a sliver of the ruler
+      var tr = snap12(L(W5[13].start) - .6);
+      tl.set([ruler.sh, rtag.sh], { visibility: "hidden" }, 0).set([ruler.sh, rtag.sh], { visibility: "visible" }, tr);
+      tl.fromTo(ruler.mv, { scaleX: .02 }, { scaleX: 1, duration: .6, ease: PE.stepped(PE.paper, .6) }, tr);
+      tl.fromTo(rtag.mv, { scale: .1, opacity: 0 }, { scale: 1, opacity: 1, duration: .5, ease: PE.stepped(PE.card, .5) }, tr + .5);
+      var thin = [0, 2, 3, 4, 5, 7, 9, 10, 11, 6], ts = snap12(L(W5[13].start)), te = L(W5[20].end) - .55;
+      thin.forEach(function (wi, i) {
+        var t = snap12(ts + (te - ts) * i / thin.length), pr = { p: 0 }, dur = .7;
+        tl.set(strips[wi].box, { visibility: "hidden" }, 0);
+        tl.to(pr, { p: 1, duration: dur, ease: PE.stepped(PE.paper, dur), onUpdate: (function (rr, q) { return function () { rr.apply(q.p); }; })(R[wi], pr) }, t);
+        var sg = segs[wi];
+        tl.set(sg.sh, { visibility: "hidden" }, 0).set(sg.sh, { visibility: "visible" }, t + dur);
+        tl.fromTo(sg.mv, { scaleX: 0 }, { scaleX: 1, duration: .25, ease: PE.stepped("power2.out", .25) }, t + dur);
+      });
+      // "Animal gets a thick strip": the straight one snaps in with a tiny overshoot
+      var ta = snap12(L(W6[0].start) - .05), pa = { p: 0 };
+      hop(H.tags[PS.ANIMAL], ta, 26); lhop(labs[PS.ANIMAL], ta, 18);
+      tl.set(strips[PS.ANIMAL].box, { visibility: "hidden" }, 0);
+      tl.to(pa, { p: 1.08, duration: .55, ease: PE.stepped(PE.strip, .55), onUpdate: function () { R[PS.ANIMAL].apply(pa.p); } }, ta + .12);
+      var sa = segs[PS.ANIMAL];
+      tl.set(sa.sh, { visibility: "hidden" }, 0).set(sa.sh, { visibility: "visible" }, ta + .5);
+      tl.fromTo(sa.mv, { scaleX: 0 }, { scaleX: 1, duration: .5, ease: PE.stepped(PE.strip, .5) }, ta + .5);
+      tl.fromTo(R[PS.ANIMAL].box, { "--h": .2 }, { "--h": 1, duration: .3, ease: "none" }, ta + .5).to(R[PS.ANIMAL].box, { "--h": .6, duration: .4, ease: "none" }, ta + .8);
+      // "Street gets a thin one"
+      var tsr = snap12(L(W6[5].start));
+      hop(H.tags[PS.STREET], tsr, 20); lhop(labs[PS.STREET], tsr, 14);
+      tl.to(segs[PS.STREET].mv, { scaleY: 1.5, duration: .2, ease: "power2.out" }, tsr).to(segs[PS.STREET].mv, { scaleY: 1, duration: .3, ease: PE.paper }, tsr + .2);
+      var an = { p: 0 };
+      tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { PS.boil(H, tl.time()); } }, 0);
+      window.__timelines["sceneD"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

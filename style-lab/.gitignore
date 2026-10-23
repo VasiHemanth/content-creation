@@ -1,0 +1,7 @@
+# local render scratch, not deliverables
+.hyperframes/
+_smoke/
+*.log
+**/out/work-*
+**/out/draft*
+node_modules/

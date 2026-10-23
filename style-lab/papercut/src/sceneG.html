@@ -1,0 +1,73 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#1d2a5b;font-family:"Fredoka",sans-serif}
+.mt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 74px/1 Fredoka,sans-serif;color:#1a1a2e;padding-bottom:6px}
+</style>
+<div id="root" data-composition-id="sceneG" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.G, W = TIMING.lines[8].words;
+  var L = function (g) { return g - SC.start; }, PS = Stage, MIX = "#f59a52";
+  sceneReady("sceneG", function () { return PS.fontsReady().then(function () {
+    var H = PS.build(root, { id: "G", starSeed: 29 });
+    var it = H.tags[PS.IT];
+    // "it" already carries the mixed colour
+    var coat = bake({ w: it.w, h: it.h, S: 2, seed: 4041, cut: 2.4, shape: '<path d="' + cutRect(it.w, it.h, 18, rngOf("tag" + PS.IT), 1.8) + '" fill="' + MIX + '"/>' });
+    it.jt.insertBefore(coat, it.txt);
+    // arcs between every pair of words: three passes ("many times over"), drawn behind the tags
+    var arcL = H.addLayer("arcs", 1.0, 3.8, 0);
+    var box = divEl("position:absolute;left:0;top:0;width:1080px;height:1920px;--h:.3;filter:drop-shadow(calc(1px + var(--h)*2px) calc(2px + var(--h)*3px) 1px rgba(14,16,40,.35)) drop-shadow(calc(3px + var(--h)*8px) calc(5px + var(--h)*12px) calc(5px + var(--h)*10px) rgba(14,16,40,.22))", arcL);
+    var svg = svgEl("svg", { width: 1080, height: 1920, viewBox: "0 0 1080 1920", style: "position:absolute;left:0;top:0;overflow:visible" }, box);
+    var paths = [], pr = rngOf("arcs");
+    var passCol = [PAL.cream, PAL.saffron, PAL.coral];
+    for (var pass = 0; pass < 3; pass++) {
+      for (var i = 0; i < 12; i++) for (var j = i + 1; j < 12; j++) {
+        var A = H.tags[i], B = H.tags[j], mx = (A.cx + B.cx) / 2, my = (A.cy + B.cy) / 2, dx = B.cx - A.cx, dy = B.cy - A.cy, ln = Math.hypot(dx, dy);
+        var bend = (pr() < .5 ? -1 : 1) * ln * (.14 + pr() * .26) * (pass ? 1.15 : 1);
+        var cx = mx - dy / ln * bend, cy = my + dx / ln * bend;
+        var isIt = i === PS.IT || j === PS.IT, other = i === PS.IT ? j : i;
+        var w = pass === 0 ? (isIt ? Math.max(2, PS.SCORE[other] * 34) : 1.8 + pr() * 2) : (isIt ? 3 + pr() * 4 : 1.2 + pr() * 2);
+        var col = pass === 0 ? (isIt ? PAL.coral : PAL.cream) : passCol[pass];
+        var p = svgEl("path", { d: "M" + A.cx + " " + A.cy + " Q" + cx + " " + cy + " " + B.cx + " " + B.cy, stroke: col, "stroke-width": w.toFixed(1), fill: "none", "stroke-linecap": "round", "stroke-opacity": pass ? .8 : .95 }, svg);
+        var len = p.getTotalLength(); p.setAttribute("stroke-dasharray", len + " " + (len + 20)); p.setAttribute("stroke-dashoffset", len);
+        paths.push({ el: p, len: len, pass: pass, i: i, j: j });
+      }
+    }
+    // end card
+    var cw = 840, ch = 200;
+    var eimg = bake({ w: cw, h: ch, S: 2, seed: 9090, cut: 2.6, shape: '<path d="' + cutRect(cw, ch, 36, rngOf("endcard"), 2.2) + '" fill="' + PAL.cream + '"/>',
+      overlay: '<path d="M30 ' + (ch - 28) + ' L' + (cw - 30) + " " + (ch - 28) + '" stroke="#e8505b" stroke-width="5" stroke-linecap="round" stroke-opacity=".9"/>' });
+    var card = piece({ x: 540 - cw / 2, y: 820, w: cw, h: ch, img: eimg, lift: .9, blur: 18, parent: H.fg || H.tagL, ox: "50%", oy: "100%" });
+    card.sh.style.zIndex = 5;
+    var ct = divEl("", card.mv, "mt"); ct.style.fontSize = "80px"; ct.style.paddingBottom = "30px"; ct.textContent = "@hemanth_with_ai";
+    var dim = divEl("position:absolute;left:-200px;top:-200px;width:1480px;height:2320px;background:#0f1738;opacity:0", H.fg ? H.fg.parentNode : root); dim.style.zIndex = 880; dim.id = "dimG";
+    var cardLayer = divEl("position:absolute;left:0;top:0;width:1080px;height:1920px;z-index:900", root); cardLayer.appendChild(card.sh);
+    return bakeAll().then(function () {
+      var tl = gsap.timeline({ paused: true });
+      var lay = H.layers.map(function (l) { return { el: l.el, d: l.d }; });
+      var key = function (t, s, P, e) { return { t: t, s: s, x: s * (P.x - 540), y: s * (P.y - 960), ease: e }; };
+      var t0 = L(W[0].start);
+      cameraTween(tl, lay, [key(0, 1.95, { x: 540, y: 1010 }), key(t0 + .1, 1.9, { x: 540, y: 1010 }, "sine.inOut"), key(L(W[7].end), .86, { x: 540, y: 880 }, PE.cam), key(SC.dur, .88, { x: 540, y: 890 }, "sine.inOut")], 540, 960);
+      // it holds its colour; the arcs draw in: pass 1 on "every word", pass 2-3 on "many times over"
+      var passT = [[L(W[2].start), L(W[4].end)], [L(W[5].start), L(W[6].end)], [L(W[7].start), L(W[8].end) + .2]];
+      paths.forEach(function (P, k) {
+        var pt = passT[P.pass], t = snap12(pt[0] + (pt[1] - pt[0]) * ((P.i * 12 + P.j) / 144) * 1.4);
+        tl.to(P.el, { attr: { "stroke-dashoffset": 0 }, duration: .45, ease: PE.stepped(PE.paper, .45) }, t);
+      });
+      // tags nod as their turn comes
+      for (var i = 0; i < 12; i++) { var T = H.tags[i], tt = snap12(passT[0][0] + (passT[0][1] - passT[0][0]) * i / 12); tl.to(T.mv, { y: -14, duration: .15, ease: PE.stepped("power2.out", .15) }, tt).to(T.mv, { y: 0, duration: .26, ease: PE.stepped(PE.card, .26) }, tt + .15); }
+      // end card
+      var te = snap12(L(W[11].end) + .35);
+      tl.fromTo(dim, { opacity: 0 }, { opacity: .55, duration: .5, ease: "power1.inOut" }, te);
+      tl.set(card.sh, { visibility: "hidden" }, 0).set(card.sh, { visibility: "visible" }, te + .1);
+      tl.fromTo(card.mv, { y: 140, scale: .3, rotation: -8, opacity: 0 }, { y: 0, scale: 1, rotation: -1.5, opacity: 1, duration: .8, ease: PE.stepped(PE.spring(5.5, 1.3), .8) }, te + .1);
+      tl.fromTo(card.sh, { "--h": 0 }, { "--h": 1, duration: .8, ease: "none" }, te + .1);
+      var an = { p: 0 };
+      tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { PS.boil(H, tl.time()); } }, 0);
+      window.__timelines["sceneG"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

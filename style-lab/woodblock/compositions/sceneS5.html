@@ -1,0 +1,49 @@
+<template>
+<style>
+@font-face{font-family:"Shippori Mincho";font-weight:400;src:url("assets/fonts/shippori-mincho-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-latin-800-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-japanese-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-japanese-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#1a1410}
+#w5{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.sl{position:absolute;left:846px;top:1376px;width:150px;height:150px;background:#c8402a;color:#efe3c6;font:800 84px/150px "Shippori Mincho",serif;text-align:center;filter:url(#rough5);box-shadow:0 0 0 3px #c8402a;visibility:hidden}
+.sl.two{font-size:62px}
+</style>
+<div id="root" data-composition-id="S5" data-width="1080" data-height="1920"><div id="w5"><canvas id="s5c" width="1080" height="1920" style="position:absolute;left:0;top:0"></canvas><canvas id="s5p" width="1080" height="1920" style="position:absolute;left:0;top:0"></canvas></div></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.S5, root = document.getElementById("root"), w5 = document.getElementById("w5");
+  var KAN = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十"];
+  Print.sceneReady("S5", function () {
+    Print.roughDefs(root, "rough5", "0.06", 5, 13);
+    var eng = Print.engine(document.getElementById("s5c")), pg = document.getElementById("s5p").getContext("2d");
+    var T0 = .5, DT = (10.8 - .5) / 19;                                    // 20 visible steps; the last one (the key lines) lands on "a wave appears"
+    var stepAt = function (k) { return T0 + (k - 1) * DT; };
+    var kOf = function (t) { return t < T0 ? 0 : Math.min(20, Math.floor((t - T0) / DT + 1e-6) + 1); };
+    // thin progress line along the border (clockwise from the top left)
+    var X0 = 24, Y0 = 24, X1 = 1056, Y1 = 1896, PER = 2 * (X1 - X0) + 2 * (Y1 - Y0);
+    function border(g, frac) {
+      g.clearRect(0, 0, 1080, 1920); if (frac <= 0) return; var len = frac * PER, segs = [[X0, Y0, X1, Y0], [X1, Y0, X1, Y1], [X1, Y1, X0, Y1], [X0, Y1, X0, Y0]];
+      g.strokeStyle = "#c8402a"; g.lineWidth = 6; g.lineCap = "round"; g.beginPath();
+      for (var i = 0; i < 4 && len > 0; i++) { var s = segs[i], L = Math.hypot(s[2] - s[0], s[3] - s[1]), u = Math.min(1, len / L); g.moveTo(s[0], s[1]); g.lineTo(s[0] + (s[2] - s[0]) * u, s[1] + (s[3] - s[1]) * u); len -= L; }
+      g.stroke();
+    }
+    function render(t) { var k = kOf(t), v = k / 20; eng.draw({ mode: "rev", t: v, bank: Math.floor(t * 12) % 4 }); border(pg, v); }
+    render(0);
+    var seals = KAN.map(function (k) { var d = Print.div("", w5, "sl" + (k.length > 1 ? " two" : "")); d.textContent = k; return d; });
+    var tl = gsap.timeline({ paused: true });
+    tl.fromTo("#w5", { scale: 1, transformOrigin: "540px 900px" }, { scale: 1.035, duration: SC.dur, ease: "none" }, 0);
+    seals.forEach(function (s, k) {
+      var t = stepAt(k + 1);
+      if (k) tl.set(seals[k - 1], { visibility: "hidden" }, t);
+      tl.set(s, { visibility: "visible" }, t);
+      tl.fromTo(s, { scale: 1.55, opacity: 0, rotation: -4 + (k % 5) }, { scale: 1, opacity: 1, rotation: -2 + (k % 3), duration: .16, ease: "power4.in" }, t);
+      tl.fromTo(s, { boxShadow: "0 0 22px 12px rgba(200,64,42,.5)" }, { boxShadow: "0 0 0px 3px rgba(200,64,42,1)", duration: .4, ease: "power2.out" }, t + .1);
+    });
+    var an = { p: 0 }; tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { render(tl.time()); } }, 0);
+    window.__timelines["S5"] = tl;
+  });
+})();
+</script>
+</template>

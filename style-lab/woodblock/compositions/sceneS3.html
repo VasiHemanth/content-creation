@@ -1,0 +1,44 @@
+<template>
+<style>
+@font-face{font-family:"Shippori Mincho";font-weight:400;src:url("assets/fonts/shippori-mincho-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-latin-800-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:700;src:url("assets/fonts/shippori-mincho-japanese-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Shippori Mincho";font-weight:800;src:url("assets/fonts/shippori-mincho-japanese-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#1a1410}
+#w3{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.seal{position:absolute;left:846px;top:1376px;width:150px;height:150px;background:#c8402a;color:#efe3c6;font:800 92px/150px "Shippori Mincho",serif;text-align:center;filter:url(#rough3);box-shadow:0 0 0 3px #c8402a}
+</style>
+<div id="root" data-composition-id="S3" data-width="1080" data-height="1920"><div id="w3"><canvas id="s3c" width="1080" height="1920" style="position:absolute;left:0;top:0"></canvas></div></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.S3, root = document.getElementById("root"), w3 = document.getElementById("w3");
+  var KAN = ["一", "二", "三", "四", "五"];
+  Print.sceneReady("S3", function () {
+    Print.roughDefs(root, "rough3", "0.06", 5, 7);
+    var eng = Print.engine(document.getElementById("s3c")), L = function (g) { return g - SC.start; };
+    var W = TIMING.lines[3].words, ts = [L(W[3].start) + .15, L(W[5].start) - .1, L(W[11].start) - .2, L(W[14].start) - .1, L(W[19].start) - .2];   // step 1..5 on the narration
+    var lev = [.1, .28, .5, .76, 1];
+    var q = function (v, n) { return Math.round(v / n) * n; };
+    function thr(t) {
+      if (t < .55) return q(1 - Print.E.slow(t / .55), 1 / 10);                  // dither-dissolve in from the previous static
+      var v = 0; for (var k = 0; k < 5; k++) { var prev = k ? lev[k - 1] : 0; if (t >= ts[k]) v = prev + (lev[k] - prev) * q(Print.clamp((t - ts[k]) / .28, 0, 1), .25); }
+      return q(v, 1 / 40);
+    }
+    function render(t) { var th = thr(t); eng.draw({ mode: "fwd", thr: th, bank: th > 0 ? Math.floor(t * 12) % 4 : 0 }); }
+    render(0);
+    var seals = KAN.map(function (k) { var d = Print.div("", w3, "seal"); d.textContent = k; d.style.visibility = "hidden"; return d; });
+    var tl = gsap.timeline({ paused: true });
+    tl.fromTo("#w3", { scale: 1, transformOrigin: "540px 900px" }, { scale: 1.04, duration: SC.dur, ease: "none" }, 0);
+    ts.forEach(function (t, k) {
+      if (k) tl.set(seals[k - 1], { visibility: "hidden" }, t);
+      tl.set(seals[k], { visibility: "visible" }, t);
+      tl.fromTo(seals[k], { scale: 1.7, opacity: 0, rotation: -5 + k * 2 }, { scale: 1, opacity: 1, rotation: -2 + k, duration: .2, ease: "power4.in" }, t);
+      tl.fromTo(seals[k], { boxShadow: "0 0 26px 14px rgba(200,64,42,.55)" }, { boxShadow: "0 0 0px 3px rgba(200,64,42,1)", duration: .5, ease: "power2.out" }, t + .12);
+    });
+    var an = { p: 0 }; tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { render(tl.time()); } }, 0);
+    window.__timelines["S3"] = tl;
+  });
+})();
+</script>
+</template>

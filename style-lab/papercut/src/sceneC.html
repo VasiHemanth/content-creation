@@ -1,0 +1,57 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#1d2a5b;font-family:"Fredoka",sans-serif}
+.bt{position:absolute;display:inline-block;font:600 44px/1.05 Fredoka,sans-serif;color:#f6e8c8}
+</style>
+<div id="root" data-composition-id="sceneC" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.C, W = TIMING.lines[3].words;
+  var L = function (g) { return g - SC.start; }, PS = Stage;
+  sceneReady("sceneC", function () { return PS.fontsReady().then(function () {
+    var H = PS.build(root, { id: "C", starSeed: 8 });
+    var it = H.tags[PS.IT];
+    // the question: a coral speech bubble whose tail points back at "it"
+    var bw = 400, bh = 250, bx = 640, by = 880, r = rngOf("qb");
+    var body = cutRect(bw, bh, 40, r, 1.6), tail = "M6 " + (bh * .62) + " L-52 " + (bh * .74) + " L12 " + (bh * .86) + "Z";
+    var bimg = bake({ w: bw + 60, h: bh, S: 2, seed: 9191, cut: 2.4, pad: 10, shape: '<g transform="translate(60 0)"><path d="' + body + '" fill="' + PAL.coral + '"/><path d="' + tail + '" fill="' + PAL.coral + '"/></g>',
+      overlay: '<g transform="translate(60 0)">' + PS.glyphMarks("tc", bw - 66, 34, 13, PAL.cream) + "</g>" });
+    var bub = piece({ x: bx - 60, y: by, w: bw + 60, h: bh, img: bimg, lift: .9, blur: 8, parent: H.strips, ox: "6%", oy: "74%" });
+    var words = ["which", "earlier", "word", "am I", "about?"], lines = [["which", "earlier"], ["word am I"], ["about?"]], spans = [];
+    var tx = divEl("position:absolute;left:60px;top:0;width:" + bw + "px;height:" + bh + "px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:0 22px 8px 30px", bub.mv);
+    [["which earlier", [0, 1]], ["word am I", [2, 3, 4]], ["about?", [5]]];
+    var wl = [[["which", 7], ["earlier", 8]], [["word", 9], ["am", 10], ["I", 11]], [["about?", 12]]];
+    wl.forEach(function (ln) {
+      var row = divEl("display:flex;gap:12px;align-items:baseline", tx);
+      ln.forEach(function (w) { var s = divEl("", row, "bt"); s.style.position = "relative"; s.textContent = w[0]; spans.push({ el: s, i: w[1] }); });
+    });
+    return bakeAll().then(function () {
+      var tl = gsap.timeline({ paused: true });
+      var lay = H.layers.map(function (l) { return { el: l.el, d: l.d }; });
+      var key = function (t, s, P, e) { return { t: t, s: s, x: s * (P.x - 540), y: s * (P.y - 960), ease: e }; };
+      cameraTween(tl, lay, [key(0, 1.55, { x: 640, y: 1040 }), key(L(W[4].start), 1.5, { x: 650, y: 1030 }, "sine.inOut"), key(L(W[8].start) - .1, 1.16, { x: 610, y: 990 }, "power2.inOut"), key(SC.dur, 1.1, { x: 590, y: 980 }, "sine.inOut")], 540, 960);
+      var hop = function (T, t, h) { tl.to(T.mv, { y: -h, duration: .15, ease: PE.stepped("power2.out", .15) }, t).to(T.mv, { y: 0, duration: .26, ease: PE.stepped(PE.card, .26) }, t + .15); };
+      // the later words step aside to make room
+      [9, 10].forEach(function (wi, k) { var T = H.tags[wi]; tl.to(T.mv, { x: 50 + k * 24, y: 60, rotation: 18 + k * 10, opacity: 0, scale: .7, duration: .5, ease: PE.stepped("power2.in", .5) }, snap12(L(W[3].start) + k * .12)); });
+      hop(it, snap12(L(W[2].start)), 24);
+      // "it holds up its question"
+      var t4 = snap12(L(W[4].start));
+      tl.fromTo(bub.mv, { scale: .05, x: -90, y: 40, rotation: -20, opacity: 0 }, { scale: 1, x: 0, y: 0, rotation: 0, opacity: 1, duration: .7, ease: PE.stepped(PE.spring(5, 1.4), .7) }, t4);
+      tl.fromTo(bub.sh, { "--h": .1 }, { "--h": 1, duration: .7, ease: "none" }, t4);
+      // the question's words land as they are spoken
+      spans.forEach(function (S) {
+        var t = snap12(L(W[S.i].start));
+        tl.fromTo(S.el, { opacity: 0, y: 14, scale: .6 }, { opacity: 1, y: 0, scale: 1, duration: .25, ease: PE.stepped(PE.card, .25) }, t);
+      });
+      // "earlier word": every earlier tag hops in order
+      [0, 1, 2, 3, 4, 5, 6, 7].forEach(function (wi, k) { hop(H.tags[wi], snap12(L(W[8].start) + .05 + k * .1), 18); });
+      tl.to(bub.mv, { rotation: 2, y: -6, duration: .4, ease: "sine.inOut" }, snap12(L(W[12].start)));
+      var an = { p: 0 };
+      tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { PS.boil(H, tl.time()); } }, 0);
+      window.__timelines["sceneC"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

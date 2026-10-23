@@ -1,0 +1,45 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#1a1410}
+#w6{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.col{position:absolute;top:262px;font:700 38px/1 "Shippori Mincho",serif;color:#1a1410;writing-mode:vertical-rl;text-orientation:mixed;white-space:nowrap;letter-spacing:2px;filter:url(#rough6);clip-path:inset(0 0 100% 0)}
+</style>
+<div id="root" data-composition-id="S6" data-width="1080" data-height="1920"><div id="w6"><canvas id="s6c" width="1080" height="1920" style="position:absolute;left:0;top:0"></canvas>
+ <div class="col" id="c1" style="left:948px">a great wave,</div><div class="col" id="c2" style="left:896px">a small boat,</div><div class="col" id="c3" style="left:844px;color:#c8402a">red sun</div>
+ <svg width="1080" height="1920" viewBox="0 0 1080 1920" style="position:absolute;left:0;top:0;overflow:visible" id="s6d"></svg></div></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.S6, root = document.getElementById("root"), L = function (g) { return g - SC.start; }, W = TIMING.lines[8].words;
+  Print.sceneReady("S6", function () {
+    Print.roughDefs(root, "rough6", "0.07", 3, 17);
+    var cv = document.getElementById("s6c"), g = cv.getContext("2d"), S = Print.SUN, off = Print.offs.verm;
+    function draw(sunR) {
+      g.drawImage(Print.print, 0, 0);
+      if (sunR > 0) { g.save(); g.beginPath(); g.arc(S.x, S.y, sunR, 0, 6.2832); g.clip(); g.drawImage(Print.sunPlate, off[0], off[1]); g.restore(); }
+    }
+    draw(0);
+    var tl = gsap.timeline({ paused: true });
+    tl.fromTo("#w6", { scale: 1, transformOrigin: "540px 900px" }, { scale: 1.03, duration: SC.dur, ease: "none" }, 0);
+    // the prompt is brushed into the cartouche, one phrase at a time, top to bottom (clip follows the brush)
+    var t1 = L(W[3].start) + .05, t2 = L(W[6].start) - .1, t3 = L(W[9].start) + .05;
+    [["#c1", t1, .8], ["#c2", t2, .8], ["#c3", t3, .6]].forEach(function (c) { tl.to(c[0], { clipPath: "inset(0 0 0% 0)", duration: c[2], ease: "power1.inOut" }, c[1]); });
+    // ink runs down from the last strokes, into the picture
+    var d = document.getElementById("s6d"), r = rngOf("drips"), drips = [];
+    [[954, 552], [902, 548], [850, 424], [931, 560]].forEach(function (p, k) {
+      var len = 150 + r() * 300, x = p[0] + (r() - .5) * 6, p1 = P1(x, p[1]), path = Print.svg("path", { d: "M" + x + " " + p[1] + " C" + (x + (r() - .5) * 8) + " " + (p[1] + len * .4) + " " + (x + (r() - .5) * 14) + " " + (p[1] + len * .75) + " " + (x + (r() - .5) * 10) + " " + (p[1] + len), stroke: k === 2 ? "#c8402a" : "#1a1410", "stroke-width": 3.2 + r() * 2.2, fill: "none", "stroke-linecap": "round", filter: "url(#rough6)" }, d);
+      var Ln = path.getTotalLength(); path.setAttribute("stroke-dasharray", Ln); path.setAttribute("stroke-dashoffset", Ln);
+      var dot = Print.svg("circle", { cx: 0, cy: 0, r: 5 + r() * 2, fill: k === 2 ? "#c8402a" : "#1a1410", opacity: 0 }, d), pe = path.getPointAtLength(Ln);
+      dot.setAttribute("cx", pe.x); dot.setAttribute("cy", pe.y);
+      drips.push({ path: path, dot: dot, L: Ln });
+    });
+    function P1(x, y) { return [x, y]; }
+    drips.forEach(function (dp, k) { var t = t3 + .35 + k * .18; tl.to(dp.path, { attr: { "stroke-dashoffset": 0 }, duration: 1.2 + k * .15, ease: "power2.out" }, t); tl.to(dp.dot, { opacity: 1, duration: .05 }, t + 1.2 + k * .15); });
+    // "becomes a print": the sun turns vermilion (ink blooms out from its centre)
+    var ts = L(W[13].start) - .1, sr = { r: 0 };
+    tl.to(sr, { r: S.r - 1, duration: 1.0, ease: "power2.out", onUpdate: function () { draw(Math.round(sr.r / 3) * 3); } }, ts);
+    window.__timelines["S6"] = tl;
+  });
+})();
+</script>
+</template>

@@ -1,0 +1,45 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:visible;pointer-events:none}
+</style>
+<div id="root" data-composition-id="wipes" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root");
+  var SH_W = 2400, SH_H = 2300, DUR = 1.0;
+  var cols = [["#2b3a8c", "#f6e8c8"], ["#e8505b", "#f9b44c"], ["#3fa796", "#f6e8c8"], ["#f6e8c8", "#2b3a8c"], ["#2b3a8c", "#e8505b"], ["#f9b44c", "#f6e8c8"]];
+  function torn(seed, inset) {
+    var r = rngOf(seed), d = "M" + inset + " -40", y;
+    for (y = -40; y < SH_H; y += 14 + r() * 22) d += " L" + (inset + (r() - .5) * 16 + Math.sin(y * .01) * 8) + " " + y;
+    d += " L" + (inset + 2) + " " + SH_H + " L" + (SH_W - inset) + " " + SH_H;
+    for (y = SH_H; y > -40; y -= 14 + r() * 22) d += " L" + (SH_W - inset + (r() - .5) * 16 + Math.sin(y * .012) * 8) + " " + y;
+    return d + "Z";
+  }
+  var sheets = [];
+  TIMING.seams.forEach(function (s, i) {
+    [0, 1].forEach(function (k) {
+      var col = cols[i][k], core = k ? "#fff6e2" : "#fbf1d8";
+      var img = bake({ w: SH_W, h: SH_H, S: 1, seed: seedOf("sheet" + i + k), cut: 5, pad: 6,
+        shape: '<path d="' + torn("tornA" + i + k, 0) + '" fill="' + core + '"/><path d="' + torn("tornB" + i + k, 9) + '" fill="' + col + '"/>' });
+      var p = piece({ x: -SH_W, y: -110, w: SH_W, h: SH_H, img: img, lift: 1.3, blur: 14, parent: root });
+      p.sh.style.zIndex = 10 - k; p.sh.style.visibility = "hidden";
+      sheets.push({ p: p, seam: s, i: i, k: k });
+    });
+  });
+  sceneReady("wipes", function () { return bakeAll().then(function () {
+    var tl = gsap.timeline({ paused: true });
+    sheets.forEach(function (S) {
+      var t0 = S.seam - DUR / 2 + S.k * 0.12;
+      var rot0 = (S.i % 2 ? 1 : -1) * (1.6 - S.k * .7);
+      tl.set(S.p.sh, { visibility: "visible", x: 0 }, t0 - .01);
+      tl.set(S.p.mv, { x: 0, rotation: rot0, y: 0 }, t0 - .01);
+      tl.fromTo(S.p.sh, { x: 0 }, { x: SH_W + 1080 + 60, duration: DUR, ease: PE.slow }, t0);
+      tl.fromTo(S.p.mv, { rotation: rot0, y: 0 }, { rotation: -rot0 * .8, y: 40, duration: DUR, ease: "sine.inOut" }, t0);
+      tl.set(S.p.sh, { visibility: "hidden" }, t0 + DUR + .02);
+    });
+    window.__timelines["wipes"] = tl;
+  }); });
+})();
+</script>
+</template>

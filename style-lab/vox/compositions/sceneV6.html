@@ -1,0 +1,52 @@
+<template>
+<style>
+@font-face{font-family:"Anton";font-weight:400;src:url("assets/fonts/anton-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Archivo Black";font-weight:400;src:url("assets/fonts/archivo-black-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:500;src:url("assets/fonts/inter-tight-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:700;src:url("assets/fonts/inter-tight-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:800;src:url("assets/fonts/inter-tight-latin-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#0b0b0b}
+</style>
+<div id="root" data-composition-id="sceneV6" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var SC = TIMING.scenes.V6, L = function (g) { return g - SC.start; };
+  V.ready("V6", function () { return V.fontsReady().then(function () {
+    var root = document.getElementById("root"), C = V.C, cam = V.div("position:absolute;left:0;top:0;width:1080px;height:1920px", root), tl = gsap.timeline({ paused: true });
+    var whip = function (el, t, dx, dy) { return V.ghostTitle(tl, el, { dx: dx || -420, dy: dy || 0, copies: 3, dur: .2 }, t); };
+
+    var tt = function (g) { return L(g); };
+    var slabOf = function (parent, color, num, word, ink, numBg, numInk, tNum, tWord, sd) {
+      var slab = V.div("position:absolute;left:50px;top:360px;width:980px;height:800px;background:" + color + ";box-shadow:16px 16px 0 " + C.w, parent);
+      var d = V.div("position:absolute;left:40px;top:40px;width:240px;height:240px;border-radius:50%;background:" + numBg + ";color:" + numInk + ";display:flex;align-items:center;justify-content:center;font:400 190px/1 Anton", slab); d.textContent = num;
+      var w = V.text(slab, word, { x: 0, y: 340, w: 980, size: V.fit(word, 900, "Anton", 330), color: ink });
+      V.slamIn(tl, slab, tNum, -1, 1.5); V.shake(tl, cam, tNum + .2, 6, sd + "a");
+      tl.set(w, { opacity: 0 }, 0).set(w, { opacity: 1 }, tWord); V.shake(tl, cam, tWord, 6, sd + "b"); return slab;
+    };
+    var a = V.beat(cam, tl, 0, tt(32.2), C.k, 16, 0);
+    slabOf(a, C.b, "3", "DESIGN", C.w, C.y, C.k, tt(31.54), tt(32.1), "v6a");
+    var b = V.beat(cam, tl, tt(32.2), tt(33.6), C.y, 17, 60);
+    var b1 = V.text(b, "A DESIGN", { y: 300, size: V.fit("A DESIGN", 940, "Anton", 300), color: C.k }); whip(b1, tt(32.27), -420);
+    var b2 = V.text(b, "THAT", { y: 600, size: 240, color: C.k }); whip(b2, tt(32.78), 420);
+    var hs = V.hilite(b, 150, 840, 780, 250, C.p, "hl6", -2);
+    var b3 = V.text(b, "SCALES", { y: 830, size: V.fit("SCALES", 740, "Anton", 330), color: C.k }); whip(b3, tt(33.01), -420); V.hiliteWipe(tl, hs, tt(33.01), .2);
+    tl.fromTo(b3, { scale: 1 }, { scale: 1.12, duration: .5, ease: "power2.out" }, tt(33.1));
+    var up = V.arrow(b.querySelector("svg") || b, 200, 1500, 880, 1250, C.k, "ar6", 14); V.draw(tl, up, tt(33.1), .4, "power2.out");
+    var c = V.beat(cam, tl, tt(33.6), tt(34.95), C.k, 18, 200);
+    var yr = V.text(c, "2017", { y: 330, size: V.fit("2017", 900, "Anton", 540), color: C.y }); V.count(tl, yr, tt(33.7), .4, 0, 2017, null, "power3.out"); V.flash(tl, c, tt(34.1), C.w);
+    tl.fromTo(yr, { scale: 1.12 }, { scale: 1, duration: .15, ease: V.E.hit }, tt(34.1));
+    var d = V.beat(cam, tl, tt(34.95), tt(36.15), C.w, 19, 20);
+    var doc = V.cutout(d, { x: 330, y: 300, w: 420, h: 540, draw: function (g, w, h) { var gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, "#fff"); gr.addColorStop(1, "#d8d8d8"); g.fillStyle = "#e8e8e8"; g.fillRect(w * .05, h * .03, w * .9, h * .94); for (var i = 0; i < 12; i++) { g.fillStyle = "#333"; g.fillRect(w * .15, h * (.12 + i * .068), w * (i % 5 === 4 ? .35 : .7), h * .022); } g.fillStyle = "#111"; g.fillRect(w * .15, h * .06, w * .5, h * .03); }, cell: 8, sx: 12, sy: 12 });
+    tl.fromTo(doc, { scale: .5, opacity: 0, rotation: -10 }, { scale: 1, opacity: 1, rotation: -2, duration: .26, ease: V.E.snap }, tt(34.54) > tt(34.95) ? tt(34.95) : tt(34.95));
+    var d1 = V.text(d, "A PAPER", { y: 900, size: 230, color: C.k }); whip(d1, tt(35.0), -420);
+    var d2 = V.text(d, "INTRODUCED", { y: 1150, size: V.fit("INTRODUCED", 940, "Anton", 230), color: C.b }); whip(d2, tt(35.03), 420);
+    var e = V.beat(cam, tl, tt(36.15), null, C.p, 20, 250);
+    var e1 = V.text(e, "THE", { y: 500, size: 200, color: C.k }); whip(e1, tt(36.02), -420);
+    var e2 = V.text(e, "TRANSFORMER", { y: 720, size: V.fit("TRANSFORMER", 960, "Anton", 330), color: C.w }); V.slamIn(tl, e2, tt(36.29), 0, 1.6); V.shake(tl, cam, tt(36.29) + .17, 6, "v6c");
+
+    V.push(tl, cam, SC.dur, 1.07);
+    window.__timelines["sceneV6"] = tl;
+  }); });
+})();
+</script>
+</template>
