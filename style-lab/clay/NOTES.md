@@ -48,4 +48,9 @@ Build chain: `tools/tts.py` -> `timing.json` -> `build.mjs` (writes `assets/timi
 - One WebGL scene (one sub-composition, `world`) holds the whole set, so the physical objects persist across beats; captions are a second sub-composition. Not one composition per beat.
 - Title is wrapped in two lines (see 7).
 - `hyperframes check` times out on heavy pages; lint, snapshots and the real render were the gates.
-- Render and audio figures are filled in below after the final render.
+
+## Final render (measured)
+- `out/final.mp4`: 1080x1920, 30 fps, 52.27 s, h264 + aac. The raw `--quality looks` render was 25 MB; it was re-encoded (crf 28, 6 Mbit/s cap) to 6.6 MB for git. Render took about 13 minutes (capture 11.5 min, 648x1152 internal WebGL canvas) with other renders sharing the box.
+- Audio: -17.9 LUFS integrated, -15.9 LUFS short-term max, sample peak -1.6 dB, true peak -1.4 dB. That is about 2 LU quieter than the -16 social target; measured, not heard.
+- Critique rounds: four snapshot rounds (start of every beat plus frames 0, 15, 30, 45) at full size. Found and fixed: cameras far too close and workers filling the frame (pulled back, dolly paths moved off the line of workers), the judge beat blocked by worker 3 (camera moved to the left), worried brows drawn vertical and then angry (fixed to inner-end-up), hand covering worker 1's face, murky backdrop (unlit painted plane), title cropped and sinking into the table, title and caption strip overlapping, certificate text upside down, stamp beat out of frame. A fifth look at the real MP4's 24-frame sheet matched the stills.
+- Still open: see the weakest-part notes above.
