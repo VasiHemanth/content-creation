@@ -1,0 +1,51 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:visible;pointer-events:none}
+.cw{position:absolute;white-space:nowrap;font:700 50px/1 "Space Mono",monospace;text-transform:uppercase;color:#0078bf;mix-blend-mode:multiply;letter-spacing:-1px}
+.hl{position:absolute;background:#ff48b0;mix-blend-mode:multiply}
+</style>
+<div id="root" data-composition-id="captions" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), FS = 50, Y = 1660;
+  var mc = document.createElement("canvas").getContext("2d");
+  Riso.ready("captions", function () { return document.fonts.load("700 50px 'Space Mono'", "Aa").then(function () {
+    mc.font = "700 " + FS + "px 'Space Mono'";
+    var cw = mc.measureText("M").width - 1, gap = cw;
+    var groups = [], cur = [], len = 0;
+    TIMING.words.forEach(function (w) {
+      var l = w.text.length;
+      if (cur.length && (len + 1 + l > 28 || cur.length >= 5)) { groups.push(cur); cur = []; len = 0; }
+      cur.push(w); len += (cur.length > 1 ? 1 : 0) + l;
+      if (/[.?!]$/.test(w.text)) { groups.push(cur); cur = []; len = 0; }
+    });
+    if (cur.length) groups.push(cur);
+    var items = [];
+    groups.forEach(function (g, gi) {
+      var chars = g.reduce(function (a, w) { return a + w.text.length; }, 0) + (g.length - 1), x = (1080 - chars * cw) / 2;
+      var gel = document.createElement("div"); gel.style.cssText = "position:absolute;left:0;top:0;width:1080px;height:1920px;visibility:hidden"; root.appendChild(gel);
+      var rows = [], r = rngOf("cap" + gi);
+      g.forEach(function (w) {
+        var wd = w.text.length * cw;
+        var hl = document.createElement("div"); hl.className = "hl"; hl.style.cssText = "left:" + (x - 10) + "px;top:" + (Y - 8) + "px;width:" + (wd + 20) + "px;height:" + (FS + 22) + "px;opacity:0;transform:rotate(" + ((r() - .5) * 1.6).toFixed(2) + "deg)"; gel.appendChild(hl);
+        var t = document.createElement("div"); t.className = "cw"; t.textContent = w.text; t.style.cssText += ";left:" + (x + 2.5) + "px;top:" + (Y + 3) + "px;opacity:0"; gel.appendChild(t);
+        rows.push({ w: w, t: t, hl: hl }); x += wd + gap;
+      });
+      items.push({ gel: gel, rows: rows, s: g[0].start, e: g[g.length - 1].end });
+    });
+    var tl = gsap.timeline({ paused: true });
+    items.forEach(function (G, gi) {
+      var nx = items[gi + 1], hide = Math.min(G.e + .45, nx ? nx.s - .03 : 999);
+      tl.set(G.gel, { visibility: "visible" }, Math.max(0, G.s - .02));
+      G.rows.forEach(function (R, k) {
+        var ts = Math.max(0, R.w.start - .02), te = k < G.rows.length - 1 ? G.rows[k + 1].w.start - .02 : hide;
+        tl.set(R.t, { opacity: 1 }, ts).set(R.hl, { opacity: 1 }, ts).set(R.hl, { opacity: 0 }, te);
+      });
+      tl.set(G.gel, { visibility: "hidden" }, hide);
+    });
+    window.__timelines["captions"] = tl;
+  }); });
+})();
+</script>
+</template>

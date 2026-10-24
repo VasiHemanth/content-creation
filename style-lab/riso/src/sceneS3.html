@@ -1,0 +1,35 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:transparent}
+</style>
+<div id="root" data-composition-id="S3" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S3, LN = TIMING.lines, D = RisoData, P = RisoPlots, B = P.BOX;
+  var tw = function (l, i) { return LN[l].words[i].start - SC.start; }, te = function (l, i) { return LN[l].words[i].end - SC.start; };
+  var ramp = function (t, a, b) { return Math.max(0, Math.min(1, (t - a) / (b - a))); };
+  var ease = function (p) { return p * p * (3 - 2 * p); };
+  var f1 = function (v) { return v.toFixed(1); }, f2 = function (v) { return v.toFixed(2); };
+  Riso.ready("S3", function () { return Riso.fontsReady().then(function () {
+
+    var b0 = tw(2, 2), EVENTS = [b0, te(2, 13)], JOLTS = []; for (var q = 0; q < 8; q++) JOLTS.push(b0 + q * .13);
+    var all = D.train.xs.map(function () { return 1; });
+    function draw(ctx, t) {
+      P.header(ctx, "b", "NEW DATA", "8 BLUE POINTS THE MODEL NEVER SAW.", "p");
+      P.frame(ctx, B, 1, { x: "INPUT >", y: "OUTPUT" });
+      var blue = D.test.xs.map(function (_, i) { return ramp(t, b0 + i * .13, b0 + i * .13 + .14); });
+      var s0 = tw(2, 10), s1 = te(2, 13), bars = D.test.xs.map(function (_, i) { var a = s0 + (s1 - s0 - .4) * i / 8; return ease(ramp(t, a, a + .4)); });
+      P.scatter(ctx, B, { pink: all, wiggle: 1, blue: blue, blueBars: bars });
+      P.counter(ctx, "p", "TRAIN ERROR", f2(0), 110, 1412, 112);
+      var v = D.err.testWiggle * ease(ramp(t, s0, s1));
+      if (t >= s0) P.counter(ctx, "b", "TEST ERROR", f1(v), 970, 1412, 112, "right");
+    }
+    var sc = Riso.scene(root, { id: "S3", dur: SC.dur, flip: true, events: EVENTS, jolts: JOLTS });
+    var tl = gsap.timeline({ paused: true }), an = { p: 0 };
+    tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { sc.render(tl.time(), draw); } }, 0);
+    window.__timelines["S3"] = tl;
+  }); });
+})();
+</script>
+</template>

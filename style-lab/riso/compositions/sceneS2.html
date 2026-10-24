@@ -1,0 +1,36 @@
+<template>
+<style>
+@font-face{font-family:"Archivo Black";font-weight:400;src:url("assets/fonts/archivo-black-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Space Mono";font-weight:400;src:url("assets/fonts/space-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Space Mono";font-weight:700;src:url("assets/fonts/space-mono-latin-700-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:transparent}
+</style>
+<div id="root" data-composition-id="S2" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S2, LN = TIMING.lines, D = RisoData, P = RisoPlots, B = P.BOX;
+  var tw = function (l, i) { return LN[l].words[i].start - SC.start; }, te = function (l, i) { return LN[l].words[i].end - SC.start; };
+  var ramp = function (t, a, b) { return Math.max(0, Math.min(1, (t - a) / (b - a))); };
+  var ease = function (p) { return p * p * (3 - 2 * p); };
+  var f1 = function (v) { return v.toFixed(1); }, f2 = function (v) { return v.toFixed(2); };
+  Riso.ready("S2", function () { return Riso.fontsReady().then(function () {
+
+    var EVENTS = [tw(1, 9)], JOLTS = [tw(1, 9)];
+    var all = D.train.xs.map(function () { return 1; });
+    function draw(ctx, t) {
+      P.header(ctx, "p", "ZERO ERROR", "ONE CURVE THROUGH ALL 12 POINTS (DEGREE 11).", "b");
+      Riso.ink(ctx, "p", function (c) { Riso.rectTone(c, "p", B.x0 + 4, B.y0 - 8, B.x1 - B.x0 + 8, B.y1 - B.y0 + 16, .11, 10); });
+      P.frame(ctx, B, 1, { x: "INPUT >", y: "OUTPUT" });
+      var w = ease(ramp(t, tw(1, 1), te(1, 8)));
+      P.scatter(ctx, B, { pink: all, wiggle: w });
+      var c0 = ramp(t, tw(1, 9), tw(1, 9) + .15);
+      if (c0 > 0) P.counter(ctx, "p", "TRAIN ERROR", f2(D.err.trainWiggle * (1 - ease(ramp(t, tw(1, 9), tw(1, 9) + .0)))), 110, 1412, 128 * (1 + (1 - c0) * .35));
+    }
+    var sc = Riso.scene(root, { id: "S2", dur: SC.dur, flip: true, events: EVENTS, jolts: JOLTS });
+    var tl = gsap.timeline({ paused: true }), an = { p: 0 };
+    tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { sc.render(tl.time(), draw); } }, 0);
+    window.__timelines["S2"] = tl;
+  }); });
+})();
+</script>
+</template>

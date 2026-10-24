@@ -1,0 +1,37 @@
+<template>
+<style>
+@font-face{font-family:"Archivo Black";font-weight:400;src:url("assets/fonts/archivo-black-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Space Mono";font-weight:400;src:url("assets/fonts/space-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Space Mono";font-weight:700;src:url("assets/fonts/space-mono-latin-700-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:transparent}
+</style>
+<div id="root" data-composition-id="S5" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S5, LN = TIMING.lines, D = RisoData, P = RisoPlots, B = P.BOX;
+  var tw = function (l, i) { return LN[l].words[i].start - SC.start; }, te = function (l, i) { return LN[l].words[i].end - SC.start; };
+  var ramp = function (t, a, b) { return Math.max(0, Math.min(1, (t - a) / (b - a))); };
+  var ease = function (p) { return p * p * (3 - 2 * p); };
+  var f1 = function (v) { return v.toFixed(1); }, f2 = function (v) { return v.toFixed(2); };
+  Riso.ready("S5", function () { return Riso.fontsReady().then(function () {
+
+    var EVENTS = [tw(4, 9)], JOLTS = [];
+    var all = D.train.xs.map(function () { return 1; }), allb = D.test.xs.map(function () { return 1; });
+    function draw(ctx, t) {
+      P.header(ctx, "p", "A SIMPLER LINE", "DEGREE 3. SMOOTH. IT IGNORES THE WIGGLES.", "b");
+      P.frame(ctx, B, 1, { x: "INPUT >", y: "OUTPUT" });
+      var sm = ease(ramp(t, tw(4, 1), te(4, 2) + .5)), a = tw(4, 3), z = te(4, 6);
+      var pb = D.train.xs.map(function (_, i) { var s = a + (z - a - .3) * i / 12; return ease(ramp(t, s, s + .3)); });
+      var a2 = tw(4, 9), z2 = te(4, 14), bb = D.test.xs.map(function (_, i) { var s = a2 + (z2 - a2 - .3) * i / 8; return ease(ramp(t, s, s + .3)); });
+      P.scatter(ctx, B, { pink: all, blue: allb, ghost: .55, simple: sm, pinkBars: pb, blueBars: bb, blueFn: D.simple });
+      if (t >= a) P.counter(ctx, "p", "TRAIN ERROR", f2(D.err.trainSimple * ease(ramp(t, a, z))), 110, 1412, 112);
+      if (t >= a2) P.counter(ctx, "b", "TEST ERROR", f2(D.err.testSimple * ease(ramp(t, a2, z2))), 970, 1412, 112, "right");
+    }
+    var sc = Riso.scene(root, { id: "S5", dur: SC.dur, flip: true, events: EVENTS, jolts: JOLTS });
+    var tl = gsap.timeline({ paused: true }), an = { p: 0 };
+    tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { sc.render(tl.time(), draw); } }, 0);
+    window.__timelines["S5"] = tl;
+  }); });
+})();
+</script>
+</template>

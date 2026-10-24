@@ -1,0 +1,41 @@
+<template>
+<style>
+@font-face{font-family:"Archivo Black";font-weight:400;src:url("assets/fonts/archivo-black-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Space Mono";font-weight:400;src:url("assets/fonts/space-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Space Mono";font-weight:700;src:url("assets/fonts/space-mono-latin-700-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:transparent}
+</style>
+<div id="root" data-composition-id="S1" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S1, LN = TIMING.lines, D = RisoData, P = RisoPlots, B = P.BOX;
+  var tw = function (l, i) { return LN[l].words[i].start - SC.start; }, te = function (l, i) { return LN[l].words[i].end - SC.start; };
+  var ramp = function (t, a, b) { return Math.max(0, Math.min(1, (t - a) / (b - a))); };
+  var ease = function (p) { return p * p * (3 - 2 * p); };
+  var f1 = function (v) { return v.toFixed(1); }, f2 = function (v) { return v.toFixed(2); };
+  Riso.ready("S1", function () { return Riso.fontsReady().then(function () {
+
+    var t0 = -.32, EVENTS = [t0 + 11 * .16 + .1], JOLTS = []; for (var q = 0; q < 12; q++) JOLTS.push(t0 + q * .16);
+    function draw(ctx, t) {
+      P.header(ctx, "p", "TWELVE DOTS", "12 PINK POINTS. EVERY ONE IS A MEASUREMENT.", "b");
+      Riso.ink(ctx, "p", function (c) { Riso.rectTone(c, "p", B.x0 + 4, B.y0 - 8, B.x1 - B.x0 + 8, B.y1 - B.y0 + 16, .11, 10); });
+      P.frame(ctx, B, 1, { x: "INPUT >", y: "OUTPUT" });
+      var pink = D.train.xs.map(function (_, i) { return ramp(t, t0 + i * .16, t0 + i * .16 + .14); });
+      // the pattern behind the dots: a dotted pink guess-line that appears with "a line that predicts"
+      var pr = ramp(t, tw(0, 8), te(0, 10));
+      if (pr > 0) Riso.ink(ctx, "p", function (c) { c.save(); c.beginPath(); c.rect(B.x0, B.y0 - 6, B.x1 - B.x0, B.y1 - B.y0 + 12); c.clip(); c.setLineDash([2, 13]); var pts = []; for (var i = 0; i <= 260 * pr; i++) { var x = i / 260; pts.push([P.mx(B, x), P.my(B, D.trend(x))]); } Riso.poly(c, pts, 6); c.restore(); });
+      // three hollow marks: where would a NEW dot fall?
+      [.27, .58, .83].forEach(function (x, k) {
+        var a = ramp(t, tw(0, 11) + k * .22, tw(0, 11) + k * .22 + .2); if (a <= 0) return;
+        Riso.ink(ctx, "b", function (c) { c.lineWidth = 4; c.setLineDash([6, 8]); c.beginPath(); c.arc(P.mx(B, x), P.my(B, D.trend(x)), 22 * (2 - a), 0, 6.2832); c.stroke(); c.setLineDash([]); Riso.text(c, "?", P.mx(B, x), P.my(B, D.trend(x)) + 13, 34, "Space Mono", "center", 700); });
+      });
+      P.scatter(ctx, B, { pink: pink });
+    }
+    var sc = Riso.scene(root, { id: "S1", dur: SC.dur, flip: false, events: EVENTS, jolts: JOLTS });
+    var tl = gsap.timeline({ paused: true }), an = { p: 0 };
+    tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { sc.render(tl.time(), draw); } }, 0);
+    window.__timelines["S1"] = tl;
+  }); });
+})();
+</script>
+</template>

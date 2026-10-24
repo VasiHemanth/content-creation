@@ -1,0 +1,47 @@
+{
+ "tail": 6.0,
+ "lines": [
+  {
+   "id": "l1",
+   "text": "Here are twelve pink dots. We want a line that predicts where new dots will fall.",
+   "gap_before": 1.1,
+   "sent_gap": 0.35
+  },
+  {
+   "id": "l2",
+   "text": "A wiggly line can pass through every pink dot. Zero error.",
+   "gap_before": 1.5,
+   "sent_gap": 0.3
+  },
+  {
+   "id": "l3",
+   "text": "Now add blue dots the model never saw. The wiggly line misses them badly.",
+   "gap_before": 1.6,
+   "sent_gap": 0.3
+  },
+  {
+   "id": "l4",
+   "text": "It did not learn the pattern. It memorized the noise.",
+   "gap_before": 1.2,
+   "sent_gap": 0.3
+  },
+  {
+   "id": "l5",
+   "text": "A simpler line misses some pink dots. But it lands close to the blue ones.",
+   "gap_before": 1.4,
+   "sent_gap": 0.3
+  },
+  {
+   "id": "l6",
+   "text": "As a model gets more complex, error on the pink dots keeps falling. Error on the blue dots falls, then rises.",
+   "gap_before": 1.4,
+   "sent_gap": 0.4
+  },
+  {
+   "id": "l7",
+   "text": "That gap is overfitting. So judge a model only on data it has not seen.",
+   "gap_before": 1.5,
+   "sent_gap": 0.35
+  }
+ ]
+}

@@ -1,0 +1,35 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:transparent}
+</style>
+<div id="root" data-composition-id="S4" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S4, LN = TIMING.lines, D = RisoData, P = RisoPlots, B = P.BOX;
+  var tw = function (l, i) { return LN[l].words[i].start - SC.start; }, te = function (l, i) { return LN[l].words[i].end - SC.start; };
+  var ramp = function (t, a, b) { return Math.max(0, Math.min(1, (t - a) / (b - a))); };
+  var ease = function (p) { return p * p * (3 - 2 * p); };
+  var f1 = function (v) { return v.toFixed(1); }, f2 = function (v) { return v.toFixed(2); };
+  Riso.ready("S4", function () { return Riso.fontsReady().then(function () {
+
+    var EVENTS = [tw(3, 9)], JOLTS = [tw(3, 9)];
+    var all = D.train.xs.map(function () { return 1; }), allb = D.test.xs.map(function () { return 1; });
+    function draw(ctx, t) {
+      P.header(ctx, "p", "MEMORIZED", "YELLOW = THE PATTERN.  PINK GAPS = THE NOISE.", "b");
+      P.frame(ctx, B, 1, { x: "INPUT >", y: "OUTPUT" });
+      var tr = ease(ramp(t, tw(3, 3), te(3, 5)));
+      var res = D.train.xs.map(function (_, i) { return ease(ramp(t, tw(3, 7) + i * .07, tw(3, 7) + i * .07 + .25)); });
+      P.scatter(ctx, B, { pink: all, wiggle: 1, trend: tr, blue: allb, dim: true });
+      // the noise: pink bars from the trend to each dot, drawn to scale
+      Riso.ink(ctx, "p", function (c) { c.save(); c.beginPath(); c.rect(B.x0, B.y0 - 6, B.x1 - B.x0, B.y1 - B.y0 + 12); c.clip(); c.lineWidth = 8; for (var i = 0; i < 12; i++) { if (res[i] <= 0) continue; var x = P.mx(B, D.train.xs[i]), y0 = P.my(B, D.trend(D.train.xs[i])), y1 = P.my(B, D.train.ys[i]); c.beginPath(); c.moveTo(x - 20, y0); c.lineTo(x + 20, y0); c.stroke(); c.beginPath(); c.moveTo(x, y0); c.lineTo(x, y0 + (y1 - y0) * res[i]); c.stroke(); } c.restore(); });
+      P.stamp(ctx, "p", "NOISE", 780, 590, 76, -.1, ramp(t, tw(3, 9), tw(3, 9) + .2));
+    }
+    var sc = Riso.scene(root, { id: "S4", dur: SC.dur, flip: true, events: EVENTS, jolts: JOLTS });
+    var tl = gsap.timeline({ paused: true }), an = { p: 0 };
+    tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () { sc.render(tl.time(), draw); } }, 0);
+    window.__timelines["S4"] = tl;
+  }); });
+})();
+</script>
+</template>
