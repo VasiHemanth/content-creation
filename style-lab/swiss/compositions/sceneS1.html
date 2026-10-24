@@ -1,0 +1,33 @@
+<template>
+<style>
+@font-face{font-family:"Inter Tight";font-weight:500;src:url("assets/fonts/inter-tight-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:800;src:url("assets/fonts/inter-tight-latin-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden}
+</style>
+<div id="root" data-composition-id="sceneS1" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S1, W = TIMING.lines[0].words, L = function (g) { return g - SC.start; };
+  G.ready("sceneS1", function () { return G.fontsReady().then(function () {
+    var svg = G.root(root); G.bgRect(svg);
+    // 1,000,000 set huge, flush left, clipped by the frame on purpose
+    var big = G.text(svg, "1,000,000", { x: 60, y: 520, size: G.fit("1,000,000", 1090, 800), weight: 800 });
+    G.label(svg, "names, sorted", 60, 600);
+    var fld = G.field(root, 720);
+    var lab = G.label(svg, "1 square = 1,000 names  /  1,000 squares", 60, 1380, G.C.k, 24);
+    var tgt = G.label(svg, "red square = the name to find", 60, 1440, G.C.r, 24);
+    var grid = G.gridLines(svg);
+    var tl = gsap.timeline({ paused: true });
+    var tR = L(W[4].start);                         // "Find one"
+    tl.set(lab, { opacity: 0 }, 0).set(lab, { opacity: 1 }, L(W[2].start));
+    tl.set(tgt, { opacity: 0 }, 0).set(tgt, { opacity: 1 }, tR);
+    G.flash(tl, grid, .4, .24); G.flash(tl, grid, 2.2, .2);
+    var an = { p: 0 };
+    tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () {
+      var t = tl.time(); fld.draw(function (i) { return i === G.TARGET && t >= tR ? G.C.r : G.C.k; });
+    } }, 0);
+    window.__timelines["sceneS1"] = tl;
+  }); });
+})();
+</script>
+</template>

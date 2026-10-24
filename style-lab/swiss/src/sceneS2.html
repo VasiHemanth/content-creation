@@ -1,0 +1,33 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden}
+</style>
+<div id="root" data-composition-id="sceneS2" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S2, W = TIMING.lines[1].words, L = function (g) { return g - SC.start; };
+  G.ready("sceneS2", function () { return G.fontsReady().then(function () {
+    var svg = G.root(root); G.bgRect(svg);
+    G.label(svg, "check in order", 60, 300, G.C.k, 28);
+    var num = G.text(svg, "0", { x: 60, y: 600, size: 330, weight: 800, fill: G.C.k });
+    var fld = G.field(root, 720);
+    G.label(svg, "1 square = 1,000 names", 60, 1380, G.C.k, 24);
+    var up = G.text(svg, "UP TO 1,000,000 CHECKS", { x: 60, y: 1480, size: 64, weight: 800, fill: G.C.r });
+    var grid = G.gridLines(svg);
+    var tl = gsap.timeline({ paused: true });
+    var s0 = L(W[3].start), s1 = L(W[10].end) + .1;      // scan from "order," to the end of "checks."
+    tl.set(up, { opacity: 0 }, 0).set(up, { opacity: 1 }, L(W[9].start));
+    G.flash(tl, grid, .1, .2);
+    var an = { p: 0 };
+    tl.to(an, { p: 1, duration: SC.dur, ease: "none", onUpdate: function () {
+      var t = tl.time(), p = Math.max(0, Math.min(1, (t - s0) / (s1 - s0))), n = Math.min(1000, Math.floor(p * 1000 + (t >= s0 ? 1 : 0)));
+      if (t < s0) n = 0;
+      fld.draw(function (i) { if (i === n - 1) return G.C.r; if (i < n - 1) return G.C.b; return i === G.TARGET ? G.C.r : G.C.k; });
+      num.textContent = G.fmt(n);
+    } }, 0);
+    window.__timelines["sceneS2"] = tl;
+  }); });
+})();
+</script>
+</template>

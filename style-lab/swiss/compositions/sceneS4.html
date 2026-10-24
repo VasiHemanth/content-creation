@@ -1,0 +1,33 @@
+<template>
+<style>
+@font-face{font-family:"Inter Tight";font-weight:500;src:url("assets/fonts/inter-tight-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:800;src:url("assets/fonts/inter-tight-latin-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden}
+</style>
+<div id="root" data-composition-id="sceneS4" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S4, L = function (g) { return g - SC.start; };
+  G.ready("sceneS4", function () { return G.fontsReady().then(function () {
+    var svg = G.root(root); G.bgRect(svg); var grid;
+    var tl = gsap.timeline({ paused: true });
+    var W = TIMING.lines[3].words, Y0 = 740, H = 200, T = 7;
+    G.text(svg, "OPEN THE", { x: 60, y: 380, size: 120, weight: 800 }); G.text(svg, "MIDDLE", { x: 60, y: 500, size: 120, weight: 800 });
+    G.label(svg, "of what is left", 60, 580, G.C.r, 28);
+    var B = G.bars(svg, 20, 48, 60, Y0, H, T, G.C.k, G.C.r), grp = B.g;
+    var rule = G.rect(svg, 536, Y0 - 40, 8, H + 80, G.C.r);
+    var sub = G.text(svg, "500,000 NAMES", { x: 60, y: 1180, size: 80, weight: 800 }); G.label(svg, "1 bar = 25,000 names", 60, 1240, G.C.k, 24);
+    var left = G.label(svg, "before", 60, Y0 - 60, G.C.k, 24), right = G.label(svg, "after", 552, Y0 - 60, G.C.k, 24);
+    tl.set([rule, left, right], { opacity: 0 }, 0).set([rule, left, right], { opacity: 1 }, L(W[2].start));
+    var tH = L(W[7].start);
+    for (var k = 10; k < 20; k++) tl.set(B.bars[k], { opacity: 0 }, tH + (k - 10) / 10 * 0.3);
+    tl.set([rule, left, right], { opacity: 0 }, tH + .3);
+    tl.fromTo(grp, { scaleX: 1, svgOrigin: "60 0" }, { scaleX: 2, svgOrigin: "60 0", duration: .3, ease: "power3.inOut" }, tH + .3);
+    tl.set(sub, { textContent: "250,000 NAMES" }, tH + .6);
+    grid = G.gridLines(svg); G.flash(tl, grid, 1.4, .2);
+
+    window.__timelines["sceneS4"] = tl;
+  }); });
+})();
+</script>
+</template>

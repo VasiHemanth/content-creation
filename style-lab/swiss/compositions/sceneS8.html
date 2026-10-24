@@ -1,0 +1,48 @@
+<template>
+<style>
+@font-face{font-family:"Inter Tight";font-weight:500;src:url("assets/fonts/inter-tight-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:800;src:url("assets/fonts/inter-tight-latin-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden}
+</style>
+<div id="root" data-composition-id="sceneS8" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S8, L = function (g) { return g - SC.start; };
+  G.ready("sceneS8", function () { return G.fontsReady().then(function () {
+    var svg = G.root(root); G.bgRect(svg); var grid;
+    var tl = gsap.timeline({ paused: true });
+    var W = TIMING.lines[7].words, X0 = 60, X1 = 1020, YA = 1160, YT = 400, NMAX = 2000000;
+    var xOf = function (n) { return X0 + (X1 - X0) * n / NMAX; }, yOf = function (v) { return YA - (YA - YT) * v / NMAX; };
+    G.label(svg, "checks needed", 60, 320, G.C.k, 24);
+    G.rect(svg, X0, YA, 960, 4, G.C.k); G.rect(svg, X0, YT, 4, YA - YT + 4, G.C.k);
+    [0, 1000000, 2000000].forEach(function (n) { G.rect(svg, xOf(n) - (n === NMAX ? 4 : n === 0 ? 0 : 2), YA, 4, 20, G.C.k); G.text(svg, G.fmt(n), { x: xOf(n), y: YA + 60, size: 24, weight: 500, anchor: n === 0 ? "start" : n === NMAX ? "end" : "middle" }); });
+    G.label(svg, "list size, names", 60, YA + 120, G.C.k, 24);
+    // real values: in order = n checks; halving = ceil(log2 n) checks, both on the same linear scale
+    var ord = "", hal = "", N = 240;
+    for (var i = 0; i <= N; i++) { var n = Math.max(1, Math.round(NMAX * i / N)); ord += (i ? " L" : "M") + xOf(n) + " " + yOf(n); hal += (i ? " L" : "M") + xOf(n) + " " + yOf(Math.ceil(Math.log2(n))); }
+    var pOrd = G.svg("path", { d: ord, stroke: G.C.k, "stroke-width": 8, fill: "none", "stroke-linecap": "butt" }, svg);
+    var pHal = G.svg("path", { d: hal, stroke: G.C.r, "stroke-width": 8, fill: "none", "stroke-linecap": "butt" }, svg);
+    var Lo = pOrd.getTotalLength(), Lh = pHal.getTotalLength();
+    pOrd.setAttribute("stroke-dasharray", Lo); pOrd.setAttribute("stroke-dashoffset", Lo); pHal.setAttribute("stroke-dasharray", Lh); pHal.setAttribute("stroke-dashoffset", Lh);
+    var lh = G.label(svg, "halving: 21 checks at 2,000,000", G.x(3), YA - 40, G.C.r, 24), lo = G.label(svg, "in order: 2,000,000 checks", G.x(3), YT - 20, G.C.k, 24);
+    tl.set(lh, { opacity: 0 }, 0).set(lo, { opacity: 0 }, 0);
+    var a = L(W[1].start), b = L(W[4].start);
+    tl.to(pHal, { attr: { "stroke-dashoffset": 0 }, duration: .9, ease: "none" }, a).set(lh, { opacity: 1 }, a + .9);
+    tl.to(pOrd, { attr: { "stroke-dashoffset": 0 }, duration: 1.4, ease: "none" }, b).set(lo, { opacity: 1 }, b + 1.4);
+    // title, then a probe walks along the axis reading both values
+    var title = G.text(svg, "LOG N", { x: 60, y: 1560, size: 260, weight: 800 }); var tT = L(W[8].end) + .5;
+    tl.set(title, { opacity: 0 }, 0).set(title, { opacity: 1 }, tT);
+    var probe = G.rect(svg, X0 - 2, YT, 4, YA - YT, G.C.b), pdot = G.circle(svg, X0, YA, 10, G.C.k), r1 = G.text(svg, "N = 1", { x: G.x(1), y: 540, size: 56, weight: 800 }), r2 = G.text(svg, "IN ORDER 1", { x: G.x(1), y: 600, size: 32, weight: 500 }), r3 = G.text(svg, "HALVING 0", { x: G.x(1), y: 640, size: 32, weight: 800, fill: G.C.r });
+    var p0 = tT + .3, p1 = SC.dur - .4, pr = { p: 0 };
+    tl.set([probe, pdot, r1, r2, r3], { opacity: 0 }, 0).set([probe, pdot, r1, r2, r3], { opacity: 1 }, p0);
+    tl.to(pr, { p: 1, duration: p1 - p0, ease: "none", onUpdate: function () {
+      var q = Math.max(1, Math.round(NMAX * pr.p)); probe.setAttribute("x", xOf(q) - 2); probe.setAttribute("y", yOf(q)); probe.setAttribute("height", Math.max(0, YA - 70 - yOf(q))); pdot.setAttribute("cx", xOf(q)); pdot.setAttribute("cy", YA);
+      r1.textContent = "N = " + G.fmt(q); r2.textContent = "IN ORDER " + G.fmt(q); r3.textContent = "HALVING " + Math.ceil(Math.log2(q));
+    } }, p0);
+    grid = G.gridLines(svg); G.flash(tl, grid, .1, .2); G.flash(tl, grid, tT, .2);
+
+    window.__timelines["sceneS8"] = tl;
+  }); });
+})();
+</script>
+</template>

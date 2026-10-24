@@ -1,0 +1,31 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden}
+</style>
+<div id="root" data-composition-id="sceneS7" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S7, L = function (g) { return g - SC.start; };
+  G.ready("sceneS7", function () { return G.fontsReady().then(function () {
+    var svg = G.root(root); G.bgRect(svg); var grid;
+    var tl = gsap.timeline({ paused: true });
+    var W = TIMING.lines[6].words, CX = 89, Y1 = 332, P = 40;
+    for (var k = 0; k < 20; k++) G.circle(svg, CX, Y1 + k * P, 14, G.C.k);
+    [5, 10, 15, 20].forEach(function (n) { G.label(svg, String(n), G.x(1), Y1 + (n - 1) * P + 8, G.C.k, 24); });
+    G.text(svg, "DOUBLE", { x: G.x(3), y: 400, size: 120, weight: 800 }); var h2 = G.text(svg, "THE LIST", { x: G.x(3), y: 520, size: 120, weight: 800 });
+    var hd = svg.childNodes[svg.childNodes.length - 2];
+    tl.set([hd, h2], { opacity: 0 }, 0).set(hd, { opacity: 1 }, L(W[0].start)).set(h2, { opacity: 1 }, L(W[2].start));
+    var big = G.text(svg, "2,000,000", { x: G.x(3), y: 760, size: G.fit("2,000,000", G.span(9), 800), weight: 800 }), nm = G.label(svg, "names", G.x(3), 820, G.C.k, 28);
+    tl.set([big, nm], { opacity: 0 }, 0).set([big, nm], { opacity: 1 }, L(W[4].start));
+    var dot = G.circle(svg, CX, Y1 + 20 * P, 14, G.C.r), cap = G.label(svg, "2,000,000 names", G.x(0), 1200, G.C.r, 24);
+    var plus = G.text(svg, "+1", { x: G.x(3), y: 1100, size: 300, weight: 800, fill: G.C.r }), chk = G.label(svg, "check", G.x(3), 1160, G.C.r, 28);
+    var t1 = L(W[11].start);
+    tl.set([dot, cap, plus, chk], { opacity: 0 }, 0).set([dot, cap], { opacity: 1 }, t1).set([plus, chk], { opacity: 1 }, t1 + .1);
+    grid = G.gridLines(svg); G.flash(tl, grid, .1, .2);
+
+    window.__timelines["sceneS7"] = tl;
+  }); });
+})();
+</script>
+</template>

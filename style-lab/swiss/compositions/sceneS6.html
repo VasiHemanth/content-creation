@@ -1,0 +1,40 @@
+<template>
+<style>
+@font-face{font-family:"Inter Tight";font-weight:500;src:url("assets/fonts/inter-tight-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Inter Tight";font-weight:800;src:url("assets/fonts/inter-tight-latin-800-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden}
+</style>
+<div id="root" data-composition-id="sceneS6" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S6, L = function (g) { return g - SC.start; };
+  G.ready("sceneS6", function () { return G.fontsReady().then(function () {
+    var svg = G.root(root); G.bgRect(svg); var grid;
+    var tl = gsap.timeline({ paused: true });
+    var W = TIMING.lines[5].words, CX = 89, Y1 = 332, P = 40;
+    var circles = [];
+    for (var k = 0; k < 20; k++) { var c = G.circle(svg, CX, Y1 + k * P, 14, G.C.k); circles.push(c); }
+    [5, 10, 15, 20].forEach(function (n) { G.label(svg, String(n), G.x(1), Y1 + (n - 1) * P + 8, G.C.k, 24); });
+    G.label(svg, "checks", G.x(3), 300, G.C.k, 28);
+    var ts = L(W[0].start);
+    for (k = 0; k < 20; k++) { tl.set(circles[k], { opacity: 0 }, 0).set(circles[k], { opacity: 1 }, snap(ts + k * 0.075)); }
+    function snap(t) { return Math.round(t * 30) / 30; }
+    var two = G.text(svg, "2", { x: G.x(3), y: 700, size: 240, weight: 800 }), tw = G.tw("2", 240, 800, 0);
+    var pw = G.text(svg, "20", { x: G.x(5), y: 580, size: 120, weight: 800 });
+    var eq = G.text(svg, "= 1,048,576", { x: G.x(3), y: 860, size: G.fit("= 1,048,576", G.span(9), 800), weight: 800, fill: G.C.r });
+    var sm = G.label(svg, "just over a million", G.x(3), 920, G.C.k, 24);
+    tl.set([two, pw], { opacity: 0 }, 0).set(two, { opacity: 1 }, L(W[5].start)).set(pw, { opacity: 1 }, L(W[10].start));
+    tl.set([eq, sm], { opacity: 0 }, 0).set([eq, sm], { opacity: 1 }, L(W[12].start));
+    // the same scale: one million checks in order against twenty checks by halving
+    var cs = L(W[14].start), bar = G.rect(svg, 60, 1260, 960, 20, G.C.k), sl = G.rect(svg, 60, 1380, 2, 20, G.C.r);
+    var l1 = G.label(svg, "in order: 1,000,000 checks", 60, 1240, G.C.k, 24), l2 = G.label(svg, "halving: 20 checks, same scale", 60, 1360, G.C.r, 24), l3 = G.label(svg, "drawn 2 px wide. true width 0.02 px", 60, 1440, G.C.k, 24);
+    tl.set([bar, l1, sl, l2, l3], { opacity: 0 }, 0).set([l1], { opacity: 1 }, cs);
+    tl.fromTo(bar, { opacity: 1, attr: { width: 0 } }, { attr: { width: 960 }, duration: .45, ease: "none" }, cs);
+    tl.set([sl, l2, l3], { opacity: 1 }, cs + .6);
+    grid = G.gridLines(svg); G.flash(tl, grid, .1, .2);
+
+    window.__timelines["sceneS6"] = tl;
+  }); });
+})();
+</script>
+</template>

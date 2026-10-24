@@ -1,0 +1,36 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden}
+</style>
+<div id="root" data-composition-id="sceneS3" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S3, L = function (g) { return g - SC.start; };
+  G.ready("sceneS3", function () { return G.fontsReady().then(function () {
+    var svg = G.root(root); G.bgRect(svg); var grid;
+    var tl = gsap.timeline({ paused: true });
+    var W = TIMING.lines[2].words, Y0 = 740, H = 200, T = 27;
+    G.text(svg, "OPEN THE", { x: 60, y: 380, size: 120, weight: 800 }); var h2 = G.text(svg, "MIDDLE.", { x: 60, y: 500, size: 120, weight: 800 });
+    var hd = svg.lastChild, hd1 = svg.childNodes[svg.childNodes.length - 2];
+    tl.set([hd1, hd], { opacity: 0 }, 0).set(hd1, { opacity: 1 }, L(W[1].start)).set(hd, { opacity: 1 }, L(W[3].start));
+    var B = G.bars(svg, 40, 24, 60, Y0, H, T, G.C.k, G.C.r), grp = B.g;
+    var rule = G.rect(svg, 536, Y0 - 40, 8, H + 80, G.C.r), mid = G.label(svg, "middle", 552, Y0 - 60, G.C.r, 24);
+    var bef = G.label(svg, "before", 60, Y0 - 60, G.C.k, 24), aft = G.label(svg, "after", 552, Y0 - 60 - 0, G.C.k, 24);
+    var sub = G.text(svg, "1,000,000 NAMES", { x: 60, y: 1180, size: 80, weight: 800 }), unit = G.label(svg, "1 bar = 25,000 names", 60, 1240, G.C.k, 24);
+    tl.set([rule, mid], { opacity: 0 }, 0).set([rule, mid], { opacity: 1 }, L(W[3].start));
+    tl.set(bef, { opacity: 0 }, 0).set(bef, { opacity: 1 }, L(W[7].start)).set(aft, { opacity: 0 }, 0).set(aft, { opacity: 1 }, L(W[10].start));
+    tl.set(mid, { opacity: 0 }, L(W[7].start));
+    // half is thrown away: left bars drop out from the rule outwards (0.3 s), then the kept half zooms to full width (0.3 s). 0.6 s in total.
+    var tH = L(W[12].start);
+    for (var k = 19; k >= 0; k--) tl.set(B.bars[k], { opacity: 0 }, tH + (19 - k) / 20 * 0.3);
+    tl.set([rule, bef, aft], { opacity: 0 }, tH + .3);
+    tl.fromTo(grp, { scaleX: 1, svgOrigin: "1020 0" }, { scaleX: 2, svgOrigin: "1020 0", duration: .3, ease: "power3.inOut" }, tH + .3);
+    tl.set(sub, { textContent: "500,000 NAMES" }, tH + .6);
+    grid = G.gridLines(svg); G.flash(tl, grid, .1, .2);
+
+    window.__timelines["sceneS3"] = tl;
+  }); });
+})();
+</script>
+</template>

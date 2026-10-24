@@ -1,0 +1,32 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden}
+</style>
+<div id="root" data-composition-id="sceneS5" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.S5, L = function (g) { return g - SC.start; };
+  G.ready("sceneS5", function () { return G.fontsReady().then(function () {
+    var svg = G.root(root); G.bgRect(svg); var grid;
+    var tl = gsap.timeline({ paused: true });
+    var W = TIMING.lines[4].words;
+    G.text(svg, "EACH CHECK", { x: 60, y: 280, size: 64, weight: 800 }); var h2 = G.text(svg, "HALVES THE LIST", { x: 60, y: 360, size: 64, weight: 800 });
+    var hs = svg.childNodes[svg.childNodes.length - 2]; tl.set([hs, h2], { opacity: 0 }, 0).set(hs, { opacity: 1 }, L(W[0].start)).set(h2, { opacity: 1 }, L(W[2].start));
+    // the type scale: each line is exactly half as wide as the one above it (960, 480, 240, 120 px)
+    var rows = [["1,000,000", 960, 40, 560, W[5].start], ["500,000", 480, 20, 800, W[7].start], ["250,000", 240, 10, 980, W[10].start], ["125,000", 120, 5, 1120, W[13].end + .12]];
+    rows.forEach(function (r, i) {
+      var size = G.fit(r[0], r[1], 800), txt = G.text(svg, r[0], { x: 60, y: r[3], size: size, weight: 800 }), bars = G.bars(svg, r[2], 24, 60, r[3] + 20, 20, -1, G.C.b, G.C.b);
+      var t0 = L(r[4]);
+      tl.set(txt, { opacity: 0 }, 0).set(txt, { opacity: 1 }, t0);
+      tl.fromTo(bars.g, { opacity: 1, scaleX: 0, svgOrigin: "60 0" }, { scaleX: 1, svgOrigin: "60 0", duration: .3, ease: "none" }, t0);
+      if (i) { var d = G.text(svg, "÷2", { x: G.x(9), y: r[3], size: 56, weight: 800, fill: G.C.r }); tl.set(d, { opacity: 0 }, 0).set(d, { opacity: 1 }, t0); }
+    });
+    G.label(svg, "1 bar = 25,000 names", 60, 1260, G.C.k, 24);
+    grid = G.gridLines(svg); G.flash(tl, grid, .1, .2); G.flash(tl, grid, L(W[13].end) + .1, .2);
+
+    window.__timelines["sceneS5"] = tl;
+  }); });
+})();
+</script>
+</template>

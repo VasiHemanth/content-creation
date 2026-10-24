@@ -1,0 +1,47 @@
+{
+ "tail": 4.5,
+ "lines": [
+  {
+   "id": "l1",
+   "text": "One million names, sorted. Find one.",
+   "gap_before": 1.1
+  },
+  {
+   "id": "l2",
+   "text": "Check them in order, and you might need one million checks.",
+   "gap_before": 1.7
+  },
+  {
+   "id": "l3",
+   "text": "Instead, open the middle. Is the name before it or after it? Throw away half.",
+   "gap_before": 1.6,
+   "sent_gap": 0.55
+  },
+  {
+   "id": "l4",
+   "text": "Open the middle of what is left. Throw away half again.",
+   "gap_before": 1.5
+  },
+  {
+   "id": "l5",
+   "text": "Each check halves the list. One million. Five hundred thousand. Two hundred fifty thousand.",
+   "gap_before": 1.5,
+   "sent_gap": 0.7
+  },
+  {
+   "id": "l6",
+   "text": "Twenty checks is enough, because two to the power of twenty is just over a million.",
+   "gap_before": 1.7
+  },
+  {
+   "id": "l7",
+   "text": "Double the list to two million, and you need just one more check.",
+   "gap_before": 1.5
+  },
+  {
+   "id": "l8",
+   "text": "The work grows slowly, while the list grows fast.",
+   "gap_before": 1.5
+  }
+ ]
+}
