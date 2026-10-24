@@ -1,0 +1,98 @@
+<template>
+<style>
+@font-face{font-family:"Libre Caslon Text";font-weight:400;font-style:normal;src:url("assets/fonts/libre-caslon-text-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Libre Caslon Text";font-weight:400;font-style:italic;src:url("assets/fonts/libre-caslon-text-latin-400-italic.woff2") format("woff2")}
+@font-face{font-family:"Libre Caslon Text";font-weight:700;font-style:normal;src:url("assets/fonts/libre-caslon-text-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Playfair Display";font-weight:700;font-style:normal;src:url("assets/fonts/playfair-display-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Playfair Display";font-weight:900;font-style:normal;src:url("assets/fonts/playfair-display-latin-900-normal.woff2") format("woff2")}
+@font-face{font-family:"UnifrakturCook";font-weight:700;font-style:normal;src:url("assets/fonts/unifrakturcook-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Special Elite";font-weight:400;font-style:normal;src:url("assets/fonts/special-elite-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Alfa Slab One";font-weight:400;font-style:normal;src:url("assets/fonts/alfa-slab-one-latin-400-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#12110e}
+.sw{background:linear-gradient(#1b1a17,#1b1a17) no-repeat 0 0/0% 100%}
+</style>
+<div id="root" data-composition-id="sceneA" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.A, L1 = TIMING.lines[0].words, L2 = TIMING.lines[1].words, L3 = TIMING.lines[2].words;
+  var P = Press, C = P.C;
+  P.ready("sceneA", function () { return P.fontsReady().then(function () {
+    var R = P.buildFront(root), sh = R.sh;
+    return sh.texReady.then(function () {
+      var tl = gsap.timeline({ paused: true });
+      var OV = P.view(.70, 750, 1050, 540, 820);
+      // ---- the stack of papers spins toward the camera and slams flat ----
+      P.spinIn(tl, sh, 0, OV, { dur: .85, s0: .6, rot0: 700 });
+      P.jolt(tl, sh.world, .82, 3);
+      tl.set(sh.shadow, { opacity: 0 }, 0).set(sh.shadow, { opacity: .5 }, .8);
+      // ---- hidden until set ----
+      var kick = R.kicker, kr = R.kickRule, heads = R.head;
+      tl.set(kick, { opacity: 0 }, 0).set(kr, { scaleX: 0, transformOrigin: "0 50%" }, 0);
+      var typers = heads.map(function (h) { return P.typer(h, h.textContent); });
+      typers.forEach(function (t) { t.set(0); });
+      var deckTy = P.typer(R.deck, R.deck.textContent); deckTy.set(0);
+      // ---- "Extra, extra.": the red kicker slams in ----
+      var k0 = .9;
+      tl.fromTo(kick, { opacity: 1, scale: 2.2, y: -14 }, { opacity: 1, scale: 1, y: 0, duration: .14, ease: "power4.in" }, k0);
+      tl.set(kick, { opacity: 0 }, 0);
+      P.jolt(tl, sh.world, k0 + .14, 3);
+      [L1[0].start, L1[1].start].forEach(function (tt) { tl.fromTo(kick, { scale: 1.16 }, { scale: 1, duration: .12, ease: "power4.in" }, tt); });
+      // copy desk slip pasted where the headline will go
+      var slip = P.div("position:absolute;left:0;width:1500px;text-align:center;top:" + (R.y0 + 130) + "px;opacity:0;", sh.over);
+      slip.innerHTML = "<div style='display:inline-block;position:relative;background:#f3eddc;border:3px solid #1b1a17;padding:22px 50px 16px;font:400 78px/1.1 " + P.F.type + ";letter-spacing:6px;box-shadow:4px 6px 0 rgba(27,26,23,.35)'>HOLD FOR HEADLINE<div style='position:absolute;left:50%;top:-14px;width:80px;height:26px;margin-left:-40px;background:rgba(190,170,120,.6);transform:rotate(-3deg)'></div></div>";
+      gsap.set(slip, { rotation: -2.5 });
+      tl.set(slip, { opacity: 0 }, 0).fromTo(slip, { opacity: 1, scale: 1.3 }, { opacity: 1, scale: 1, duration: .14, ease: "power4.in" }, 1.1).set(slip, { opacity: 0 }, L1[2].start + .15);
+      tl.set(slip, { opacity: 0 }, 0);
+      tl.fromTo(kr, { scaleX: 0 }, { scaleX: 1, duration: .5, ease: "power3.out" }, L1[1].start);
+      // ---- camera: overview -> masthead -> headline -> back ----
+      P.camTo(tl, sh, 1.4, 1.3, P.view(.84, 750, 330, 540, 640), "power2.inOut");
+      P.camTo(tl, sh, L1[2].start - .35, .9, P.view(.76, 750, 560, 540, 720), "power2.inOut");
+      // ---- headline set like linotype: line by line, each line drops in ----
+      var times = [L1[2].start + .2, L1[7].start - .6, L1[12].start - .55], durs = [.95, 1.0, .6];
+      heads.forEach(function (h, i) {
+        P.typeTween(tl, typers[i], times[i], durs[i]);
+        tl.fromTo(h, { y: -10 }, { y: 0, duration: .18, ease: P.E.steps(3) }, times[i]);
+      });
+      P.typeTween(tl, deckTy, L1[12].end + .15, 1.5);
+      P.camTo(tl, sh, L1[12].end + .7, 1.1, P.view(.72, 750, 1000, 540, 830), "power2.inOut");
+      // ---- "A language model is trained to pick a likely next word": a black bar wipes the sentence word by word ----
+      var sw = R.sw, ink = sh.ink, over = sh.over;
+      var pos = sw.map(function (s) { return P.pos(s, ink); });
+      var sentMid = { x: COLXMID(), y: (pos[0].y + pos[10].y) / 2 };
+      function COLXMID() { return 50 + 2 * 286 + 128; }
+      P.camTo(tl, sh, L2[0].end + .1, 1.3, P.view(2.4, sentMid.x, sentMid.y - 20, 540, 760), "power3.inOut");
+      sw.forEach(function (s, k) {
+        var w = L2[k + 1], d = Math.max(.12, w.end - w.start);
+        tl.fromTo(s, { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: d, ease: "none" }, w.start);
+        tl.set(s, { color: C.paper }, w.start + d * .35);
+      });
+      // ---- typewriter tags stuck on the words ----
+      function tag(txt, rot) {
+        var d = P.div("position:absolute;left:0;top:0;opacity:0;transform-origin:50% 100%", over);
+        d.innerHTML = "<div style='position:relative;background:#f3eddc;border:1.5px solid #1b1a17;padding:3px 12px 1px;font:400 25px/1.1 " + P.F.type + ";color:#1b1a17;letter-spacing:1px;box-shadow:2px 3px 0 rgba(27,26,23,.35)'>" + txt + "<div style='position:absolute;left:50%;top:-9px;width:34px;height:14px;margin-left:-17px;background:rgba(190,170,120,.55);transform:rotate(-4deg)'></div></div>";
+        gsap.set(d, { rotation: rot }); return d;
+      }
+      var tLikely = tag("likely", -3), tTrue = tag("true", 2.5);
+      var pl = pos[9], pt = P.pos(R.tw, ink);
+      gsap.set(tLikely, { x: pl.x - 6, y: pl.y - 46 }); gsap.set(tTrue, { x: pt.x - 4, y: pt.y - 46 });
+      var tLk = L2[10].start;
+      tl.fromTo(tLikely, { opacity: 0, scale: 1.7 }, { opacity: 1, scale: 1, duration: .16, ease: "power4.in" }, tLk);
+      P.jolt(tl, sh.world, tLk + .16, 2);
+      // ---- "Likely is not the same as true.": a second tag, and a rule between them ----
+      P.camTo(tl, sh, L3[0].start - .5, 1.0, P.view(1.9, sentMid.x, (pl.y + pt.y) / 2, 540, 760), "power2.inOut");
+      var svg = P.svg("svg", { width: 1500, height: 2100, viewBox: "0 0 1500 2100", style: "position:absolute;left:0;top:0;overflow:visible" }, over);
+      var a = { x: pl.x + 30, y: pl.y - 8 }, b = { x: pt.x + 14, y: pt.y - 12 };
+      var line = P.svg("path", { d: "M" + a.x + " " + a.y + " L" + (a.x - 26) + " " + ((a.y + b.y) / 2) + " L" + (b.x + 22) + " " + ((a.y + b.y) / 2 + 4) + " L" + b.x + " " + b.y, stroke: C.red, "stroke-width": 2.2, fill: "none", "stroke-linecap": "round" }, svg);
+      var ln = line.getTotalLength(); line.setAttribute("stroke-dasharray", ln); line.setAttribute("stroke-dashoffset", ln);
+      var lab = P.t(over, "NOT THE SAME", { x: a.x - 60, y: (a.y + b.y) / 2 - 24, font: "400 15px " + P.F.type, css: "letter-spacing:3px;opacity:0;background:#e9e2cf;padding:0 4px" });
+      tl.to(line, { attr: { "stroke-dashoffset": 0 }, duration: .8, ease: "none" }, L3[2].start);
+      var lt = P.typer(lab, "NOT THE SAME"); lt.set(0); tl.set(lab, { opacity: 1 }, L3[2].start); P.typeTween(tl, lt, L3[2].start, .7);
+      var tTr = L3[6].start - .05;
+      tl.fromTo(tTrue, { opacity: 0, scale: 1.7 }, { opacity: 1, scale: 1, duration: .16, ease: "power4.in" }, tTr);
+      P.jolt(tl, sh.world, tTr + .16, 2);
+      window.__timelines["sceneA"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

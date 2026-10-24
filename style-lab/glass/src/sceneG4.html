@@ -1,0 +1,31 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#050507}
+</style>
+<div id="root" data-composition-id="G4" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.G4, W = TIMING.lines[3].words, L = function (g) { return g - SC.start; };
+  Glass.ready("G4", function () { return Glass.fontsReady().then(function () { Glass.compute(); return Glass.assets([3]); }).then(function (A) {
+    var S = Glass.stage(root, A, { key: "G4", pane: 3, floodIn: Glass.SEAM[2], floodOut: Glass.SEAM[3], prev: [1, 2] }), win = S.win, tl = gsap.timeline({ paused: true });
+    Glass.cast(win, 2, .6);
+    Glass.common(tl, S, SC, { s0: 1.1, s1: 1.03 });
+    tl.to(win.castG, { opacity: .08, duration: 1.0, ease: "power2.inOut" }, L(W[4].start));
+    var name = function (n) { return win.cells.filter(function (K) { return K.c.name === n; })[0]; };
+    function on(K, t, op) { tl.fromTo(K.lit, { opacity: 0 }, { keyframes: [{ opacity: op, duration: .14 }, { opacity: op * .7, duration: .14 }, { opacity: op, duration: .35 }] }, t); }
+    function draw(list, t) { list.forEach(function (el, i) { if (el.tagName === "circle") tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: .25 }, t + .45); else tl.fromTo(el, { "stroke-dashoffset": 1 }, { "stroke-dashoffset": 0, duration: .65, ease: "power2.out" }, t + .1 * i); }); }
+    // "parts.": the supporting sections glow softly
+    win.cells.filter(function (K) { return K.c.cls === "sup" || K.c.cls === "bg"; }).forEach(function (K, i) { on(K, L(W[6].start) + (Math.abs(K.c.cx - 380) + Math.abs(K.c.cy - 480)) / 1200 * .9, K.c.cls === "sup" ? .55 : .3); });
+    // "An eye, a nose, a mouth.": each part lights in turn with its own glyph in lead
+    ["eyeL", "eyeR"].forEach(function (n) { on(name(n), L(W[8].start), 1); });
+    draw(win.parts.eyeL.concat(win.parts.eyeR), L(W[8].start)); draw(win.parts.browL.concat(win.parts.browR), L(W[8].start) + .25);
+    on(name("nose"), L(W[10].start), 1); draw(win.parts.nose, L(W[10].start));
+    on(name("mouth"), L(W[12].start), 1); draw(win.parts.mouth, L(W[12].start));
+    tl.fromTo(win.bloom, { opacity: 0 }, { opacity: .6, duration: 1.6, ease: "power2.out" }, L(W[6].start));
+    S.rays.rays.forEach(function (R, i) { tl.fromTo(R.el, { opacity: 0 }, { opacity: .4, duration: 1.4, ease: "power2.out" }, .9 + i * .07); });
+    window.__timelines["G4"] = tl;
+  }); });
+})();
+</script>
+</template>

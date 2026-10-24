@@ -1,0 +1,55 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#12110e}
+</style>
+<div id="root" data-composition-id="sceneD" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.D, W = TIMING.lines[5].words, P = Press, C = P.C;
+  var L = function (g) { return g - SC.start; };
+  P.ready("sceneD", function () { return P.fontsReady().then(function () {
+    var R = P.buildLookup(root), sh = R.sh, over = sh.over, ink = sh.ink;
+    return sh.texReady.then(function () {
+      var tl = gsap.timeline({ paused: true }), OV = P.view(.70, 750, sh.PH / 2, 540, 820);
+      P.camSet(tl, sh, 0, OV);
+      // the page turns: it swings in from the left edge with a shade that clears as it lands
+      var shade = P.div("position:absolute;left:0;top:0;width:1080px;height:1920px;background:linear-gradient(90deg,#000,rgba(0,0,0,.2));opacity:0;pointer-events:none;z-index:5", sh.cam);
+      tl.set(sh.cam, { transformPerspective: 1500, transformOrigin: "0% 50%" }, 0);
+      tl.fromTo(sh.cam, { rotationY: -96 }, { rotationY: 0, duration: .85, ease: "power3.out" }, 0);
+      tl.fromTo(shade, { opacity: .85 }, { opacity: 0, duration: .85, ease: "power2.out" }, 0);
+      P.jolt(tl, sh.world, .86, 3);
+      // robot, shelf, magnifier
+      tl.set([R.robot, R.shelf, R.mag], { opacity: 0 }, 0);
+      var tr = L(W[0].start) - .05;
+      tl.fromTo(R.robot, { opacity: 1, scale: 1.3 }, { opacity: 1, scale: 1, duration: .16, ease: "power4.in" }, tr);
+      tl.fromTo(R.shelf, { opacity: 1, scale: 1.3 }, { opacity: 1, scale: 1, duration: .16, ease: "power4.in" }, tr + .6);
+      tl.set([R.robot, R.shelf], { opacity: 0 }, 0);
+      P.jolt(tl, sh.world, tr + .16, 2); P.jolt(tl, sh.world, tr + .76, 2);
+      P.camTo(tl, sh, tr - .2, 1.1, P.view(1.0, 750, 640, 540, 780), "power2.inOut");
+      // "look things up": the magnifier travels along the shelf
+      var tm = L(W[7].start) - .1;
+      tl.fromTo(R.mag, { opacity: 1, x: -420, y: 120, rotation: -22 }, { opacity: 1, x: 0, y: 0, rotation: 0, duration: .8, ease: "back.out(1.4)" }, tm);
+      tl.set(R.mag, { opacity: 0 }, 0);
+      tl.to(R.mag, { x: 90, y: 30, rotation: 6, duration: 1.1, ease: "sine.inOut" }, tm + .9);
+      // footnote numerals pop, thin lines run down to their source boxes
+      tl.set(R.fns, { opacity: 0 }, 0); tl.set(R.src, { opacity: 0 }, 0);
+      var ts = L(W[10].start);
+      P.camTo(tl, sh, ts - .3, 1.1, P.view(.78, 750, 900, 540, 820), "power2.inOut");
+      var svg = P.svg("svg", { width: 1500, height: 2100, viewBox: "0 0 1500 2100", style: "position:absolute;left:0;top:0;overflow:visible" }, over);
+      R.fns.forEach(function (f, i) {
+        var a = P.pos(f, ink), b = P.pos(R.src[i], ink), ax = a.x + 6, ay = a.y + 20, bx = b.x + b.w / 2, by = b.y;
+        var path = P.svg("path", { d: "M" + ax + " " + ay + " L" + ax + " " + (ay + 26 + i * 8) + " L" + bx + " " + (ay + 26 + i * 8) + " L" + bx + " " + by, stroke: C.ink, "stroke-width": 1.6, fill: "none" }, svg);
+        var ln = path.getTotalLength(); path.setAttribute("stroke-dasharray", ln); path.setAttribute("stroke-dashoffset", ln);
+        var t = ts + i * .42;
+        tl.fromTo(f, { opacity: 1, scale: 2.4 }, { opacity: 1, scale: 1, duration: .14, ease: "power4.in" }, t); tl.set(f, { opacity: 0 }, 0);
+        tl.to(path, { attr: { "stroke-dashoffset": 0 }, duration: .5, ease: "power1.inOut" }, t + .12);
+        tl.fromTo(R.src[i], { opacity: 1, scale: 1.12, y: -14 }, { opacity: 1, scale: 1, y: 0, duration: .14, ease: "power4.in" }, t + .55); tl.set(R.src[i], { opacity: 0 }, 0);
+        P.jolt(tl, sh.world, t + .69, 1.5);
+      });
+      window.__timelines["sceneD"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

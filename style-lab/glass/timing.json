@@ -1,0 +1,518 @@
+{
+ "voice": "af_heart",
+ "speed": 0.86,
+ "duration": 48.962,
+ "lines": [
+  {
+   "id": "l1",
+   "text": "How does a network recognize a face? Think of light passing through windows.",
+   "start": 0.8,
+   "end": 5.396,
+   "words": [
+    {
+     "text": "How",
+     "start": 0.8,
+     "end": 0.99
+    },
+    {
+     "text": "does",
+     "start": 0.99,
+     "end": 1.214
+    },
+    {
+     "text": "a",
+     "start": 1.214,
+     "end": 1.338
+    },
+    {
+     "text": "network",
+     "start": 1.338,
+     "end": 1.752
+    },
+    {
+     "text": "recognize",
+     "start": 1.752,
+     "end": 2.413
+    },
+    {
+     "text": "a",
+     "start": 2.413,
+     "end": 2.536
+    },
+    {
+     "text": "face?",
+     "start": 2.536,
+     "end": 2.962
+    },
+    {
+     "text": "Think",
+     "start": 3.362,
+     "end": 3.632
+    },
+    {
+     "text": "of",
+     "start": 3.632,
+     "end": 3.797
+    },
+    {
+     "text": "light",
+     "start": 3.797,
+     "end": 4.067
+    },
+    {
+     "text": "passing",
+     "start": 4.067,
+     "end": 4.503
+    },
+    {
+     "text": "through",
+     "start": 4.503,
+     "end": 4.844
+    },
+    {
+     "text": "windows.",
+     "start": 4.844,
+     "end": 5.396
+    }
+   ]
+  },
+  {
+   "id": "l2",
+   "text": "The first pane of glass only notices edges. Places where light meets dark.",
+   "start": 6.896,
+   "end": 11.995,
+   "words": [
+    {
+     "text": "The",
+     "start": 6.896,
+     "end": 7.123
+    },
+    {
+     "text": "first",
+     "start": 7.123,
+     "end": 7.431
+    },
+    {
+     "text": "pane",
+     "start": 7.431,
+     "end": 7.805
+    },
+    {
+     "text": "of",
+     "start": 7.805,
+     "end": 7.992
+    },
+    {
+     "text": "glass",
+     "start": 7.992,
+     "end": 8.299
+    },
+    {
+     "text": "only",
+     "start": 8.299,
+     "end": 8.673
+    },
+    {
+     "text": "notices",
+     "start": 8.673,
+     "end": 9.274
+    },
+    {
+     "text": "edges.",
+     "start": 9.274,
+     "end": 9.821
+    },
+    {
+     "text": "Places",
+     "start": 10.221,
+     "end": 10.649
+    },
+    {
+     "text": "where",
+     "start": 10.649,
+     "end": 11.039
+    },
+    {
+     "text": "light",
+     "start": 11.039,
+     "end": 11.328
+    },
+    {
+     "text": "meets",
+     "start": 11.328,
+     "end": 11.618
+    },
+    {
+     "text": "dark.",
+     "start": 11.618,
+     "end": 11.995
+    }
+   ]
+  },
+  {
+   "id": "l3",
+   "text": "The second pane combines edges into corners, curves and simple textures.",
+   "start": 13.495,
+   "end": 18.445,
+   "words": [
+    {
+     "text": "The",
+     "start": 13.495,
+     "end": 13.719
+    },
+    {
+     "text": "second",
+     "start": 13.719,
+     "end": 14.167
+    },
+    {
+     "text": "pane",
+     "start": 14.167,
+     "end": 14.535
+    },
+    {
+     "text": "combines",
+     "start": 14.535,
+     "end": 15.167
+    },
+    {
+     "text": "edges",
+     "start": 15.167,
+     "end": 15.575
+    },
+    {
+     "text": "into",
+     "start": 15.575,
+     "end": 15.944
+    },
+    {
+     "text": "corners,",
+     "start": 15.944,
+     "end": 16.563
+    },
+    {
+     "text": "curves",
+     "start": 16.563,
+     "end": 17.01
+    },
+    {
+     "text": "and",
+     "start": 17.01,
+     "end": 17.234
+    },
+    {
+     "text": "simple",
+     "start": 17.234,
+     "end": 17.682
+    },
+    {
+     "text": "textures.",
+     "start": 17.682,
+     "end": 18.445
+    }
+   ]
+  },
+  {
+   "id": "l4",
+   "text": "The third pane combines those into parts. An eye, a nose, a mouth.",
+   "start": 19.945,
+   "end": 24.424,
+   "words": [
+    {
+     "text": "The",
+     "start": 19.945,
+     "end": 20.143
+    },
+    {
+     "text": "third",
+     "start": 20.143,
+     "end": 20.41
+    },
+    {
+     "text": "pane",
+     "start": 20.41,
+     "end": 20.736
+    },
+    {
+     "text": "combines",
+     "start": 20.736,
+     "end": 21.294
+    },
+    {
+     "text": "those",
+     "start": 21.294,
+     "end": 21.654
+    },
+    {
+     "text": "into",
+     "start": 21.654,
+     "end": 21.979
+    },
+    {
+     "text": "parts.",
+     "start": 21.979,
+     "end": 22.363
+    },
+    {
+     "text": "An",
+     "start": 22.763,
+     "end": 22.936
+    },
+    {
+     "text": "eye,",
+     "start": 22.936,
+     "end": 23.271
+    },
+    {
+     "text": "a",
+     "start": 23.271,
+     "end": 23.407
+    },
+    {
+     "text": "nose,",
+     "start": 23.407,
+     "end": 23.879
+    },
+    {
+     "text": "a",
+     "start": 23.879,
+     "end": 24.015
+    },
+    {
+     "text": "mouth.",
+     "start": 24.015,
+     "end": 24.424
+    }
+   ]
+  },
+  {
+   "id": "l5",
+   "text": "The last pane combines parts into a whole. A face.",
+   "start": 25.924,
+   "end": 29.673,
+   "words": [
+    {
+     "text": "The",
+     "start": 25.924,
+     "end": 26.114
+    },
+    {
+     "text": "last",
+     "start": 26.114,
+     "end": 26.337
+    },
+    {
+     "text": "pane",
+     "start": 26.337,
+     "end": 26.65
+    },
+    {
+     "text": "combines",
+     "start": 26.65,
+     "end": 27.186
+    },
+    {
+     "text": "parts",
+     "start": 27.186,
+     "end": 27.443
+    },
+    {
+     "text": "into",
+     "start": 27.443,
+     "end": 27.756
+    },
+    {
+     "text": "a",
+     "start": 27.756,
+     "end": 27.879
+    },
+    {
+     "text": "whole.",
+     "start": 27.879,
+     "end": 28.337
+    },
+    {
+     "text": "A",
+     "start": 28.837,
+     "end": 29.024
+    },
+    {
+     "text": "face.",
+     "start": 29.024,
+     "end": 29.673
+    }
+   ]
+  },
+  {
+   "id": "l6",
+   "text": "Nobody told it to look for eyes. Training pushed each pane toward whatever helped it get the answer right.",
+   "start": 31.073,
+   "end": 37.51,
+   "words": [
+    {
+     "text": "Nobody",
+     "start": 31.073,
+     "end": 31.595
+    },
+    {
+     "text": "told",
+     "start": 31.595,
+     "end": 31.843
+    },
+    {
+     "text": "it",
+     "start": 31.843,
+     "end": 32.017
+    },
+    {
+     "text": "to",
+     "start": 32.017,
+     "end": 32.191
+    },
+    {
+     "text": "look",
+     "start": 32.191,
+     "end": 32.439
+    },
+    {
+     "text": "for",
+     "start": 32.439,
+     "end": 32.65
+    },
+    {
+     "text": "eyes.",
+     "start": 32.65,
+     "end": 33.023
+    },
+    {
+     "text": "Training",
+     "start": 33.423,
+     "end": 33.886
+    },
+    {
+     "text": "pushed",
+     "start": 33.886,
+     "end": 34.28
+    },
+    {
+     "text": "each",
+     "start": 34.28,
+     "end": 34.511
+    },
+    {
+     "text": "pane",
+     "start": 34.511,
+     "end": 34.835
+    },
+    {
+     "text": "toward",
+     "start": 34.835,
+     "end": 35.229
+    },
+    {
+     "text": "whatever",
+     "start": 35.229,
+     "end": 35.785
+    },
+    {
+     "text": "helped",
+     "start": 35.785,
+     "end": 36.178
+    },
+    {
+     "text": "it",
+     "start": 36.178,
+     "end": 36.34
+    },
+    {
+     "text": "get",
+     "start": 36.34,
+     "end": 36.537
+    },
+    {
+     "text": "the",
+     "start": 36.537,
+     "end": 36.734
+    },
+    {
+     "text": "answer",
+     "start": 36.734,
+     "end": 37.128
+    },
+    {
+     "text": "right.",
+     "start": 37.128,
+     "end": 37.51
+    }
+   ]
+  },
+  {
+   "id": "l7",
+   "text": "In many image networks, the layers end up working roughly like this.",
+   "start": 38.81,
+   "end": 42.962,
+   "words": [
+    {
+     "text": "In",
+     "start": 38.81,
+     "end": 38.982
+    },
+    {
+     "text": "many",
+     "start": 38.982,
+     "end": 39.327
+    },
+    {
+     "text": "image",
+     "start": 39.327,
+     "end": 39.808
+    },
+    {
+     "text": "networks,",
+     "start": 39.808,
+     "end": 40.424
+    },
+    {
+     "text": "the",
+     "start": 40.424,
+     "end": 40.633
+    },
+    {
+     "text": "layers",
+     "start": 40.633,
+     "end": 40.954
+    },
+    {
+     "text": "end",
+     "start": 40.954,
+     "end": 41.163
+    },
+    {
+     "text": "up",
+     "start": 41.163,
+     "end": 41.336
+    },
+    {
+     "text": "working",
+     "start": 41.336,
+     "end": 41.791
+    },
+    {
+     "text": "roughly",
+     "start": 41.791,
+     "end": 42.247
+    },
+    {
+     "text": "like",
+     "start": 42.247,
+     "end": 42.592
+    },
+    {
+     "text": "this.",
+     "start": 42.592,
+     "end": 42.962
+    }
+   ]
+  }
+ ]
+}

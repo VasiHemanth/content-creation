@@ -1,0 +1,49 @@
+<template>
+<style>
+@font-face{font-family:"Cinzel";font-weight:600;src:url("assets/fonts/cinzel-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Cinzel";font-weight:700;src:url("assets/fonts/cinzel-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Cinzel";font-weight:800;src:url("assets/fonts/cinzel-latin-800-normal.woff2") format("woff2")}
+@font-face{font-family:"Cormorant Garamond";font-weight:600;src:url("assets/fonts/cormorant-garamond-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Cormorant Garamond";font-weight:700;src:url("assets/fonts/cormorant-garamond-latin-700-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:visible;pointer-events:none}
+.cw{position:absolute;white-space:nowrap;font:700 58px/1 "Cormorant Garamond",serif;color:#efe4cc;letter-spacing:.4px;opacity:0}
+</style>
+<div id="root" data-composition-id="captions" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), FS = 58, Y = 1648;
+  Glass.ready("captions", function () { return Glass.fontsReady().then(function () {
+    // a dark stone plaque with a thin brass edge (legible, deliberately not glass)
+    var pl = Glass.div("position:absolute;left:40px;top:" + (Y - 52) + "px;width:1000px;height:150px;background:linear-gradient(#141210,#0a0908);border:2px solid #7a6540;border-radius:6px;box-shadow:0 0 0 5px #0a0908,0 10px 30px rgba(0,0,0,.6)", root);
+    Glass.div("position:absolute;left:0;top:0;width:100%;height:100%;border-radius:6px;box-shadow:inset 0 0 28px rgba(0,0,0,.8)", pl);
+    var m = document.createElement("canvas").getContext("2d"); m.font = "700 " + FS + "px 'Cormorant Garamond'";
+    var sp = m.measureText(" ").width + 6, wdt = function (t) { return m.measureText(t).width + 1; };
+    var groups = [], cur = [], curW = 0;
+    TIMING.words.forEach(function (w) {
+      var ww = wdt(w.text);
+      if (cur.length && (curW + sp + ww > 900 || cur.length >= 5)) { groups.push(cur); cur = []; curW = 0; }
+      cur.push(w); curW += (cur.length > 1 ? sp : 0) + ww;
+      if (/[.?!]$/.test(w.text)) { groups.push(cur); cur = []; curW = 0; }
+    });
+    if (cur.length) groups.push(cur);
+    var items = [];
+    groups.forEach(function (g) {
+      var tot = g.reduce(function (a, w) { return a + wdt(w.text); }, 0) + sp * (g.length - 1), x = (1080 - tot) / 2, gel = Glass.div("position:absolute;left:0;top:0;width:1080px;height:1920px;visibility:hidden", root), rows = [];
+      g.forEach(function (w) { var t = Glass.div("left:" + x + "px;top:" + (Y + 10) + "px", gel, "cw"); t.textContent = w.text; rows.push({ w: w, t: t }); x += wdt(w.text) + sp; });
+      items.push({ gel: gel, rows: rows, s: g[0].start, e: g[g.length - 1].end });
+    });
+    var tl = gsap.timeline({ paused: true });
+    items.forEach(function (G, gi) {
+      var nx = items[gi + 1], hide = Math.min(G.e + .45, nx ? nx.s - .03 : 999);
+      tl.set(G.gel, { visibility: "visible" }, Math.max(0, G.s - .05));
+      G.rows.forEach(function (R, k) {
+        var ts = Math.max(0, R.w.start - .03), te = k < G.rows.length - 1 ? G.rows[k + 1].w.start - .03 : Math.min(G.e + .15, hide);
+        tl.set(R.t, { opacity: 1, color: "#ffd98a" }, ts).set(R.t, { opacity: 1, color: "#efe4cc" }, te);
+      });
+      tl.set(G.gel, { visibility: "hidden" }, hide);
+    });
+    window.__timelines["captions"] = tl;
+  }); });
+})();
+</script>
+</template>

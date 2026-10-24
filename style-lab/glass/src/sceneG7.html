@@ -1,0 +1,64 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#050507}
+.title{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font:800 70px/1 Cinzel,serif;letter-spacing:7px;color:#0d0b09;white-space:nowrap}
+</style>
+<div id="root" data-composition-id="G7" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.G7, W = TIMING.lines[6].words, L = function (g) { return g - SC.start; };
+  Glass.ready("G7", function () { return Glass.fontsReady().then(function () { Glass.compute(); return Glass.assets([1, 2, 3, 4]); }).then(function (A) {
+    var nv = Glass.nave(root, A, { poolOp: 0 }), cam = nv.cam, tl = gsap.timeline({ paused: true });
+    var fi = Glass.flood(root, Glass.SEAM[5]); fi.style.opacity = 1;
+    // the procession: four windows along a wall, receding in perspective
+    var wall = Glass.div("position:absolute;left:165px;top:300px;width:3000px;height:1100px;transform-origin:0% 50%;transform:perspective(1500px) rotateY(48deg)", cam), wins = [], SCL = .58;
+    for (var i = 0; i < 4; i++) {
+      var w = Glass.window(wall, { key: "G7" + i, pane: i + 1, A: A, x: 0 + i * 600, y: 120, lit0: true, bloom: .5 });
+      gsap.set(w.box, { scale: SCL, transformOrigin: "0% 0%" }); gsap.set(w.lit, { opacity: .25 });
+      wins.push(w);
+    }
+    // pools of each window on the floor, shrinking toward the far end (own perspective plane, screen-blended)
+    var pools = [];
+    [[150, 1290, .38], [330, 1280, .31], [490, 1270, .25], [620, 1262, .2]].forEach(function (p, i) {
+      var pd = Glass.div("position:absolute;left:" + p[0] + "px;top:" + p[1] + "px;width:760px;height:960px;transform-origin:0 0;transform:scale(" + p[2] + ") perspective(520px) rotateX(72deg);mix-blend-mode:screen;filter:blur(5px);opacity:0", cam);
+      var sv = Glass.svg("svg", { width: 760, height: 960, viewBox: "0 0 760 960", style: "overflow:visible" }, pd), u = Glass.svg("use", {}, sv); u.setAttribute("href", "#" + wins[i].litId); pools.push(pd);
+    });
+    var rays = Glass.rays(cam, { seed: 7, n: 7, top: 980 });
+    // carved title: a stone slab with engraved capitals
+    var slab = Glass.div("position:absolute;left:90px;top:1350px;width:900px;height:170px;background:url(" + A.stone + ");background-size:540px 960px;border:3px solid #0b0a09;box-shadow:0 12px 30px rgba(0,0,0,.8),inset 0 0 40px rgba(0,0,0,.7);opacity:0", cam);
+    var tx = Glass.div("", slab, "title"); tx.textContent = "LAYER BY LAYER"; tx.style.textShadow = "1.5px 1.5px 0 rgba(255,236,205,.30),-2px -2px 3px rgba(0,0,0,.95)"; tx.style.clipPath = "inset(0 100% 0 0)";
+    var chisel = Glass.div("position:absolute;left:0;top:18px;width:6px;height:134px;background:linear-gradient(rgba(255,214,140,0),#ffe2a0,rgba(255,214,140,0));filter:blur(3px);opacity:0", slab);
+    var fo = null;
+    var S = { cam: cam, fi: fi, fo: fo, rays: rays, nave: nv };
+    Glass.common(tl, S, SC, { s0: 1.5, s1: 1.0, out: false });
+    // pull back from the first window to the whole procession
+    tl.fromTo(cam, { x: 200 }, { x: 0, duration: 2.8, ease: "power3.out" }, 0);
+    // the light flows window to window: each lights in turn as the line names the layers
+    var beats = [L(W[2].start), L(W[5].start), L(W[6].start) + .15, L(W[9].start)];
+    wins.forEach(function (w, i) {
+      tl.to(w.lit, { opacity: 1, duration: .8, ease: "power2.out" }, beats[i]);
+      tl.fromTo(w.bloom, { opacity: .3 }, { opacity: .85, duration: .5, ease: "power2.out", yoyo: true, repeat: 1 }, beats[i]);
+      tl.fromTo(pools[i], { opacity: 0 }, { opacity: .6, duration: 1.0, ease: "power2.out" }, beats[i]);
+    });
+    // beams carrying the colour from one window to the next (a bright pulse travels along each)
+    var bx = [[340, 745], [520, 745], [650, 745]];
+    wins.slice(0, 3).forEach(function (w, i) {
+      var tint = [Glass.C.cobalt, Glass.C.emerald, Glass.C.ruby][i];
+      var bm = Glass.div("position:absolute;left:" + (330 + i * 150) + "px;top:640px;width:" + (210 - i * 28) + "px;height:70px;background:linear-gradient(90deg," + tint + "00," + tint + "cc," + tint + "00);filter:blur(14px);mix-blend-mode:screen;opacity:0", cam);
+      tl.fromTo(bm, { opacity: 0, x: -50 }, { opacity: .9, x: 60, duration: .9, ease: "sine.inOut" }, beats[i] + .25);
+      tl.to(bm, { opacity: 0, duration: .4 }, beats[i] + 1.1);
+    });
+    rays.rays.forEach(function (R, i) { tl.fromTo(R.el, { opacity: 0 }, { opacity: .38, duration: 1.8, ease: "power2.out" }, beats[1] + i * .08); });
+    // "like this.": everything brightens, then the title is carved into the stone
+    var tc = L(W[11].start) + .4;
+    wins.forEach(function (w) { tl.to(w.bloom, { opacity: .8, duration: 1.2, ease: "power2.inOut" }, tc); });
+    tl.fromTo(slab, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .6, ease: "power2.out" }, tc);
+    tl.fromTo(tx, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 1.6, ease: "power1.inOut" }, tc + .5);
+    tl.fromTo(chisel, { opacity: 0, x: 60 }, { keyframes: [{ opacity: 1, x: 120, duration: .1 }, { x: 790, opacity: 1, duration: 1.45, ease: "power1.inOut" }, { x: 840, opacity: 0, duration: .15 }] }, tc + .5);
+    tl.fromTo(cam, { scale: 1.0 }, { scale: 1.035, duration: SC.dur - (tc + 2.2), ease: "sine.inOut", immediateRender: false }, tc + 2.2);
+    window.__timelines["G7"] = tl;
+  }); });
+})();
+</script>
+</template>

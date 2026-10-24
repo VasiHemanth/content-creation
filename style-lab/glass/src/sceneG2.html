@@ -1,0 +1,34 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#050507}
+</style>
+<div id="root" data-composition-id="G2" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.G2, W = TIMING.lines[1].words, L = function (g) { return g - SC.start; };
+  Glass.ready("G2", function () { return Glass.fontsReady().then(function () { Glass.compute(); return Glass.assets([1]); }).then(function (A) {
+    var S = Glass.stage(root, A, { key: "G2", pane: 1, back: true, floodIn: Glass.SEAM[0], floodOut: Glass.SEAM[1], prev: [] });
+    var win = S.win, tl = gsap.timeline({ paused: true });
+    Glass.common(tl, S, SC, { s0: 1.12, s1: 1.03 });
+    // the projected face is seen faintly through the dark glass, bent by the hammered surface
+    tl.fromTo(win.backG, { opacity: 0 }, { opacity: .8, duration: .9, ease: "power1.inOut" }, L(W[4].start));
+    tl.to(win.backG, { opacity: 0, duration: .6, ease: "power1.in" }, L(W[7].start) + .55);
+    // light meets dark: the edge cells light by direction (horizontal edges ruby, vertical cobalt, diagonal amber)
+    var by = function (cls, f) { return win.cells.filter(function (K) { return K.c.cls === cls && K.lit; }).sort(function (a, b) { return f(a.c) - f(b.c); }); };
+    var t0 = L(W[7].start) + .05, groups = [["h", function (c) { return c.cy; }], ["v", function (c) { return c.cx; }], ["d", function (c) { return c.cx + c.cy; }]];
+    groups.forEach(function (gp, gi) {
+      var arr = by(gp[0], gp[1]), ts = t0 + gi * .62, n = arr.length;
+      arr.forEach(function (K, i) {
+        var t = ts + .52 * i / n;
+        tl.fromTo(K.lit, { opacity: 0 }, { keyframes: [{ opacity: 1.0, duration: .1 }, { opacity: .72, duration: .12 }, { opacity: 1, duration: .25 }] }, t);
+      });
+    });
+    tl.fromTo(win.bloom, { opacity: 0 }, { opacity: .7, duration: 1.4, ease: "power2.out" }, t0);
+    S.rays.rays.forEach(function (R, i) { tl.fromTo(R.el, { opacity: 0 }, { opacity: .42, duration: 1.6, ease: "power2.out" }, t0 + .4 + i * .08); });
+    tl.fromTo(S.nave.pool, { opacity: 0 }, { opacity: .8, duration: 1.4, ease: "power2.out" }, t0);
+    window.__timelines["G2"] = tl;
+  }); });
+})();
+</script>
+</template>

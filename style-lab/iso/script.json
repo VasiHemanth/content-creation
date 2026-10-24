@@ -1,0 +1,51 @@
+{
+ "tail": 3.4,
+ "lines": [
+  {
+   "id": "l1",
+   "text": "A thousand people open the same page at once. All of them ask the database.",
+   "gap_before": 0.5,
+   "sent_gap": 0.2
+  },
+  {
+   "id": "l2",
+   "text": "The database does the same work a thousand times.",
+   "gap_before": 0.6
+  },
+  {
+   "id": "l3",
+   "text": "Put a cache in front. A cache is a small, fast store of recent answers.",
+   "gap_before": 0.7,
+   "sent_gap": 0.2
+  },
+  {
+   "id": "l4",
+   "text": "The first request misses. The cache asks the database, and keeps a copy.",
+   "gap_before": 0.8,
+   "sent_gap": 0.3
+  },
+  {
+   "id": "l5",
+   "text": "The next requests hit. The cache answers right away. The database never hears about them.",
+   "gap_before": 0.8,
+   "sent_gap": 0.3
+  },
+  {
+   "id": "l6",
+   "text": "If nine in ten requests hit the cache, the database sees one tenth of the load.",
+   "gap_before": 0.8
+  },
+  {
+   "id": "l7",
+   "text": "The catch: copies go stale. So each copy gets a time limit. When it runs out, the cache fetches a fresh one.",
+   "gap_before": 0.8,
+   "sent_gap": 0.3
+  },
+  {
+   "id": "l8",
+   "text": "Fast reads, a quiet database, answers that are a little old. That is the trade.",
+   "gap_before": 0.8,
+   "sent_gap": 0.3
+  }
+ ]
+}

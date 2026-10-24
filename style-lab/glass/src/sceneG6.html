@@ -1,0 +1,53 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#050507}
+.plate{position:absolute;display:flex;align-items:center;justify-content:center;font:600 27px/1 Cinzel,serif;letter-spacing:3px;color:#c9bca5;background:linear-gradient(#1b1815,#0e0c0a);border:2px solid #4a3f30;border-radius:4px;box-shadow:0 6px 14px rgba(0,0,0,.7)}
+</style>
+<div id="root" data-composition-id="G6" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.G6, W = TIMING.lines[5].words, L = function (g) { return g - SC.start; };
+  Glass.ready("G6", function () { return Glass.fontsReady().then(function () { Glass.compute(); return Glass.assets([1, 2, 3, 4]); }).then(function (A) {
+    var nv = Glass.nave(root, A, { poolOp: .7 }), cam = nv.cam, tl = gsap.timeline({ paused: true });
+    Glass.staticPool(nv.poolSvg, [1, 2, 3, 4], "G6");
+    var fi = Glass.flood(root, Glass.SEAM[4]); fi.style.opacity = 1; var fo = Glass.flood(root, Glass.SEAM[5]);
+    var pos = [[-80, 90, "EDGES"], [400, 90, "CORNERS AND CURVES"], [-80, 590, "PARTS"], [400, 590, "A FACE"]], wins = [], SCL = .44;
+    pos.forEach(function (p, i) {
+      var w = Glass.window(cam, { key: "G6" + i, pane: i + 1, A: A, x: p[0], y: p[1], lit0: true, bloom: .5 });
+      gsap.set(w.box, { scale: SCL, transformOrigin: "50% 50%" });
+      var pw = 330, pl = Glass.div("left:" + (p[0] + 380 - pw / 2) + "px;top:" + (p[1] + 480 + 218) + "px;width:" + pw + "px;height:44px", cam, "plate"); pl.textContent = p[2]; pl.style.fontSize = (p[2].length > 12 ? 20 : 27) + "px";
+      if (w.face) w.face.forEach(function (el) { el.setAttribute("stroke-dashoffset", 0); el.setAttribute("opacity", 1); });
+      wins.push({ w: w, plate: pl });
+    });
+    var S = { cam: cam, fi: fi, fo: fo, rays: Glass.rays(cam, { seed: 6, n: 6 }), nave: nv };
+    Glass.common(tl, S, SC, { s0: 1.1, s1: 1.0 });
+    S.rays.rays.forEach(function (R) { tl.fromTo(R.el, { opacity: .25 }, { opacity: .4, duration: 2, ease: "sine.inOut" }, 0); });
+    // "Nobody told it to look for eyes." : the parts pane steps forward, its eye glass flares
+    var p3 = wins[2].w, dim = [wins[0].w, wins[1].w, wins[3].w];
+    tl.to(p3.box, { scale: SCL * 1.16, duration: .6, ease: "power2.out" }, L(W[2].start));
+    dim.forEach(function (d) { tl.to(d.box, { opacity: .35, duration: .5 }, L(W[2].start)); });
+    p3.cells.filter(function (K) { return K.c.name === "eyeL" || K.c.name === "eyeR"; }).forEach(function (K) { tl.fromTo(K.lit, { opacity: 1 }, { keyframes: [{ opacity: .35, duration: .1 }, { opacity: 1, duration: .15 }, { opacity: .5, duration: .15 }, { opacity: 1, duration: .3 }] }, L(W[6].start)); });
+    tl.to(p3.bloom, { opacity: .9, duration: .3 }, L(W[6].start)).to(p3.bloom, { opacity: .5, duration: 1 }, L(W[6].start) + .5);
+    // "Training pushed each pane...": every pane wobbles and re-colours, then settles
+    var t0 = L(W[7].start) - .1, tEnd = L(W[10].end) + .05;
+    tl.to(p3.box, { scale: SCL, duration: .5, ease: "power2.inOut" }, t0 - .2);
+    dim.forEach(function (d) { tl.to(d.box, { opacity: 1, duration: .4 }, t0 - .2); });
+    wins.forEach(function (ww, i) {
+      var r = rngOf("train" + i), t = t0 + i * .12, hues = [0, 60 + r() * 40, -50 - r() * 30, 100 + r() * 40, -80 + r() * 30, 40 * (r() - .5)], steps = hues.length, span = (tEnd - t0) / steps;
+      var svgEl = ww.w.svg;
+      for (var k = 0; k < steps; k++) {
+        var ts = t + k * span * .98;
+        tl.fromTo(svgEl, { filter: "hue-rotate(" + (k ? hues[k - 1] : 0) + "deg)" }, { filter: "hue-rotate(" + hues[k] + "deg)", duration: span * .5, ease: "power2.inOut" }, ts);
+        tl.fromTo(ww.w.box, { rotation: (k ? ((k % 2 ? 1 : -1) * 2.2 * (r() + .4)) : 0) }, { rotation: ((k % 2 ? -1 : 1) * 2.2 * (r() + .4)), duration: span, ease: "sine.inOut" }, ts);
+        tl.fromTo(ww.w.bloom, { opacity: .5 }, { opacity: .75, duration: span * .5, ease: "sine.inOut", yoyo: true, repeat: 1 }, ts);
+      }
+      // settle (spring) when the line says "right."
+      tl.to(svgEl, { filter: "hue-rotate(0deg)", duration: .5, ease: "power2.out" }, tEnd);
+      tl.to(ww.w.box, { rotation: 0, scale: SCL, duration: .7, ease: "elastic.out(1,.5)" }, tEnd);
+    });
+    window.__timelines["G6"] = tl;
+  }); });
+})();
+</script>
+</template>

@@ -1,0 +1,513 @@
+{
+ "voice": "af_heart",
+ "speed": 0.86,
+ "duration": 48.425,
+ "lines": [
+  {
+   "id": "l1",
+   "text": "Extra, extra. A language model says something false, and says it with confidence.",
+   "start": 2.6,
+   "end": 7.855,
+   "words": [
+    {
+     "text": "Extra,",
+     "start": 2.6,
+     "end": 3.16
+    },
+    {
+     "text": "extra.",
+     "start": 3.16,
+     "end": 3.719
+    },
+    {
+     "text": "A",
+     "start": 3.979,
+     "end": 4.103
+    },
+    {
+     "text": "language",
+     "start": 4.103,
+     "end": 4.642
+    },
+    {
+     "text": "model",
+     "start": 4.642,
+     "end": 4.99
+    },
+    {
+     "text": "says",
+     "start": 4.99,
+     "end": 5.215
+    },
+    {
+     "text": "something",
+     "start": 5.215,
+     "end": 5.788
+    },
+    {
+     "text": "false,",
+     "start": 5.788,
+     "end": 6.249
+    },
+    {
+     "text": "and",
+     "start": 6.249,
+     "end": 6.44
+    },
+    {
+     "text": "says",
+     "start": 6.44,
+     "end": 6.664
+    },
+    {
+     "text": "it",
+     "start": 6.664,
+     "end": 6.822
+    },
+    {
+     "text": "with",
+     "start": 6.822,
+     "end": 7.046
+    },
+    {
+     "text": "confidence.",
+     "start": 7.046,
+     "end": 7.855
+    }
+   ]
+  },
+  {
+   "id": "l2",
+   "text": "Why? A language model is trained to pick a likely next word.",
+   "start": 9.355,
+   "end": 14.061,
+   "words": [
+    {
+     "text": "Why?",
+     "start": 9.355,
+     "end": 9.946
+    },
+    {
+     "text": "A",
+     "start": 10.206,
+     "end": 10.359
+    },
+    {
+     "text": "language",
+     "start": 10.359,
+     "end": 11.024
+    },
+    {
+     "text": "model",
+     "start": 11.024,
+     "end": 11.454
+    },
+    {
+     "text": "is",
+     "start": 11.454,
+     "end": 11.648
+    },
+    {
+     "text": "trained",
+     "start": 11.648,
+     "end": 12.161
+    },
+    {
+     "text": "to",
+     "start": 12.161,
+     "end": 12.355
+    },
+    {
+     "text": "pick",
+     "start": 12.355,
+     "end": 12.633
+    },
+    {
+     "text": "a",
+     "start": 12.633,
+     "end": 12.785
+    },
+    {
+     "text": "likely",
+     "start": 12.785,
+     "end": 13.368
+    },
+    {
+     "text": "next",
+     "start": 13.368,
+     "end": 13.645
+    },
+    {
+     "text": "word.",
+     "start": 13.645,
+     "end": 14.061
+    }
+   ]
+  },
+  {
+   "id": "l3",
+   "text": "Likely is not the same as true.",
+   "start": 15.361,
+   "end": 17.369,
+   "words": [
+    {
+     "text": "Likely",
+     "start": 15.361,
+     "end": 15.882
+    },
+    {
+     "text": "is",
+     "start": 15.882,
+     "end": 16.055
+    },
+    {
+     "text": "not",
+     "start": 16.055,
+     "end": 16.266
+    },
+    {
+     "text": "the",
+     "start": 16.266,
+     "end": 16.477
+    },
+    {
+     "text": "same",
+     "start": 16.477,
+     "end": 16.824
+    },
+    {
+     "text": "as",
+     "start": 16.824,
+     "end": 16.997
+    },
+    {
+     "text": "true.",
+     "start": 16.997,
+     "end": 17.369
+    }
+   ]
+  },
+  {
+   "id": "l4",
+   "text": "Ask for a book that does not exist, and it can write a believable title, author and year. They sound right, so they get picked.",
+   "start": 19.169,
+   "end": 27.087,
+   "words": [
+    {
+     "text": "Ask",
+     "start": 19.169,
+     "end": 19.389
+    },
+    {
+     "text": "for",
+     "start": 19.389,
+     "end": 19.608
+    },
+    {
+     "text": "a",
+     "start": 19.608,
+     "end": 19.75
+    },
+    {
+     "text": "book",
+     "start": 19.75,
+     "end": 20.008
+    },
+    {
+     "text": "that",
+     "start": 20.008,
+     "end": 20.267
+    },
+    {
+     "text": "does",
+     "start": 20.267,
+     "end": 20.525
+    },
+    {
+     "text": "not",
+     "start": 20.525,
+     "end": 20.744
+    },
+    {
+     "text": "exist,",
+     "start": 20.744,
+     "end": 21.274
+    },
+    {
+     "text": "and",
+     "start": 21.274,
+     "end": 21.493
+    },
+    {
+     "text": "it",
+     "start": 21.493,
+     "end": 21.674
+    },
+    {
+     "text": "can",
+     "start": 21.674,
+     "end": 21.893
+    },
+    {
+     "text": "write",
+     "start": 21.893,
+     "end": 22.294
+    },
+    {
+     "text": "a",
+     "start": 22.294,
+     "end": 22.436
+    },
+    {
+     "text": "believable",
+     "start": 22.436,
+     "end": 23.236
+    },
+    {
+     "text": "title,",
+     "start": 23.236,
+     "end": 23.766
+    },
+    {
+     "text": "author",
+     "start": 23.766,
+     "end": 24.204
+    },
+    {
+     "text": "and",
+     "start": 24.204,
+     "end": 24.424
+    },
+    {
+     "text": "year.",
+     "start": 24.424,
+     "end": 24.811
+    },
+    {
+     "text": "They",
+     "start": 25.071,
+     "end": 25.307
+    },
+    {
+     "text": "sound",
+     "start": 25.307,
+     "end": 25.578
+    },
+    {
+     "text": "right,",
+     "start": 25.578,
+     "end": 25.967
+    },
+    {
+     "text": "so",
+     "start": 25.967,
+     "end": 26.132
+    },
+    {
+     "text": "they",
+     "start": 26.132,
+     "end": 26.368
+    },
+    {
+     "text": "get",
+     "start": 26.368,
+     "end": 26.568
+    },
+    {
+     "text": "picked.",
+     "start": 26.568,
+     "end": 27.087
+    }
+   ]
+  },
+  {
+   "id": "l5",
+   "text": "This is called hallucination.",
+   "start": 28.887,
+   "end": 30.592,
+   "words": [
+    {
+     "text": "This",
+     "start": 28.887,
+     "end": 29.104
+    },
+    {
+     "text": "is",
+     "start": 29.104,
+     "end": 29.256
+    },
+    {
+     "text": "called",
+     "start": 29.256,
+     "end": 29.625
+    },
+    {
+     "text": "hallucination.",
+     "start": 29.625,
+     "end": 30.592
+    }
+   ]
+  },
+  {
+   "id": "l6",
+   "text": "One fix is to let the model look things up, and show its sources.",
+   "start": 32.292,
+   "end": 36.392,
+   "words": [
+    {
+     "text": "One",
+     "start": 32.292,
+     "end": 32.627
+    },
+    {
+     "text": "fix",
+     "start": 32.627,
+     "end": 32.854
+    },
+    {
+     "text": "is",
+     "start": 32.854,
+     "end": 33.042
+    },
+    {
+     "text": "to",
+     "start": 33.042,
+     "end": 33.23
+    },
+    {
+     "text": "let",
+     "start": 33.23,
+     "end": 33.457
+    },
+    {
+     "text": "the",
+     "start": 33.457,
+     "end": 33.685
+    },
+    {
+     "text": "model",
+     "start": 33.685,
+     "end": 34.101
+    },
+    {
+     "text": "look",
+     "start": 34.101,
+     "end": 34.369
+    },
+    {
+     "text": "things",
+     "start": 34.369,
+     "end": 34.717
+    },
+    {
+     "text": "up,",
+     "start": 34.717,
+     "end": 35.039
+    },
+    {
+     "text": "and",
+     "start": 35.039,
+     "end": 35.267
+    },
+    {
+     "text": "show",
+     "start": 35.267,
+     "end": 35.535
+    },
+    {
+     "text": "its",
+     "start": 35.535,
+     "end": 35.763
+    },
+    {
+     "text": "sources.",
+     "start": 35.763,
+     "end": 36.392
+    }
+   ]
+  },
+  {
+   "id": "l7",
+   "text": "Another is to check every claim against the source yourself. Fluent text is not evidence.",
+   "start": 38.092,
+   "end": 43.425,
+   "words": [
+    {
+     "text": "Another",
+     "start": 38.092,
+     "end": 38.59
+    },
+    {
+     "text": "is",
+     "start": 38.59,
+     "end": 38.745
+    },
+    {
+     "text": "to",
+     "start": 38.745,
+     "end": 38.899
+    },
+    {
+     "text": "check",
+     "start": 38.899,
+     "end": 39.154
+    },
+    {
+     "text": "every",
+     "start": 39.154,
+     "end": 39.585
+    },
+    {
+     "text": "claim",
+     "start": 39.585,
+     "end": 39.839
+    },
+    {
+     "text": "against",
+     "start": 39.839,
+     "end": 40.248
+    },
+    {
+     "text": "the",
+     "start": 40.248,
+     "end": 40.436
+    },
+    {
+     "text": "source",
+     "start": 40.436,
+     "end": 40.812
+    },
+    {
+     "text": "yourself.",
+     "start": 40.812,
+     "end": 41.365
+    },
+    {
+     "text": "Fluent",
+     "start": 41.625,
+     "end": 41.952
+    },
+    {
+     "text": "text",
+     "start": 41.952,
+     "end": 42.204
+    },
+    {
+     "text": "is",
+     "start": 42.204,
+     "end": 42.38
+    },
+    {
+     "text": "not",
+     "start": 42.38,
+     "end": 42.594
+    },
+    {
+     "text": "evidence.",
+     "start": 42.594,
+     "end": 43.425
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,137 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:visible;pointer-events:none;font-family:"Space Grotesk",sans-serif}
+.lb{position:absolute;left:0;top:0;width:0;height:0}
+.lb svg{position:absolute;left:0;top:0;overflow:visible}
+.in{position:absolute;left:0;top:0;transform-origin:0 0}
+.card{position:absolute;background:#fff;border-radius:18px;padding:12px 24px 14px;box-shadow:0 6px 0 rgba(31,39,64,.18),0 14px 28px rgba(31,39,64,.16);color:#1f2740;white-space:nowrap;border-left:12px solid var(--c,#3b6cff)}
+.card b{display:block;font:700 34px/1.1 "Space Grotesk",sans-serif}
+.card small{display:block;font:500 28px/1.15 "Space Grotesk",sans-serif;color:#4a556e;letter-spacing:.2px}
+.big{font:700 84px/1 "Space Grotesk",sans-serif;letter-spacing:-1px;color:#1f2740}
+.stat{position:absolute;background:#fff;border-radius:18px;padding:10px 22px 12px;box-shadow:0 6px 0 rgba(31,39,64,.18);color:#1f2740;border-left:12px solid var(--c)}
+.stat small{display:block;font:500 28px/1.1 "Space Grotesk",sans-serif;color:#4a556e}
+.stat b{display:block;font:700 56px/1.05 "Space Grotesk",sans-serif}
+.board{position:absolute;left:60px;top:232px;width:600px;height:300px;background:#fff;border-radius:22px;box-shadow:0 8px 0 rgba(31,39,64,.18),0 18px 34px rgba(31,39,64,.18);padding:18px 24px}
+.board h4{font:700 30px/1.1 "Space Grotesk",sans-serif;color:#1f2740;margin-bottom:10px}
+.board canvas{display:block;margin-bottom:10px}
+.board .tl{display:flex;gap:26px;font:700 34px/1 "Space Grotesk",sans-serif}
+.dial{position:absolute;left:700px;top:232px;width:320px;height:300px;background:#fff;border-radius:22px;box-shadow:0 8px 0 rgba(31,39,64,.18),0 18px 34px rgba(31,39,64,.18)}
+.dial h4{position:absolute;left:0;right:0;top:16px;text-align:center;font:700 28px/1.1 "Space Grotesk",sans-serif;color:#1f2740}
+.dial .pct{position:absolute;left:0;right:0;top:214px;text-align:center;font:700 74px/1 "Space Grotesk",sans-serif;color:#1f2740}
+.handle{position:absolute;left:0;width:1080px;top:1250px;text-align:center}
+.handle span{display:inline-block;background:#fff;border-radius:999px;padding:10px 30px 12px;font:700 36px/1 "Space Grotesk",sans-serif;color:#1f2740;box-shadow:0 5px 0 rgba(31,39,64,.18)}
+</style>
+<div id="root" data-composition-id="hud" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), B = ISO.B, C = ISO.C, Wd = function (l, w) { return TIMING.lines[l].words[w].start; }, We = function (l, w) { return TIMING.lines[l].words[w].end; };
+  window.__hf = window.__hf || {}; window.__hf.buildReady = window.__hf.buildReady || {};
+  var comma = function (n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ","); };
+  window.__hf.buildReady["hud"] = Promise.all([document.fonts.load("700 34px 'Space Grotesk'", "Aa0"), document.fonts.load("500 28px 'Space Grotesk'", "Aa0")]).then(function () {
+    var tl = gsap.timeline({ paused: true }), labels = [], S = ISO.story();
+    /* a label is a card on a thin leader line, anchored to a world point, always upright in screen space */
+    function label(o) {
+      var w = document.createElement("div"); w.className = "lb"; w.style.visibility = "hidden";
+      var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); svg.setAttribute("width", 1); svg.setAttribute("height", 1);
+      var ln = document.createElementNS("http://www.w3.org/2000/svg", "line"); ln.setAttribute("x1", 0); ln.setAttribute("y1", 0); ln.setAttribute("x2", o.dx); ln.setAttribute("y2", o.dy); ln.setAttribute("stroke", "#1f2740"); ln.setAttribute("stroke-width", 3); svg.appendChild(ln);
+      var dot = document.createElementNS("http://www.w3.org/2000/svg", "circle"); dot.setAttribute("r", 6); dot.setAttribute("fill", "#1f2740"); svg.appendChild(dot); w.appendChild(svg);
+      var inn = document.createElement("div"); inn.className = "in"; w.appendChild(inn);
+      var card = document.createElement("div"); card.className = "card"; card.style.setProperty("--c", o.color || "#3b6cff"); card.innerHTML = o.html; inn.appendChild(card);
+      root.appendChild(w); labels.push({ w: w, o: o, card: card, inn: inn, cw: card.offsetWidth, ch: card.offsetHeight });
+      var L = labels[labels.length - 1]; o.el = L;
+      tl.set(w, { visibility: "visible" }, o.t0).set(w, { visibility: "hidden" }, o.t1);
+      tl.fromTo(card, { scale: 0.5, opacity: 0, transformOrigin: "50% 100%" }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(1.6)" }, o.t0);
+      tl.fromTo(svg, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "none" }, o.t0);
+      tl.to(card, { scale: 0.85, opacity: 0, duration: 0.18, ease: "power2.in" }, o.t1 - 0.18);
+      return L;
+    }
+    function place(L, t) {
+      var o = L.o, p = ISO.proj(o.ax, o.ay, o.az, t), card = L.card, cw = L.cw, ch = L.ch;
+      L.w.style.left = p.x + "px"; L.w.style.top = p.y + "px";
+      card.style.left = (o.dx - cw / 2) + "px"; card.style.top = (o.below ? o.dy : o.dy - ch) + "px";
+    }
+    /* title: the hook on the very first frame */
+    var ttl = document.createElement("div"); ttl.style.cssText = "position:absolute;left:60px;top:236px;width:960px;font:700 80px/1.02 'Space Grotesk',sans-serif;color:#1f2740;letter-spacing:-1.5px;visibility:hidden";
+    ttl.innerHTML = "How a <span style='color:#ff9f1c'>cache</span><br>protects a <span style='color:#35405a'>database</span>"; root.appendChild(ttl);
+    tl.set(ttl, { visibility: "visible" }, 0).fromTo(ttl, { y: 0, opacity: 1 }, { y: -30, opacity: 0, duration: 0.35, ease: "power2.in" }, TIMING.lines[0].end - 0.35).set(ttl, { visibility: "hidden" }, TIMING.lines[0].end);
+    /* 1. queue sign over the crowd */
+    var q = label({ html: "<small>REQUESTS WAITING</small><span class='big' id='qn'>0</span>", ax: 5.0, ay: 1.0, az: -2.6, dx: -60, dy: -150, t0: 0.3, t1: Wd(5, 3) - 0.35, color: "#18c8d4" });
+    /* 2. same work */
+    label({ html: "<b>same work × 1,000</b><small>one answer, computed again and again</small>", ax: C.DB_X, ay: 3.2, az: 0, dx: 40, dy: -110, t0: Wd(1, 0) + 0.1, t1: We(1, 8) + 0.5, color: "#35405a" });
+    /* 3. cache label */
+    label({ html: "<b>cache: small, fast</b>", ax: -1.3, ay: 2.8, az: 0, dx: -20, dy: -130, t0: B.labelCache, t1: B.gateOpen + 1.3, color: "#ff9f1c" });
+    /* 4. the first request */
+    label({ html: "<b>miss</b><small>not on the shelf</small>", ax: -1.3, ay: 2.8, az: 0, dx: 0, dy: -120, t0: ISO.E.check0 - 0.1, t1: ISO.E.check1 + 0.2, color: "#ff9f1c" });
+    label({ html: "<b>ask the database</b>", ax: C.DB_X, ay: 3.2, az: 0, dx: 30, dy: -105, t0: ISO.E.check1 + 0.0, t1: ISO.E.dbOut + 0.25, color: "#35405a" });
+    label({ html: "<b>copy kept</b><small>on the shelf</small>", ax: -1.3, ay: 2.8, az: 0, dx: 0, dy: -120, t0: ISO.E.copy - 0.15, t1: ISO.E.copy + 1.5, color: "#ff9f1c" });
+    /* 5. hits */
+    label({ html: "<b>hit</b>", ax: -1.3, ay: 2.8, az: 0, dx: 0, dy: -105, t0: B.hits0 + 0.35, t1: B.hits0 + 2.2, color: "#ff9f1c" });
+    label({ html: "<b>database never hears</b>", ax: C.DB_X, ay: 3.2, az: 0, dx: 30, dy: -105, t0: Wd(4, 9) + 0.0, t1: B.recolor0 - 0.2, color: "#35405a" });
+    /* 7. the catch */
+    label({ html: "<b>copies go stale</b>", ax: -1.3, ay: 2.8, az: 0, dx: 0, dy: -120, t0: Wd(6, 2) - 0.1, t1: B.ringOn - 0.1, color: "#a47c54" });
+    label({ html: "<b>time limit</b>", ax: -1.3, ay: 2.8, az: 0, dx: 0, dy: -120, t0: B.ringOn + 0.05, t1: S.flagAt - 0.15, color: "#ff5a36" });
+    label({ html: "<b>stale answer served</b><small>a little old</small>", ax: C.LAT_X, ay: 1.2, az: C.ZOUT, dx: 40, dy: -150, t0: S.flagAt - 0.05, t1: B.ringRun1 + 0.2, color: "#a47c54" });
+    label({ html: "<b>time is up: fetch fresh</b>", ax: -1.3, ay: 2.8, az: 0, dx: 0, dy: -120, t0: B.ringRun1 + 0.15, t1: S.freshAt - 0.05, color: "#ff5a36" });
+    label({ html: "<b>fresh copy</b>", ax: -1.3, ay: 2.8, az: 0, dx: 0, dy: -120, t0: S.freshAt - 0.05, t1: Wd(7, 5) - 0.1, color: "#ff9f1c" });
+    /* 8. three signs on posts */
+    label({ html: "<b>fast reads</b>", ax: 0.9, ay: 0.7, az: 2.45, dx: 130, dy: 120, below: true, t0: Wd(7, 0) + 0.15, t1: 999, color: "#ff9f1c" });
+    label({ html: "<b>quiet database</b>", ax: C.DB_X, ay: 3.2, az: 0, dx: -40, dy: -170, t0: Wd(7, 3) + 0.0, t1: 999, color: "#35405a" });
+    label({ html: "<b>slightly old answers</b>", ax: -1.3, ay: 2.8, az: 0, dx: 120, dy: -200, t0: Wd(7, 5) + 0.05, t1: 999, color: "#a47c54" });
+
+    /* counters (bottom-left): live from the model */
+    var st1 = document.createElement("div"); st1.className = "stat"; st1.style.cssText += ";left:60px;top:1370px;--c:#ff9f1c;visibility:hidden"; st1.innerHTML = "<small>ANSWERED BY THE CACHE</small><b id='sv'>0</b>";
+    var st2 = document.createElement("div"); st2.className = "stat"; st2.style.cssText += ";left:60px;top:1488px;--c:#35405a;visibility:hidden"; st2.innerHTML = "<small>DATABASE REQUESTS</small><b id='dr'>0</b>";
+    root.appendChild(st1); root.appendChild(st2);
+    tl.set([st1, st2], { visibility: "visible" }, B.hits0 + 0.3);
+    tl.fromTo([st1, st2], { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "back.out(1.4)", stagger: 0.12 }, B.hits0 + 0.3);
+
+    /* 6. the 1,000-request board and the load dial */
+    var tally = ISO.tally(), N = C.N;
+    var board = document.createElement("div"); board.className = "board"; board.style.visibility = "hidden";
+    board.innerHTML = "<h4>1,000 requests, one dot each</h4><canvas id='bc' width='552' height='200'></canvas><div class='tl'><span style='color:#e08600'>● <span id='bh'>0</span> hits</span><span style='color:#0e9aa6'>● <span id='bm'>0</span> misses</span></div>";
+    root.appendChild(board);
+    var dial = document.createElement("div"); dial.className = "dial"; dial.style.visibility = "hidden";
+    dial.innerHTML = "<h4>DATABASE LOAD</h4><svg width='320' height='300' style='position:absolute;left:0;top:0'><path d='M40 200 A120 120 0 0 1 280 200' fill='none' stroke='#e3e9f3' stroke-width='26' stroke-linecap='round'/><path id='da' d='M40 200 A120 120 0 0 1 280 200' fill='none' stroke='#35405a' stroke-width='26' stroke-linecap='round'/><line id='dn' x1='160' y1='200' x2='160' y2='100' stroke='#ff9f1c' stroke-width='8' stroke-linecap='round'/><circle cx='160' cy='200' r='14' fill='#1f2740'/></svg><div class='pct'><span id='dp'>100</span>%</div>";
+    root.appendChild(dial);
+    var t6 = Wd(5, 3) - 0.3;
+    tl.set([board, dial], { visibility: "visible" }, t6).set([board, dial], { visibility: "hidden" }, B.sink0 + 0.45);
+    tl.fromTo(board, { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.5)" }, t6);
+    tl.fromTo(dial, { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.5)" }, t6 + 0.12);
+    tl.to([board, dial], { y: -30, opacity: 0, duration: 0.3, ease: "power2.in" }, B.sink0 + 0.1);
+    var bc = board.querySelector("#bc").getContext("2d"), dap = dial.querySelector("#da"), dn = dial.querySelector("#dn"), dp = dial.querySelector("#dp");
+    var daLen = dap.getTotalLength(); dap.setAttribute("stroke-dasharray", daLen);
+    var gridPos = [], k; for (k = 0; k < N; k++) gridPos.push([(k % 50) * 11 + 5.5, Math.floor(k / 50) * 10 + 5]);
+
+    /* handle at the end */
+    var hd = document.createElement("div"); hd.className = "handle"; hd.innerHTML = "<span>@hemanth_with_ai</span>"; hd.style.visibility = "hidden"; root.appendChild(hd);
+    tl.set(hd, { visibility: "visible" }, Wd(7, 11) - 0.1).fromTo(hd.firstChild, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "back.out(1.5)" }, Wd(7, 11) - 0.1);
+
+    /* per-frame: anchors, numbers, board, dial (all pure functions of t) */
+    var an = { p: 0 }, qn = root.querySelector("#qn"), sv = st1.querySelector("#sv"), dr = st2.querySelector("#dr"), bh = board.querySelector("#bh"), bmm = board.querySelector("#bm");
+    function frame(t) {
+      labels.forEach(function (L) { if (t >= L.o.t0 - 0.05 && t <= L.o.t1 + 0.05) place(L, t); });
+      qn.textContent = comma(ISO.waiting(t));
+      sv.textContent = comma(ISO.served(t) + (t >= S.flagAt + 0.9 ? 1 : 0)); dr.textContent = comma(ISO.dbHits(t));
+      if (t >= t6 - 0.1 && t <= B.sink0 + 0.5) {
+        bc.clearRect(0, 0, 552, 200); var hits = 0, miss = 0, j, bcnt = ISO.boardCount(t);
+        for (j = 0; j < N; j++) {
+          var shown = j < bcnt, isHit = ISO.status[j] === 1, orange = shown && isHit && t >= B.recolor0 + (j / N) * (B.recolor1 - B.recolor0);
+          bc.fillStyle = !shown ? "#e3e9f3" : orange ? "#ff9f1c" : "#18c8d4";
+          bc.beginPath(); bc.arc(gridPos[j][0], gridPos[j][1], 4.0, 0, 6.2832); bc.fill();
+          if (shown) { if (orange) hits++; else if (!isHit) miss++; }
+        }
+        // cubes that are still "waiting" before they recolour count as requests, not yet hits
+        bh.textContent = comma(hits); bmm.textContent = comma(t >= B.recolor1 ? tally.misses : miss);
+        if (t >= B.recolor1) bh.textContent = comma(tally.hits);
+        var load = ISO.dbLoad(t); dp.textContent = String(Math.round(load)); dap.setAttribute("stroke-dashoffset", daLen * (1 - load / 100));
+        var ang = Math.PI * (1 - load / 100); dn.setAttribute("x2", 160 + Math.cos(ang) * -0 + (-Math.cos(Math.PI * (load / 100)) * 100)); dn.setAttribute("y2", 200 - Math.sin(Math.PI * (load / 100)) * 100);
+      }
+    }
+    tl.to(an, { p: 1, duration: TIMING.total, ease: "none", onUpdate: function () { frame(tl.time()); } }, 0);
+    frame(0);
+    window.__timelines["hud"] = tl;
+  });
+})();
+</script>
+</template>

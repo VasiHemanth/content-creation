@@ -1,0 +1,23 @@
+<template>
+<style>
+#root{position:absolute;inset:0;overflow:hidden;background:#dfe6f0}
+#cv{position:absolute;left:0;top:0;width:1080px;height:1920px;display:block}
+</style>
+<div id="root" data-composition-id="world" data-width="1080" data-height="1920">
+  <canvas id="cv" width="1080" height="1920"></canvas>
+</div>
+<script>
+(function () {
+  window.__hf = window.__hf || {}; window.__hf.buildReady = window.__hf.buildReady || {};
+  window.__hf.buildReady["world"] = Promise.resolve().then(function () {
+    var S = ISO.world.build(document.getElementById("cv"));
+    var tl = gsap.timeline({ paused: true });
+    var an = { p: 0 };
+    // one anchor tween: the diorama is drawn from tl.time() alone, so every frame is a pure function of time
+    tl.to(an, { p: 1, duration: TIMING.total, ease: "none", onUpdate: function () { ISO.world.draw(S, tl.time()); } }, 0);
+    ISO.world.draw(S, 0);
+    window.__timelines["world"] = tl;
+  });
+})();
+</script>
+</template>

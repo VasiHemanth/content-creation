@@ -1,0 +1,53 @@
+{
+ "tail": 5.6,
+ "lines": [
+  {
+   "id": "l1",
+   "text": "A tiny network makes a guess. The guess is wrong.",
+   "gap_before": 0.7,
+   "sent_gap": 0.45
+  },
+  {
+   "id": "l2",
+   "text": "Three clay workers stand in a line. Each one takes a number, changes it a little, and passes it on.",
+   "gap_before": 0.7,
+   "sent_gap": 0.4
+  },
+  {
+   "id": "l3",
+   "text": "At the end, a judge compares the answer with the truth, and measures how wrong it was. That is the loss.",
+   "gap_before": 0.7,
+   "sent_gap": 0.4
+  },
+  {
+   "id": "l4",
+   "text": "Now the blame goes backwards. The last worker asks: how much of this error was my fault?",
+   "gap_before": 0.8,
+   "sent_gap": 0.4
+  },
+  {
+   "id": "l5",
+   "text": "Then it tells the worker before it, who asks the same question, and passes it on.",
+   "gap_before": 0.7,
+   "sent_gap": 0.4
+  },
+  {
+   "id": "l6",
+   "text": "Each worker gets a share of the blame. Big share, big nudge. Small share, small nudge.",
+   "gap_before": 0.7,
+   "sent_gap": 0.4
+  },
+  {
+   "id": "l7",
+   "text": "Every worker turns its dial a little, in the direction that makes the error smaller.",
+   "gap_before": 0.7,
+   "sent_gap": 0.4
+  },
+  {
+   "id": "l8",
+   "text": "Do it again with the next example. Do it millions of times, and the guesses get better.",
+   "gap_before": 0.7,
+   "sent_gap": 0.4
+  }
+ ]
+}

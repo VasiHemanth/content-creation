@@ -1,0 +1,34 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#050507}
+</style>
+<div id="root" data-composition-id="G5" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.G5, W = TIMING.lines[4].words, L = function (g) { return g - SC.start; };
+  Glass.ready("G5", function () { return Glass.fontsReady().then(function () { Glass.compute(); return Glass.assets([4]); }).then(function (A) {
+    var S = Glass.stage(root, A, { key: "G5", pane: 4, floodIn: Glass.SEAM[3], floodOut: Glass.SEAM[4], prev: [1, 2, 3] }), win = S.win, tl = gsap.timeline({ paused: true });
+    Glass.cast(win, 3, .55);
+    Glass.common(tl, S, SC, { s0: 1.1, s1: 1.04 });
+    tl.to(win.castG, { opacity: .06, duration: 1.0, ease: "power2.inOut" }, L(W[4].start));
+    // the cathedral brightens: a warm ambient wash that rises with the face
+    var amb = Glass.div("position:absolute;left:-40px;top:-40px;width:1160px;height:1700px;background:radial-gradient(circle at 50% 38%,rgba(255,214,140,.7),rgba(255,160,70,.25) 40%,rgba(0,0,0,0) 72%);mix-blend-mode:screen;opacity:0", S.cam);
+    // rings light from the outside in; the medallion last
+    var ring = function (n) { return win.cells.filter(function (K) { return K.c.ring === n; }); };
+    [[3, W[3].start], [2, W[4].start + .1], [1, W[6].start]].forEach(function (rr) {
+      ring(rr[0]).forEach(function (K, i, a) { tl.fromTo(K.lit, { opacity: 0 }, { keyframes: [{ opacity: 1, duration: .12 }, { opacity: .75, duration: .12 }, { opacity: 1, duration: .3 }] }, L(rr[1]) + .5 * i / a.length); });
+    });
+    var ctr = ring(0)[0];
+    tl.fromTo(ctr.lit, { opacity: 0 }, { keyframes: [{ opacity: 1, duration: .2 }, { opacity: .8, duration: .15 }, { opacity: 1, duration: .5 }] }, L(W[7].start));
+    win.face.forEach(function (el, i) { if (el.tagName === "circle") tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: .3 }, L(W[8].start) + .9); else tl.fromTo(el, { "stroke-dashoffset": 1 }, { "stroke-dashoffset": 0, duration: .7, ease: "power2.out" }, L(W[8].start) + i * .1); });
+    tl.fromTo(win.bloom, { opacity: 0 }, { opacity: .55, duration: 1.2, ease: "power2.out" }, L(W[3].start));
+    tl.to(win.bloom, { opacity: .95, duration: 1.2, ease: "power2.inOut" }, L(W[8].start));
+    tl.to(amb, { opacity: .8, duration: 1.4, ease: "power2.inOut" }, L(W[8].start) + .1);
+    S.rays.rays.forEach(function (R, i) { tl.fromTo(R.el, { opacity: 0 }, { keyframes: [{ opacity: .4, duration: 1.4 }, { opacity: .7, duration: 1.2 }] }, .9 + i * .07); });
+    tl.to(S.nave.pool, { opacity: 1, duration: 1.2 }, L(W[8].start));
+    window.__timelines["G5"] = tl;
+  }); });
+})();
+</script>
+</template>

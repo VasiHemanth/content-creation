@@ -1,0 +1,41 @@
+<template>
+<style>
+@font-face{font-family:"Fredoka";font-weight:500;src:url("assets/fonts/fredoka-latin-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:600;src:url("assets/fonts/fredoka-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Fredoka";font-weight:700;src:url("assets/fonts/fredoka-latin-700-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:visible;pointer-events:none}
+.cw{position:absolute;white-space:nowrap;font:600 60px/1 Fredoka,sans-serif;color:#3a2410}
+.strip{position:absolute;left:46px;width:988px;height:150px;border-radius:44px;background:#d8b98c;box-shadow:0 10px 0 #a3844f, 0 18px 24px rgba(40,22,10,.35), inset 0 6px 8px rgba(255,240,210,.5), inset 0 -8px 10px rgba(120,80,40,.35)}
+.fp{position:absolute;inset:0;border-radius:44px;opacity:.22;background:repeating-radial-gradient(ellipse at 22% 60%,rgba(255,255,255,.0) 0 7px,rgba(90,60,30,.35) 8px 9px)}
+</style>
+<div id="root" data-composition-id="captions" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), Y = 1648, FS = 60;
+  window.__hf = window.__hf || {}; window.__hf.buildReady = window.__hf.buildReady || {};
+  window.__hf.buildReady["captions"] = Promise.resolve().then(function () { return document.fonts.load("600 60px Fredoka", "Aa"); }).then(function () {
+    var st = document.createElement("div"); st.className = "strip"; st.style.top = (Y - 32) + "px"; root.appendChild(st); var fp = document.createElement("div"); fp.className = "fp"; st.appendChild(fp);
+    var m = document.createElement("canvas").getContext("2d"); m.font = "600 " + FS + "px Fredoka"; var sp = 17, wdt = function (t) { return m.measureText(t).width; };
+    var groups = [], cur = [], cw = 0;
+    TIMING.words.forEach(function (wd) { var ww = wdt(wd.text); if (cur.length && (cw + sp + ww > 900 || cur.length >= 5)) { groups.push(cur); cur = []; cw = 0; } cur.push(wd); cw += (cur.length > 1 ? sp : 0) + ww; if (/[.?!:]$/.test(wd.text)) { groups.push(cur); cur = []; cw = 0; } });
+    if (cur.length) groups.push(cur);
+    var items = groups.map(function (g) {
+      var tot = g.reduce(function (a, w2) { return a + wdt(w2.text); }, 0) + sp * (g.length - 1), x = (1080 - tot) / 2, gel = document.createElement("div"); gel.style.cssText = "position:absolute;left:0;top:0;width:1080px;height:1920px;visibility:hidden"; root.appendChild(gel);
+      var rows = g.map(function (w2) { var t = document.createElement("div"); t.className = "cw"; t.style.left = x + "px"; t.style.top = Y + "px"; t.style.opacity = 0; t.textContent = w2.text; gel.appendChild(t); x += wdt(w2.text) + sp; return { w: w2, t: t }; });
+      return { gel: gel, rows: rows, s: g[0].start, e: g[g.length - 1].end };
+    });
+    var tl = gsap.timeline({ paused: true });
+    items.forEach(function (G, gi) {
+      var nx = items[gi + 1], hide = Math.min(G.e + .45, nx ? nx.s - .02 : 999);
+      tl.set(G.gel, { visibility: "visible" }, Math.max(0, G.s - .03));
+      G.rows.forEach(function (R, k) {
+        var ts = Math.max(0, R.w.start - .03), te = k < G.rows.length - 1 ? G.rows[k + 1].w.start - .03 : Math.min(G.e + .12, hide);
+        tl.set(R.t, { opacity: 1, color: "#b02a1a" }, ts).set(R.t, { color: "#3a2410" }, te);
+      });
+      tl.set(G.gel, { visibility: "hidden" }, hide);
+    });
+    window.__timelines["captions"] = tl;
+  });
+})();
+</script>
+</template>

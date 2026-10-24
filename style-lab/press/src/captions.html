@@ -1,0 +1,56 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:visible;pointer-events:none}
+.cap{position:absolute;white-space:nowrap;font:400 50px/1 "Special Elite",monospace;color:#1b1a17;text-transform:uppercase;letter-spacing:1px}
+.hl{position:absolute;background:#1b1a17}
+</style>
+<div id="root" data-composition-id="captions" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), FS = 50, Y = 1640, BH = 150;
+  Press.ready("captions", function () { return document.fonts.load("400 50px 'Special Elite'", "Aa").then(function () {
+    // a strip of newsprint: slip with torn-ish edges, ink-pressed type
+    var strip = Press.div("position:absolute;left:30px;top:" + Y + "px;width:1020px;height:" + BH + "px;background:#e9e2cf;box-shadow:4px 7px 0 rgba(0,0,0,.45);clip-path:polygon(0 3%,3% 0,12% 4%,24% 0,40% 3%,55% 0,70% 4%,86% 0,100% 3%,99% 97%,88% 100%,70% 96%,52% 100%,34% 97%,18% 100%,6% 96%,1% 100%)", root);
+    var tx = new Image(); tx.src = Press.paperTex(510, 75, 11, true); tx.style.cssText = "position:absolute;left:0;top:0;width:1020px;height:" + BH + "px"; strip.appendChild(tx);
+    Press.div("position:absolute;left:30px;top:" + (Y + BH - 10) + "px;width:1020px;height:3px;background:#c1272d;opacity:0", root);
+    var stripTl = strip;
+    var m = document.createElement("canvas").getContext("2d"); m.font = "400 " + FS + "px 'Special Elite'";
+    var sp = m.measureText(" ").width + 6, wdt = function (t) { return m.measureText(t.toUpperCase()).width + 1; };
+    var groups = [], cur = [], curW = 0;
+    TIMING.words.forEach(function (w) {
+      var ww = wdt(w.text);
+      if (cur.length && (curW + sp + ww > 950 || cur.length >= 5)) { groups.push(cur); cur = []; curW = 0; }
+      cur.push(w); curW += (cur.length > 1 ? sp : 0) + ww;
+      if (/[.?!]$/.test(w.text)) { groups.push(cur); cur = []; curW = 0; }
+    });
+    if (cur.length) groups.push(cur);
+    var items = [];
+    groups.forEach(function (g, gi) {
+      var tot = g.reduce(function (a, w) { return a + wdt(w.text); }, 0) + sp * (g.length - 1), x = (1080 - tot) / 2;
+      var gel = Press.div("position:absolute;left:0;top:0;width:1080px;height:1920px;visibility:hidden", root), rows = [], r = rngOf("cap" + gi);
+      g.forEach(function (w, k) {
+        var ww = wdt(w.text);
+        var hl = Press.div("position:absolute;left:" + (x - 7) + "px;top:" + (Y + 38) + "px;width:" + (ww + 14) + "px;height:" + (FS + 22) + "px;background:#1b1a17;opacity:0;clip-path:polygon(0 " + (r() * 5) + "px,100% " + (r() * 5) + "px,99% 100%,1% " + (100 - r() * 5) + "%)", gel);
+        var t = Press.div("left:" + x + "px;top:" + (Y + 50) + "px;opacity:0;", gel, "cap"); t.textContent = w.text.toUpperCase();
+        rows.push({ w: w, t: t, hl: hl }); x += ww + sp;
+      });
+      items.push({ gel: gel, rows: rows, s: g[0].start, e: g[g.length - 1].end });
+    });
+    var tl = gsap.timeline({ paused: true });
+    tl.set(strip, { opacity: 0 }, 0).set(strip, { opacity: 1 }, Math.max(0, TIMING.words[0].start - .2));
+    items.forEach(function (G, gi) {
+      var nxt = items[gi + 1], hide = Math.min(G.e + .4, nxt ? nxt.s - .02 : 999);
+      tl.set(G.gel, { visibility: "visible" }, Math.max(0, G.s - .03));
+      G.rows.forEach(function (R, k) {
+        var ts = Math.max(0, R.w.start - .03), te = k < G.rows.length - 1 ? G.rows[k + 1].w.start - .03 : Math.min(G.e + .1, hide);
+        tl.set(R.t, { opacity: 1, color: "#e9e2cf" }, ts).set(R.hl, { opacity: 1 }, ts);
+        tl.set(R.t, { color: "#1b1a17" }, te).set(R.hl, { opacity: 0 }, te);
+      });
+      tl.set(G.gel, { visibility: "hidden" }, hide);
+    });
+    window.__timelines["captions"] = tl;
+  }); });
+})();
+</script>
+</template>

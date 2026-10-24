@@ -1,0 +1,40 @@
+{
+ "tail": 5.0,
+ "lines": [
+  {
+   "id": "l1",
+   "text": "Extra, extra. A language model says something false, and says it with confidence.",
+   "gap_before": 2.6
+  },
+  {
+   "id": "l2",
+   "text": "Why? A language model is trained to pick a likely next word.",
+   "gap_before": 1.5
+  },
+  {
+   "id": "l3",
+   "text": "Likely is not the same as true.",
+   "gap_before": 1.3
+  },
+  {
+   "id": "l4",
+   "text": "Ask for a book that does not exist, and it can write a believable title, author and year. They sound right, so they get picked.",
+   "gap_before": 1.8
+  },
+  {
+   "id": "l5",
+   "text": "This is called hallucination.",
+   "gap_before": 1.8
+  },
+  {
+   "id": "l6",
+   "text": "One fix is to let the model look things up, and show its sources.",
+   "gap_before": 1.7
+  },
+  {
+   "id": "l7",
+   "text": "Another is to check every claim against the source yourself. Fluent text is not evidence.",
+   "gap_before": 1.7
+  }
+ ]
+}

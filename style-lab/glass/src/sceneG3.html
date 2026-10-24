@@ -1,0 +1,34 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#050507}
+</style>
+<div id="root" data-composition-id="G3" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.G3, W = TIMING.lines[2].words, L = function (g) { return g - SC.start; };
+  Glass.ready("G3", function () { return Glass.fontsReady().then(function () { Glass.compute(); return Glass.assets([2]); }).then(function (A) {
+    var S = Glass.stage(root, A, { key: "G3", pane: 2, floodIn: Glass.SEAM[1], floodOut: Glass.SEAM[2], prev: [1] }), win = S.win, tl = gsap.timeline({ paused: true });
+    Glass.cast(win, 1, .75);
+    Glass.common(tl, S, SC, { s0: 1.1, s1: 1.03 });
+    // the colour that already passed through pane 1 falls on this pane, then gives way to what pane 2 makes of it
+    tl.to(win.castG, { opacity: .1, duration: 1.0, ease: "power2.inOut" }, L(W[3].start));
+    var by = function (cls) { return win.cells.filter(function (K) { return K.c.cls === cls && K.lit; }).sort(function (a, b) { return a.c.cy - b.c.cy; }); };
+    function light(arr, t0, op, span) {
+      arr.forEach(function (K, i) {
+        var t = t0 + span * i / Math.max(1, arr.length);
+        tl.fromTo(K.lit, { opacity: 0 }, { keyframes: [{ opacity: op, duration: .12 }, { opacity: op * .72, duration: .12 }, { opacity: op, duration: .3 }] }, t);
+        var gl = win.glyphs.filter(function (g) { return g.K === K; })[0]; if (gl) tl.fromTo(gl.el, { "stroke-dashoffset": 1 }, { "stroke-dashoffset": 0, duration: .6, ease: "power2.out" }, t + .12);
+      });
+    }
+    light(by("straight"), L(W[4].start), .5, .9);
+    light(by("corner"), L(W[6].start), 1, .5);
+    light(by("curve"), L(W[7].start), 1, .5);
+    light(by("texture"), L(W[10].start), 1, .6);
+    tl.fromTo(win.bloom, { opacity: 0 }, { opacity: .65, duration: 1.6, ease: "power2.out" }, L(W[4].start));
+    S.rays.rays.forEach(function (R, i) { tl.fromTo(R.el, { opacity: 0 }, { opacity: .38, duration: 1.4, ease: "power2.out" }, .9 + i * .07); });
+    window.__timelines["G3"] = tl;
+  }); });
+})();
+</script>
+</template>

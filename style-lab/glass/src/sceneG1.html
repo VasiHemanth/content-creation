@@ -1,0 +1,42 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#050507}
+</style>
+<div id="root" data-composition-id="G1" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.G1, W = TIMING.lines[0].words, L = function (g) { return g - SC.start; };
+  Glass.ready("G1", function () { return Glass.fontsReady().then(function () { Glass.compute(); return Glass.assets([1]); }).then(function (A) {
+    var S = Glass.stage(root, A, { key: "G1", pane: 1, floodOut: Glass.SEAM[0], prev: [], poolOp: .8 }), win = S.win, tl = gsap.timeline({ paused: true });
+    gsap.set(win.box, { scale: .56, transformOrigin: "50% 0%" });
+    // the projection screen: a dark board with the input face drawn in light
+    var sx = 330, sy = 862, sw = 420, sh = 520, cam = S.cam;
+    var scr = Glass.div("position:absolute;left:" + sx + "px;top:" + sy + "px;width:" + sw + "px;height:" + sh + "px;", cam);
+    var sv = Glass.svg("svg", { width: sw, height: sh, viewBox: "0 0 " + sw + " " + sh, style: "position:absolute;left:0;top:0;overflow:visible" }, scr);
+    var df = Glass.svg("defs", {}, sv), gb = Glass.svg("filter", { id: "g1glow", x: "-30%", y: "-30%", width: "160%", height: "160%" }, df); Glass.svg("feGaussianBlur", { stdDeviation: 7 }, gb);
+    Glass.svg("rect", { x: 4, y: 4, width: sw - 8, height: sh - 40, rx: 8, fill: "#0c0b0a", stroke: "#3d352b", "stroke-width": 8 }, sv);
+    Glass.svg("path", { d: "M70 " + (sh - 36) + " L50 " + sh + " M" + (sw - 70) + " " + (sh - 36) + " L" + (sw - 50) + " " + sh, stroke: "#3d352b", "stroke-width": 8, "stroke-linecap": "round" }, sv);
+    var ft = "translate(" + (sw - 300 * 1.2) / 2 + " 18) scale(1.2)";
+    var glowG = Glass.svg("g", { transform: ft, filter: "url(#g1glow)", opacity: .9 }, sv), lineG = Glass.svg("g", { transform: ft }, sv);
+    var fg = Glass.faceSvg(glowG, "#ffd58a", 9), fl = Glass.faceSvg(lineG, "#fff3d6", 3.6), all = fg.paths.concat(fl.paths);
+    all.forEach(function (p) { if (p.tagName === "path") { p.setAttribute("pathLength", 1); p.setAttribute("stroke-dasharray", 1); p.setAttribute("stroke-dashoffset", 1); } else p.setAttribute("opacity", 0); });
+    // the light that rises from the screen to the window
+    var beam = Glass.div("position:absolute;left:340px;top:760px;width:400px;height:130px;background:linear-gradient(rgba(255,226,170,0),rgba(255,226,170,.55));clip-path:polygon(0 0,100% 0,82% 100%,18% 100%);filter:blur(10px);mix-blend-mode:screen;opacity:0", cam);
+    Glass.common(tl, S, SC, { s0: 1.07, s1: 1.0, out: true });
+    var n = fg.paths.length;
+    fg.paths.forEach(function (p, i) {
+      var t = i * .17;
+      if (p.tagName === "path") { tl.fromTo([p, fl.paths[i]], { "stroke-dashoffset": 1 }, { "stroke-dashoffset": 0, duration: .7, ease: "power1.inOut" }, t); } else { tl.fromTo([p, fl.paths[i]], { opacity: 0 }, { opacity: 1, duration: .3 }, t + .1); }
+    });
+    // "Think of light passing through windows": the beam climbs, then the first window lights
+    tl.fromTo(beam, { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "power2.out" }, L(W[9].start));
+    tl.fromTo(S.nave.pool, { opacity: 0 }, { opacity: .8, duration: 1.2, ease: "power2.out" }, L(W[12].start) - .3);
+    win.cells.forEach(function (K, i) { if (K.lit) tl.fromTo(K.lit, { opacity: 0 }, { keyframes: [{ opacity: .55, duration: .14 }, { opacity: .3, duration: .14 }, { opacity: .5, duration: .3 }] }, L(W[12].start) - .35 + (K.c.cy / 960) * .6 + hash01(i) * .12); });
+    tl.fromTo(win.bloom, { opacity: 0 }, { opacity: .5, duration: 1.1, ease: "power2.out" }, L(W[12].start) - .3);
+    S.rays.rays.forEach(function (R, i) { tl.fromTo(R.el, { opacity: 0 }, { opacity: .3, duration: 1.4, ease: "power2.out" }, L(W[12].start) + i * .06); });
+    window.__timelines["G1"] = tl;
+  }).catch(function (e) { var d = document.createElement('pre'); d.style.cssText = 'position:absolute;left:0;top:0;color:#f55;font-size:20px;z-index:9999;width:1000px;white-space:pre-wrap'; d.textContent = String(e && e.stack || e); root.appendChild(d); }); });
+})();
+</script>
+</template>

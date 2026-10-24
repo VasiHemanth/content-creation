@@ -1,0 +1,44 @@
+<template>
+<style>
+@font-face{font-family:"Libre Caslon Text";font-weight:400;font-style:normal;src:url("assets/fonts/libre-caslon-text-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Libre Caslon Text";font-weight:400;font-style:italic;src:url("assets/fonts/libre-caslon-text-latin-400-italic.woff2") format("woff2")}
+@font-face{font-family:"Libre Caslon Text";font-weight:700;font-style:normal;src:url("assets/fonts/libre-caslon-text-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Playfair Display";font-weight:700;font-style:normal;src:url("assets/fonts/playfair-display-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Playfair Display";font-weight:900;font-style:normal;src:url("assets/fonts/playfair-display-latin-900-normal.woff2") format("woff2")}
+@font-face{font-family:"UnifrakturCook";font-weight:700;font-style:normal;src:url("assets/fonts/unifrakturcook-latin-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Special Elite";font-weight:400;font-style:normal;src:url("assets/fonts/special-elite-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Alfa Slab One";font-weight:400;font-style:normal;src:url("assets/fonts/alfa-slab-one-latin-400-normal.woff2") format("woff2")}
+#root{position:absolute;inset:0;overflow:hidden;background:#12110e}
+</style>
+<div id="root" data-composition-id="sceneC" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.C, W = TIMING.lines[4].words, P = Press, C = P.C;
+  var L = function (g) { return g - SC.start; };
+  P.ready("sceneC", function () { return P.fontsReady().then(function () {
+    var R = P.buildHalluc(root), sh = R.sh;
+    return sh.texReady.then(function () {
+      var tl = gsap.timeline({ paused: true }), OV = P.view(.70, 750, sh.PH / 2, 540, 820);
+      P.camSet(tl, sh, 0, OV);
+      // the columns slide in from above and below and lock onto the grid
+      R.grp.forEach(function (g, i) { tl.fromTo(g, { y: (i % 2 ? 1 : -1) * 1500 }, { y: 0, duration: .6, ease: "power4.out" }, .08 + i * .12); P.jolt(tl, sh.world, .75 + i * .12, 1.5); });
+      tl.set(R.head, { opacity: 0 }, 0);
+      var th = L(W[3].start) - .1;
+      P.camTo(tl, sh, L(W[0].start) - .1, 1.0, P.view(.74, 750, 330, 540, 640), "power2.inOut");
+      tl.fromTo(R.head, { opacity: 1, scale: 3.2 }, { opacity: 1, scale: 1, duration: .16, ease: "power4.in" }, th);
+      tl.set(R.head, { opacity: 0 }, 0);
+      P.jolt(tl, sh.world, th + .16, 5);
+      // the bubble's dots drift apart; the definition is typed
+      R.defTy.set(0); P.typeTween(tl, R.defTy, th + .5, 1.6);
+      P.camTo(tl, sh, th + .35, 1.1, P.view(.9, 750, 700, 540, 800), "power2.inOut");
+      var pr = { p: 0 };
+      tl.to(pr, { p: 1, duration: SC.dur - th - .55, ease: "power1.in", onUpdate: function () {
+        var p = pr.p, k = p * p * 95;
+        R.dotEls.forEach(function (e) { e.el.setAttribute("cx", e.d.x + e.ax * k * e.sp); e.el.setAttribute("cy", e.d.y + e.ay * k * e.sp - p * 18); });
+      } }, th + .35);
+      window.__timelines["sceneC"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

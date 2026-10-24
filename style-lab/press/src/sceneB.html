@@ -1,0 +1,48 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#12110e}
+</style>
+<div id="root" data-composition-id="sceneB" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.B, W = TIMING.lines[3].words, P = Press, C = P.C;
+  var L = function (g) { return g - SC.start; };
+  P.ready("sceneB", function () { return P.fontsReady().then(function () {
+    var R = P.buildBook(root), sh = R.sh;
+    return sh.texReady.then(function () {
+      var tl = gsap.timeline({ paused: true }), OV = P.view(.70, 750, sh.PH / 2, 540, 820), over = sh.over;
+      P.spinIn(tl, sh, 0, OV, { dur: .8, s0: .25, rot0: -900 });
+      P.jolt(tl, sh.world, .82, 3);
+      tl.set(sh.shadow, { opacity: 0 }, 0).set(sh.shadow, { opacity: .5 }, .8);
+      // hidden until their line
+      var bp = P.pos(R.bookPic, over), cp = R.cardPos;
+      tl.set(R.bookPic, { opacity: 0 }, 0).set(R.hand, { opacity: 0 }, 0).set(R.card, { opacity: 0 }, 0);
+      tl.set(R.stamp, { opacity: 0 }, 0);
+      // "Ask for a book": the book prints in, its cover blank but for a question mark
+      var tb = L(W[3].start) - .25;
+      tl.fromTo(R.bookPic, { opacity: 1, scale: 1.25, y: -20 }, { opacity: 1, scale: 1, y: 0, duration: .16, ease: "power4.in" }, tb);
+      tl.set(R.bookPic, { opacity: 0 }, 0);
+      P.jolt(tl, sh.world, tb + .16, 3);
+      P.camTo(tl, sh, tb - .1, 1.1, P.view(1.5, bp.x + 200, bp.y + 215, 540, 800), "power2.inOut");
+      // "a believable title, author and year": the camera moves to the catalog card, a hand points at it
+      var tc = L(W[12].start);
+      P.camTo(tl, sh, tc - .2, 1.1, P.view(1.32, cp.x + cp.w / 2, cp.y + 200, 540, 800), "power2.inOut");
+      tl.fromTo(R.card, { opacity: 1, scale: 1.18, y: -30, rotation: 3 }, { opacity: 1, scale: 1, y: 0, rotation: 0, duration: .16, ease: "power4.in" }, tc);
+      tl.set(R.card, { opacity: 0 }, 0);
+      P.jolt(tl, sh.world, tc + .16, 2);
+      tl.fromTo(R.hand, { opacity: 1, x: 420 }, { opacity: 1, x: 0, duration: .5, ease: "power3.out" }, tc + .1);
+      tl.set(R.hand, { opacity: 0 }, 0);
+      var ts = [L(W[14].start) - .35, L(W[15].start) - .15, L(W[17].start) - .15, L(W[19].start)], ds = [.95, .8, .4, .7];
+      R.cardEls.forEach(function (e, i) { P.typeTween(tl, e.ty, ts[i], ds[i]); });
+      // the red stamp
+      var tsx = L(W[24].end) + .2;
+      tl.fromTo(R.stamp, { opacity: 0, scale: 2.1 }, { opacity: .93, scale: 1, duration: .13, ease: "power4.in" }, tsx);
+      P.jolt(tl, sh.world, tsx + .13, 4);
+      P.camTo(tl, sh, tsx - .4, 1.0, P.view(1.18, cp.x + cp.w / 2, cp.y + 210, 540, 800), "power2.inOut");
+      window.__timelines["sceneB"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>

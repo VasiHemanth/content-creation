@@ -1,0 +1,50 @@
+<template>
+<style>
+/*@FONTS*/
+#root{position:absolute;inset:0;overflow:hidden;background:#12110e}
+.sw{background:none}
+</style>
+<div id="root" data-composition-id="sceneE" data-width="1080" data-height="1920"></div>
+<script>
+(function () {
+  var root = document.getElementById("root"), SC = TIMING.scenes.E, W = TIMING.lines[6].words, P = Press, C = P.C;
+  var L = function (g) { return g - SC.start; };
+  P.ready("sceneE", function () { return P.fontsReady().then(function () {
+    var R = P.buildFront(root), sh = R.sh, over = sh.over;
+    return sh.texReady.then(function () {
+      var tl = gsap.timeline({ paused: true }), OV = P.view(.70, 750, 1050, 540, 820);
+      P.spinIn(tl, sh, 0, OV, { dur: .8, s0: .25, rot0: 900 });
+      P.jolt(tl, sh.world, .82, 3);
+      tl.set(sh.shadow, { opacity: 0 }, 0).set(sh.shadow, { opacity: .5 }, .8);
+      // the CORRECTION box prints over the original headline
+      var bx = 170, by = R.y0 + 56, bw = 1160, bh = 330;
+      var box = P.div("position:absolute;left:" + bx + "px;top:" + by + "px;width:" + bw + "px;height:" + bh + "px;opacity:0;transform-origin:50% 50%", over);
+      P.div("position:absolute;inset:0;background:#efe9d7;box-shadow:6px 9px 0 rgba(27,26,23,.4)", box);
+      var edge = P.div("position:absolute;inset:0;border:9px double " + C.red + ";box-sizing:border-box;filter:url(#stamp)", box);
+      P.t(box, "CORRECTION", { x: 0, y: 28, w: bw, align: "center", font: "400 66px/1 " + P.F.slab, color: C.red, css: "letter-spacing:14px" });
+      P.rule(box, 70, 112, bw - 140, 3, C.red);
+      var line = P.t(box, "Check every claim against the source.", { x: 0, y: 134, w: bw, align: "center", font: "italic 700 62px/1.1 " + P.F.head });
+      var sub = P.t(box, "The Daily Token regrets its machine’s error.", { x: 0, y: 248, w: bw, align: "center", font: "400 24px " + P.F.type, css: "letter-spacing:3px" });
+      var ty = P.typer(line, line.textContent); ty.set(0);
+      tl.set(box, { opacity: 0 }, 0);
+      var t1 = L(W[3].start) - .2;
+      P.camTo(tl, sh, L(W[0].start), 1.0, P.view(.98, 750, 560, 540, 800), "power2.inOut");
+      tl.fromTo(box, { opacity: 1, scale: 1.35, rotation: 3 }, { opacity: 1, scale: 1, rotation: -.8, duration: .15, ease: "power4.in" }, t1);
+      tl.set(box, { opacity: 0 }, 0);
+      P.jolt(tl, sh.world, t1 + .15, 5);
+      P.typeTween(tl, ty, t1 + .35, 2.2);
+      // "Fluent text is not evidence.": a small red stamp on the old story, then the page pulls back
+      var stamp = P.stamp(over, "NOT A REAL BOOK", { x: 930, y: 1150, size: 46, rot: -9, bw: 6, pad: "8px 16px" });
+      tl.set(stamp, { opacity: 0 }, 0);
+      var t2 = L(W[10].start);
+      P.camTo(tl, sh, L(W[9].end) + .2, 1.2, P.view(.74, 750, 1000, 540, 830), "power2.inOut");
+      tl.fromTo(stamp, { opacity: 0, scale: 2.1 }, { opacity: .93, scale: 1, duration: .13, ease: "power4.in" }, t2 + .35);
+      P.jolt(tl, sh.world, t2 + .48, 3);
+      // final hold: the whole page with every red mark, then in on the masthead
+      P.camTo(tl, sh, SC.dur - 5.4, 5.2, P.view(.96, 750, 470, 540, 780), "sine.inOut");
+      window.__timelines["sceneE"] = tl;
+    });
+  }); });
+})();
+</script>
+</template>
