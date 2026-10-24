@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!-- wardrobe · one card, six looks, one take. Written on onetake (github.com/feitangyuan/onetake, PolyForm Noncommercial 1.0.0):
+     lib/motion.js (the moves) and looks/looks.json (the six looks, bundled by make_looks.py into looks.js).
+     Every value below is a pure function of t. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>wardrobe</title>
+<style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#111}
+#stage{position:absolute;inset:0;overflow:hidden;isolation:isolate}
+.world{position:absolute;inset:0;overflow:hidden;background:var(--ground);color:var(--ink);will-change:clip-path}
+.world .ground,.world .camwrap,.world .slide{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.camwrap{will-change:transform}
+.card{position:absolute;left:580px;top:320px;width:760px;height:440px;box-sizing:border-box;padding:46px 48px;background:var(--card);border-radius:20px;color:var(--ink);transform-origin:50% 50%;will-change:transform}
+.card .eyebrow{font-family:var(--mono);font-weight:400;font-size:20px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);white-space:nowrap}
+.card h2{position:relative;margin:20px 0 0;font-family:var(--display);font-weight:var(--display-weight);font-size:84px;line-height:.98;letter-spacing:var(--display-tracking);color:var(--ink);white-space:nowrap}
+.card h2 .b{display:none}
+.card p{position:absolute;left:48px;top:262px;margin:0;font-family:var(--text);font-weight:500;font-size:27px;color:var(--mute);white-space:nowrap}
+.card .row{position:absolute;left:48px;right:48px;bottom:40px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.track{width:420px;height:10px;border-radius:5px;background:var(--line);position:relative;overflow:hidden}
+.track i{position:absolute;left:0;top:0;bottom:0;width:62%;background:var(--accent);border-radius:5px}
+.pill{width:150px;height:56px;border-radius:999px;background:var(--accent);color:var(--onaccent);font-family:var(--text);font-weight:600;font-size:24px;display:flex;align-items:center;justify-content:center;transform-origin:50% 50%}
+/* paper: calm, lots of air */
+.L-paper .card{border:1px solid var(--line);box-shadow:0 24px 60px -24px rgba(20,20,20,.22),0 2px 6px rgba(20,20,20,.05)}
+/* dusk: one lit violet subject */
+.L-dusk .card{border:1px solid var(--line);box-shadow:0 0 0 1px rgba(0,0,0,.4),0 40px 120px -10px rgba(124,108,255,.38)}
+.L-dusk .glow{position:absolute;left:360px;top:130px;width:1200px;height:820px;background:radial-gradient(ellipse at center,rgba(124,108,255,.34),rgba(124,108,255,0) 68%)}
+/* tabletop: a physical object on a table */
+.L-tabletop .card{box-shadow:inset 0 2px 0 #fff,0 1px 0 var(--line)}
+.L-tabletop .tshadow{position:absolute;left:560px;top:770px;width:800px;height:70px;background:radial-gradient(ellipse at center,rgba(60,50,40,.34),rgba(60,50,40,0) 70%)}
+.L-tabletop .ball{position:absolute;width:108px;height:108px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#ff9a7e,var(--accent) 55%,#c2401f);box-shadow:0 26px 30px -14px rgba(60,50,40,.45)}
+/* ultramarine: a poster, not an interface */
+.L-ultramarine .card{border-radius:0;border:6px solid var(--ink);box-shadow:20px 20px 0 var(--accent)}
+.L-ultramarine .card h2{text-transform:uppercase;font-size:92px;line-height:.92}
+.L-ultramarine .disc{position:absolute;border-radius:50%}
+/* riso: printed matter, two inks, a little out of register */
+.L-riso .card{border-radius:4px;border:3px solid var(--accent2);box-shadow:none}
+.L-riso .card h2{text-transform:uppercase;font-size:94px;line-height:.9;color:transparent}
+.L-riso .card h2 .a,.L-riso .card h2 .b{display:block;white-space:nowrap}
+.L-riso .card h2 .a{color:var(--accent);mix-blend-mode:multiply;transform:translate(var(--rx,0px),var(--ry,0px))}
+.L-riso .card h2 .b{color:var(--accent2);mix-blend-mode:multiply;position:absolute;left:0;top:0;transform:translate(calc(var(--rx,0px) * -1),calc(var(--ry,0px) * -1))}
+.L-riso .card p{color:var(--accent2)}
+.L-riso .dots{position:absolute;mix-blend-mode:multiply}
+/* ember: warm paper, an orange light */
+.L-ember .card{border-radius:36px;box-shadow:0 50px 100px -40px rgba(236,104,46,.45),0 0 0 1px var(--line)}
+/* names for the burst */
+.nm{position:absolute;left:0;top:0;width:1920px;height:1080px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:var(--display-weight);font-size:230px;letter-spacing:var(--display-tracking);color:var(--ink);white-space:nowrap;display:none}
+.L-ultramarine .nm,.L-riso .nm{text-transform:uppercase}
+/* overlays */
+#rA,#rB,#flood,.plate{position:absolute;inset:0;display:none}
+.plate{mix-blend-mode:multiply}
+#cur{position:absolute;left:0;top:0;width:34px;height:44px;display:none;will-change:transform;filter:drop-shadow(0 2px 5px rgba(0,0,0,.3))}
+#grid{position:absolute;inset:0;display:none}
+.mini{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:960px 540px;will-change:transform}
+.sw{position:absolute;display:flex;gap:7px;will-change:transform,opacity}
+.sw i{display:block;width:22px;height:22px;border-radius:7px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+.tag{position:absolute;font-family:'Mono',monospace;white-space:nowrap}
+#hud{position:absolute;right:14px;bottom:10px;font:13px monospace;color:#c00;display:none;z-index:99}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="hud"></div>
+<script src="motion.js"></script>
+<script src="looks.js"></script>
+<script>
+// ══════════════════════════════════════════════ the film ══════════════════════════════════════════════
+// concept: ONE card. A hand presses its button; every press carries the card into another of onetake's six looks,
+// and each look arrives out of the card in a different way. The card never leaves the frame; only its dress changes.
+const FPS=30, DUR=23.2;
+window.__meta={dur:DUR,fps:FPS,w:1920,h:1080,inFrame:{card:[0,18.0]}};
+const ORDER=['paper','dusk','tabletop','ultramarine','riso','ember'];
+const ONACC={paper:'#ffffff',dusk:'#ffffff',tabletop:'#ffffff',ultramarine:'#0b0b0b',riso:'#34322e',ember:'#ffffff'};
+const CLK=[4.00,6.00,10.20,11.80,14.60,16.60];            // the hand's presses; shot lengths 4.0 · 2.0 · 4.2 · 1.6 · 2.8 · 2.0 s (a 2.6x spread, never a metronome)
+const T0={ iris:[CLK[0]+0.14,CLK[0]+0.86], hop:[CLK[1]+0.12,CLK[1]+0.62], whip:[CLK[2]+0.14,CLK[2]+0.76],
+           plates:CLK[3]+0.14, flood:CLK[4]+0.14 };
+const LAND=T0.hop[1];                                      // the card lands: ripples leave it
+const STAC=[[16.74,0],[16.96,1],[17.18,2],[17.40,3],[17.62,4],[17.84,5]], STAC_END=18.06;
+const G0=18.1, G1=19.1, SW0=19.6, TT0=19.95, CAP0=20.4, HOLD=20.5;                                    // the six dressed cards fan out into a grid
+const SLOTS=[[520,390],[960,390],[1400,390],[520,745],[960,745],[1400,745]], MINI_S=0.44;
+const {clamp,lerp,sstep,ssstep,spring:spr,seg}=OM;
+const $=(id)=>document.getElementById(id);
+const stage=$('stage');
+const WORLD=[], MINI=[];
+const PILL={x:1221,y:690};                                  // the button, in world coordinates
+
+// ───────────── build ─────────────
+function dress(el,name){
+  const L=LOOKS[name]; for(const [k,v] of Object.entries(L.color)) el.style.setProperty('--'+k,v);
+  for(const [r,t] of Object.entries(L.type)){ el.style.setProperty('--'+r,t.stack); el.style.setProperty('--'+r+'-weight',t.weight); el.style.setProperty('--'+r+'-tracking',t.tracking+'em'); }
+  el.style.setProperty('--onaccent',ONACC[name]); el.classList.add('L-'+name);
+}
+function cardHTML(name){
+  const two = name==='riso';
+  return `<div class="card"><div class="eyebrow">now dressed · ${name}</div>
+  <h2><span class="a">One card,<br>six looks.</span>${two?'<span class="b">One card,<br>six looks.</span>':''}</h2>
+  <p>Same words. Different light.</p>
+  <div class="row"><div class="track"><i></i></div><div class="pill">Play</div></div></div>`;
+}
+function decorHTML(name){
+  if(name==='dusk') return '<div class="glow"></div>';
+  if(name==='tabletop') return '<div class="tshadow"></div><div class="ball" id="ball"></div>';
+  if(name==='ultramarine') return '<div class="disc" style="left:1330px;top:-250px;width:760px;height:760px;background:var(--accent)"></div><div class="disc" style="left:-190px;top:700px;width:560px;height:560px;border:26px solid var(--card);box-sizing:border-box"></div><div class="disc" style="left:1500px;top:700px;width:150px;height:150px;background:var(--accent2)"></div>';
+  if(name==='riso'){
+    const dot=(c,sz,ang)=>`background-image:radial-gradient(circle,${c} 34%,transparent 37%);background-size:${sz}px ${sz}px;transform:rotate(${ang}deg)`;
+    const reg=(x,y)=>`<svg style="position:absolute;left:${x-20}px;top:${y-20}px" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="11" fill="none" stroke="var(--ink)" stroke-width="1.6"/><path d="M20 0V40M0 20H40" stroke="var(--ink)" stroke-width="1.6"/></svg>`;
+    return `<div class="dots" style="left:-260px;top:520px;width:1100px;height:900px;${dot('var(--accent)',24,15)};-webkit-mask-image:linear-gradient(35deg,#000 0%,transparent 60%);mask-image:linear-gradient(35deg,#000 0%,transparent 60%)"></div>
+    <div class="dots" style="left:1100px;top:-300px;width:1100px;height:900px;${dot('var(--accent2)',24,75)};-webkit-mask-image:linear-gradient(215deg,#000 0%,transparent 60%);mask-image:linear-gradient(215deg,#000 0%,transparent 60%)"></div>
+    ${reg(60,60)}${reg(1860,60)}${reg(60,1020)}${reg(1860,1020)}
+    <div style="position:absolute;left:118px;top:1032px;display:flex;gap:0">${['accent','accent2','ink','mute'].map(k=>`<i style="display:block;width:44px;height:16px;background:var(--${k})"></i>`).join('')}</div>`;
+  }
+  if(name==='ember') return '<div id="emberglow" style="position:absolute;inset:0"></div>';
+  return '';
+}
+function groundHTML(name){
+  if(name==='tabletop') return '<div style="position:absolute;left:0;top:0;width:1920px;height:690px;background:var(--deep)"></div><div style="position:absolute;left:0;top:690px;width:1920px;height:24px;background:linear-gradient(var(--line),rgba(213,208,198,0))"></div>';
+  if(name==='dusk') return '<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 46%,var(--ground),var(--deep) 92%)"></div><canvas id="lat" width="1920" height="1080" style="position:absolute;left:0;top:0"></canvas>';
+  return '';
+}
+function build(){
+  ORDER.forEach((name,i)=>{
+    const w=document.createElement('div'); w.className='world'; w.style.zIndex=[10,30,50,70,90,110][i]; dress(w,name);
+    w.innerHTML=`<div class="ground">${groundHTML(name)}</div>${(i===4||i===5)?'<div class="fl" style="position:absolute;inset:0;display:none"></div>':''}<div class="camwrap"><div class="slide">${decorHTML(name)}</div>${cardHTML(name)}</div><div class="nm">${name}</div>`;
+    stage.appendChild(w); WORLD.push({el:w,name,ground:w.querySelector('.ground'),cam:w.querySelector('.camwrap'),slide:w.querySelector('.slide'),card:w.querySelector('.card'),pill:w.querySelector('.pill'),nm:w.querySelector('.nm'),
+      h2a:w.querySelector('h2 .a'),h2b:w.querySelector('h2 .b'),lat:w.querySelector('#lat'),ball:w.querySelector('.ball'),glow:w.querySelector('#emberglow'),fl:w.querySelector('.fl')});
+    w.style.display= i===0?'block':'none';
+  });
+  const mk=(id,z)=>{ const d=document.createElement('div'); d.id=id; d.style.zIndex=z; stage.appendChild(d); return d; };
+  window.rA=mk('rA',40); window.rB=mk('rB',45); 
+  rA.style.background=LOOKS.tabletop.color.accent; rB.style.background=LOOKS.tabletop.color.deep;
+  window.plateP=document.createElement('div'); plateP.className='plate'; plateP.style.zIndex=120; plateP.style.background=LOOKS.riso.color.accent; stage.appendChild(plateP);
+  window.plateB=document.createElement('div'); plateB.className='plate'; plateB.style.zIndex=121; plateB.style.background=LOOKS.riso.color.accent2; stage.appendChild(plateB);
+  // the grid: six dressed cards, each under its own eight tokens
+  const grid=$('grid')||document.createElement('div'); grid.id='grid'; grid.style.zIndex=130; stage.appendChild(grid);
+  ORDER.forEach((name,i)=>{
+    const m=document.createElement('div'); m.className='mini'; dress(m,name); m.innerHTML=cardHTML(name); grid.appendChild(m);
+    const sw=document.createElement('div'); sw.className='sw'; sw.innerHTML=Object.keys(LOOKS[name].color).map(k=>`<i style="background:${LOOKS[name].color[k]}"></i>`).join(''); grid.appendChild(sw);
+    const lab=document.createElement('div'); lab.className='tag'; lab.style.color='#8e7a69'; lab.style.fontSize='19px'; lab.style.letterSpacing='.12em'; lab.textContent=name.toUpperCase(); grid.appendChild(lab);
+    MINI.push({el:m,sw,lab,name});
+  });
+  window.capEl=document.createElement('div'); capEl.className='tag'; capEl.style.cssText='left:0;width:1920px;text-align:center;top:918px;font-size:30px;letter-spacing:.04em;color:#2b1d14;font-family:var(--mono)'; dress(capEl,'ember'); capEl.classList.remove('L-ember'); grid.appendChild(capEl);
+  window.ttlEl=document.createElement('div'); ttlEl.style.cssText='position:absolute;left:0;width:1920px;text-align:center;top:104px;font-size:84px;color:#2b1d14'; dress(ttlEl,'ember'); ttlEl.classList.remove('L-ember'); ttlEl.style.fontFamily='var(--display)'; ttlEl.style.fontWeight='var(--display-weight)'; ttlEl.textContent='tokens, not themes.'; grid.appendChild(ttlEl);
+  const cur=document.createElementNS('http://www.w3.org/2000/svg','svg'); cur.id='cur'; cur.setAttribute('viewBox','0 0 34 44'); cur.style.zIndex=140;
+  cur.innerHTML='<path id="curp" d="M4 3 L30 22 L18 24 L26 40 L20 43 L12 27 L4 36 Z" fill="#111" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>'; stage.appendChild(cur);
+}
+
+// ───────────── the hand ─────────────
+const HAND=[]; CLK.forEach(c=>HAND.push({t:c-0.62,x:1560,y:960},{t:c-0.30,x:1330,y:790},{t:c-0.07,x:PILL.x+2,y:PILL.y+2},{t:c+0.24,x:PILL.x+2,y:PILL.y+2},{t:c+0.80,x:1580,y:980}));
+const hand=t=>OM.spline(HAND,t);
+
+// ───────────── camera: keyed where each beat needs it, with an operator's lean toward the button ─────────────
+const KEYS=[{t:0,x:900,y:560,zoom:1.14},{t:1.5,x:960,y:540,zoom:1.0,curve:OM.ease.sineInOut}];
+CLK.forEach((c,i)=>{ const lean={x:1050,y:610,zoom:1.06}; KEYS.push({t:c-0.55,x:960,y:540,zoom:1.0},{t:c-0.02,...lean,curve:OM.ease.sineInOut},{t:c+0.60,x:960,y:540,zoom:1.0,curve:OM.ease.expoOut}); });
+KEYS.push({t:18.05,x:960,y:540,zoom:1.0},{t:HOLD,x:960,y:540,zoom:1.03,curve:OM.ease.sineInOut});
+const HITS=[[LAND,9,9],[T0.whip[1]-0.12,8,9],[T0.plates+0.4,6,10],[CLK[5]+0.04,5,10]];
+function camAt(t){ const c=OM.camera(t,KEYS); let x=c.x,y=c.y,rot=c.rot; for(const [th,amp,dec] of HITS){ const s=OM.shake(t,th,{amp,decay:dec,seed:Math.round(th*100)}); x+=s.x/c.zoom; y+=s.y/c.zoom; rot+=s.rot; } return {x,y,zoom:c.zoom,rot}; }
+
+// ───────────── the card's own state: press, lift, landing, lean ─────────────
+function cardState(t){
+  let sx=1, sy=1, dy=0, rot=0, pill=1, active=false;
+  for(const c of CLK){ const p=OM.press(t,c+0.0,{depth:0.14,flash:0.35}); if(p.s!==1) pill=p.s; if(p.active) active=true; }
+  const near=CLK.reduce((a,c)=>Math.abs(t-c)<Math.abs(t-a)?c:a,CLK[0]); const dip=OM.press(t,near+0.02,{depth:0.02,flash:0}).s; sx*=dip; sy*=dip;
+  dy=OM.hop(t,T0.hop[0],T0.hop[1],{x:0,y:0},{x:0,y:0},{height:150}).y;   // hop() returns the arc as negative y
+  if(t<1.2){ const pp=OM.popIn(t,0.0,{rise:0,s0:0.9,ds:0.1}); sx*=pp.s; sy*=pp.s; }
+  const imp=OM.impact(t,LAND,{decay:8,omega:24,sqx:0.05,sqy:0.075}); sx*=imp.sx; sy*=imp.sy;
+  const wk=OM.whip(t,T0.whip[0],T0.whip[1]-T0.whip[0],1920); const bell=Math.sin(Math.PI*clamp(wk.k,0,1)); sx*=1+0.07*bell; sy*=1-0.04*bell; rot+=-0.9*bell;
+  return {sx,sy,dy,rot,pill,active};
+}
+
+// ───────────── per-frame ─────────────
+let CAM=null, CS=null;
+const mat=(M)=>`matrix(${M.map(v=>v.toFixed(5)).join(',')})`;
+function setWorld(i,on,clip){ const w=WORLD[i]; w.el.style.display=on?'block':'none'; w.el.style.clipPath=clip||'none'; return on; }
+function circ(r,cx=960,cy=540){ return `circle(${Math.max(0,r).toFixed(1)}px at ${cx}px ${cy}px)`; }
+function lookIdxAt(t){ return t<T0.iris[0]+0.2?0 : t<LAND+0.45?1 : t<T0.whip[0]+0.2?2 : t<T0.plates+0.5?3 : t<T0.flood+0.45?4 : 5; }
+function seek(t){
+  CAM=camAt(t); CS=cardState(t);
+  const M=OM.view(CAM);
+  // which worlds are on screen
+  const iris=OM.iris(t,T0.iris[0],T0.iris[1],960,540), rip=OM.ripple(t,LAND,{n:3,stagger:0.12,dur:1.0});
+  const wp=OM.whip(t,T0.whip[0],T0.whip[1]-T0.whip[0],1920);
+  const burst=t>=STAC[0][0]&&t<STAC_END, after=t>=STAC_END;
+  const swapP=T0.plates+0.40, swapF=T0.flood+0.40;
+  const show=[true,t>=iris.k*0+T0.iris[0]-0.001,t>=LAND-0.001,t>=T0.whip[0]-0.001,t>=T0.plates+0.30,t>=T0.flood+0.30];
+  const hideBelow=[ t>=T0.iris[1] , t>=rip.r[2]/ (1100) *0+LAND+1.3 , t>=T0.whip[1], t>=T0.plates+0.45, t>=T0.flood+0.45, false ];
+  // world 0..5 visibility
+  WORLD.forEach((w,i)=>{ let on=show[i]&&!hideBelow[i]; if(i===3) on=show[3]&&t<swapP; if(i===4) on=t>=swapP-0.01&&t<swapF; if(i===5) on=t>=swapF-0.01||false; if(i===0) on=t<T0.iris[1]+0.02; if(i===1) on=t>=T0.iris[0]&&t<LAND+1.34; if(i===2) on=t>=LAND-0.001&&t<T0.whip[1]+0.02; w.el.style.display=on?'block':'none'; w.el.style.clipPath='none'; });
+  if(t>=T0.iris[0]&&t<T0.iris[1]) WORLD[1].el.style.clipPath=circ(iris.r);
+  // ripple: tint rings, then the tabletop shows inside the innermost
+  const ripOn=t>=LAND&&!rip.done; rA.style.display=ripOn?'block':'none'; rB.style.display=ripOn?'block':'none';
+  if(ripOn){ rA.style.clipPath=circ(rip.r[0]); rB.style.clipPath=circ(rip.r[1]); }
+  if(t>=LAND&&t<LAND+1.34) WORLD[2].el.style.clipPath=circ(rip.r[2]);
+  // whip: both worlds slide, the card stays (the camera is chasing it)
+  if(t>=T0.whip[0]&&t<T0.whip[1]+0.02){ WORLD[2].slide.style.transform=`translate(${(-wp.d).toFixed(1)}px,0)`; WORLD[2].ground.style.transform=`translate(${(-wp.d).toFixed(1)}px,0)`;
+    WORLD[3].slide.style.transform=`translate(${(1920-wp.d).toFixed(1)}px,0)`; WORLD[3].ground.style.transform=`translate(${(1920-wp.d).toFixed(1)}px,0)`; }
+  else { WORLD[2].slide.style.transform='none'; WORLD[2].ground.style.transform='none'; WORLD[3].slide.style.transform='none'; WORLD[3].ground.style.transform='none'; }
+  // world 3 (ultramarine) shows only after the whip starts; before then it is hidden by `show`
+  // riso plates: two inks slide in a little out of register, the world swaps under them, they snap into register and leave
+  { const a=t-T0.plates, inK=OM.ease.expoOut(seg(t,T0.plates,T0.plates+0.38)), reg=OM.ease.cubicOut(seg(t,swapP+0.04,swapP+0.22)), outK=OM.ease.expoIn(seg(t,swapP+0.22,swapP+0.74));
+    const on=t>=T0.plates&&t<swapP+0.80; plateP.style.display=on?'block':'none'; plateB.style.display=on?'block':'none';
+    if(on){ const mis=lerp(1,0,reg)*34; const px=lerp(-1920,mis,inK)+outK*1920, bx=lerp(1920,-mis,OM.ease.expoOut(seg(t,T0.plates+0.06,T0.plates+0.44)))-OM.ease.expoIn(seg(t,swapP+0.26,swapP+0.78))*1920;
+      plateP.style.transform=`translate(${px.toFixed(1)}px,${(lerp(1,0,reg)*-14).toFixed(1)}px)`; plateB.style.transform=`translate(${bx.toFixed(1)}px,${(lerp(1,0,reg)*14).toFixed(1)}px)`; } }
+  // riso: the headline's two inks drift out of register, then snap shut at the press
+  { const w=WORLD[4]; const regd=OM.ease.cubicOut(seg(t,T0.flood-0.3,T0.flood+0.1)); const drift=(1-regd)*(4.2+1.4*Math.sin(t*2.1)); w.el.style.setProperty('--rx',(drift).toFixed(2)+'px'); w.el.style.setProperty('--ry',(drift*.55).toFixed(2)+'px'); }
+  // ember flood: warm light rises out of the card, the world changes under it, it drains
+  { const up=OM.ease.expoOut(seg(t,T0.flood,T0.flood+0.38)), dn=OM.ease.smoother(seg(t,swapF+0.14,swapF+1.14)); const level=t<swapF?up:1-dn; const on=t>=T0.flood&&t<swapF+1.2;
+    for(const k of [4,5]){ const fe=WORLD[k].fl; fe.style.display=on?'block':'none'; if(on){ const f=OM.lightField(level,{rest:0.9,r0:520,r1:1500}); fe.style.background=`radial-gradient(ellipse ${f.rx.toFixed(0)}px ${f.ry.toFixed(0)}px at ${f.cx.toFixed(0)}px ${f.cy.toFixed(0)}px,#fff3e6 0%,#f4a064 36%,#ec682e 60%,rgba(236,104,46,.55) 80%,rgba(236,104,46,0) 100%)`; } }
+    const ew=WORLD[5].glow; if(ew){ const f=OM.lightField(0.0,{rest:0.9,r0:520,r1:900}); ew.style.background=`radial-gradient(ellipse ${f.rx.toFixed(0)}px ${f.ry.toFixed(0)}px at ${f.cx.toFixed(0)}px ${f.cy.toFixed(0)}px,rgba(244,150,92,.55) 0%,rgba(236,104,46,.22) 50%,rgba(236,104,46,0) 100%)`; } }
+  // camera + card on every visible world
+  WORLD.forEach((w,i)=>{ if(w.el.style.display==='none') return;
+    w.cam.style.transform=mat(M);
+    w.card.style.transform=`translateY(${CS.dy.toFixed(1)}px) rotate(${CS.rot.toFixed(3)}deg) scale(${CS.sx.toFixed(4)},${CS.sy.toFixed(4)})`; w.card.style.visibility=(burst||after)?'hidden':'visible';
+    w.pill.style.transform=`scale(${CS.pill.toFixed(3)})`; w.pill.style.filter=CS.active?'brightness(1.12)':'none'; });
+  // dusk: a far lattice to slide against
+  { const w=WORLD[1]; if(w.el.style.display!=='none'){ const c=w.lat.getContext('2d'); c.setTransform(1,0,0,1,0,0); c.clearRect(0,0,1920,1080); const G=OM.lattice(CAM,{depth:1.2,spacing:64,px:2.2}); c.setTransform(...G.matrix); const col=LOOKS.dusk.color; for(let x=G.x0;x<=G.x1;x+=G.spacing) for(let y=G.y0;y<=G.y1;y+=G.spacing){ const hot=((x*7+y*13)%11===0); c.fillStyle=hot?col.accent:col.line; c.globalAlpha=hot?0.9:0.8; c.beginPath(); c.arc(x,y,G.r*(hot?1.9:1),0,6.2832); c.fill(); } c.globalAlpha=1; } }
+  // tabletop: the ball is nudged by the landing and rolls aside
+  { const w=WORLD[2]; if(w.ball){ const roll=OM.spring(t-LAND-0.05,0.8,11); w.ball.style.transform=`translate(${(300-130*roll).toFixed(1)}px,${(660).toFixed(1)}px) rotate(${(-300*roll).toFixed(1)}deg)`; } }
+  // burst: hard cuts through the six looks, names set in each face
+  if(burst){ const idx=OM.staccato(t,STAC.map(s=>[s[0],s[1]])).word; WORLD.forEach((w,i)=>{ const on=i===idx; w.el.style.display=on?'block':'none'; w.el.style.clipPath='none'; w.nm.style.display=on?'flex':'none'; w.slide.style.transform='none'; w.ground.style.transform='none'; w.cam.style.transform='none'; });
+    [rA,rB,plateP,plateB].forEach(e=>e.style.display='none'); WORLD.forEach(w=>{ w.card.style.visibility='hidden'; if(w.fl) w.fl.style.display='none'; }); }
+  else WORLD.forEach(w=>w.nm.style.display='none');
+  // after the burst: the six dressed cards fan out from one place into a grid
+  { const g=$('grid'); const on=after; g.style.display=on?'block':'none';
+    if(on){ WORLD.forEach((w,i)=>{ w.el.style.display=i===5?'block':'none'; w.el.style.clipPath='none'; w.nm.style.display='none'; w.card.style.visibility='hidden'; w.cam.style.transform='none'; });
+      const camg=OM.camera(t,[{t:G0,zoom:1.0},{t:HOLD,zoom:1.03,curve:OM.ease.sineInOut}]);
+      MINI.forEach((m,i)=>{ const gp=OM.gather(t,G0,G1,i,6,{x:960,y:540},{x:SLOTS[i][0],y:SLOTS[i][1]},{stagger:0.08,arc:140,spin:0.35}); const s=lerp(1,MINI_S,gp.k)*camg.zoom;
+        m.el.style.transform=`translate(${(gp.x-960).toFixed(1)}px,${(gp.y-540).toFixed(1)}px) rotate(${gp.rot.toFixed(3)}rad) scale(${s.toFixed(4)})`; m.el.style.visibility=t>=G0-0.02?'visible':'hidden'; m.el.style.zIndex=10+i;
+        const sw=OM.wordRise(t,SW0+i*0.09,{dist:16}); m.sw.style.left=(SLOTS[i][0]-m.sw.offsetWidth/2||SLOTS[i][0]-100)+'px'; m.sw.style.top=(SLOTS[i][1]+114*camg.zoom).toFixed(0)+'px'; m.sw.style.opacity=t>=SW0?sw.op:0; m.sw.style.transform=`translateY(${sw.y.toFixed(1)}px)`;
+        m.lab.style.left=(SLOTS[i][0]-110)+'px'; m.lab.style.width='220px'; m.lab.style.textAlign='center'; m.lab.style.top=(SLOTS[i][1]-134*camg.zoom).toFixed(0)+'px'; const lw=OM.wordRise(t,SW0-0.1+i*0.09,{dist:12}); m.lab.style.opacity=t>=SW0-0.1?lw.op:0; m.lab.style.transform=`translateY(${lw.y.toFixed(1)}px)`; });
+      const tt=OM.wordRise(t,TT0,{dist:20}); ttlEl.style.opacity=t>=TT0?tt.op:0; ttlEl.style.transform=`translateY(${tt.y.toFixed(1)}px)`;
+      const ty=OM.typeOn(t,CAP0,'eight colours · three faces · one take',{cps:34}); capEl.textContent=ty.str+(ty.caret>0.5&&!ty.done?'▏':''); capEl.style.opacity=t>=CAP0?1:0; } }
+  if(!after){ $('grid').style.display='none'; }
+  // the hand
+  { const c=CLK.reduce((a,x)=>Math.abs(t-x)<Math.abs(t-a)?x:a,CLK[0]); const ci=CLK.indexOf(c); const vis=t>=c-0.62&&t<c+0.80; const cu=OM.cursor(t,HAND,CLK);
+    const P=OM.project(M,cu.x,cu.y); const el=$('cur'); el.style.display=vis?'block':'none';
+    el.style.transform=`translate(${(P[0]-4).toFixed(1)}px,${(P[1]-3).toFixed(1)}px) scale(${cu.s})`; const dark=(ci===1||ci===3); $('curp').setAttribute('fill',dark?'#fff':'#111'); $('curp').setAttribute('stroke',dark?'#111':'#fff'); }
+  $('hud').textContent='t='+t.toFixed(3);
+}
+// ───────────── what a probe and the shutter need ─────────────
+window.__track=(t)=>{ const cam=camAt(t),cs=cardState(t),M=OM.view(cam); const b=OM.projectBox(M,{x:580,y:320+cs.dy,w:760,h:440}); const g=t>=STAC_END;
+  return g?{}:{card:{x:b.x,y:b.y,w:b.w,h:b.h,op:(t>=STAC[0][0]&&t<STAC_END)?0:1}}; };
+window.__motion=(t0,t1)=>{ const m=(t0+t1)/2; let px=OM.screenTravel(camAt(t0),camAt(t1),camAt(m));
+  const d=(f)=>Math.abs(f(t1)-f(t0)); const wk=(t)=>OM.whip(t,T0.whip[0],T0.whip[1]-T0.whip[0],1920).d;
+  px+=d(wk)+d((t)=>OM.iris(t,T0.iris[0],T0.iris[1],960,540).r)*0.5+d((t)=>OM.ripple(t,LAND,{n:3,stagger:0.12,dur:1.0}).r[0])*0.5+d((t)=>cardState(t).dy);
+  px+=Math.max(d((t)=>OM.ease.expoOut(seg(t,T0.plates,T0.plates+0.38))*1920),d((t)=>OM.ease.expoIn(seg(t,T0.plates+0.62,T0.plates+1.14))*1920));
+  px+=d((t)=>OM.ease.expoOut(seg(t,T0.flood,T0.flood+0.38))*500);
+  if(t1>G0&&t0<G1+0.6) px+=Math.hypot(SLOTS[2][0]-960,SLOTS[2][1]-540)*Math.abs(OM.ease.smoother(seg(t1,G0,G1))-OM.ease.smoother(seg(t0,G0,G1)));
+  return px; };
+window.__seek=async(t)=>{ seek(t); return true; };
+window.__ready=LOOKS.ready.then(()=>document.fonts.ready).then(()=>{ build(); return seek(0); });
+const q=new URLSearchParams(location.search);
+if(q.has('t')) __ready.then(()=>seek(parseFloat(q.get('t'))));
+if(q.has('hud')) $('hud').style.display='block';
+if(q.has('play')) __ready.then(()=>{const t0=performance.now();(function loop(){seek(((performance.now()-t0)/1000)%DUR);requestAnimationFrame(loop);})();});
+</script>
+</body>
+</html>
