@@ -52,3 +52,9 @@ Three sub-compositions: `world` (the WebGL canvas, whole video), `hud` (labels, 
 2. A faster lane and a true 1,000-cube drain.
 3. AO baking; thicker belt rails; arrows on the belts.
 4. Listen to the audio.
+
+## Delivery measurements
+- `out/final.mp4`: 1080x1920, 30 fps, 49.07 s, h264 + aac. Rendered with `--quality looks` (13 min; Three.js with 1,000 instanced cubes and shadow maps rendered fine in software GL at about 0.5 s per frame), then re-encoded (crf 28, 6 Mbit/s cap) to 5 MB for git; the 33 MB master is not kept.
+- Loudness of the delivered file (`hyperframes audio`): -17.4 LUFS integrated, -15.3 LUFS short-term max, sample and true peak -1.0 dB. That is about 1.5 LU under the -16 target. Measured, not heard.
+- Critique passes: 5 rounds of stills at beat starts plus frames 0, 15, 30, 45 (first full build, then after each fix list). Fixed: dead first frame (added title card and a half-risen database), queue sign clipped at the right edge, near-black database, overlapping labels, a stuck "fresh copy" label at 0,0, board overlapping the database, an off-centre camera after the crowd slab sank, handle overlapping a counter, invisible shelf (cache rebuilt as a cutaway).
+- Unverified: audio by ear; word-level sync beyond the estimate noted above.
