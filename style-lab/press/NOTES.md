@@ -47,7 +47,7 @@ Fonts (all local woff2 from @fontsource): Libre Caslon Text (body), Playfair Dis
 
 ### 8. Sound (built in code, not heard)
 - `tools/audio_press.py` (seeded numpy): rotary press rumble, paper whoosh for each spin, stamp thuds on every hit, typewriter bursts matched to every typed line (headline, deck, catalog card, definition, correction), page turn, column scrapes, magnifier whoosh, dot-scatter ticks. A slow 78 bpm plucked bed enters after the press has landed; ducked under the voice by a `volume` lane taken from the line times; swells for the last 3.5 s.
-- Not verified: no one has listened. Levels were measured with `hyperframes audio` (numbers below).
+- Measured on the delivered file: -16.7 LUFS integrated, -13.6 LUFS short-term max, true peak -1.4 dB. The raw render (89 MB, -18.7 LUFS) was re-encoded to 20 MB with crf 28, a 6 Mbit/s cap and a `loudnorm` pass (I=-16, TP=-1.5) to fit git and the loudness target. Not verified: no one has listened.
 
 ## Constraint checks and deviations
 - Deterministic: `mulberry32` and a sin-fold hash only; no `Math.random`, no wall clock, no `repeat: -1`. One paused GSAP timeline per scene; scene state is built before the timeline is registered (`window.__hf.buildReady`).
